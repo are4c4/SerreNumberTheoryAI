@@ -39,15 +39,22 @@
 
 ## Current handoff
 
-- Focused Issue: none
+- Focused Issue: #7
 - Parent: #2 Phase 1 finite fields
-- Target candidate: Theorem 1(ii)
-- Branch / PR: none
-- Completed on main: opening notation, Frobenius lemma, Theorem 1(i)
-- Next: wait for A to create a focused Lean Issue and fix the statement boundary
-- Blockers: ownership not yet assigned
-- Shared hotspots: do not edit root import aggregators unless required and conflict-checked
+- Target id: `S1.1.Theorem1(ii)`
+- Canonical statement contract: #6 (completed)
+- Branch: `formalize/s1-1-theorem1-ii-7`
+- PR: #25
+- Completed on main: opening notation, Frobenius lemma, Theorem 1(i); C #9 exposition / Blueprint and D #10 mathlib research are also merged.
+- Work in branch: direct fixed-point subfield construction; `X^(p^f)-X` root characterization; local separability/root count; exact `Nat.card = p^f`; uniqueness among subfields of the fixed algebraically closed ambient field; umbrella theorem `serre_theorem1_ii`.
+- Mathlib use: general characteristic-power, polynomial root/splitting/separability, set-cardinality APIs, plus the elementary identity `FiniteField.pow_card`; deliberately not using GaloisField or an existing finite-field existence/uniqueness classification theorem to close the target.
+- Verification: CI run #59 passed repository policy, `lake build`, and `lake exe vbp build` on code head `72b176993001c5039d8c9bfdd384f94f61dfac03`. The subsequent handoff-only run #63 ended with GitHub `startup_failure` before creating any job, so it did not report a code, policy, Lean, or Blueprint failure; this synchronization exists only to obtain a fresh final CI run on the unchanged Lean implementation.
+- Semantic review: A reported no drift from #6; B rechecked that the result is existence and uniqueness as an actual `Subfield Ω`, with carrier `{x | x^(p^f)=x}` and the root set of `X^(p^f)-X`, not Theorem 1(iii)'s abstract uniqueness up to isomorphism.
+- Cross-lane: C-owned Blueprint exposition is not edited here; final `lean :=` linkage and slice-wide progress completion belong to E integration after this PR merges.
+- Next: confirm the fresh final CI for this handoff snapshot, self-review PR #25, then merge if green and no new blocker appears. After merge, B should become idle until A assigns another focused Lean Issue; do not begin Theorem 1(iii) before integration completes.
+- Blockers: none; run #63 was an Actions startup failure without jobs, not a repository failure.
+- Shared hotspots: none edited; `FORMALIZATION_PROGRESS.md`, root import aggregators, `docs/LANE_STATUS.md`, and C-owned Blueprint files remain untouched in this branch.
 
 ## Short resume prompt
 
-`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、割り当て済みfocused IssueのLean実装だけを進めて。statementを変更せず、C所有のBlueprintは編集しないで。`
+`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、#7 / PR #25 の最終CIと自己レビューを確認して、greenかつblockerなしならmergeして。merge後はA/Eの統合handoffを確認し、新しいfocused Lean Issueが割り当てられるまで新規数学targetをclaimしないで。`
