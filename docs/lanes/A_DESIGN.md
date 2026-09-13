@@ -42,25 +42,28 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
 
 ## Current handoff
 
-- State: active scheduler coordination
-- Active A work: #54 — post-activation dependency refinement / queue refill
-- Branch / PR: `design/refine-worker-queue-54` / #57
-- Mathematical frontier: Theorem 1(ii) cross-layer complete; worker pool has started later slices
+- State: ready scheduler; no active A mathematical implementation or scheduler deliverable after completed #54 / PR #57
+- Mathematical frontier: Theorem 1(ii) cross-layer complete; later slices are now owned by the worker pool
+- Completed latest A coordination checkpoint:
+  - #54 / PR #57 — refined actual source dependencies, seeded #55/#56, synchronized live claims, and extended future §3 progress; latest-head CI green and merged
 - Live ownership at the latest check:
-  - C owns #49 / `work/s1-1-t1iii`
-  - B owns #50 / `work/s1-2-mult-group`; B preflight independently confirmed no T1(iii) dependency and is proceeding to implementation
-  - D owns #51 / `work/s2-1-power-sums` and #52 / `work/s2-2-chevalley` as two preflight items; neither proof body may pass its upstream gate without `DONE`/`STACK-READY`
+  - C owns #49 / `work/s1-1-t1iii` / draft PR #58; semantic target is abstract uniqueness up to isomorphism
+  - B owns #50 / `work/s1-2-mult-group` / draft PR #59; source/dependency preflight confirmed Theorem 1(iii) is not required
+  - D owns #51 / `work/s2-1-power-sums` and #52 / `work/s2-2-chevalley` as dependency-safe preflights
   - E has no live canonical branch at the latest check
-- Queue refinement in #54:
-  - #50 promoted semantically to implementation-ready from current main; Theorem 1(iii) is not a dependency
-  - #51 exact hard edge -> #50 cyclicity interface
-  - #52 exact hard edge -> #51 power-sum interface
-  - #55 `S3.1-QuadraticElements` added as `PREFLIGHT`
-  - #56 `S3.2-LegendreSymbol` added as `PREFLIGHT`
-  - #49 abstract-isomorphism statement boundary recorded explicitly
+- Queue capacity:
+  - #55 `S3.1-QuadraticElements` — unclaimed `PREFLIGHT`
+  - #56 `S3.2-LegendreSymbol` — unclaimed `PREFLIGHT`
+  - next refill candidate when depth drops: §3.3 quadratic reciprocity
+- Dependency gates:
+  - #51 proof waits for #50 `DONE` or explicit `STACK-READY`
+  - #52 proof waits for #51 `DONE` or explicit `STACK-READY`
+  - #55 odd-characteristic proof is expected to use #50 cyclicity; preflight may refine the exact interface now
+  - #56 proof waits for the required #55 interface
+- Current worker PR state: #58 and #59 are active draft implementation PRs; each worker owns its own CI repair and end-to-end completion
 - Blockers: none at A level
-- Shared hotspots reserved by A while #54 / #57 is active: `docs/WORK_QUEUE.md`, `docs/LANE_STATUS.md`, `FORMALIZATION_PROGRESS.md`
-- Next safe action: finish #57 CI/self-review/merge, then monitor #50 for `STACK-READY` and the worker pool for claims on #55/#56. Do not manually assign them when atomic claim is available.
+- Shared hotspots reserved by A: none after this post-merge handoff synchronization lands
+- Next A action: monitor live canonical claims, queue depth, worker-published `STACK-READY` interfaces, and any statement/ownership/shared-hotspot blocker routed to A. Do not take worker proof implementation.
 
 ## Scheduler health target
 
@@ -72,7 +75,7 @@ A should prefer this state:
 - no duplicate canonical branch ownership
 - no worker waiting merely because another specialist lane has not produced a handoff
 
-Current intended queue after #54: #49/#50 are claimed implementation fronts; #51/#52 are claimed dependency-safe preflights; #55/#56 are unclaimed preflight capacity. Live branch ownership overrides the static table as workers claim or release items.
+Current queue has two active implementation fronts (#49/#50), two owned preflights (#51/#52), and two unclaimed preflights (#55/#56). This is healthy queue depth; do not create extra work merely to keep A busy.
 
 ## Short resume prompt
 
