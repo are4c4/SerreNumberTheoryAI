@@ -38,10 +38,7 @@ theorem gaussSignedPermutation_legendreValue
   classical
   let P : ZMod p := ∏ s : ↥S, (s.1 : ZMod p)
   have hP : P ≠ 0 := by
-    dsimp [P]
-    apply Finset.prod_ne_zero
-    intro s _
-    exact Units.ne_zero s.1
+    simpa [P] using (Units.ne_zero (∏ s : ↥S, s.1))
   have hprod :
       (∏ s : ↥S, (a : ZMod p) * (s.1 : ZMod p)) =
         ∏ s : ↥S, ((ε s : ℤ) : ZMod p) * ((τ s).1 : ZMod p) := by
