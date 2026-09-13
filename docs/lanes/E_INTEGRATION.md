@@ -46,11 +46,12 @@
 
 ## Current handoff
 
-- Focused Issue: #4 lane infrastructure verification
-- PR: #5
-- Next: inspect #5 changed files, CI, coordination consistency, and README/AGENTS policy alignment; route any issue to A, otherwise approve merge gate
-- Blockers: none
-- Cross-lane dependency: #5 is A-owned; E reviews integration only and does not take ownership of the changes
+- Focused Issue: #8 post-merge lane-state synchronization
+- Branch: `integration/post-merge-lane-sync-8`
+- PR: none yet
+- Next: reconcile `docs/LANE_STATUS.md` and `FORMALIZATION_PROGRESS.md` with merged PR #5 / closed #4, confirm the `main` push CI for merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691`, then open a focused E PR and merge only after CI is green
+- Blockers: the post-merge `main` CI must be green before #8 is completed
+- Cross-lane dependency: #6 is the canonical statement contract for `S1.1.Theorem1(ii)` and #7 owns its Lean implementation; E does not take B/C/D mathematical work and will perform the integration gate after the corresponding deliverables exist
 
 ## Short resume prompt
 
