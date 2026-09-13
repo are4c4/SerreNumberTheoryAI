@@ -5,6 +5,7 @@ import SerreNumberTheoryAI.Formalization.Chapter01.Chevalley
 import SerreNumberTheoryAI.Formalization.Chapter01.ChevalleyNontrivialZero
 import SerreNumberTheoryAI.Formalization.Chapter01.QuadraticElements
 import SerreNumberTheoryAI.Formalization.Chapter01.ChevalleyQuadraticForm
+import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
 
 /-!
 # Formalization root
