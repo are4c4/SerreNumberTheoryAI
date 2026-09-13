@@ -34,20 +34,21 @@
 
 ## Current handoff
 
-- Current focused Issue: #11 — A handoff / interpretation progress synchronization
-- Current branch: `design/s1-1-theorem1-ii-handoff-11`
-- Current PR: #12
+- State: monitoring / coordination; no active A mathematical implementation deliverable
 - Mathematical frontier: `S1.1.Theorem1(ii)`
-- Completed design contract: #6 — assumptions, uniqueness scope, exact cardinality, and root-set characterization are fixed
-- Parallel owners:
+- Completed design checkpoints:
+  - #6 — canonical statement contract completed
+  - #11 / PR #12 — lane split and Interpretation/progress synchronization completed
+  - #14 — transition of this handoff to steady monitoring state
+- Current parallel owners:
   - B #7 — Lean statement / proof
   - C #9 — Blueprint / independent exposition
   - D #10 — mathlib research
-- E status: E #8 currently owns the post-#5 lane-state integration cleanup; A must not edit `docs/LANE_STATUS.md` or `docs/lanes/E_INTEGRATION.md` while that ownership is active
-- Completed infrastructure: #4 / PR #5 are merged on main
-- Next: merge #12 after CI, then monitor #7/#9/#10 for statement drift, ownership conflict, or shared-hotspot contention; create/route the Theorem 1(ii) E integration Issue only after E #8 is complete and B/C artifacts are ready
+- Current integration owner: E #8 / PR #13 owns post-#5 lane-status / integration cleanup while it remains active
+- Next A action: monitor #7/#9/#10 for statement drift, ownership conflicts, cross-lane dependency changes, and shared-hotspot contention. Do not create work merely to keep A busy.
+- Integration routing: after E #8 is complete and B/C artifacts for Theorem 1(ii) are ready, create or route a focused E integration task for cross-layer verification if one does not already exist.
 - Blockers: none
-- Shared hotspot currently touched by A: `FORMALIZATION_PROGRESS.md` only, to mark Theorem 1(ii) Interpretation complete; no other progress columns change
+- Shared hotspots reserved by A: none
 
 ## Theorem 1(ii) coordination contract
 
@@ -58,6 +59,13 @@ The semantic source of truth is #6. In summary, for prime `p`, positive `f`, `q 
 - equality of its carrier with the set of `x : Ω` satisfying `x^q = x`, equivalently the roots of `X^q - X`.
 
 Abstract uniqueness up to field isomorphism belongs to Theorem 1(iii), not this target.
+
+## Monitoring rules
+
+- If B/C interpret the target differently from #6, stop the affected work and route `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` to A.
+- If two lanes claim the same deliverable or shared hotspot, do not resolve it by concurrent edits; route the conflict through A.
+- D findings are advisory; B must still verify exact theorem assumptions and theorem strength before use.
+- Do not advance to Theorem 1(iii) merely because A is idle. The current target should reach a stable integrated state first unless the dependency graph is explicitly changed.
 
 ## Short resume prompt
 
