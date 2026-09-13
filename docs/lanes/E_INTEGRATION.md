@@ -47,10 +47,10 @@
 ## Current handoff
 
 - Focused Issue: #4 lane infrastructure verification
-- Branch / PR: none
-- Next: after #4 PR opens, inspect changed files, CI, coordination consistency, and README/AGENTS policy alignment
+- PR: #5
+- Next: inspect #5 changed files, CI, coordination consistency, and README/AGENTS policy alignment; route any issue to A, otherwise approve merge gate
 - Blockers: none
-- Cross-lane dependency: waits for A's infrastructure PR; afterward monitors B/C work
+- Cross-lane dependency: #5 is A-owned; E reviews integration only and does not take ownership of the changes
 
 ## Short resume prompt
 
