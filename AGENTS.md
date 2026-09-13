@@ -12,39 +12,42 @@
 
 「Leanが通ること」だけでなく、「セールで扱われている数学を忠実に形式化すること」を優先する。
 
-## 1. Source of truth とレーン起動
+## 1. Source of truth とworker起動
 
 作業開始時に必ず確認する。
 
 1. `AGENTS.md`
 2. `docs/AI_WORKFLOW.md`
-3. `docs/LANE_STATUS.md`
-4. 自分の `docs/lanes/*.md`
-5. `FORMALIZATION_PROGRESS.md`
-6. `docs/SOURCE_AND_COPYRIGHT_POLICY.md`
-7. 最新 `main`
-8. open Issue / PR / CI
-9. 対象節に対応する本リポジトリ内の既存Blueprint / formalization
+3. `docs/WORK_QUEUE.md`
+4. `docs/LANE_STATUS.md`
+5. 自分の `docs/lanes/*.md`
+6. `FORMALIZATION_PROGRESS.md`
+7. `docs/SOURCE_AND_COPYRIGHT_POLICY.md`
+8. 最新 `main`
+9. live branch / open Issue / PR / CI
+10. 対象節に対応する本リポジトリ内の既存Blueprint / formalization
 
-GitHub上のmain・Issue・PR・CI・lane handoffが共有状態であり、チャット履歴だけに存在する情報はsource of truthではない。
+GitHub上のmain・branch・Issue・PR・CIが共有状態であり、チャット履歴だけに存在する情報はsource of truthではない。静的handoffとlive GitHub stateが矛盾する場合はlive stateを優先し、後で文書を同期する。
 
-複数チャットの並列運用は `docs/AI_WORKFLOW.md` に従う。初期レーンは以下。
+複数chatの並列運用は `docs/AI_WORKFLOW.md` に従う。
 
-- A — Design / Coordination
-- B — Lean Formalization
-- C — Blueprint / Exposition
-- D — Mathlib Research
-- E — Integration / CI
+- A — Scheduler / Design / dependency coordination
+- B — End-to-end Formalizer
+- C — End-to-end Formalizer
+- D — End-to-end Formalizer
+- E — End-to-end Formalizer
 
-新しいチャットで「Bレーンとして作業を続けて」のように指示された場合、上記の読込順でGitHubから現在地を復元してから作業する。
+B/C/D/Eは同等workerであり、固定専門領域を持たない。
 
 ### 1.1 Ownership hard rule
 
-- 同じdeliverableを複数レーンが同時に所有してはならない。
-- 同じ数学的targetでも、Lean / Blueprint / research / integrationのように成果物が分離され、focused Issueとownerが明示されていれば並列作業してよい。
-- active PRと重複する作業を開始しない。
+- **1 work item = 1 active owner** を守る。
+- ownershipは `docs/WORK_QUEUE.md` のcanonical branchをGitHub上で作成することでclaimする。
+- canonical branch作成に失敗した場合、そのitemは別workerが所有している可能性があるため奪わない。
+- active PR / branchと重複するworkを開始しない。
 - shared hotspotを編集する前にopen PRを確認する。
-- 広いparent Issueしかない場合、Aレーンがfocused Issueへ分割するまで新規実装をclaimしない。
+- focused Issueがまだなくても、queueに安全なwork itemがありcanonical branch lockを取得できれば、worker自身がIssueを作成して進めてよい。Aの事前承認は不要。
+- 上流が未mergeの場合は `STACK-READY` 条件を満たさない限りdownstream proofを推測して実装しない。
 
 ## 2. 人間版リポジトリからの独立性 — hard rule
 
@@ -95,7 +98,7 @@ Lean toolchain、Verso、CI等の**一般的インフラ互換性**を合わせ�
 - 定義を都合よく変更する
 - 対象定理と異なる定理を同じ名前で登録する
 
-書籍の主張に複数の自然な形式化があり、一意に決められない場合は停止する。レーン間でstatement解釈が一致しない場合もAへrouteして停止する。
+書籍の主張に複数の自然な形式化があり、一意に決められない場合はそのwork itemを停止する。別workerが勝手に別解釈を採用して進めてはならない。Aへrouteする。
 
 ### 4.2 証明方針の優先順位
 
@@ -111,6 +114,14 @@ Lean toolchain、Verso、CI等の**一般的インフラ互換性**を合わせ�
 数学的アイデアを保つ限り、Leanに適した補助lemmaの追加・分割・再構成は推奨する。
 
 書籍では一行の議論でも、型合わせ・有限和・cast・subtype・equiv等の処理のために複数lemmaへ分解してよい。
+
+### 4.4 Dependency integrity
+
+- 並列化は章番号ではなく実際の数学的依存関係で決める。
+- downstreamがupstream theoremを使うなら、そのedgeをIssue / queueへ記録する。
+- dependencyが不明なら `PREFLIGHT` で確認する。
+- source順が後でも論理的独立と確認できれば並列化してよい。
+- upstream statementが不安定なままdownstream statement / proofを推測しない。
 
 ## 5. mathlib利用方針
 
@@ -130,7 +141,7 @@ Lean toolchain、Verso、CI等の**一般的インフラ互換性**を合わせ�
 
 PR本文には主要なmathlib依存と、意図的に使用しなかった「強すぎる」定理を記録する。
 
-Dレーンの調査結果は候補情報であり、Bレーンは実装時に型・仮定・定理の強さを再確認する。
+どのformalizerも、自分で候補定理の型・仮定・強さを確認する。過去のresearch handoffは参考情報であって検証の代替ではない。
 
 ## 6. 禁止された証明穴
 
@@ -158,43 +169,56 @@ formalization sourceでは以下を禁止する。
 
 Lean proofと自然言語proofの数学的戦略が大きく異なる場合、Blueprintに差異を明記する。
 
-CレーンがBレーンと並列に作業する場合、未確定のLean declaration名やstatementを独断で固定しない。依存をhandoffへ記録する。
+work item ownerは原則としてLeanとBlueprintを同じend-to-end slice内で同期する。宣言名が未確定なら、同じworker内でstatementとLean interfaceを安定させてから最終 `lean :=` linkageを入れる。
 
-## 8. 並列自律作業フロー
+## 8. Continuous autonomous workflow
 
-通常は人間への逐次確認なしに以下を進めてよい。
+B/C/D/Eは次のloopを、人間への逐次確認なしで実行してよい。
 
-1. 最新main / Issue / PR / CIを再確認
-2. `docs/LANE_STATUS.md` と自分のlane handoffからassigned focused Issueを確認
-3. ownership・dependency・shared hotspotを確認
-4. 自分のlane deliverableを実装または調査
-5. lane handoffを更新
-6. 必要な検証を実行
-7. branchへcommit / push
-8. PRを作成
-9. CI failureがあれば担当範囲内で修正、または適切なlaneへroute
-10. CIがgreenで、停止条件に該当せず、PRの内容がlane deliverableのDone条件を満たすことを再確認
-11. AI自身でPRをmerge
-12. 最新mainを再確認し、handoff / `docs/LANE_STATUS.md` / progressのdriftを修正
-13. 同じlaneに安全な次のassigned workがある場合のみ続行
+1. startup docsとlive GitHubを再確認する。
+2. 自分が既に所有するcanonical branch / PRがあれば復元する。
+3. 実行可能ならそのworkを進める。
+4. workがCI待ち、upstream待ち、またはitem固有blockerになったらqueueを再走査する。
+5. `READY` / eligible `STACKABLE` / `PREFLIGHT` の最高priority itemをcanonical branch lockでclaimする。
+6. source interpretation、dependency、mathlib APIを確認する。
+7. statementが一意ならLean + Blueprint + independent expositionをend-to-endで実装する。
+8. policy / `lake build` / `lake exe vbp build` を実行する。
+9. PRを作る。
+10. downstream stackingを安全に許せる場合だけIssue/PRへ `STACK-READY` と固定interface / head SHAを記録する。
+11. CI pendingなら停止せず、in-flight上限の範囲で別workをstealする。
+12. CI greenになったPRをdiff・statement integrity・dependencyまで自己レビューしてmergeする。
+13. latest mainを再確認し、progress / queue / handoff driftを同期する。
+14. 利用可能な実行時間が残る限りloopを続ける。
 
 AIは通常、人間レビューを待たずにPRをmergeしてよい。
-ただし、`BLOCKED:` 停止条件、著作権判断、statementの曖昧性、仮定変更、数学的整合性に疑義がある場合はmergeしてはならない。
-CI greenだけを理由に数学的レビューを省略せず、PR本文・diff・依存・statement integrityをAI自身で再監査してからmergeする。
 
-### 8.1 レーン別の境界
+### 8.1 Continuous-run hard rule
 
-- A: 設計・Issue分割・owner・dependency。B/C/D/Eの実装を奪わない。
-- B: Lean formalization。CのBlueprintを編集しない。
-- C: Blueprint / exposition。BのLean proofを編集しない。
-- D: mathlib research。完成proofを奪わない。
-- E: integration / CI。通常は新規数学proofを書かない。
+次は**chat停止条件ではない**。
 
-詳細は `docs/AI_WORKFLOW.md` と `docs/lanes/*.md` に従う。
+- commit完了
+- PR作成完了
+- CI pending
+- 1 work item完了
+- 1 work itemのupstream待ち
+- 1 work item固有の `BLOCKED:`
 
-## 9. 停止条件
+上記になったら別の安全なworkへ移る。
 
-以下では作業を勝手に解決せず、Issue/PRに根拠を残して停止する。
+1 workerの未merge実装PRは原則2本まで。2本ある場合は3本目を増やさず、CI確認・修正・PREFLIGHT・dependency整理・self-review・handoff同期を行う。
+
+### 8.2 Stacked branch
+
+stacked branchを許可するのは、upstream ownerがIssueまたはPRへ `STACK-READY` を記録し、数学的statement・assumptions・downstreamが使うLean interface・stack base head SHAを固定した場合だけである。
+
+- downstream canonical branchはその特定SHAから作る。
+- downstream PRはstack base PR / SHAを記録する。
+- upstream merge後は最新mainへrebase/更新し、PR baseをmainへ戻し、全checkを再実行する。
+- upstreamにbreaking changeが必要になったらstacked downstreamは再検証までmerge禁止。
+
+## 9. Blocker semantics と停止条件
+
+以下では、その**work item**を勝手に解決せず、Issue/PRに根拠を残して停止する。
 
 - `BLOCKED: STATEMENT-AMBIGUOUS` — 主張の形式化が複数あり選べない
 - `BLOCKED: ASSUMPTION-CHANGE` — 仮定の追加・削除・変更が必要
@@ -203,53 +227,63 @@ CI greenだけを理由に数学的レビューを省略せず、PR本文・diff
 - `BLOCKED: TARGET-THEOREM-ONLY` — 対象そのものの既存定理以外で進めない
 - `BLOCKED: MAJOR-PROOF-DEVIATION` — セールと大きく異なる強力な数学が必要
 - `BLOCKED: SOURCE-QUOTE-REVIEW` — 直接引用等の公開判断が必要
-- `BLOCKED: INFRASTRUCTURE` — CI / toolchain / dependency問題で数学作業を安全に進められない
-- `BLOCKED: OWNERSHIP-CONFLICT` — 同じdeliverableに別のactive owner / PRがある
-- `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` — LeanとBlueprint等でstatement解釈が一致しない
+- `BLOCKED: INFRASTRUCTURE` — CI / toolchain / dependency問題でそのworkを安全に進められない
+- `BLOCKED: OWNERSHIP-CONFLICT` — 同じwork item / shared hotspotに別のactive ownerがある
+- `BLOCKED: CROSS-LAYER-STATEMENT-DRIFT` — LeanとBlueprint等でstatement解釈が一致しない
 
-ownership conflictやshared hotspot競合を見つけた場合は仕事を奪わず、Aへrouteする。
+blockerを記録したworkerは、unsafeな実装を止めた上でqueueへ戻り、別の実行可能itemをclaimする。
+
+worker chat全体が停止するのは、次のいずれかの場合だけである。
+
+- repository全体に影響するhard failureで、安全な別workもない
+- queueに `READY` / eligible `STACKABLE` / `PREFLIGHT` がない
+- ownership/shared-hotspot conflictが広範囲で、安全な別fileのworkもない
+- 利用可能な実行時間の終了が近く、handoff同期が必要
 
 ## 10. Definition of Done
 
-### 10.1 Lane PR のDone
-
-レーン単位のPRは、担当deliverableだけを完成させてmergeしてよい。最低限:
-
-- focused Issueとlane ownerが明確
-- 担当成果物が自己完結している
-- statement integrityを壊していない
-- 他レーン所有ファイルを不必要に変更していない
-- 必要なbuild / policy checksが成功
-- handoffが更新されている
-- cross-lane dependencyがPR本文に明記されている
-
-### 10.2 数学的slice全体のDone
-
-1つの数学的sliceを `FORMALIZATION_PROGRESS.md` でcompleteにするには最低限次を満たす。
+1つのend-to-end formalization work itemをcompleteにするには最低限次を満たす。
 
 - statementの数学的意味が記録されている
-- Blueprint nodeがある
-- 独立した自然言語説明がある
+- dependencyが記録されている
+- independent natural-language explanationがある
+- Blueprint node / dependencyがある
 - Lean declarationが対応している
+- Lean↔Blueprint linkageがある
 - proofに `sorry` / `admit` / 新規穴埋めaxiomがない
+- `bash scripts/check_formalization_policy.sh` 成功
 - `lake build` 成功
 - `lake exe vbp build` 成功
-- policy check成功
-- 進捗ファイル更新
-- 必要なPR本文に数学的方針・mathlib依存・セールとの差異が記録されている
-- EまたはAがcross-layer整合を確認している
+- `FORMALIZATION_PROGRESS.md` の該当状態が同期されている
+- PR本文に数学的方針・mathlib依存・強すぎて避けた定理・セールとの差異・dependency/base modeが記録されている
+- stacked workならupstream merge後のmain再検証が成功している
 
-Bだけ、Cだけが先にmergeされても、その時点ではslice全体をcompleteにしない。
+旧方式のようにLeanだけ / Blueprintだけを通常の別lane PRとして完了扱いにはしない。大きすぎるtargetは、数学的dependencyが明確なend-to-end sub-sliceへ分割する。
 
 ## 11. PRの粒度
 
-原則として「1つの小節」「密接に依存する1つの定理群」または「その中の1つのlane deliverable」を1 PRとする。
+原則として「1つの小節」「密接に依存する1つの定理群」または「dependency-safeな1つのend-to-end sub-slice」を1 PRとする。
 
-巨大PRにしない。下流の定理に進む前に、上流の数学的statementが安定していることを確認する。
+巨大PRにしない。一方で、同じ小さなtargetのLean / Blueprint / research / integrationを職種別の4 PRへ機械的に分割しない。
 
-shared hotspotだけをまとめるinfra/integration PRは数学PRから分離する。
+shared hotspotだけをまとめるinfra/coordination PRは数学PRから分離してよい。
 
-## 12. 初期実験の範囲
+## 12. A scheduler の責務
+
+Aはapproval gateではない。
+
+Aが担当するのは:
+
+- `docs/WORK_QUEUE.md` のqueue health
+- dependency graph / work item境界
+- statement ambiguityの調整
+- ownership / shared-hotspot conflict
+- stale handoff / queue drift
+- 大きすぎるtargetの分割
+
+Aの事前Issue作成や承認がなくても、formalizerがqueue上の安全なitemをatomic claimできれば進めてよい。
+
+## 13. 初期実験の範囲
 
 最初は以下のみで自律運用を評価する。
 
@@ -258,4 +292,4 @@ shared hotspotだけをまとめるinfra/integration PRは数学PRから分離�
 3. 有限体上のべき乗和
 4. Chevalleyの定理周辺
 
-この範囲を終えるまでは、プロジェクト全体を一気に自動生成しない。問題を発見したら先に本規約・lane workflowを改善する。
+この範囲を終えるまでは、プロジェクト全体を一気に自動生成しない。問題を発見したら先に本規約・queue workflowを改善する。
