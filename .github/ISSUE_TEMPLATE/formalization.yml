@@ -1,0 +1,55 @@
+name: Formalization slice
+description: セール『数論講義』の1小節・定理群をBlueprint + Leanで独立に形式化する
+title: "Formalize: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        書籍本文・ページ画像はIssueへ転載せず、章・節・定理番号などの参照情報と数学的目標を記載してください。
+
+  - type: input
+    id: source
+    attributes:
+      label: Source location
+      description: 章・節・定理番号・ページなど。本文そのものは貼らない。
+      placeholder: "例: 第1章 §... / 命題 ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: target
+    attributes:
+      label: Mathematical target
+      description: 形式化したい数学的内容を独立した言葉で記載する。
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Expected dependencies
+      description: 既にmainにある定義・補題、一般的なmathlib APIなど。
+
+  - type: checkboxes
+    id: outputs
+    attributes:
+      label: Required outputs
+      options:
+        - label: Mathematical interpretation
+          required: true
+        - label: Independent natural-language explanation
+          required: true
+        - label: Blueprint nodes / dependencies
+          required: true
+        - label: Lean statement
+          required: true
+        - label: Lean proof without placeholders
+          required: true
+        - label: CI / policy checks
+          required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: Ambiguities / stop conditions
+      description: statementの解釈、強すぎるmathlib定理、出典上の懸念などが分かっていれば記載する。
