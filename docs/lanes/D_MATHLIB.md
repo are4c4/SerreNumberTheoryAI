@@ -42,16 +42,16 @@ Issueコメントまたはこのhandoffに次を残す。
 
 ## Current handoff
 
-- Focused Issue: #10 — mathlib research for `S1.1.Theorem1(ii)`
+- Focused Issue: none
 - Parent: #2 Phase 1 finite fields
+- Last completed target: #10 — mathlib research for `S1.1.Theorem1(ii)`
 - Semantic contract: #6
-- Branch: `research/s1-1-theorem1-ii-10`
-- PR: #24
-- Completed: pinned mathlib `v4.32.0` API survey; detailed findings posted to Issue #10
-- Next: self-review / CI / merge #24, then B #7 can consume the Issue #10 research; do not take ownership of B's proof
-- Blockers: none; no `TARGET-THEOREM-ONLY` blocker because a general-purpose elementary route exists
-- Cross-lane dependency: B #7 owns the Lean implementation; C #9 / PR #18 owns Blueprint/exposition; E integrates after B/C readiness
-- Shared hotspots: none; this work only updates the D-owned handoff
+- Completed PR: #24 (merged)
+- Completed: pinned mathlib `v4.32.0` API survey; detailed findings are in Issue #10 and the research summary below; B #7 was explicitly notified
+- Next: remain ready for the next focused D-lane research request; do not claim B/E work while waiting
+- Blockers: none
+- Cross-lane state: B #7 / PR #25 owns the active Lean implementation; C #9 / PR #18 is merged; E owns downstream cross-layer integration once B is ready
+- Shared hotspots: none
 - Independence: human `are4c4/SerreNumberTheoryBlueprint` mathematical content was not inspected or used
 
 ## S1.1 Theorem 1(ii) — research summary
