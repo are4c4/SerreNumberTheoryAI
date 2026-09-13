@@ -31,6 +31,35 @@ theorem padicReduction_surjective (p n : ℕ) : Function.Surjective (padicReduct
       apply pow_dvd_pow p
       omega : p ^ (n + 1) ∣ p ^ ((n + 1) + 1))
 
+/--
+The kernel of the adjacent reduction consists exactly of the multiples of `p^(n+1)`
+in the source residue ring. This is the reindexed form of the source identity
+`ker(φ_m) = p^(m-1) A_m`.
+-/
+theorem mem_ker_padicReduction_iff (p n : ℕ) (x : padicResidueRing p (n + 1)) :
+    x ∈ RingHom.ker (padicReduction p n) ↔
+      ∃ y : padicResidueRing p (n + 1),
+        x = (p ^ (n + 1) : padicResidueRing p (n + 1)) * y := by
+  constructor
+  · intro hx
+    change padicReduction p n x = 0 at hx
+    obtain ⟨z, rfl⟩ := ZMod.intCast_surjective x
+    have hz : ((z : ℤ) : padicResidueRing p n) = 0 := by
+      simpa [padicReduction] using hx
+    have hdvd : ((p ^ (n + 1) : ℕ) : ℤ) ∣ z :=
+      (ZMod.intCast_zmod_eq_zero_iff_dvd z (p ^ (n + 1))).1 hz
+    obtain ⟨k, rfl⟩ := hdvd
+    refine ⟨(k : padicResidueRing p (n + 1)), ?_⟩
+    simp
+  · rintro ⟨y, rfl⟩
+    change padicReduction p n
+      ((p ^ (n + 1) : padicResidueRing p (n + 1)) * y) = 0
+    rw [map_mul]
+    have hpzero :
+        padicReduction p n (p ^ (n + 1) : padicResidueRing p (n + 1)) = 0 := by
+      simp [padicReduction]
+    rw [hpzero, zero_mul]
+
 /-- Compatibility condition defining the projective limit. -/
 def padicCompatible (p : ℕ) (x : ∀ n : ℕ, padicResidueRing p n) : Prop :=
   ∀ n, padicReduction p n (x (n + 1)) = x n
@@ -68,6 +97,14 @@ def serrePadicIntProj (p n : ℕ) : SerrePadicInt p →+* padicResidueRing p n :
 theorem serrePadicIntProj_apply (p n : ℕ) (x : SerrePadicInt p) :
     serrePadicIntProj p n x = x.1 n := rfl
 
+/-- Two compatible sequences are equal when all their residue projections agree. -/
+@[ext]
+theorem serrePadicInt_ext (p : ℕ) {x y : SerrePadicInt p}
+    (h : ∀ n, serrePadicIntProj p n x = serrePadicIntProj p n y) : x = y := by
+  apply Subtype.ext
+  funext n
+  exact h n
+
 /-- The projections satisfy the defining transition compatibility. -/
 theorem serrePadicIntProj_compat (p n : ℕ) (x : SerrePadicInt p) :
     padicReduction p n (serrePadicIntProj p (n + 1) x) = serrePadicIntProj p n x :=
@@ -94,6 +131,12 @@ def serrePadicIntIntCast (p : ℕ) : ℤ →+* SerrePadicInt p :=
 theorem serrePadicIntIntCast_proj (p n : ℕ) (z : ℤ) :
     serrePadicIntProj p n (serrePadicIntIntCast p z) = (z : padicResidueRing p n) := rfl
 
+/-- Every residue class occurs as a projection of a compatible p-adic sequence. -/
+theorem serrePadicIntProj_surjective (p n : ℕ) : Function.Surjective (serrePadicIntProj p n) := by
+  intro a
+  obtain ⟨z, rfl⟩ := ZMod.intCast_surjective a
+  exact ⟨serrePadicIntIntCast p z, serrePadicIntIntCast_proj p n z⟩
+
 /-- A prime modulus is nonzero at every positive residue level. -/
 instance padicResidueRing_neZero (p n : ℕ) [Fact p.Prime] : NeZero (p ^ (n + 1)) :=
   ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
@@ -119,6 +162,10 @@ theorem serrePadicInt_isCompact (p : ℕ) [Fact p.Prime] :
 
 instance serrePadicInt_compactSpace (p : ℕ) [Fact p.Prime] : CompactSpace (SerrePadicInt p) :=
   isCompact_iff_compactSpace.mp (serrePadicInt_isCompact p)
+
+/-- Each residue projection is continuous for the induced product topology. -/
+theorem serrePadicIntProj_continuous (p n : ℕ) : Continuous (serrePadicIntProj p n) := by
+  exact (continuous_apply n).comp continuous_subtype_val
 
 /-- The canonical map `ℤ → ℤ_p` is injective for prime `p`. -/
 theorem serrePadicIntIntCast_injective (p : ℕ) [Fact p.Prime] :
