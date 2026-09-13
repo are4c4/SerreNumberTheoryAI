@@ -21,7 +21,7 @@ def finiteFieldNonzeroSquares : Subgroup Kˣ :=
   (powMonoidHom (α := Kˣ) 2).range
 
 /-- The half-power map on the multiplicative group. -/
-def finiteFieldHalfPowerCharacter : Kˣ →* Kˣ :=
+noncomputable def finiteFieldHalfPowerCharacter : Kˣ →* Kˣ :=
   powMonoidHom (Nat.card Kˣ / 2)
 
 @[simp]
@@ -32,8 +32,9 @@ theorem finiteFieldHalfPowerCharacter_apply (x : Kˣ) :
 /-- In characteristic two, every finite-field element is a square. -/
 theorem finiteField_isSquare_of_char_two [CharP K 2] (x : K) : IsSquare x := by
   letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  have hsurj : Function.Surjective (frobeniusPowerMap K 2) :=
-    (RingHom.injective (frobeniusPowerMap K 2)).surjective_of_finite
+  have hsurj : Function.Surjective (frobeniusPowerMap K 2) := by
+    rw [← Finite.injective_iff_surjective]
+    exact RingHom.injective (frobeniusPowerMap K 2)
   obtain ⟨y, hy⟩ := hsurj x
   refine ⟨y, ?_⟩
   simpa [frobeniusPowerMap_apply, pow_two] using hy.symm
