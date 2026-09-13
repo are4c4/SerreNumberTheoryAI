@@ -29,7 +29,7 @@ PR作成、CI pending、1 item merge、item固有blocker、upstream待ちはchat
 
 ## 4. Stacked branch gate
 
-未merge upstreamへstackしてよいのは、upstream ownerが数学的statement/assumptions、downstream interface、exact head SHA、interface変更時の通知先を固定した場合だけです。upstream merge後はstack-only状態を解除し、downstream branchを最新mainへresyncしてから統合します。
+未merge upstreamへstackしてよいのは、upstream ownerが数学的statement/assumptions、downstream interface、exact head SHA、interface変更時の通知先を固定した場合だけです。upstream ownerがその承認を撤回した場合、既存downstream workは保存してよいですが、新しい依存proofを積み増さず、replacement `STACK-READY` またはupstream mergeを待ちます。upstream merge後はstack-only状態を解除し、downstream branchを最新mainへresyncしてから統合します。
 
 ## 5. Dependency rule
 
@@ -53,8 +53,8 @@ Live dependency graph:
 - `S3.2-LegendreSymbol` #56 はC-owned、draft PR **#93** で実装中。#55はDONEなのでstack-only gateは解除済み。current head `83d03bc…` のCIはstatement/dependencyではなく`LegendreSymbol.lean`のsign/cast proof 1箇所で失敗しており、Cへrepairをroute済み。
 - `S3.3-QuadraticReciprocity` #64 はC-owned PREFLIGHT。proofは #56 が characteristic-independent Legendre sign/value、field-core compatibility、multiplicativity、Theorem 5(ii) at `-1` をDONEまたはSTACK-READYにするまで待つ。Theorem 5(iii) at `2` はhard dependencyではない。
 - `C1-Supp-GaussLemma` #78 は **B-owned**。canonical branch `work/c1-supp-gauss-lemma` が存在し、source/package/API preflightはcomplete。proofはminimal #56 sign/half-power interfaceがDONE/STACK-READYになるまでWAITING。#64には依存しない。
-- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR **#86**。Bはexact green head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` を #72 向け `STACK-READY` としてfreeze済み。current PR headはpolicy / `lake build` を通過し、`vbp build`のduplicate Blueprint tagだけがfailure; Bへrepairをroute済み。後発 #79 はduplicateとしてclosed。
-- `C2S1.2-ZpProperties` #72 はD-owned、draft stacked PR **#92**。#71のfrozen project-local `SerrePadicInt` / projection / integer-map interfaceをexact anchor `27a41437…` からconsumeし、current head `a6ffdf7a…` はCI green。algebraic Proposition 1–2 + valuation sliceを継続する。
+- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR **#86**。以前の exact `STACK-READY` SHA `27a414…` は、root aggregator未接続のため新moduleが実際にはcompileされていなかったことが判明し、B自身が明示的に撤回した。public declaration names/statementsは変更なしと報告されている。current head `6a39d1fd…` のCI #190はpolicy通過後、Chapter-2 Blueprintのheader nesting (`##` where `#` expected) で`lake build` failure。Bへrepairをroute済みで、replacement exact `STACK-READY` はroot-integrated policy/build/vbp green後に再公開される。
+- `C2S1.2-ZpProperties` #72 はD-owned、draft PR **#92**。旧承認が有効だった時点でexact `27a414…` anchorから開始し、existing head `a6ffdf7a…` 自体はCI green。ただし#71が旧承認を撤回したため、現在は**WAITING**に戻す。既存workは保持してよいが、replacement `STACK-READY` または#71 mergeまで新たなupstream依存proofを積み増さない。AからDへこのgate correctionをroute済み。
 - `C2S1.2-ZpMetric` #89 はunclaimed PREFLIGHT。#72 preflightで切り出されたProposition 3（metric / topology compatibility / completeness / density）。proofは#72 valuation/topology-relevant interface待ち。
 - `C2S1.3-QpField` #96 はunclaimed PREFLIGHT。Definition 2のproject `Z_p` のfraction fieldとしての `Q_p`、valuation extension、Proposition 4のlocal compactness / `Z_p` open compact / `Q` densityをsource boundaryとする。algebraic proofは#72待ちで、metric側が#89のどの最小interfaceを必要とするかはpreflightで確定する。
 
@@ -70,8 +70,8 @@ Live dependency graph:
 | P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | PR #93; repair implementation-local Lean goal, continue isolated module | `work/s3-2-legendre-symbol` | #56 / C |
 | P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `PREFLIGHT` | wait for minimal #56 subset DONE/STACK-READY | `work/s3-3-quadratic-reciprocity` | #64 / C |
 | P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `WAITING` | B preflight complete; proof waits minimal #56 interface | `work/c1-supp-gauss-lemma` | #78 / B |
-| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86; repair duplicate vbp tag; #72 interface stays frozen at `27a41437…` | `work/c2-s1-1-zp-construction` | #71 / B |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `STACKABLE` | PR #92 green on exact #71 anchor; continue algebraic slice | `work/c2-s1-2-zp-properties` | #72 / D |
+| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86; fix Blueprint header nesting; publish replacement root-integrated STACK-READY only after full green | `work/c2-s1-1-zp-construction` | #71 / B |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `WAITING` | preserve green PR #92 work; wait replacement #71 STACK-READY or #71 merge before new dependent proof | `work/c2-s1-2-zp-properties` | #72 / D |
 | P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `PREFLIGHT` | preflight safe; proof waits #72 | `work/c2-s1-2-zp-metric` | #89 / unclaimed |
 | P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `PREFLIGHT` | preflight safe; algebraic proof waits #72, metric edge to #89 to be minimized | `work/c2-s1-3-qp-field` | #96 / unclaimed |
 
@@ -82,14 +82,14 @@ Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work。旧
 Current worker PRs overlap root imports:
 
 1. **#94 / C** is already end-to-end green and gets the next root `Formalization.lean` / `Blueprint.lean` integration slot after resync to latest main.
-2. **#86 / B** also touches both root imports. Repair its local Blueprint tag first, then rebase after #94 lands before final integrated CI.
+2. **#86 / B** also touches both root imports. Repair its local Chapter-2 Blueprint hierarchy first, then rebase after #94 lands before final integrated CI.
 3. **#93 / C** currently touches root `Formalization.lean` but remains an in-progress §3.2 slice. Keep proof work isolated; rebase/add final root integration only after #94 rather than racing the shared hotspot.
 
 A does not modify these worker mathematical branches.
 
 ## 8. Queue health
 
-Unclaimed safe capacity is currently #89 and #96 (`PREFLIGHT`). Owned executable/stackable work includes #74, #56, #71, and #72; #64 and #78 retain owned dependency-safe preflight/waiting state. Thus no worker should be globally blocked by one dependency chain.
+Unclaimed safe capacity is currently #89 and #96 (`PREFLIGHT`). Owned executable work includes #74, #56, and #71; #64/#78 have safe preflight/waiting work, while #72 is temporarily WAITING only because its former stack approval was withdrawn. Thus the pool still has safe work without violating the stack gate.
 
 A should refill only when these candidates are claimed/thin, and should prefer source/dependency boundaries already exposed by current work rather than inventing unrelated tasks.
 
