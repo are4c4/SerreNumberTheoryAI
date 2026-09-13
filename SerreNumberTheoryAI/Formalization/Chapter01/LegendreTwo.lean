@@ -187,7 +187,7 @@ theorem legendreValue_two_eq_one_of_mod_eight
   have hK : (2 : AlgebraicClosure (ZMod p)) ^ ((p - 1) / 2) = 1 := by
     rw [← hy2, ← pow_mul, hhalf, hyexp]
   apply (algebraMap (ZMod p) (AlgebraicClosure (ZMod p))).injective
-  simpa [legendreValue] using hK
+  simpa only [legendreValue, map_pow, map_ofNat, map_one, Nat.cast_ofNat] using hK
 
 /-- For `p ≡ 3,5 (mod 8)`, the source half-power Legendre value of `2` is `-1`. -/
 theorem legendreValue_two_eq_neg_one_of_mod_eight
@@ -220,7 +220,7 @@ theorem legendreValue_two_eq_neg_one_of_mod_eight
   have hK : (2 : AlgebraicClosure (ZMod p)) ^ ((p - 1) / 2) = -1 := by
     rw [← hy2, ← pow_mul, hhalf, hyexp]
   apply (algebraMap (ZMod p) (AlgebraicClosure (ZMod p))).injective
-  simpa [legendreValue] using hK
+  simpa only [legendreValue, map_pow, map_ofNat, map_neg, map_one, Nat.cast_ofNat] using hK
 
 end LegendreTwo
 
