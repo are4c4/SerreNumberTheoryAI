@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🟡 ready | none | none | maintain dependency graph / queue health; resolve ambiguity or conflicts without becoming a per-item approval gate |
-| B | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
-| C | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
-| D | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
-| E | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
+| A | Scheduler / Design | 🚧 active | #54 dependency graph / queue refill | `design/refine-worker-queue-54` / PR pending | finish scheduler-doc synchronization, CI/self-review/merge; continue monitoring claims and `STACK-READY` transitions |
+| B | End-to-end Formalizer | 🚧 active | #50 `S1.2-MultGroup` | `work/s1-2-mult-group` / PR pending | continue end-to-end implementation; preflight confirmed T1(iii) is not a dependency |
+| C | End-to-end Formalizer | 🚧 active | #49 `S1.1-T1iii` | `work/s1-1-t1iii` / PR pending | formalize abstract uniqueness up to isomorphism end-to-end under the stabilized source contract |
+| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums` preflight | `work/s2-1-power-sums` / PR pending | keep proof gated on #50 `DONE` or explicit `STACK-READY`; continue source/dependency/mathlib preflight meanwhile |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim the highest-priority still-unclaimed executable item (#52/#55/#56 according to live state) rather than waiting for a specialist handoff |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -30,13 +30,20 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 `S1.1.Theorem1(ii)` まではInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIがmain上でcompleteです。
 
-Active seed queue:
+Live worker claims at the latest A check:
 
-- #49 `S1.1-T1iii` — `READY`
-- #50 `S1.2-MultGroup` — `PREFLIGHT`
-- #51 `S2.1-PowerSums` — `PREFLIGHT`。本実装前に必要なS1.2 resultを明示する
-- #52 `S2.2-Chevalley` — `PREFLIGHT`。本実装前に必要なS2.1 resultを明示する
+- C: #49 `S1.1-T1iii`
+- B: #50 `S1.2-MultGroup`
+- D: #51 `S2.1-PowerSums` preflight
+- E: unclaimed
 
-Issueが存在するだけではownershipではありません。canonical branch lockを最初に取得したworkerがownerです。
+A #54 refined the source-level dependency graph:
 
-後続targetの細かいdependencyは推測せずpreflightで確定します。actual dependencyがある場合は上流 `DONE` または `STACK-READY` まで本proofを待ちますが、worker自身は別workへ移って稼働を続けます。
+- #49 `S1.1-T1iii` — abstract uniqueness up to isomorphism; source contract stabilized on the Issue.
+- #50 `S1.2-MultGroup` — implementation-ready from current main; source proof does **not** depend on T1(iii).
+- #51 `S2.1-PowerSums` — preflight is productive now, but full proof depends on #50 cyclicity `DONE` or `STACK-READY`.
+- #52 `S2.2-Chevalley` — preflight is productive now, but full proof depends on #51 power-sum interface `DONE` or `STACK-READY`.
+- #55 `S3.1-QuadraticElements` — new `PREFLIGHT`; §3.1 branches from the multiplicative-group/finite-field path rather than requiring the §2 power-sum/Chevalley chain.
+- #56 `S3.2-LegendreSymbol` — new `PREFLIGHT`; implementation depends on the required §3.1 interface.
+
+Issueが存在するだけではownershipではありません。canonical branch lockを最初に取得したworkerがownerです。Aは未claim itemを各workerへ手動配布せず、queueとdependencyの整合だけを維持します。
