@@ -57,8 +57,7 @@ theorem mem_ker_padicReduction_iff (p n : ℕ) (x : padicResidueRing p (n + 1)) 
     rw [map_mul]
     have hpzero :
         padicReduction p n (p ^ (n + 1) : padicResidueRing p (n + 1)) = 0 := by
-      rw [map_natCast]
-      exact ZMod.natCast_self (p ^ (n + 1))
+      rw [map_pow, map_natCast, ← Nat.cast_pow, ZMod.natCast_self]
     rw [hpzero, zero_mul]
 
 /-- Compatibility condition defining the projective limit. -/
