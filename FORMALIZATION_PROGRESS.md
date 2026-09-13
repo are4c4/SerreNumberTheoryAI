@@ -50,8 +50,6 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 
 定理1(iii)は #49 / PR #58 でend-to-endに完成し、位数 `p^f` の任意の有限体をTheorem 1(ii)のcanonical `p^f`-element subfieldへ同型で移す構成をLean/Blueprintで同期した。PR #58は近すぎる有限体分類定理を完成証明に使わず、policy・Lean build・Verso Blueprint buildがgreenの状態でmainへmerge済みである。
 
-**開始条件:** Phase 0の数学作業に必要な基盤がmainへmergeされていること。達成済み。
-
 **注意:** 人間版 `are4c4/SerreNumberTheoryBlueprint` の形式化・Blueprintは数学的解答源として参照しない。
 
 ## Phase 2 — 有限体の乗法群
@@ -60,9 +58,7 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | 有限体の乗法群に関する対象節 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-#50 / PR #59 では、§1.2（印刷頁5–6 / uploaded PDF pages 15–16）をsource boundaryとして、Euler関数の約数和、有限群のpower-root boundからの巡回性、有限体単元群での多項式根数評価、`Kˣ` の巡回性と `Nat.card Kˣ = Nat.card K - 1` をend-to-endで形式化した。Lean/Blueprint declaration linkageを含む実装headでrepository policy・`lake build`・`lake exe vbp build`がgreenとなり、Theorem 1(iii)を前提としないsource-derived dependencyも確認済みである。
-
-開始条件: A #54 のsource/dependency auditにより、定理1(iii)はこのsource proofの前提ではないと確認した。定理1(ii)までのstable mainから本実装可能であり、live ownerは `docs/LANE_STATUS.md` / canonical branchを参照する。
+#50 / PR #59 では、§1.2（印刷頁5–6 / uploaded PDF pages 15–16）をsource boundaryとして、Euler関数の約数和、有限群のpower-root boundからの巡回性、有限体単元群での多項式根数評価、`Kˣ` の巡回性と `Nat.card Kˣ = Nat.card K - 1` をend-to-endで形式化した。Lean/Blueprint declaration linkageを含む実装headでrepository policy・`lake build`・`lake exe vbp build`がgreenとなった。
 
 ## Phase 3 — 有限体上のべき乗和
 
@@ -70,34 +66,48 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | べき乗和の定義と基本補題 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-#51 / PR #62 では、§2.1（印刷頁6 / uploaded PDF p.16）の有限体上のべき乗和をend-to-endで完成した。`S1.2-MultGroup` のproject cyclicity interfaceから指数のdivisibility判定を導き、`u = 0`、`q - 1 ∣ u`、非divisibleの三場合をsource-faithfulに形式化し、#52が必要とする低指数消滅corollaryまでLean/Blueprintで同期した。近すぎるmathlibのfinite-field power-sum完成定理は使わず、policy・`lake build`・`lake exe vbp build`がgreenの状態でmainへmerge済みである。
-
-開始条件: Phase 2の乗法群巡回性が `DONE` またはstacking可能なstable interfaceになっていること。A #54 のsource auditで、§2.1 proofがこの巡回性を明示的に使うdependency edgeを確認済み。
+#51 / PR #62 では、§2.1（印刷頁6 / uploaded PDF p.16）の有限体上のべき乗和をend-to-endで完成した。`S1.2-MultGroup` のproject cyclicity interfaceから指数のdivisibility判定を導き、`u = 0`、`q - 1 ∣ u`、非divisibleの三場合をsource-faithfulに形式化し、#52が必要とする低指数消滅corollaryまでLean/Blueprintで同期した。
 
 ## Phase 4 — Chevalley の定理周辺
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| 補助多項式・必要な中間結果 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| Chevalleyの対象定理 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 補助多項式・必要な中間結果 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Chevalleyの対象定理 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-開始条件: Phase 3のpower-sum interfaceが `DONE` またはstacking可能なstable interfaceになっていること。A #54 のsource auditで、§2.2 proofが単項式和の消滅に§2.1を明示的に使うdependency edgeを確認済み。
+#52 / PR #68 で、§2.2（印刷頁7 / uploaded PDF p.17）の**core Chevalley–Warning theorem**をend-to-endで完成した。project-local full-grid sum vanishing、indicator polynomial `∏ᵢ (1 - fᵢ^(q-1))`、degree bound、common-zero cardinalityの標数による可除性までを、#51 の低指数power-sum interfaceからsource-shapedに証明した。mathlibのnear-target Chevalley–Warning / `MvPolynomial.sum_eval_eq_zero` / finite-field power-sum完成定理はcompletion argumentとして使っていない。PR #68はpolicy・Lean build・Verso Blueprint buildがgreenでmainへmerge済みである。
+
+このsliceはcore theoremまで。本文直後の2つの系は別のdownstream targetとして残る。
 
 ## Phase 5 — 平方剰余の相互法則への有限体準備
 
-Source continuation: 第1章・§3。queueではまず3.1と3.2をdependency-awareなpreflight targetとしてseedする。
+Source continuation: 第1章・§3 と補遺。
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| 3.1 `F_q` の平方数 / 定理4 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 3.2 Legendre記号 / 定理5 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 3.3 平方剰余の相互法則 / 定理6 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3.1 `F_q` の平方数 / 定理4 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3.2 Legendre記号 / 定理5 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3.3 平方剰余の相互法則 / 定理6 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 補遺 (i) Gaussの補題 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件:
+Current source/dependency state:
 
-- 3.1: odd-characteristic側は有限体乗法群の巡回性を使うため、`S1.2-MultGroup` の必要interfaceが `DONE` または `STACK-READY` であること。§2.1/§2.2の完了は論理的前提として仮定しない。
-- 3.2: §3.1の平方部分群・quadratic character記述の必要interfaceが安定していること。
-- 3.3: §3.2のLegendre記号interfaceが安定してからqueueへ本格seedする。現時点ではprogress上の将来targetとしてのみ記録する。
+- 3.1 / #55: D preflightはsource statementとchar-2 / odd-characteristic splitを固定済み。§1.2 cyclicityはDONEなのでfull implementation gateはopen。
+- 3.2 / #56: C preflightはsource boundary・mathlib boundaryを固定済み。proofは#55のhalf-power `{±1}` / square-kernel interface `DONE`/`STACK-READY`待ち。
+- 3.3 / #64: C preflightはGauss-sum proofのsource boundaryを固定し、必要な#56 interfaceをLegendre sign layer・multiplicativity・Theorem 5(ii) at `-1`・cross-characteristic sign compatibilityまで狭めた。Theorem 5(iii) at `2` はsource dependencyではない。
+- 補遺 (i) / #78: fresh PREFLIGHT candidate。#64の完了は不要で、minimal #56 Legendre/half-power interfaceのみがproof dependency。
+
+## Phase 6 — 第2章 p進体
+
+Source start: 第2章「p進体」、§1「環 `Z_p` と体 `Q_p`」。
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| §1.1 `Z_p` の射影極限定義 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+#79 は printed pp.15–16 / uploaded PDF pp.25–26 の1.1「定義」をPREFLIGHT targetとしてseedした。`A_n = Z/p^n Z` の射影系、compatible sequenceとしてのinverse limit、componentwise ring operations、product/subspace topology・compactness、`Z → Z_p` のcanonical embeddingまでをsource boundaryとし、§1.2 命題1は含めない。
+
+これはChapter 1のquadratic-residue chainから数学的に独立しており、representation/API preflight後はmainからend-to-end実装可能。mathlibのready-made `PadicInt` をsource inverse-limit constructionの代用としてcompletionに使わない。
 
 ## Continuous parallelization rules
 
