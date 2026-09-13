@@ -47,14 +47,16 @@
 ## Current handoff
 
 - Focused Issue: none
-- Last completed integration work: #8 / PR #13, post-merge lane-state synchronization after #5
-- Branch / PR: none
-- Next: monitor B #7 and C #9; take a new focused E integration Issue only when their artifacts are ready for cross-layer verification
+- Last completed integration work: #36 / PR #45 — `S1.1.Theorem1(ii)` Lean↔Blueprint cross-layer integration
+- Branch / PR: none after PR #45 merges
+- Completed upstream artifacts: canonical contract #6; C #9 / PR #18 Blueprint + independent explanation; D #10 / PR #24 research; B #7 / PR #25 Lean statement + proof
+- Statement-integrity audit: `SerreNumberTheoryAI.serre_theorem1_ii` matches #6 — prime `p`, positive `f`, fixed algebraically closed ambient field `Ω` of characteristic `p`, unique `p^f`-element subfield inside `Ω`, with carrier both `{x | x^(p^f)=x}` and the root set of `X^(p^f)-X`; Theorem 1(iii) remains separate
+- Linkage completed: the merged C nodes are linked to stable B declarations `primePowerFixedSubfield`, `mem_primePowerFixedSubfield`, `primePowerFixedSubfield_natCard`, and `serre_theorem1_ii` without rewriting C's exposition
+- Integration gate: repository policy, `lake build`, and `lake exe vbp build` passed on the integrated PR head; PR #45 is merged only after the final documentation head passes the same CI gate
+- Progress synchronization: Theorem 1(ii) is complete across Interpretation / Explanation / Blueprint / Lean statement / Lean proof / CI in `FORMALIZATION_PROGRESS.md`
+- Next: remain ready/idle. Do not start Theorem 1(iii) as E; A should first establish the next focused semantic contract and ownership, then E returns only for downstream integration or a concrete CI/linkage problem
 - Blockers: none
-- Verified: the post-merge `main` CI for PR #5 merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691` completed successfully
-- Progress synchronization: A #11 / PR #12 resolved the stale Phase 0 coordination row and marked Theorem 1(ii) Interpretation complete; E no longer owns or edits that shared hotspot
-- Cross-lane dependency: #6 is the completed canonical contract for `S1.1.Theorem1(ii)`; B #7 owns Lean, C #9 owns Blueprint / exposition, and D #10 owns API research. E does not take those mathematical deliverables and will run the integration gate after B/C artifacts are ready
 
 ## Short resume prompt
 
-`Eレーンとして作業を続けて。最新main、open Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認し、統合・CI・policy・Lean/Blueprint対応・handoff driftを監査して。B/Cの数学実装は奪わないで。`
+`Eレーンとして作業を続けて。最新main、open Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認し、統合・CI・policy・Lean/Blueprint対応・handoff driftを監査して。数学的statement/proofは他laneから奪わないで。`

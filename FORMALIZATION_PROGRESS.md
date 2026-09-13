@@ -42,8 +42,10 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1.1 導入・Frobenius 補題・定理1(i) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 定理1(ii): `F_q` の存在・一意性と `X^q-X` | ✅ | ✅ | 🚧 | ⬜ | ⬜ | ⬜ |
+| 定理1(ii): `F_q` の存在・一意性と `X^q-X` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 定理1(iii): 位数 `q` の有限体の一意性 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+定理1(ii)は、#6 のcanonical statement contract、C #9 / PR #18 の独立説明・Blueprint、B #7 / PR #25 のLean statement/proofをE #36 / PR #45で最終統合した。stable Lean declarationsへの`lean :=`対応を追加したintegrated headでrepository policy・`lake build`・`lake exe vbp build`がすべてgreenとなり、cross-layer statement driftも確認されなかったため、全列をcompleteとする。
 
 **開始条件:** Phase 0の数学作業に必要な基盤がmainへmergeされていること。達成済み。
 
