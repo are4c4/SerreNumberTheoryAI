@@ -50,11 +50,34 @@ theorem padicPolynomialReduction_eval
   simpa [padicPolynomialReduction, Function.comp_def] using
     (MvPolynomial.map_eval (serrePadicIntProj p n) x f)
 
+/-- Reducing polynomial coefficients through two consecutive residue levels is compatible. -/
+theorem padicPolynomialReduction_compat
+    (p n : ℕ) (f : MvPolynomial σ (SerrePadicInt p)) :
+    MvPolynomial.map (padicReduction p n)
+        (padicPolynomialReduction p (n + 1) f) =
+      padicPolynomialReduction p n f := by
+  rw [padicPolynomialReduction, padicPolynomialReduction, MvPolynomial.map_map]
+  congr 1
+  ext x
+  exact serrePadicIntProj_compat p n x
+
 /-- Common zeros of a polynomial family after reduction to one residue level. -/
 def padicReducedCommonZeroSet
     (p n : ℕ) (f : ι → MvPolynomial σ (SerrePadicInt p)) :
     Set (σ → padicResidueRing p n) :=
   {x | ∀ i, MvPolynomial.eval x (padicPolynomialReduction p n (f i)) = 0}
+
+/-- Reducing a finite-level common zero by one step preserves the common-zero equations. -/
+theorem padicReducedCommonZeroSet_mapsTo_reduction
+    (p : ℕ) (f : ι → MvPolynomial σ (SerrePadicInt p)) (n : ℕ) :
+    Set.MapsTo
+      (fun x s => padicReduction p n (x s))
+      (padicReducedCommonZeroSet p (n + 1) f)
+      (padicReducedCommonZeroSet p n f) := by
+  intro x hx i
+  rw [← padicPolynomialReduction_compat p n (f i)]
+  rw [← MvPolynomial.map_eval]
+  rw [hx i, map_zero]
 
 /--
 P-adic tuples whose values on every polynomial vanish after projection to level `n`.
