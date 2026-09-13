@@ -46,9 +46,9 @@ Issueコメントまたはこのhandoffに次を残す。
 - Parent: #2 Phase 1 finite fields
 - Semantic contract: #6
 - Branch: `research/s1-1-theorem1-ii-10`
-- PR: pending
+- PR: #24
 - Completed: pinned mathlib `v4.32.0` API survey; detailed findings posted to Issue #10
-- Next: merge this D-handoff update, then B #7 can consume the Issue #10 research; do not take ownership of B's proof
+- Next: self-review / CI / merge #24, then B #7 can consume the Issue #10 research; do not take ownership of B's proof
 - Blockers: none; no `TARGET-THEOREM-ONLY` blocker because a general-purpose elementary route exists
 - Cross-lane dependency: B #7 owns the Lean implementation; C #9 / PR #18 owns Blueprint/exposition; E integrates after B/C readiness
 - Shared hotspots: none; this work only updates the D-owned handoff
