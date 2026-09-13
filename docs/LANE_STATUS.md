@@ -6,11 +6,11 @@
 
 | Lane | State | Focus | Issue | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A Design | 🚧 active | parallel-lane infrastructure | #4 | `infra/parallel-lane-coordination-4` | merge coordination docs, then split next mathematical work into focused Issues |
+| A Design | 🚧 active | parallel-lane infrastructure | #4 | `infra/parallel-lane-coordination-4` / #5 | self-review and merge #5, then split next mathematical work into focused Issues |
 | B Formalization | 🟡 ready | Phase 1 finite fields follow-up | parent #2 | none | wait for focused Lean Issue for Theorem 1(ii) |
 | C Blueprint | 🟡 ready | Phase 1 finite fields follow-up | parent #2 | none | wait for focused Blueprint/exposition Issue |
 | D Mathlib | 🟡 ready | support Phase 1 finite fields | parent #2 | none | research only after a focused request or blocker |
-| E Integration | 🟡 ready | repository-wide verification | #4 / parent #2 | none | verify lane infrastructure PR, then monitor B/C integration |
+| E Integration | 🚧 active | verify lane infrastructure | #4 | review #5 | inspect changed files and CI; after merge monitor B/C integration |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
