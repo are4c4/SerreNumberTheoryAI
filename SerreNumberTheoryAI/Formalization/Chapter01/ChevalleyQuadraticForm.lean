@@ -15,8 +15,7 @@ open MvPolynomial
 
 section ChevalleyQuadraticForm
 
-variable {K σ : Type*} [Fintype K] [Field K] [Fintype σ] [DecidableEq σ]
-variable [DecidableEq K]
+variable {K σ : Type*} [Fintype K] [Field K] [Fintype σ]
 
 /--
 Serre's second corollary to Chevalley–Warning: a quadratic form over a finite
