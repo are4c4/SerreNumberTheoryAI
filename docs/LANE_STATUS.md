@@ -10,7 +10,7 @@
 | B Formalization | 🟡 ready | S1.1 Theorem 1(ii) Lean formalization merged | completed #7 | PR #25 merged | remain idle unless E #36 routes a concrete Lean integration blocker; do not claim a new target |
 | C Blueprint | 🟡 ready | S1.1 Theorem 1(ii) exposition merged | completed #9 | PR #18 merged | remain mathematically idle; E #36 owns final `lean :=` linkage to the now-stable B declarations |
 | D Mathlib | 🟡 ready | S1.1 Theorem 1(ii) research complete | completed #10 | PR #24 merged | remain advisory/idle unless E #36 requests a focused API investigation |
-| E Integration | 🚧 active | S1.1 Theorem 1(ii) cross-layer integration | #36 | branch / PR pending | start from latest `main`: link merged Blueprint nodes to stable B declarations, run policy/build/vbp, and synchronize progress/status |
+| E Integration | 🚧 active | S1.1 Theorem 1(ii) cross-layer integration | #36 | `integration/s1-1-theorem1-ii-36-v2` / PR pending | verify integrated policy/build/vbp; if green, complete Blueprint/CI progress and return E to ready |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -24,4 +24,4 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Current mathematical frontier
 
-`FORMALIZATION_PROGRESS.md` に従い、Phase 1「有限体」を継続する。最初のslice（導入・Frobenius補題・定理1(i)）は完了済み。定理1(ii)のcanonical statement contractは #6 で完成・close済み。C #9 / PR #18 の独立説明とBlueprint nodes、D #10 / PR #24 のmathlib調査、B #7 / PR #25 のLean statement/proofはすべて `main` へmerge済みである。B #25 はlatest-head CI run #66でrepository policy・`lake build`・`lake exe vbp build`がすべてgreenとなり、Aのsemantic reviewでも #6 からのstatement driftは確認されなかった。したがってE #36のactivation gateは満たされ、現在のactive ownerはE Integrationのみである。Eはmerged C artifactへstable B declarationの最終 `lean :=` linkageを追加・検証し、integrated stateでpolicy/build/vbpを再実行し、`FORMALIZATION_PROGRESS.md` とlane handoff/statusを実態どおりに完了させる。統合でsemantic mismatchが判明した場合は `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` としてAへ戻す。Theorem 1(ii)が統合完了するまではTheorem 1(iii)へ進まない。
+`FORMALIZATION_PROGRESS.md` に従い、Phase 1「有限体」を継続する。最初のslice（導入・Frobenius補題・定理1(i)）は完了済み。定理1(ii)のcanonical statement contractは #6 で完成・close済み。C #9 / PR #18 の独立説明とBlueprint nodes、D #10 / PR #24 のmathlib調査、B #7 / PR #25 のLean statement/proofはすべて `main` へmerge済みである。B #25 はlatest-head CI run #66でrepository policy・`lake build`・`lake exe vbp build`がすべてgreenとなり、Aのsemantic reviewでも #6 からのstatement driftは確認されなかった。E #36 が現在の唯一のactive deliverableであり、merged C artifactへstable B declarationの最終 `lean :=` linkageを追加済み。integrated stateでrepository policy・`lake build`・`lake exe vbp build`を再検証し、green後に`FORMALIZATION_PROGRESS.md` とlane handoff/statusを完了状態へ同期する。統合でsemantic mismatchが判明した場合は `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` としてAへ戻す。Theorem 1(ii)が統合完了するまではTheorem 1(iii)へ進まない。
