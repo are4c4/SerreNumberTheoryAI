@@ -31,9 +31,9 @@ B/C/D/Eが成果物単位で並列作業することはできますが、上の�
 | Verso Blueprint scaffold | ✅ |
 | CI build + policy checks | ✅ |
 | Issue / PR templates | ✅ |
-| Parallel lane coordination | 🚧 |
+| Parallel lane coordination | ✅ |
 
-Parallel lane coordination is tracked in Issue #4. It does not alter mathematical content.
+Parallel lane coordination was completed by Issue #4 / PR #5. Post-merge lane-state cleanup is tracked separately by E and does not reopen the infrastructure item.
 
 ## Phase 1 — 有限体
 
