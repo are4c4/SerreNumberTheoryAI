@@ -46,15 +46,18 @@
 
 ## Current handoff
 
-- Focused Issue: none
-- Last completed integration work: #8 / PR #13, post-merge lane-state synchronization after #5
-- Branch / PR: none
-- Next: monitor B #7 and C #9; take a new focused E integration Issue only when their artifacts are ready for cross-layer verification
+- Focused Issue: #36 — integrate `S1.1.Theorem1(ii)` across Lean and Blueprint
+- Branch: `integration/s1-1-theorem1-ii-36-v2`
+- PR: pending
+- Activation gate: satisfied. B #7 / PR #25 merged to `main` after latest-head CI run #66 passed repository policy, `lake build`, and `lake exe vbp build`
+- Completed upstream artifacts: canonical contract #6; C #9 / PR #18 Blueprint + independent explanation; D #10 / PR #24 research; B #7 / PR #25 Lean statement + proof
+- Statement-integrity audit: merged `SerreNumberTheoryAI.serre_theorem1_ii` still states existence/uniqueness of the `p^f`-element subfield inside the fixed algebraically closed ambient field and identifies its carrier with both `x^(p^f)=x` and the root set of `X^(p^f)-X`; no drift from #6 detected
+- Linkage implementation: added `lean :=` links from the merged C nodes to stable B declarations (`primePowerFixedSubfield`, `mem_primePowerFixedSubfield`, `primePowerFixedSubfield_natCard`, `serre_theorem1_ii`) without rewriting C's exposition
+- Progress state on branch: Interpretation / Explanation / Lean statement / Lean proof are complete; Blueprint and CI remain in progress until integrated PR CI passes
+- Shared hotspot: A PR #38 is merged, so `docs/LANE_STATUS.md` is released. E now owns the focused #36 status/progress synchronization while this integration branch is active
+- Next: open the focused integration PR and verify repository policy + `lake build` + `lake exe vbp build`; if green, mark Blueprint/CI complete, finalize lane status/handoff, and merge
 - Blockers: none
-- Verified: the post-merge `main` CI for PR #5 merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691` completed successfully
-- Progress synchronization: A #11 / PR #12 resolved the stale Phase 0 coordination row and marked Theorem 1(ii) Interpretation complete; E no longer owns or edits that shared hotspot
-- Cross-lane dependency: #6 is the completed canonical contract for `S1.1.Theorem1(ii)`; B #7 owns Lean, C #9 owns Blueprint / exposition, and D #10 owns API research. E does not take those mathematical deliverables and will run the integration gate after B/C artifacts are ready
 
 ## Short resume prompt
 
-`Eレーンとして作業を続けて。最新main、open Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認し、統合・CI・policy・Lean/Blueprint対応・handoff driftを監査して。B/Cの数学実装は奪わないで。`
+`Eレーンとして作業を続けて。Issue #36 / branch integration/s1-1-theorem1-ii-36-v2 をsource of truthとして、merged B #25 と C #18 のLean↔Blueprint linkage、policy/lake/vbp、FORMALIZATION_PROGRESS、LANE_STATUS/E handoffを統合して。数学的statement/proof自体は変更しないで。`
