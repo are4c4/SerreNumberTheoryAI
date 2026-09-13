@@ -32,11 +32,15 @@
 
 ## Phase 1 — 有限体
 
+Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印刷頁3–4（uploaded PDF pages 13–14）。
+
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| 有限体の導入・必要な基本事項 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 1.1 導入・Frobenius 補題・定理1(i) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 定理1(ii): `F_q` の存在・一意性と `X^q-X` | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 定理1(iii): 位数 `q` の有限体の一意性 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-**開始条件:** Phase 0 PRがmainへmergeされていること。
+**開始条件:** Phase 0 PRがmainへmergeされていること。達成済み。
 
 **注意:** 人間版 `are4c4/SerreNumberTheoryBlueprint` の形式化・Blueprintは数学的解答源として参照しない。
 
