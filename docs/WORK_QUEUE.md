@@ -71,10 +71,12 @@ Theorem 1(ii)まではmain上でcross-layer completeです。次の表は、**�
 
 | Priority | Work ID | Target | State | Required before implementation | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `READY` | Theorem 1(ii) integrated on main ✅ | `work/s1-1-t1iii` | unclaimed |
-| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 | `PREFLIGHT` | exact Phase 1 prerequisites must be recorded by preflight; do not assume whether T1(iii) is logically needed | `work/s1-2-mult-group` | unclaimed |
-| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `PREFLIGHT` | identify the exact S1.2 result(s) used; implementation waits for those results to be `DONE` or `STACK-READY` | `work/s2-1-power-sums` | unclaimed |
-| P3 | `S2.2-Chevalley` | 2.2 Chevalleyの定理周辺 | `PREFLIGHT` | identify exact S2.1 prerequisites; implementation waits for them to be `DONE` or `STACK-READY` | `work/s2-2-chevalley` | unclaimed |
+| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `READY` | Theorem 1(ii) integrated on main ✅ | `work/s1-1-t1iii` | #49 / unclaimed |
+| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 | `PREFLIGHT` | exact Phase 1 prerequisites must be recorded by preflight; do not assume whether T1(iii) is logically needed | `work/s1-2-mult-group` | #50 / unclaimed |
+| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `PREFLIGHT` | identify the exact S1.2 result(s) used; implementation waits for those results to be `DONE` or `STACK-READY` | `work/s2-1-power-sums` | #51 / unclaimed |
+| P3 | `S2.2-Chevalley` | 2.2 Chevalleyの定理周辺 | `PREFLIGHT` | identify exact S2.1 prerequisites; implementation waits for them to be `DONE` or `STACK-READY` | `work/s2-2-chevalley` | #52 / unclaimed |
+
+Issue #49–#52はqueue seedとして事前作成済みです。ただし**Issueがあること自体はownershipを意味しません**。canonical branchを最初に作成したworkerがownerです。
 
 ## 7. Queue refill
 
