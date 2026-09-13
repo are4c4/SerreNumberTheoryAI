@@ -39,7 +39,7 @@ theorem gaussSignedPermutation_legendreValue
   let P : ZMod p := ∏ s : ↥S, (s.1 : ZMod p)
   have hP : P ≠ 0 := by
     dsimp [P]
-    rw [Finset.prod_ne_zero_iff]
+    apply Finset.prod_ne_zero
     intro s _
     exact Units.ne_zero s.1
   have hprod :
@@ -51,7 +51,7 @@ theorem gaussSignedPermutation_legendreValue
   have hleft :
       (∏ s : ↥S, (a : ZMod p) * (s.1 : ZMod p)) =
         (a : ZMod p) ^ S.card * P := by
-    simp [P, Finset.prod_mul_distrib, Fintype.card_coe]
+    simp [P, Finset.prod_mul_distrib]
   let e : ↥S ≃ ↥S := Equiv.ofBijective τ hτ
   have hperm :
       (∏ s : ↥S, ((τ s).1 : ZMod p)) = P := by
@@ -125,9 +125,21 @@ theorem gaussSignedPermutation_legendreSign
   letI : Fact (2 < p) := ⟨by omega⟩
   rcases hleft with hleft | hleft <;> rcases hright with hright | hright
   · rw [hleft, hright]
-  · have hbad : (1 : ZMod p) = -1 := by simpa [hleft, hright] using hcast
+  · have hcast' := hcast
+    simp only [hleft, Int.cast_one] at hcast'
+    have hrightCast := congrArg (fun z : ℤ => (z : ZMod p)) hright
+    have hbad : (1 : ZMod p) = -1 := by
+      calc
+        (1 : ZMod p) = (((∏ s : ↥S, ε s) : ℤ) : ZMod p) := hcast'
+        _ = -1 := by simpa using hrightCast
     exact False.elim (ZMod.neg_one_ne_one hbad.symm)
-  · have hbad : (-1 : ZMod p) = 1 := by simpa [hleft, hright] using hcast
+  · have hcast' := hcast
+    simp only [hleft, Int.cast_neg, Int.cast_one] at hcast'
+    have hrightCast := congrArg (fun z : ℤ => (z : ZMod p)) hright
+    have hbad : (-1 : ZMod p) = 1 := by
+      calc
+        (-1 : ZMod p) = (((∏ s : ↥S, ε s) : ℤ) : ZMod p) := hcast'
+        _ = 1 := by simpa using hrightCast
     exact False.elim (ZMod.neg_one_ne_one hbad)
   · rw [hleft, hright]
 
