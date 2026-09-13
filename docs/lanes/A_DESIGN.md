@@ -43,8 +43,9 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
 ## Current handoff
 
 - State: active scheduler coordination
-- Active A coordination: #64 / PR #66 — refill queue with `S3.3-QuadraticReciprocity` PREFLIGHT and synchronize dependency state
+- Active A coordination: #64 / PR #69 — refill queue with `S3.3-QuadraticReciprocity` PREFLIGHT and synchronize dependency state
 - Canonical A branch: `design/refill-quadratic-reciprocity-64`
+- Historical A PR #66 auto-closed during latest-main rebase and is superseded by #69
 - Completed recent mathematical checkpoints:
   - C #49 / PR #58 — `S1.1-T1iii` end-to-end complete on `main`
   - B #50 / PR #59 — `S1.2-MultGroup` end-to-end complete on `main`
@@ -54,7 +55,7 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
   - D owns #52 / `work/s2-2-chevalley` and #55 / `work/s3-1-quadratic-elements`
   - B and E have no unfinished mathematical work item at the latest check
 - Dependency gates:
-  - #52 proof gate is now open because #51 is `DONE`; A posted the gate-open notice and D may move to latest main
+  - #52 proof gate is now open because #51 is `DONE`; D has already opened draft PR #68 from current main
   - #55 full proof gate is open because #50 is `DONE`
   - #56 proof waits for #55 `DONE` or explicit `STACK-READY`; C may continue preflight
   - #64 / `S3.3-QuadraticReciprocity` proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit roots-of-unity, Gauss-sum, finite-sum, Frobenius and algebraic-closure APIs now
@@ -64,11 +65,11 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
   - source proof via primitive `l`-th root `w`, Gauss sum `y`, `y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)`, then Theorem 5 from §3.2
 - Queue health: #52/#55/#56 are owned; #64 is the fresh unclaimed PREFLIGHT candidate. The first B/C/D/E worker that creates `work/s3-3-quadratic-reciprocity` owns it.
 - Shared-hotspot coordination:
-  - A #64 / PR #66 owns `docs/WORK_QUEUE.md` and this A handoff only.
+  - A #64 / PR #69 owns `docs/WORK_QUEUE.md` and this A handoff only.
   - duplicate queue-only PR #67 was closed as redundant.
-  - B cleanup PR #63 was asked to drop its overlapping `docs/WORK_QUEUE.md` diff and retain its other coordination files; A deliberately does not touch `FORMALIZATION_PROGRESS.md` or `docs/LANE_STATUS.md` in #66.
+  - B cleanup PR #63 has dropped its overlapping `docs/WORK_QUEUE.md` diff and retains its other coordination files; A deliberately does not touch `FORMALIZATION_PROGRESS.md` or `docs/LANE_STATUS.md` in #69.
 - Blockers: none at A level
-- Next A action: finish #66 after latest-main CI, then monitor the #52/#55 implementation transitions and #55/#56 `STACK-READY`/DONE edges while keeping at least one unclaimed safe PREFLIGHT visible.
+- Next A action: finish #69 after latest-head CI, then monitor #52/#55 implementation and #55/#56 `STACK-READY`/DONE edges while keeping at least one unclaimed safe PREFLIGHT visible.
 
 ## Scheduler health target
 
