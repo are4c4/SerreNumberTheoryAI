@@ -163,6 +163,94 @@ theorem intCast_legendreSign_eq_legendreValue
       rw [hsign, h]
       norm_num
 
+/-- The characteristic-independent sign layer is multiplicative. -/
+theorem legendreSign_mul
+    (hp : p ≠ 2) (x y : ZMod p) :
+    legendreSign p (x * y) = legendreSign p x * legendreSign p y := by
+  by_cases hx : x = 0
+  · subst x
+    simp [legendreSign]
+  by_cases hy : y = 0
+  · subst y
+    simp [legendreSign]
+  have hxy : x * y ≠ 0 := mul_ne_zero hx hy
+  have hp3 : 3 ≤ p := by
+    have hp2 : 2 ≤ p := (Fact.out : p.Prime).two_le
+    omega
+  letI : Fact (2 < p) := ⟨by omega⟩
+  have hneg : (-1 : ZMod p) ≠ 1 := ZMod.neg_one_ne_one
+  have hsignOne (z : ZMod p) (hz : z ≠ 0)
+      (hv : legendreValue p z = 1) : legendreSign p z = 1 := by
+    simp [legendreSign, hz, hv]
+  have hsignNeg (z : ZMod p) (hz : z ≠ 0)
+      (hv : legendreValue p z = -1) : legendreSign p z = -1 := by
+    have hv1 : legendreValue p z ≠ 1 := by
+      rw [hv]
+      exact hneg
+    simp [legendreSign, hz, hv1]
+  rcases legendreValue_eq_one_or_neg_one_of_ne_zero p hp x hx with hx1 | hxneg
+  · rcases legendreValue_eq_one_or_neg_one_of_ne_zero p hp y hy with hy1 | hyneg
+    · have hxy1 : legendreValue p (x * y) = 1 := by
+        rw [legendreValue_mul, hx1, hy1]
+        simp
+      rw [hsignOne (x * y) hxy hxy1, hsignOne x hx hx1, hsignOne y hy hy1]
+      norm_num
+    · have hxyneg : legendreValue p (x * y) = -1 := by
+        rw [legendreValue_mul, hx1, hyneg]
+        simp
+      rw [hsignNeg (x * y) hxy hxyneg, hsignOne x hx hx1, hsignNeg y hy hyneg]
+      norm_num
+  · rcases legendreValue_eq_one_or_neg_one_of_ne_zero p hp y hy with hy1 | hyneg
+    · have hxyneg : legendreValue p (x * y) = -1 := by
+        rw [legendreValue_mul, hxneg, hy1]
+        simp
+      rw [hsignNeg (x * y) hxy hxyneg, hsignNeg x hx hxneg, hsignOne y hy hy1]
+      norm_num
+    · have hxy1 : legendreValue p (x * y) = 1 := by
+        rw [legendreValue_mul, hxneg, hyneg]
+        simp
+      rw [hsignOne (x * y) hxy hxy1, hsignNeg x hx hxneg, hsignNeg y hy hyneg]
+      norm_num
+
+/-- Multiplicativity after transporting integer inputs into the prime field. -/
+theorem legendreSignInt_mul
+    (hp : p ≠ 2) (a b : ℤ) :
+    legendreSignInt p (a * b) = legendreSignInt p a * legendreSignInt p b := by
+  simpa [legendreSignInt] using
+    legendreSign_mul p hp (a : ZMod p) (b : ZMod p)
+
+/-- Serre's Theorem 5(i): the Legendre sign of `1` is `1`. -/
+theorem serre_theorem5_i : legendreSignInt p 1 = 1 := by
+  simp [legendreSignInt]
+
+/-- Serre's Theorem 5(ii): the value at `-1` is governed by `(p-1)/2` parity. -/
+theorem serre_theorem5_ii
+    (hp : p ≠ 2) :
+    legendreSignInt p (-1) = (-1 : ℤ) ^ ((p - 1) / 2) := by
+  have hp3 : 3 ≤ p := by
+    have hp2 : 2 ≤ p := (Fact.out : p.Prime).two_le
+    omega
+  letI : Fact (2 < p) := ⟨by omega⟩
+  have hneg0 : (-1 : ZMod p) ≠ 0 := by simp
+  rcases Nat.even_or_odd ((p - 1) / 2) with hn | hn
+  · have hval : legendreValue p (-1 : ZMod p) = 1 := by
+      change (-1 : ZMod p) ^ ((p - 1) / 2) = 1
+      exact hn.neg_one_pow
+    calc
+      legendreSignInt p (-1) = 1 := by
+        simp [legendreSignInt, legendreSign, hneg0, hval]
+      _ = (-1 : ℤ) ^ ((p - 1) / 2) := hn.neg_one_pow.symm
+  · have hval : legendreValue p (-1 : ZMod p) = -1 := by
+      change (-1 : ZMod p) ^ ((p - 1) / 2) = -1
+      exact hn.neg_one_pow
+    have hval1 : legendreValue p (-1 : ZMod p) ≠ 1 := by
+      rw [hval]
+      exact ZMod.neg_one_ne_one
+    calc
+      legendreSignInt p (-1) = -1 := by
+        simp [legendreSignInt, legendreSign, hneg0, hval1]
+      _ = (-1 : ℤ) ^ ((p - 1) / 2) := hn.neg_one_pow.symm
+
 end OddPrime
 
 end LegendreSymbol
