@@ -1,3 +1,5 @@
+import Mathlib.Algebra.Algebra.ZMod
+import Mathlib.Algebra.CharP.CharAndCard
 import Mathlib.Algebra.CharP.Lemmas
 import Mathlib.Algebra.Field.Subfield.Basic
 import Mathlib.Algebra.Field.ZMod
@@ -284,5 +286,60 @@ theorem serre_theorem1_ii (hp : Nat.Prime p) (hf : 0 < f) :
     · exact coe_primePowerFixedSubfield_eq_rootSet Ω p f hp hf
 
 end PrimePowerSubfield
+
+section FiniteFieldUniqueness
+
+variable (Ω : Type*) [Field Ω] [IsAlgClosed Ω]
+variable (p f : ℕ) [CharP Ω p]
+
+/--
+A field with `p^f` elements is isomorphic to the canonical `p^f`-element
+subfield of a fixed algebraically closed field of characteristic `p`.
+
+This follows Serre's route: derive the source field's characteristic from its
+cardinality, embed it in the algebraically closed field, then identify the
+image with the unique subfield supplied by Theorem 1(ii).
+-/
+noncomputable def finiteFieldEquivPrimePowerFixedSubfield
+    (hp : Nat.Prime p) (hf : 0 < f)
+    (K : Type*) [Field K] [Fintype K]
+    (hK : Fintype.card K = p ^ f) :
+    K ≃+* primePowerFixedSubfield Ω p f hp := by
+  letI : Fact p.Prime := ⟨hp⟩
+  letI : CharP K p := charP_of_card_eq_prime_pow hK
+  letI : Algebra (ZMod p) K := ZMod.algebra K p
+  letI : Algebra (ZMod p) Ω := ZMod.algebra Ω p
+  letI : Module.Finite (ZMod p) K := .of_finite
+  letI : Algebra.IsAlgebraic (ZMod p) K := Algebra.IsAlgebraic.of_finite (ZMod p) K
+  let φ : K →ₐ[ZMod p] Ω :=
+    Classical.choice (by
+      apply IntermediateField.nonempty_algHom_of_splits
+      exact fun x => ⟨Algebra.IsIntegral.isIntegral x, IsAlgClosed.splits _⟩)
+  let E : Subfield Ω := φ.toRingHom.fieldRange
+  have hEcard : Nat.card E = p ^ f := by
+    calc
+      Nat.card E = Nat.card K :=
+        (Nat.card_congr φ.toRingHom.rangeRestrictFieldEquiv.toEquiv).symm
+      _ = Fintype.card K := Nat.card_eq_fintype_card
+      _ = p ^ f := hK
+  have hEeq : E = primePowerFixedSubfield Ω p f hp :=
+    subfield_eq_primePowerFixedSubfield_of_natCard Ω p f hp hf E hEcard
+  exact
+    φ.toRingHom.rangeRestrictFieldEquiv.trans
+      (RingEquiv.subfieldCongr hEeq)
+
+/--
+Serre, Chapter 1, §1.1, Theorem 1(iii): every finite field with `p^f` elements
+is isomorphic, as an abstract field, to the canonical `p^f`-element field from
+Theorem 1(ii).
+-/
+theorem serre_theorem1_iii
+    (hp : Nat.Prime p) (hf : 0 < f)
+    (K : Type*) [Field K] [Fintype K]
+    (hK : Fintype.card K = p ^ f) :
+    Nonempty (K ≃+* primePowerFixedSubfield Ω p f hp) :=
+  ⟨finiteFieldEquivPrimePowerFixedSubfield Ω p f hp hf K hK⟩
+
+end FiniteFieldUniqueness
 
 end SerreNumberTheoryAI
