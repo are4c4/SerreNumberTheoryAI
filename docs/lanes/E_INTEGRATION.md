@@ -52,7 +52,7 @@
 - Next: monitor B #7 and C #9; take a new focused E integration Issue only when their artifacts are ready for cross-layer verification
 - Blockers: none
 - Verified: the post-merge `main` CI for PR #5 merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691` completed successfully
-- Shared-hotspot routing: A #11 owns `FORMALIZATION_PROGRESS.md`; E detected stale Phase 0 / Interpretation entries and routed them to #11 instead of keeping an overlapping edit
+- Progress synchronization: A #11 / PR #12 resolved the stale Phase 0 coordination row and marked Theorem 1(ii) Interpretation complete; E no longer owns or edits that shared hotspot
 - Cross-lane dependency: #6 is the completed canonical contract for `S1.1.Theorem1(ii)`; B #7 owns Lean, C #9 owns Blueprint / exposition, and D #10 owns API research. E does not take those mathematical deliverables and will run the integration gate after B/C artifacts are ready
 
 ## Short resume prompt
