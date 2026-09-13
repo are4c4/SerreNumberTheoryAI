@@ -25,7 +25,9 @@ theorem zmod_eight_ne_zero_of_prime_ne_two (hp : p ≠ 2) :
     norm_num at hdiv ⊢
     exact hdiv
   have hp2 : p ∣ 2 := (Fact.out : p.Prime).dvd_of_dvd_pow hpow
-  exact hp ((Nat.dvd_prime Nat.prime_two).mp hp2)
+  rcases (Nat.dvd_prime Nat.prime_two).mp hp2 with hp1 | hp2eq
+  · exact (Fact.out : p.Prime).ne_one hp1
+  · exact hp hp2eq
 
 /-- In the algebraic closure of `F_p`, odd characteristic supplies a primitive eighth root. -/
 theorem exists_primitive_eighth_root_algClosure (hp : p ≠ 2) :
