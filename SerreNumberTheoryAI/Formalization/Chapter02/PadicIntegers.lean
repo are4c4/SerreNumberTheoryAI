@@ -57,7 +57,8 @@ theorem mem_ker_padicReduction_iff (p n : ℕ) (x : padicResidueRing p (n + 1)) 
     rw [map_mul]
     have hpzero :
         padicReduction p n (p ^ (n + 1) : padicResidueRing p (n + 1)) = 0 := by
-      simp [padicReduction]
+      rw [map_natCast]
+      exact ZMod.natCast_self (p ^ (n + 1))
     rw [hpzero, zero_mul]
 
 /-- Compatibility condition defining the projective limit. -/
@@ -69,10 +70,10 @@ def serrePadicIntSubring (p : ℕ) : Subring (∀ n : ℕ, padicResidueRing p n)
   carrier := {x | padicCompatible p x}
   zero_mem' := by
     intro n
-    simp [padicCompatible, padicReduction]
+    exact map_zero (padicReduction p n)
   one_mem' := by
     intro n
-    simp [padicCompatible, padicReduction]
+    exact map_one (padicReduction p n)
   add_mem' := by
     intro x y hx hy n
     change padicReduction p n (x (n + 1) + y (n + 1)) = x n + y n
