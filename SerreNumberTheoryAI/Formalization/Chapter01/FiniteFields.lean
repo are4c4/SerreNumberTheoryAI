@@ -186,7 +186,7 @@ theorem coe_primePowerFixedSubfield_eq_rootSet (hp : Nat.Prime p) (hf : 0 < f) :
   ext x
   change x ^ (p ^ f) = x ↔ x ∈ (primePowerPolynomial Ω p f).rootSet Ω
   rw [Polynomial.mem_rootSet_of_ne (primePowerPolynomial_ne_zero Ω p f hp hf)]
-  simp [primePowerPolynomial]
+  simp [primePowerPolynomial, sub_eq_zero]
 
 /-- The defining polynomial has exactly `p^f` distinct roots in `Ω`. -/
 theorem primePowerPolynomial_rootSet_card (hp : Nat.Prime p) (hf : 0 < f) :
