@@ -152,8 +152,13 @@ Lean proofと自然言語proofの数学的戦略が大きく異なる場合、Bl
 11. PRを作成
 12. CI failureがあればログを読み修正
 13. `FORMALIZATION_PROGRESS.md` を更新
+14. CIがgreenで、停止条件に該当せず、PRの内容がDefinition of Doneを満たすことを再確認する
+15. AI自身でPRをmergeする
+16. 最新mainを再確認して次の安全なsliceへ進む
 
-初期運用では**formalization PRをAIが自動mergeしてはならない**。CI green後、人間レビューを待つ。
+AIは通常、人間レビューを待たずにformalization PRをmergeしてよい。
+ただし、`BLOCKED:` 停止条件、著作権判断、statementの曖昧性、仮定変更、数学的整合性に疑義がある場合はmergeしてはならない。
+CI greenだけを理由に数学的レビューを省略せず、PR本文・diff・依存・statement integrityをAI自身で再監査してからmergeする。
 
 ## 9. 停止条件
 
