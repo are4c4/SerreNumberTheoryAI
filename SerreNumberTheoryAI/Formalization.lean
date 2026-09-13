@@ -7,6 +7,7 @@ import SerreNumberTheoryAI.Formalization.Chapter01.QuadraticElements
 import SerreNumberTheoryAI.Formalization.Chapter01.ChevalleyQuadraticForm
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreTwo
+import SerreNumberTheoryAI.Formalization.Chapter01.GaussLemma
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegers
 import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 
