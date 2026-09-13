@@ -79,3 +79,58 @@ Leanでは `F_p` を `ZMod p` で表し、一般的な有限次元ベクトル�
 `Module.card_eq_pow_finrank` を使う。
 対象そのものに近い `FiniteField.card` は意図的に使用しない。
 :::
+
+## 定理1(ii) — 固定された代数閉体の中の有限部分体
+
+以下では、素数 `p`、正整数 `f`、`q=p^f` を固定し、標数 `p` の代数閉体 `Ω` の中で考える。
+ここでの一意性は、抽象的な体の同型を除いて一意という意味ではなく、同じ `Ω` の部分体として一意という意味である。
+
+:::definition "q_power_fixed_points" (uses := "frobenius_power_map")
+`Ω` の元のうち `x^q=x` を満たすもの全体を考える。
+これは `q` 乗写像の固定点集合であり、多項式 `X^q-X` の `Ω` における根の集合と同じである。
+:::
+
+:::lemma_ "q_power_fixed_points_form_subfield" (uses := "q_power_fixed_points", "frobenius_power_map")
+`q=p^f` であるため、標数 `p` では `q` 乗写像はFrobenius写像を `f` 回合成した写像として振る舞う。
+したがって `x^q=x` を満たす元は、加法・乗法・加法逆元について閉じ、非零元の逆元についても閉じる。
+このため `q_power_fixed_points` は `Ω` の部分体を定める。
+:::
+
+:::proof "q_power_fixed_points_form_subfield"
+固定点 `x,y` に対し、Frobeniusの加法性と乗法性を `f` 回反復すると
+`(x+y)^q=x^q+y^q=x+y` および `(xy)^q=x^q y^q=xy` が得られる。
+加法逆元も同様に固定される。
+さらに `x≠0` なら `(x⁻¹)^q=(x^q)⁻¹=x⁻¹` なので、逆元についても閉じる。
+`0` と `1` も固定点であるため、これらの元全体は部分体をなす。
+:::
+
+:::lemma_ "q_power_fixed_points_cardinality" (uses := "q_power_fixed_points")
+`q_power_fixed_points` はちょうど `q` 個の元を持つ。
+:::
+
+:::proof "q_power_fixed_points_cardinality"
+多項式 `P(X)=X^q-X` を考える。`Ω` は代数閉体なので `P` は `Ω` 上で一次式の積に分解する。
+また `q=p^f` だから標数 `p` では係数 `q` は0になり、形式微分は `P'(X)=-1` となる。
+したがって `P` は重根を持たない。
+次数が `q` で、すべての根が `Ω` にあり、しかも重複しないので、根はちょうど `q` 個存在する。
+これらの根はまさに `x^q=x` を満たす元である。
+:::
+
+:::theorem "finite_subfield_cardinality_q_unique" (uses := "q_power_fixed_points_form_subfield", "q_power_fixed_points_cardinality")
+標数 `p` の代数閉体 `Ω` には、位数 `q=p^f` の部分体がただ一つ存在する。
+その部分体の台集合は `x^q=x` を満たす元全体であり、したがって `X^q-X` の `Ω` における根全体でもある。
+:::
+
+:::proof "finite_subfield_cardinality_q_unique"
+存在については、`q_power_fixed_points_form_subfield` で得た固定点部分体を用いる。
+`q_power_fixed_points_cardinality` により、その位数は正確に `q` である。
+
+一意性のため、`Ω` の任意の `q` 元部分体 `E` をとる。
+`E` の非零元全体は位数 `q-1` の有限群なので、各 `x≠0` について `x^(q-1)=1` が成り立つ。
+従って `x^q=x` であり、`x=0` の場合も同じ等式を満たす。
+よって `E` のすべての元は `q_power_fixed_points` に含まれる。
+両者の位数はともに `q` だから、包含は等号である。
+したがって `Ω` の中の `q` 元部分体はこの固定点部分体ただ一つである。
+
+この議論は固定された代数閉体の内部での一意性を示すものであり、異なる有限体同士の抽象的な同型一意性は次の別ターゲットに残す。
+:::
