@@ -7,6 +7,8 @@
 人間版 `are4c4/SerreNumberTheoryBlueprint` のformalizationを数学的ソースとしてimport・コピーしません。
 -/
 
+import SerreNumberTheoryAI.Formalization.Chapter01.FiniteFields
+
 namespace SerreNumberTheoryAI
 
 end SerreNumberTheoryAI
