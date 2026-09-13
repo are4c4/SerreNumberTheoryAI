@@ -74,8 +74,8 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | 補遺 (i) Gaussの補題 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成済み。
-- #56 / PR #98 はC-owned。#64向けfrozen head `45bde2ef…` はLegendre value/sign、multiplicativity、cast-back、Theorem 5(i)/(ii)を含むCI-green interface。Theorem 5(iii)本体は一度CI #217 greenまで到達した後、source-shaped cleanupで局所的な加法可換性normalization failureがCI #220/#223に出現し、Aがdiagnosticをroute済み。current observed repair head `90996cbe…` はCI #225 queued。独立Blueprint exposition/linkageとfinal latest-main integrationはproof安定後に残る。
-- #64 はC preflight completeで、frozen `45bde2ef…` からstacked implementation可能。latest checkではcanonical branchはまだそのheadをconsumeしていない。
+- #56 / PR #98 はC-owned。#64向けfrozen head `45bde2ef…` はLegendre value/sign、multiplicativity、cast-back、Theorem 5(i)/(ii)を含むCI-green interface。moving live branchはTheorem 5(iii)の後続coercion/normalization修正まで通過し、latest checked `e681e215…` はCI #232 green。独立Blueprint exposition/linkageとfinal latest-main integrationは未完了。
+- #64 はC preflight completeで、frozen `45bde2ef…` からstacked implementation可能。later #56 declarationsはreplacement freezeまたはmergeなしに仮定しない。
 - #78 はB preflight complete。必要なminimal #56 interfaceは存在するが現在のupstream promiseは#64専用なので、別freezeまたは#56 merge待ち。
 
 ## Phase 6 — 第2章 p進体 §1
@@ -96,17 +96,25 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
+| §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
 | §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| §2.2 Hensel lifting theorem + Corollary 1 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 3: dyadic quadratic lifting | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #99 / PR #103 はB-owned。earlier `bf91ce4a…` はCI #218 greenでfinite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proofとBlueprint workを含んだ。その後のcompatibility refinementでcurrent observed head `6f4fe68e…` はCI #224 local Lean failureとなり、coefficient-level `MvPolynomial.map` compatibilityとmapped evaluation rewriteのdiagnosticをAがBへroute済み。最終normal root integrationはisolated proofがgreenかつ#98 shared hotspot解消後に行う。
-- #100 はBがclaimしてsource/API/dependency preflight中。命題6を命題5と分離し、primitive/unit criterionは#72、`Q_p` scalingは#96、finite-level inverse-limit machineryは#99の実際の公開interfaceへ依存させる。proof codeはgate成立まで追加しない。
-- #102 はunclaimed PREFLIGHT。§2.2のone-step improvement、multivariate Hensel theorem、simple-root Corollary 1を対象とし、source-shaped iterative/Cauchy proofを予定。proofは#72 valuation/congruenceと#89 completeness interface待ちが見込まれる。
+- #99 / PR #103 はB-owned。current checked `fe1a173e…` はCI #226 greenで、finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、Blueprint exposition/linkageまでisolated formで揃う。shared rootが#98にownedされているため、最終normal aggregator integration + latest-main CIのみ残る。#100向けdownstream subsetもこのheadでexplicit freeze済み。
+- #100 はB-owned preflight。命題6を命題5と分離し、#99 frozen subsetをpreflight/interface用途に利用可能。full proofは#72 primitive/unit criterionと#96 `Q_p` scaling interface待ち。
+- #102 はB-ownedでsource/API/dependency preflight complete。one-step Taylor remainder、multivariate specialization、iterative Cauchy proofのsource-shaped planを固定し、proofは#72 valuation/congruence/decompositionと#89 compatible completeness interface待ち。`Q_p`依存は不要。
 - #104 はunclaimed PREFLIGHT。odd `p` の非退化対称二次形式についてprimitive mod-`p` solutionからsimple-root条件を導き#102 Corollary 1でliftするsource Corollary 2を対象とする。
 - #105 はunclaimed PREFLIGHT。`p=2` でprimitive mod-8 solutionとpartial derivative nonzero mod 4から#102 theorem (`n=3,k=1`) を用いてliftし、invertible determinantを十分条件とするsource Corollary 3を対象とする。
+
+## Phase 8 — 第2章 §3 `Q_p` の乗法群
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| §3.1 unit filtration / Proposition 7 / roots of unity corollary | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+- #108 はAがsource boundaryを独立確認してseedしたunclaimed PREFLIGHT。project `U=(SerrePadicInt p)ˣ` と `U_n` のfiltration、`U_n/U_{n+1} ≃ Z/pZ`、coprime-order finite splitting、inverse-limit passageによる `U = V × U_1` と `V ≃ (Z/pZ)ˣ` をProposition 7のcoreとする。core proofは#71 + stable #72 units/divisibility interface待ちで、source corollaryをproject `Q_p` 内のroots of unityとして述べる最終bridgeだけ#96待ち。§3.2 Proposition 8はこのitemに含めない。
 
 ## Continuous parallelization rules
 
