@@ -52,12 +52,12 @@
 - Activation gate: satisfied. B #7 / PR #25 merged to `main` after latest-head CI run #66 passed repository policy, `lake build`, and `lake exe vbp build`
 - Completed upstream artifacts: canonical contract #6; C #9 / PR #18 Blueprint + independent explanation; D #10 / PR #24 research; B #7 / PR #25 Lean statement + proof
 - Statement-integrity audit: merged `SerreNumberTheoryAI.serre_theorem1_ii` still states existence/uniqueness of the `p^f`-element subfield inside the fixed algebraically closed ambient field and identifies its carrier with both `x^(p^f)=x` and the root set of `X^(p^f)-X`; no drift from #6 detected
-- Linkage implementation: E is adding `lean :=` links from the merged C nodes to stable B declarations without rewriting C's exposition
+- Linkage implementation: added `lean :=` links from the merged C nodes to stable B declarations (`primePowerFixedSubfield`, `mem_primePowerFixedSubfield`, `primePowerFixedSubfield_natCard`, `serre_theorem1_ii`) without rewriting C's exposition
 - Progress state on branch: Interpretation / Explanation / Lean statement / Lean proof are complete; Blueprint and CI remain in progress until integrated PR CI passes
-- Shared hotspot: A PR #38 currently owns `docs/LANE_STATUS.md`. E does not edit that file until #38 merges or otherwise releases it; `FORMALIZATION_PROGRESS.md` is E-owned for #36
-- Next: open the focused integration PR, verify policy + `lake build` + `lake exe vbp build`; if green, mark Blueprint/CI complete, synchronize final lane status after #38, and merge
-- Blockers: no semantic blocker. The only coordination dependency is the temporary `docs/LANE_STATUS.md` ownership by A PR #38
+- Shared hotspot: A PR #38 is merged, so `docs/LANE_STATUS.md` is released. E now owns the focused #36 status/progress synchronization while this integration branch is active
+- Next: open the focused integration PR and verify repository policy + `lake build` + `lake exe vbp build`; if green, mark Blueprint/CI complete, finalize lane status/handoff, and merge
+- Blockers: none
 
 ## Short resume prompt
 
-`Eレーンとして作業を続けて。Issue #36 / branch integration/s1-1-theorem1-ii-36 をsource of truthとして、merged B #25 と C #18 のLean↔Blueprint linkage、policy/lake/vbp、FORMALIZATION_PROGRESS、LANE_STATUS/E handoffを統合して。A PR #38がLANE_STATUSを所有している間は競合編集せず、数学的statement/proof自体は変更しないで。`
+`Eレーンとして作業を続けて。Issue #36 / branch integration/s1-1-theorem1-ii-36 をsource of truthとして、merged B #25 と C #18 のLean↔Blueprint linkage、policy/lake/vbp、FORMALIZATION_PROGRESS、LANE_STATUS/E handoffを統合して。数学的statement/proof自体は変更しないで。`
