@@ -134,3 +134,37 @@ Leanでは `F_p` を `ZMod p` で表し、一般的な有限次元ベクトル�
 
 この議論は固定された代数閉体の内部での一意性を示すものであり、異なる有限体同士の抽象的な同型一意性は次の別ターゲットに残す。
 :::
+
+## 定理1(iii) — 位数による有限体の抽象同型一意性
+
+引き続き `q=p^f` とし、定理1(ii)で得た `Ω` 内の `q` 元部分体を標準的な代表 `F_q` とみなす。
+ここでは、別の有限体 `K` が同じ `q` 個の元を持つなら、`K` と `F_q` が環同型になることを示す。
+これは二つの体を同じ集合として等しいと主張するのではなく、体構造を保つ全単射が存在するという主張である。
+
+:::definition "finite_field_equiv_canonical_q_field" (lean := "SerreNumberTheoryAI.finiteFieldEquivPrimePowerFixedSubfield") (uses := "finite_subfield_cardinality_q_unique")
+位数が `q=p^f` の有限体 `K` をとる。要素数が素数 `p` のべきであることから `K` の標数は `p` と分かるので、`K` は `F_p` 上の有限代数拡大とみなせる。
+標数 `p` の代数閉体 `Ω` への埋め込みを一つ選び、その像を `Ω` の部分体 `E` とする。
+埋め込みは `K` と `E` の間の体同型を与え、`E` の要素数も `q` である。
+定理1(ii)の一意性によって `E=F_q` となるため、この同型を `F_q` への同型へ移すことができる。
+:::
+
+:::proof "finite_field_equiv_canonical_q_field"
+まず `|K|=p^f` から一般的な標数と濃度の関係を用いて `CharP K p` を得る。
+次に `F_p` をLeanでは `ZMod p` として扱い、有限性から `K/F_p` が代数的であることを使う。
+代数閉体では代数拡大の各最小多項式が分解するので、拡大体の埋め込み定理により `K` から `Ω` への `F_p`-代数準同型が得られる。
+体からの準同型は単射であり、像への制限は `K` と像部分体 `E` の同型になる。
+この同型から `|E|=|K|=q` を得て、`finite_subfield_cardinality_q_unique` を適用すると `E` は定理1(ii)の固定点部分体と一致する。
+最後に像への同型とこの部分体の同一視を合成する。
+
+Leanでは有限体同士が同じ位数なら同型になるという完成済みの有限体分類定理を直接使わず、定理1(ii)へ戻るこの構成を明示する。
+:::
+
+:::theorem "finite_field_cardinality_q_isomorphic" (lean := "SerreNumberTheoryAI.serre_theorem1_iii") (uses := "finite_field_equiv_canonical_q_field")
+`p` を素数、`f>0` とし、`K` が `p^f` 個の元を持つ有限体なら、`K` は定理1(ii)で構成した `p^f` 元体と同型である。
+したがって、位数 `q=p^f` を固定すると有限体は抽象的な体同型を除いて一意である。
+:::
+
+:::proof "finite_field_cardinality_q_isomorphic"
+`finite_field_equiv_canonical_q_field` が必要な体同型そのものを構成しているので、その同型の存在を取り出せばよい。
+定理1(ii)が「一つの代数閉体の中での部分体の一意性」を与えるのに対し、この定理は任意の有限体をその代数閉体へ埋め込むことで「抽象的な同型を除く一意性」へ移している。
+:::
