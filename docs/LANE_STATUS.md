@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #54 dependency graph / queue refill | `design/refine-worker-queue-54` / PR pending | finish scheduler-doc synchronization, CI/self-review/merge; continue monitoring claims and `STACK-READY` transitions |
+| A | Scheduler / Design | 🚧 active | #54 dependency graph / queue refill | `design/refine-worker-queue-54` / PR #57 | finish scheduler-doc synchronization, CI/self-review/merge; continue monitoring claims and `STACK-READY` transitions |
 | B | End-to-end Formalizer | 🚧 active | #50 `S1.2-MultGroup` | `work/s1-2-mult-group` / PR pending | continue end-to-end implementation; preflight confirmed T1(iii) is not a dependency |
 | C | End-to-end Formalizer | 🚧 active | #49 `S1.1-T1iii` | `work/s1-1-t1iii` / PR pending | formalize abstract uniqueness up to isomorphism end-to-end under the stabilized source contract |
-| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums` preflight | `work/s2-1-power-sums` / PR pending | keep proof gated on #50 `DONE` or explicit `STACK-READY`; continue source/dependency/mathlib preflight meanwhile |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim the highest-priority still-unclaimed executable item (#52/#55/#56 according to live state) rather than waiting for a specialist handoff |
+| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums` + #52 `S2.2-Chevalley` preflights | `work/s2-1-power-sums`, `work/s2-2-chevalley` / PRs pending | keep both proof bodies gated on their upstream `DONE`/`STACK-READY`; use the second branch only for safe preflight while #51 waits |
+| E | End-to-end Formalizer | 🟡 ready | none | none | after #57 exposes the refilled queue on main, atomic-claim the highest-priority still-unclaimed executable preflight (#55 before #56 unless live state changes) |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -34,7 +34,7 @@ Live worker claims at the latest A check:
 
 - C: #49 `S1.1-T1iii`
 - B: #50 `S1.2-MultGroup`
-- D: #51 `S2.1-PowerSums` preflight
+- D: #51 `S2.1-PowerSums` preflight and #52 `S2.2-Chevalley` preflight
 - E: unclaimed
 
 A #54 refined the source-level dependency graph:
