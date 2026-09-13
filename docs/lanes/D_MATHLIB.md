@@ -47,10 +47,11 @@ Issueコメントまたはこのhandoffに次を残す。
 - Last completed target: #10 — mathlib research for `S1.1.Theorem1(ii)`
 - Semantic contract: #6
 - Completed PR: #24 (merged)
-- Completed: pinned mathlib `v4.32.0` API survey; detailed findings are in Issue #10 and the research summary below; B #7 was explicitly notified
-- Next: remain ready for the next focused D-lane research request; do not claim B/E work while waiting
+- Completed: pinned mathlib `v4.32.0` API survey; detailed findings are in Issue #10 and the research summary below; B #7 consumed the handoff and PR #25 is now merged
+- Next: remain advisory/idle while E #36 performs cross-layer integration; resume only for a concrete D-focused research request or an E-routed API blocker
 - Blockers: none
-- Cross-lane state: B #7 / PR #25 owns the active Lean implementation; C #9 / PR #18 is merged; E owns downstream cross-layer integration once B is ready
+- Cross-lane state: B #7 / PR #25 is completed and merged; C #9 / PR #18 is merged; E #36 is the active owner for Theorem 1(ii) integration
+- Frontier: do not claim E integration work and do not advance to Theorem 1(iii) until the current slice is integrated or A explicitly changes the dependency graph
 - Shared hotspots: none
 - Independence: human `are4c4/SerreNumberTheoryBlueprint` mathematical content was not inspected or used
 
