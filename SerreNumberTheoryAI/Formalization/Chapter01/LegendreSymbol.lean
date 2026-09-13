@@ -104,7 +104,7 @@ theorem legendreValue_eq_one_iff_isSquare_of_ne_zero
     rw [← hbridge]
     simpa using hval
   · intro hs
-    have hchar : finiteFieldHalfPowerCharacter (ZMod p) u = 1 := hu.mpr (hsquare.mpr hs)
+    have hchar : finiteFieldHalfPowerCharacter (ZMod p) u = 1 := hu.mp (hsquare.mpr hs)
     rw [hbridge]
     simpa using congrArg (fun v : (ZMod p)ˣ => (v : ZMod p)) hchar
 
@@ -156,8 +156,8 @@ theorem intCast_legendreSign_eq_legendreValue
         omega
       letI : Fact (2 < p) := ⟨by omega⟩
       have hne : legendreValue p x ≠ 1 := by
-        rw [h]
-        exact ZMod.neg_one_ne_one
+        intro h1
+        exact ZMod.neg_one_ne_one (h.symm.trans h1)
       simp [legendreSign, hx, hne, h]
 
 end OddPrime
