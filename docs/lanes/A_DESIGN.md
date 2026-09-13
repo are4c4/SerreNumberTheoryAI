@@ -42,25 +42,34 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
 
 ## Current handoff
 
-- State: ready scheduler; no A mathematical implementation deliverable
-- Active A coordination: #60 / PR #61 is the final docs-only cleanup after #54 / PR #57; merge once latest-head CI is green
-- Completed latest mathematical worker checkpoint:
-  - C #49 / PR #58 — `S1.1-T1iii` end-to-end formalization merged; abstract uniqueness up to isomorphism is now complete on `main`
+- State: active scheduler coordination
+- Active A coordination: #64 / PR #69 — refill queue with `S3.3-QuadraticReciprocity` PREFLIGHT and synchronize dependency state
+- Canonical A branch: `design/refill-quadratic-reciprocity-64`
+- Historical A PR #66 auto-closed during latest-main rebase and is superseded by #69
+- Completed recent mathematical checkpoints:
+  - C #49 / PR #58 — `S1.1-T1iii` end-to-end complete on `main`
+  - B #50 / PR #59 — `S1.2-MultGroup` end-to-end complete on `main`
+  - D #51 / PR #62 — `S2.1-PowerSums` end-to-end complete on `main`; source three-case formula and Chevalley-facing low-exponent vanishing corollary are stable
 - Live ownership at the latest check:
-  - B owns #50 / `work/s1-2-mult-group` / draft PR #59
-  - C owns #56 / `work/s3-2-legendre-symbol` for dependency-safe preflight after completing #49
-  - D owns #51 / `work/s2-1-power-sums`, #52 / `work/s2-2-chevalley`, and #55 / `work/s3-1-quadratic-elements` as dependency-safe preflights
-  - E has no live canonical branch at the latest check
+  - C owns #56 / `work/s3-2-legendre-symbol` for dependency-safe preflight
+  - D owns #52 / `work/s2-2-chevalley` and #55 / `work/s3-1-quadratic-elements`
+  - B and E have no unfinished mathematical work item at the latest check
 - Dependency gates:
-  - #51 proof waits for #50 `DONE` or explicit `STACK-READY`
-  - #52 proof waits for #51 `DONE` or explicit `STACK-READY`
-  - #55 preflight confirms the characteristic-2 half is independent of #50, while the full odd-characteristic/index-2 theorem has a hard edge to #50 cyclicity; no dependent proof code should land before `DONE`/`STACK-READY`
-  - #56 proof waits for the required #55 interface; C may continue source/dependency/mathlib preflight meanwhile
-- Queue health: all currently seeded items #50/#51/#52/#55/#56 are owned. This means A should prepare the next refill candidate rather than assume E can claim an existing row.
-- Next refill candidate: §3.3 quadratic reciprocity. Add only a dependency-safe `PREFLIGHT` seed after checking the exact source boundary and whether its implementation depends on #56 or a narrower earlier interface.
+  - #52 proof gate is now open because #51 is `DONE`; D has already opened draft PR #68 from current main
+  - #55 full proof gate is open because #50 is `DONE`
+  - #56 proof waits for #55 `DONE` or explicit `STACK-READY`; C may continue preflight
+  - #64 / `S3.3-QuadraticReciprocity` proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit roots-of-unity, Gauss-sum, finite-sum, Frobenius and algebraic-closure APIs now
+- §3.3 source boundary fixed for queue purposes:
+  - distinct odd primes `l,p`
+  - Theorem 6: `(l/p) = (p/l)(-1)^(ε(l)ε(p))`
+  - source proof via primitive `l`-th root `w`, Gauss sum `y`, `y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)`, then Theorem 5 from §3.2
+- Queue health: #52/#55/#56 are owned; #64 is the fresh unclaimed PREFLIGHT candidate. The first B/C/D/E worker that creates `work/s3-3-quadratic-reciprocity` owns it.
+- Shared-hotspot coordination:
+  - A #64 / PR #69 owns `docs/WORK_QUEUE.md` and this A handoff only.
+  - duplicate queue-only PR #67 was closed as redundant.
+  - B cleanup PR #63 has dropped its overlapping `docs/WORK_QUEUE.md` diff and retains its other coordination files; A deliberately does not touch `FORMALIZATION_PROGRESS.md` or `docs/LANE_STATUS.md` in #69.
 - Blockers: none at A level
-- Shared hotspots reserved by A while #60 / PR #61 is active: `docs/LANE_STATUS.md`, `docs/lanes/A_DESIGN.md`; do not overlap worker implementation files
-- Next A action: finish #61, then preflight/refill the queue so at least one unclaimed safe item is visible for E without stealing B/C/D work.
+- Next A action: finish #69 after latest-head CI, then monitor #52/#55 implementation and #55/#56 `STACK-READY`/DONE edges while keeping at least one unclaimed safe PREFLIGHT visible.
 
 ## Scheduler health target
 
@@ -71,8 +80,6 @@ A should prefer this state:
 - `STACKABLE` only when upstream interface is explicitly stable
 - no duplicate canonical branch ownership
 - no worker waiting merely because another specialist lane has not produced a handoff
-
-The current queue has one active implementation front (#50) plus four owned downstream preflights (#51/#52/#55/#56). Because there is no unclaimed seeded item at the latest check, A should now refill one dependency-safe future preflight rather than create proof work speculatively.
 
 ## Short resume prompt
 

@@ -89,22 +89,26 @@ preflightの結果、未mergeupstreamへのstackが必要になった場合:
 
 ## 6. Current queue
 
-Theorem 1(ii)まではmain上でcross-layer completeです。2026-09-13のA preflightで、書籍上の実際の証明依存を次のように明示しました。
+Theorem 1(ii), Theorem 1(iii), §1.2 finite-field multiplicative group, and §2.1 power sums are now end-to-end complete on `main`.
 
-- `S1.2-MultGroup` は Theorem 1(iii) を必要としない。Theorem 1(ii) の安定した `F_q` modelと一般的な有限群・多項式根数の議論から進められる。
-- `S2.1-PowerSums` は `S1.2-MultGroup` の巡回性を明示的に使う。
-- `S2.2-Chevalley` は `S2.1-PowerSums` の単項式に対する和を明示的に使う。
-- §3.1平方数は §2 系列とは独立に、主として `S1.2-MultGroup` とPhase 1の有限体/Frobenius基盤に依存する。
-- §3.2 Legendre記号は §3.1 の平方部分群・指標の記述を使う。
+書籍上の実際の証明依存は次のとおりです。
+
+- `S1.2-MultGroup` は Theorem 1(iii) を必要としない。
+- `S2.1-PowerSums` は `S1.2-MultGroup` の巡回性を明示的に使う。#51 / PR #62 はそのproject interfaceからsource三分岐式とChevalley向け低指数消滅系まで完成し、mainへmerge済み。
+- `S2.2-Chevalley` は `S2.1-PowerSums` の低指数消滅系を明示的に使う。#51がDONEになったため、D-owned #52 のfull proof gateは現在open。
+- §3.1平方数は §2 系列とは独立。characteristic-2 halfはPhase 1/Frobeniusのみで進み、full odd-characteristic/index-2 resultは `S1.2-MultGroup` を使う。#50がDONEなのでD-owned #55 のfull implementation gateもopen。
+- §3.2 Legendre記号は §3.1 の平方部分群 / half-power character interfaceを使う。
+- §3.3平方剰余の相互法則は §3.2 Legendre記号 / 定理5を明示的に使う。source proofは primitive `l`-th root とGauss sumを導入し、`y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)` を示した後にTheorem 5を用いて相互法則を得る。
 
 | Priority | Work ID | Target | State | Required before implementation | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `CLAIMED` | Theorem 1(ii) integrated on main ✅; canonical semantic boundary recorded on #49 | `work/s1-1-t1iii` | #49 / C |
-| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `CLAIMED` | Theorem 1(ii) finite-field model on main ✅; T1(iii) is not a dependency | `work/s1-2-mult-group` | #50 / B |
-| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `CLAIMED` | D owns preflight; full proof waits for `S1.2-MultGroup` `DONE` or `STACK-READY` | `work/s2-1-power-sums` | #51 / D |
-| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `CLAIMED` | D owns second preflight; full proof waits for `S2.1-PowerSums` `DONE` or `STACK-READY` | `work/s2-2-chevalley` | #52 / D |
-| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `PREFLIGHT` | full odd-characteristic proof is expected to need `S1.2-MultGroup`; confirm exact Phase 1 edges before implementation | `work/s3-1-quadratic-elements` | #55 / unclaimed |
-| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `PREFLIGHT` | full proof waits for the required §3.1 interface `DONE` or `STACK-READY`; preflight may proceed now | `work/s3-2-legendre-symbol` | #56 / unclaimed |
+| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `DONE` | PR #58 merged green | `work/s1-1-t1iii` | #49 / C complete |
+| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `DONE` | PR #59 merged green | `work/s1-2-mult-group` | #50 / B complete |
+| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `DONE` | PR #62 merged green | `work/s2-1-power-sums` | #51 / D complete |
+| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `CLAIMED` | #51 is DONE on main; D may move branch to latest main and implement the core theorem end-to-end | `work/s2-2-chevalley` | #52 / D |
+| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | #50 is DONE; D preflight fixed the split and may implement the full source target from latest main | `work/s3-1-quadratic-elements` | #55 / D |
+| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | full proof waits for the required §3.1 interface `DONE` or `STACK-READY`; preflight may continue | `work/s3-2-legendre-symbol` | #56 / C |
+| P6 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `PREFLIGHT` | full proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit Gauss-sum / roots-of-unity / Frobenius APIs now | `work/s3-3-quadratic-reciprocity` | #64 / unclaimed |
 
 Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。`CLAIMED` 行についてはIssue上の `OWNER:` コメントとlive branchを優先します。
 
@@ -116,7 +120,7 @@ Aはqueue healthを監視し、可能なら常時3〜6個程度の `READY` / `PR
 
 B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが明白になった場合はfocused Issueやqueue更新を提案・実装してよいです。曖昧なstatement、dependency conflict、shared-hotspot conflictだけをAへrouteします。
 
-次のrefill候補は §3.3 平方剰余の相互法則です。§3.2のstatement/interfaceが安定する前にproof dependencyを推測せず、queue depthが減った段階でPREFLIGHT seedを追加します。
+§3.3は#64でPREFLIGHT seed済みです。次のrefillでは、§3.3のpreflightからsource/dependency boundaryが安定するまで、それより先のproof dependencyを推測しません。queue capacityが再び薄くなったら、次のsource targetを独立性・dependencyの観点からpreflightします。
 
 ## 8. End-of-run handoff
 
