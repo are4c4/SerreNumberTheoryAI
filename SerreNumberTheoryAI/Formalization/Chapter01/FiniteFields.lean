@@ -128,7 +128,7 @@ def primePowerFixedSubfield : Subfield Ω := by
 
 @[simp]
 theorem mem_primePowerFixedSubfield (x : Ω) :
-    x ∈ primePowerFixedSubfield Ω p f hp hf ↔ x ^ (p ^ f) = x :=
+    x ∈ primePowerFixedSubfield Ω p f hp ↔ x ^ (p ^ f) = x :=
   Iff.rfl
 
 /-- The defining polynomial has degree exactly `p^f`. -/
@@ -164,7 +164,7 @@ The fixed-point description agrees exactly with the roots of `X^(p^f) - X`
 in the ambient algebraically closed field.
 -/
 theorem coe_primePowerFixedSubfield_eq_rootSet :
-    ((primePowerFixedSubfield Ω p f hp hf : Subfield Ω) : Set Ω) =
+    ((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω) =
       (primePowerPolynomial Ω p f).rootSet Ω := by
   ext x
   simp [primePowerPolynomial, primePowerPolynomial_ne_zero Ω p f hp hf,
@@ -184,13 +184,13 @@ theorem primePowerPolynomial_rootSet_card :
 
 /-- The fixed-point subfield has exactly `p^f` elements. -/
 theorem primePowerFixedSubfield_natCard :
-    Nat.card (primePowerFixedSubfield Ω p f hp hf) = p ^ f := by
+    Nat.card (primePowerFixedSubfield Ω p f hp) = p ^ f := by
   calc
-    Nat.card (primePowerFixedSubfield Ω p f hp hf) =
-        ((primePowerFixedSubfield Ω p f hp hf : Subfield Ω) : Set Ω).ncard := by
+    Nat.card (primePowerFixedSubfield Ω p f hp) =
+        ((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω).ncard := by
       simpa using
         (Nat.card_coe_set_eq
-          ((primePowerFixedSubfield Ω p f hp hf : Subfield Ω) : Set Ω))
+          ((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω))
     _ = ((primePowerPolynomial Ω p f).rootSet Ω).ncard := by
       rw [coe_primePowerFixedSubfield_eq_rootSet Ω p f hp hf]
     _ = Nat.card ((primePowerPolynomial Ω p f).rootSet Ω) := by
@@ -206,7 +206,7 @@ subfield: every element of a finite field satisfies `x^(#F) = x`.
 -/
 theorem subfield_le_primePowerFixedSubfield_of_natCard
     (E : Subfield Ω) (hcard : Nat.card E = p ^ f) :
-    E ≤ primePowerFixedSubfield Ω p f hp hf := by
+    E ≤ primePowerFixedSubfield Ω p f hp := by
   have hq_ne_zero : p ^ f ≠ 0 := pow_ne_zero f hp.ne_zero
   have hfinite : Finite E := by
     rcases finite_or_infinite E with hE | hE
@@ -232,7 +232,7 @@ ambient field is unique.
 -/
 theorem subfield_eq_primePowerFixedSubfield_of_natCard
     (E : Subfield Ω) (hcard : Nat.card E = p ^ f) :
-    E = primePowerFixedSubfield Ω p f hp hf := by
+    E = primePowerFixedSubfield Ω p f hp := by
   apply SetLike.ext'
   apply Set.eq_of_subset_of_ncard_le
   · exact subfield_le_primePowerFixedSubfield_of_natCard Ω p f hp hf E hcard
@@ -240,7 +240,7 @@ theorem subfield_eq_primePowerFixedSubfield_of_natCard
       rw [← Nat.card_coe_set_eq]
       exact hcard
     have hFcard :
-        ((primePowerFixedSubfield Ω p f hp hf : Subfield Ω) : Set Ω).ncard = p ^ f := by
+        ((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω).ncard = p ^ f := by
       rw [← Nat.card_coe_set_eq]
       exact primePowerFixedSubfield_natCard Ω p f hp hf
     rw [hEcard, hFcard]
@@ -255,12 +255,12 @@ solutions of `x^(p^f) = x`.
 -/
 theorem serre_theorem1_ii :
     (∃! F : Subfield Ω, Nat.card F = p ^ f) ∧
-      (((primePowerFixedSubfield Ω p f hp hf : Subfield Ω) : Set Ω) =
+      (((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω) =
         {x : Ω | x ^ (p ^ f) = x}) ∧
-      (((primePowerFixedSubfield Ω p f hp hf : Subfield Ω) : Set Ω) =
+      (((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω) =
         (primePowerPolynomial Ω p f).rootSet Ω) := by
   constructor
-  · refine ⟨primePowerFixedSubfield Ω p f hp hf, ?_, ?_⟩
+  · refine ⟨primePowerFixedSubfield Ω p f hp, ?_, ?_⟩
     · exact primePowerFixedSubfield_natCard Ω p f hp hf
     · intro E hE
       exact subfield_eq_primePowerFixedSubfield_of_natCard Ω p f hp hf E hE
