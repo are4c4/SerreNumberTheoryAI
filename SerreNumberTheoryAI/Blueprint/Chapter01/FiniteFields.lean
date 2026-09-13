@@ -90,7 +90,7 @@ Leanでは `F_p` を `ZMod p` で表し、一般的な有限次元ベクトル�
 これは `q` 乗写像の固定点集合であり、多項式 `X^q-X` の `Ω` における根の集合と同じである。
 :::
 
-:::lemma_ "q_power_fixed_points_form_subfield" (uses := "q_power_fixed_points", "frobenius_power_map")
+:::lemma_ "q_power_fixed_points_form_subfield" (uses := "q_power_fixed_points, frobenius_power_map")
 `q=p^f` であるため、標数 `p` では `q` 乗写像はFrobenius写像を `f` 回合成した写像として振る舞う。
 したがって `x^q=x` を満たす元は、加法・乗法・加法逆元について閉じ、非零元の逆元についても閉じる。
 このため `q_power_fixed_points` は `Ω` の部分体を定める。
@@ -116,7 +116,7 @@ Leanでは `F_p` を `ZMod p` で表し、一般的な有限次元ベクトル�
 これらの根はまさに `x^q=x` を満たす元である。
 :::
 
-:::theorem "finite_subfield_cardinality_q_unique" (uses := "q_power_fixed_points_form_subfield", "q_power_fixed_points_cardinality")
+:::theorem "finite_subfield_cardinality_q_unique" (uses := "q_power_fixed_points_form_subfield, q_power_fixed_points_cardinality")
 標数 `p` の代数閉体 `Ω` には、位数 `q=p^f` の部分体がただ一つ存在する。
 その部分体の台集合は `x^q=x` を満たす元全体であり、したがって `X^q-X` の `Ω` における根全体でもある。
 :::
