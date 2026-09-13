@@ -158,7 +158,9 @@ theorem intCast_legendreSign_eq_legendreValue
       have hne : legendreValue p x ≠ 1 := by
         intro h1
         exact ZMod.neg_one_ne_one (h.symm.trans h1)
-      simp [legendreSign, hx, hne, h]
+      have hsign : legendreSign p x = -1 := by
+        simp only [legendreSign, if_neg hx, if_neg hne]
+      rw [hsign, h]
 
 end OddPrime
 
