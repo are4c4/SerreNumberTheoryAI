@@ -44,15 +44,17 @@
 - Target id: `S1.1.Theorem1(ii)`
 - Canonical statement contract: #6 (completed)
 - Branch: `formalize/s1-1-theorem1-ii-7`
-- PR: pending initial CI
-- Completed on main: opening notation, Frobenius lemma, Theorem 1(i)
-- Work in branch: direct fixed-point subfield construction; `X^(p^f)-X` root characterization; separability/root count; exact `Nat.card = p^f`; uniqueness among subfields of the fixed algebraically closed ambient field; umbrella theorem `serre_theorem1_ii`.
-- Mathlib use: general polynomial root/splitting/separability APIs and `FiniteField.pow_card`; deliberately not using a theorem that constructs or classifies the target finite subfield.
-- Cross-lane: C owns #9 Blueprint/exposition and must not be edited here; D #10 research is advisory; E integrates after B/C artifacts stabilize.
-- Next: run PR CI, repair Lean/API errors, then self-review statement integrity and merge if green and no blocker remains.
-- Blockers: none currently; CI has not yet checked the initial implementation.
-- Shared hotspots: none edited; `FORMALIZATION_PROGRESS.md`, root import aggregators, and `docs/LANE_STATUS.md` remain untouched in this branch.
+- PR: #25
+- Completed on main: opening notation, Frobenius lemma, Theorem 1(i); C #9 exposition / Blueprint and D #10 mathlib research are also merged.
+- Work in branch: direct fixed-point subfield construction; `X^(p^f)-X` root characterization; local separability/root count; exact `Nat.card = p^f`; uniqueness among subfields of the fixed algebraically closed ambient field; umbrella theorem `serre_theorem1_ii`.
+- Mathlib use: general characteristic-power, polynomial root/splitting/separability, set-cardinality APIs, plus the elementary identity `FiniteField.pow_card`; deliberately not using GaloisField or an existing finite-field existence/uniqueness classification theorem to close the target.
+- Verification: CI run #59 passed repository policy, `lake build`, and `lake exe vbp build` on head `72b176993001c5039d8c9bfdd384f94f61dfac03`.
+- Semantic review: A reported no drift from #6; B rechecked that the result is existence and uniqueness as an actual `Subfield Ω`, with carrier `{x | x^(p^f)=x}` and the root set of `X^(p^f)-X`, not Theorem 1(iii)'s abstract uniqueness up to isomorphism.
+- Cross-lane: C-owned Blueprint exposition is not edited here; final `lean :=` linkage and slice-wide progress completion belong to E integration after this PR merges.
+- Next: final CI after this handoff-only commit, self-review PR #25, then merge if green and no new blocker appears. After merge, B should become idle until A assigns another focused Lean Issue; do not begin Theorem 1(iii) before integration completes.
+- Blockers: none.
+- Shared hotspots: none edited; `FORMALIZATION_PROGRESS.md`, root import aggregators, `docs/LANE_STATUS.md`, and C-owned Blueprint files remain untouched in this branch.
 
 ## Short resume prompt
 
-`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、#7 / formalize/s1-1-theorem1-ii-7 のLean実装とCI修正だけを進めて。statement #6を変更せず、C所有のBlueprintは編集しないで。`
+`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、#7 / PR #25 の最終CIと自己レビューを確認して、greenかつblockerなしならmergeして。merge後はA/Eの統合handoffを確認し、新しいfocused Lean Issueが割り当てられるまで新規数学targetをclaimしないで。`
