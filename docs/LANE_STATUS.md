@@ -8,7 +8,7 @@
 | --- | --- | --- | --- | --- | --- |
 | A Design | 🟡 ready | S1.1 Theorem 1(ii) contract handed off / integration monitored | none | none | monitor B #7 / PR #25 and route cross-layer integration once the Lean artifact is stable |
 | B Formalization | 🚧 active | S1.1 Theorem 1(ii) Lean formalization | #7 | `formalize/s1-1-theorem1-ii-7` / #25 (draft) | repair current Lean/API CI failures without changing the completed #6 statement contract |
-| C Blueprint | 🟡 ready | S1.1 Theorem 1(ii) exposition merged | completed #9 | PR #18 merged; #26 is handoff cleanup only | keep C mathematically idle; final `lean :=` linkage belongs to B/E integration after B names stabilize |
+| C Blueprint | 🟡 ready | S1.1 Theorem 1(ii) exposition merged | completed #9 | PR #18 merged | remain mathematically idle; final `lean :=` linkage belongs to B/E integration after B names stabilize |
 | D Mathlib | 🟡 ready | S1.1 Theorem 1(ii) research complete | completed #10 | PR #24 merged | remain advisory/idle unless B requests a new focused API investigation |
 | E Integration | 🟡 ready | await S1.1 Theorem 1(ii) cross-layer integration | none | none | when B #7 is stable, open a focused integration Issue for Lean/Blueprint linkage, build, and progress completion |
 
