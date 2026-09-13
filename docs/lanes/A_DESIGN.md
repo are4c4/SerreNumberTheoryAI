@@ -16,71 +16,78 @@ Aはapproval gateではなく、B/C/D/Eが長く止まらずに形式化を進�
 
 ## Owned work
 
-- `docs/WORK_QUEUE.md` のqueue health
-- mathematical target / dependency boundary
+- queue health / dependency graph
 - `READY` / `PREFLIGHT` / `STACKABLE` / `WAITING` の整合
 - ambiguous statementの調整
-- ownership / shared-hotspot conflictの解消
-- stale queue / handoff / progress driftの修正
-- 大きすぎるtargetのdependency-safeなwork itemへの分割
+- ownership / shared-hotspot conflict解消
+- stale Issue / PR / handoff / progress driftの修正
+- dependency-safeなwork item分割とqueue refill
 
 ## Not an approval gate
 
-B/C/D/Eは、queue上の安全なwork itemについてcanonical branch lockを取得できれば、AのIssue作成・承認を待たずに進めてよいです。
-
-Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度の実行候補が見えるようにqueueを先回りして整えます。
-
-## When A is otherwise idle
-
-通常のLean proofをworker poolから奪う代わりに、次を進めます。
-
-- upcoming targetのsource / dependency preflight
-- queue refill
-- work item粒度の見直し
-- stacked branch候補のdependency確認
-- stale issue / PR / handoff cleanup
+B/C/D/Eは安全なwork itemについてcanonical branch lockを取れればA承認を待たずに進めてよいです。Aは通常のLean/Blueprint実装をworker poolから奪いません。
 
 ## Current handoff
 
 - State: active scheduler coordination
-- Active A coordination: #64 / PR #69 — refill queue with `S3.3-QuadraticReciprocity` PREFLIGHT and synchronize dependency state
-- Canonical A branch: `design/refill-quadratic-reciprocity-64`
-- Historical A PR #66 auto-closed during latest-main rebase and is superseded by #69
-- Completed recent mathematical checkpoints:
-  - C #49 / PR #58 — `S1.1-T1iii` end-to-end complete on `main`
-  - B #50 / PR #59 — `S1.2-MultGroup` end-to-end complete on `main`
-  - D #51 / PR #62 — `S2.1-PowerSums` end-to-end complete on `main`; source three-case formula and Chevalley-facing low-exponent vanishing corollary are stable
-- Live ownership at the latest check:
-  - C owns #56 / `work/s3-2-legendre-symbol` for dependency-safe preflight
-  - D owns #52 / `work/s2-2-chevalley` and #55 / `work/s3-1-quadratic-elements`
-  - B and E have no unfinished mathematical work item at the latest check
-- Dependency gates:
-  - #52 proof gate is now open because #51 is `DONE`; D has already opened draft PR #68 from current main
-  - #55 full proof gate is open because #50 is `DONE`
-  - #56 proof waits for #55 `DONE` or explicit `STACK-READY`; C may continue preflight
-  - #64 / `S3.3-QuadraticReciprocity` proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit roots-of-unity, Gauss-sum, finite-sum, Frobenius and algebraic-closure APIs now
-- §3.3 source boundary fixed for queue purposes:
-  - distinct odd primes `l,p`
-  - Theorem 6: `(l/p) = (p/l)(-1)^(ε(l)ε(p))`
-  - source proof via primitive `l`-th root `w`, Gauss sum `y`, `y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)`, then Theorem 5 from §3.2
-- Queue health: #52/#55/#56 are owned; #64 is the fresh unclaimed PREFLIGHT candidate. The first B/C/D/E worker that creates `work/s3-3-quadratic-reciprocity` owns it.
-- Shared-hotspot coordination:
-  - A #64 / PR #69 owns `docs/WORK_QUEUE.md` and this A handoff only.
-  - duplicate queue-only PR #67 was closed as redundant.
-  - B cleanup PR #63 has dropped its overlapping `docs/WORK_QUEUE.md` diff and retains its other coordination files; A deliberately does not touch `FORMALIZATION_PROGRESS.md` or `docs/LANE_STATUS.md` in #69.
-- Blockers: none at A level
-- Next A action: finish #69 after latest-head CI, then monitor #52/#55 implementation and #55/#56 `STACK-READY`/DONE edges while keeping at least one unclaimed safe PREFLIGHT visible.
+- Active A Issue: #81
+- Canonical branch: `design/sync-live-queue-81-v2`
+- Superseded A work: PR #75 / Issue #73 and PR #83 were closed rather than merging stale scheduler state.
+- Latest main at branch creation includes #70 / PR #80 Chevalley Corollary 1.
+
+### Completed checkpoints
+
+- #49 / PR #58 — Theorem 1(iii) DONE
+- #50 / PR #59 — finite-field multiplicative group DONE
+- #51 / PR #62 — power sums DONE
+- #52 / PR #68 — core Chevalley–Warning DONE
+- #70 / PR #80 — Corollary 1 nontrivial common zero DONE
+
+### Live ownership
+
+- B owns #71 `C2S1.1-ZpConstruction`; draft PR #86 is active.
+- C owns #56 `S3.2-LegendreSymbol` and #64 `S3.3-QuadraticReciprocity`.
+- D owns #55 `S3.1-QuadraticElements` and #72 `C2S1.2-ZpProperties` preflight.
+- E currently has no owned mathematical item.
+
+### Dependency gates
+
+- #55 / PR #82 exact head `ead063fff3e3714a77c9b340ffc339f4c8f74dfd` is CI-green and explicitly `STACK-READY` for #56. Frozen downstream declarations are:
+  - `finiteFieldHalfPowerCharacter`
+  - `finiteFieldHalfPowerCharacter_eq_one_or_neg_one`
+  - `finiteFieldNonzeroSquares_eq_ker_halfPowerCharacter`
+  - `mem_finiteFieldNonzeroSquares_iff_halfPowerCharacter_eq_one`
+- #56 is therefore `STACKABLE` now; C may stack onto that exact head.
+- #64 proof remains gated on a future smaller #56 subset: characteristic-independent Legendre sign/value, compatibility with the field-valued half-power core, multiplicativity, and Theorem 5(ii) at `-1`. Theorem 5(iii) at `2` is not required for §3.3.
+- #71 is independent of Chapter 1 and is being implemented by B.
+- #72 preflight is complete and WAITING on #71 public representation/projection/integer-map interface. D recommends splitting Proposition 3 metric/completeness/density into a follow-up after the algebraic #72 slice.
+
+### Queue health
+
+- #85 `S2.2-Chevalley-Cor2` is unclaimed `READY`; canonical Corollary 1 is #70 and is already DONE.
+- #78 `C1-Supp-GaussLemma` is unclaimed `PREFLIGHT`; proof waits for minimal #56 interface but does not depend on #64.
+- duplicate scheduler seeds #84 and #79 are closed as duplicates of #70 and #71 respectively.
+
+### Shared-hotspot / stale PR cleanup
+
+- A current branch changes only `docs/WORK_QUEUE.md`, `docs/LANE_STATUS.md`, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`.
+- C PR #76 touches only `docs/lanes/C_BLUEPRINT.md`, but its handoff predates #55 STACK-READY and is now stale/nonmergeable; route refresh/supersede to C rather than editing it in A.
+- D PR #82 and B PR #86 remain worker-owned; A does not edit their mathematical artifacts.
+
+### Next A actions
+
+1. finish #81 latest-main central sync, verify CI, and self-merge if green;
+2. watch #85/#78 claims so idle capacity remains available;
+3. monitor #56 stack transition and #64 future `STACK-READY` edge;
+4. if queue thins again, seed the source-faithful §1.2 Proposition 3 metric/completeness/density follow-up identified by #72 preflight rather than inventing unrelated work.
 
 ## Scheduler health target
 
-A should prefer this state:
-
-- at least one `READY` implementation item when mathematics permits
-- several `PREFLIGHT` items so workers can stay productive during dependency waits
-- `STACKABLE` only when upstream interface is explicitly stable
-- no duplicate canonical branch ownership
-- no worker waiting merely because another specialist lane has not produced a handoff
+- at least one `READY` item when mathematics permits;
+- several safe `PREFLIGHT`/`STACKABLE` candidates;
+- no duplicate canonical ownership;
+- no worker idle merely because another worker is waiting on CI/upstream.
 
 ## Short resume prompt
 
-`Aレーンとして作業を続けて。最新main、branch、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、A_DESIGN.md、FORMALIZATION_PROGRESS.mdを確認し、queue health・dependency graph・statement ambiguity・ownership conflictを管理して。B/C/D/Eの開始許可ゲートにはならず、常に複数のREADY/PREFLIGHT候補を先回りして用意して。`
+`Aレーンとして作業を続けて。最新main、branch、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、A_DESIGN.md、FORMALIZATION_PROGRESS.mdを確認し、queue health・dependency graph・statement ambiguity・ownership conflictを管理して。B/C/D/Eの開始許可ゲートにはならず、複数のREADY/PREFLIGHT候補を先回りして維持して。`
