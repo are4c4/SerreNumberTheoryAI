@@ -49,11 +49,11 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ### Live ownership
 
-- B: #78 `C1-Supp-GaussLemma` / PR #115; #96 `C2S1.3-QpField`; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting`; #104 `C2S2.2-HenselQuadraticOdd`.
+- B: #78 `C1-Supp-GaussLemma` / PR #115; #96 `C2S1.3-QpField`; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting`; #104 `C2S2.2-HenselQuadraticOdd`; #105 `C2S2.2-HenselQuadraticTwo`.
 - C: #64 `S3.3-QuadraticReciprocity` / PR #114.
 - D: #72 `C2S1.2-ZpProperties` / PR #92; #89 `C2S1.2-ZpMetric` / PR #116.
 - E: no mathematical ownership at latest check.
-- Unclaimed: #105 `C2S2.2-HenselQuadraticTwo`; #108 `C2S3.1-UnitFiltration`; #112 `C2S3.2-PrincipalUnits`.
+- Unclaimed: #108 `C2S3.1-UnitFiltration`; #112 `C2S3.2-PrincipalUnits`; #120 `C2S3.3-PadicSquares`.
 
 ### Dependency / integration state
 
@@ -62,15 +62,16 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - #78/B draft PR #115 has advanced beyond preflight. Latest checked head `dac9ecf5c18665d16a89a40d5e1b612412ada39c` passed CI #277 and includes source-shaped Gauss-lemma code plus Blueprint/root linkage. Because it also edits `Formalization.lean` and `Blueprint.lean`, A serialized its final aggregator merge behind #114; B may continue nonconflicting module work and must resync latest main after #114 clears.
 - #72/D exact head `c43d7f09c57a01418663965fd070c69ee16a73b6` passed CI #261. It provides projection/kernel, unit and power-divisibility bridges, unique `p^n * unit` decomposition, `serrePadicIntAddValuation` with multiplication/ultrametric laws, the domain instance, and independent Blueprint exposition.
 - D explicitly published `STACK-READY` from `c43d7f09…` **for #89 only**. A must not silently reuse that promise for #96/#102/#100/#108.
-- #89/D draft PR #116 stacks exactly on the frozen #72 head. Latest checked head `382a56d40d41e197b837eab34f7de871d147d8ba` passed CI #267 and currently changes only `PadicIntegerMetric.lean`, so the metric implementation can proceed without shared-root contention.
+- #89/D draft PR #116 stacks exactly on the frozen #72 head. Latest checked head `382a56d40d41e197b837eab34f7de871d147d8ba` passed CI #267 and currently changes only `PadicIntegerMetric.lean`, so the metric implementation can proceed without shared-root contention. A requested separate stable subsets for #102 completeness and #96 topology+density when those declarations are ready.
 - #96/B remains proof-gated until #72 publishes a #96-scoped stable domain/decomposition/valuation subset or merges. Proposition 4 additionally needs minimal #89 topology/density.
 - #99/B is DONE on main. Its final head `1a86c84e…` passed CI #260 with normal Formalization/Blueprint integration; the earlier #100 downstream interface remains stable.
 - #100/B may consume #99 now without stacking. Full proof still needs #72 primitive/unit and #96 `Q_p` scaling.
 - #102/B completed source/API preflight. It needs more than the #89-scoped #72 freeze: the source congruence/decomposition interface plus a compatible completeness result from #89.
 - #104/B completed odd-prime quadratic-lifting preflight. It remains proof-code-clean until #102 is DONE/STACK-READY plus the minimal #72 primitive/unit/congruence subset.
-- #105 remains the dyadic Hensel corollary unclaimed preflight.
+- #105/B completed dyadic quadratic-lifting preflight on canonical branch `work/c2-s2-2-hensel-quadratic-two`, based on main `c8b94633…`. The source uses the #102 main Hensel theorem at `n=3,k=1`, derivative `2 * Σ aᵢⱼxᵢ`, mod-8/mod-4 valuation condition, and a determinant-unit reduction mod 2. Proof waits an explicit #102 main-theorem gate plus #72 domain/divisibility/valuation/primitive subset; no #96 dependency is needed.
 - #108 is the Chapter 2 §3.1 unit-filtration / Proposition 7 preflight. Core work waits for an explicit stable #72 unit/divisibility subset; only the final roots-of-unity corollary phrased inside project `Q_p` needs #96.
 - #112 is the source-adjacent §3.2 principal-unit / Proposition 8 preflight. Core work depends on #108/#72; the final project `Q_p^×` decomposition statement also needs #96.
+- #120 is the newly seeded §3.3 p-adic-square-class preflight. Odd `p` uses valuation parity plus the merged project Legendre residue-square criterion; `p=2` uses valuation parity plus unit `≡1 mod 8`. Core proof waits #112 + #96, and no implementation begins before those exact interfaces are DONE/STACK-READY.
 
 ### Shared-hotspot coordination
 
@@ -82,19 +83,19 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 Unclaimed safe capacity:
 
-- #105 `C2S2.2-HenselQuadraticTwo` — PREFLIGHT; proof waits #102/#72.
 - #108 `C2S3.1-UnitFiltration` — PREFLIGHT; core waits an explicit #72 unit/divisibility subset, final `Q_p` corollary waits #96.
 - #112 `C2S3.2-PrincipalUnits` — PREFLIGHT; core waits #108/#72, final `Q_p^×` theorem waits #96.
+- #120 `C2S3.3-PadicSquares` — PREFLIGHT; source Theorems 3–4 / square-class quotients, proof waits #112/#96 and odd case reuses merged #56.
 
-Owned executable/near-executable work includes #64/#78/#72 and stackable #89. Owned preflight/waiting work includes #100/#102/#104/#96. The pool therefore retains several useful paths without speculative work.
+Owned executable/near-executable work includes #64/#78/#72 and stackable #89. Owned preflight/waiting work includes #100/#102/#104/#105/#96. The pool therefore retains several useful paths without speculative work.
 
 ### Next A actions
 
 1. monitor #114 source proof/Blueprint/final root integration and keep #115 serialized behind it;
 2. once #114 merges, route #115 to latest-main root reconciliation and full CI;
 3. monitor #72 for any additional explicit downstream freeze(s) before releasing #96/#102/#100/#108;
-4. monitor #116 implementation from exact `c43d7f09…` and future topology/completeness freeze needed by #96/#102;
-5. monitor claims of #105/#108/#112 and refill only when safe capacity thins again;
+4. monitor #116 implementation from exact `c43d7f09…` and future separate topology/completeness freezes needed by #96/#102;
+5. monitor claims of #108/#112/#120 and refill only when safe capacity thins again;
 6. do not create speculative implementation work merely to keep a lane busy.
 
 ## Scheduler health target
