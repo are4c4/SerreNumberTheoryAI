@@ -32,9 +32,9 @@ B/C/D/Eは現在end-to-end formalizer workerです。通常は1つのworkerが1 
 | CI build + policy checks | ✅ |
 | Issue / PR templates | ✅ |
 | Parallel lane coordination | ✅ |
-| Continuous worker queue / work stealing / stacked-branch protocol | 🚧 |
+| Continuous worker queue / work stealing / stacked-branch protocol | ✅ |
 
-Role-specialized lane coordination was introduced by Issue #4 / PR #5. Issue #47 replaces the specialized B/C/D/E pipeline with a scheduler + end-to-end worker pool while preserving the same mathematical safety rules.
+Role-specialized lane coordination was introduced by Issue #4 / PR #5. Issue #47 / PR #48 replaced the specialist B/C/D/E pipeline with A as scheduler plus four equivalent end-to-end formalizers, a dependency-aware queue, atomic branch claims, work stealing, and guarded stacked branches. PR #48 passed repository policy, `lake build`, and `lake exe vbp build` before merge.
 
 ## Phase 1 — 有限体
 

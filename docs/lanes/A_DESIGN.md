@@ -42,13 +42,17 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
 
 ## Current handoff
 
-- Active infrastructure Issue: #47 — continuous formalizer queue / work stealing / stacked branches
-- Active branch: `infra/continuous-formalizer-queue-47`
-- Mathematical frontier on main: `S1.1.Theorem1(ii)` cross-layer complete
-- Next mathematical target: `S1.1-T1iii` is seeded as `READY` in the new queue
-- Additional preflight candidates: `S1.2-MultGroup`, `S2.1-PowerSums`, `S2.2-Chevalley`
-- Important safety rule: exact fine-grained dependencies for later targets are not guessed; workers confirm them during preflight
+- State: ready scheduler
+- Continuous-worker infrastructure: #47 / PR #48 merged on main
+- Mathematical frontier: `S1.1.Theorem1(ii)` cross-layer complete
+- Queue seed:
+  - #49 / `S1.1-T1iii` — `READY`
+  - #50 / `S1.2-MultGroup` — `PREFLIGHT`
+  - #51 / `S2.1-PowerSums` — `PREFLIGHT`
+  - #52 / `S2.2-Chevalley` — `PREFLIGHT`
+- Active A coordination work: none
 - Blockers: none
+- Next: monitor queue depth, actual dependency findings, stale claims, and ambiguity/conflicts. Do not assign each worker manually when a safe atomic claim is available.
 
 ## Scheduler health target
 

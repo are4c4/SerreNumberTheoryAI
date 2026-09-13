@@ -35,9 +35,10 @@ Dは固定のmathlib research専任ではありません。`docs/WORK_QUEUE.md` 
 - Active work: none
 - Active branch / PR: none
 - Last completed historical work: `S1.1.Theorem1(ii)` mathlib research (#10 / PR #24); target全体もmain上でintegration complete
-- New workflow infrastructure: #47 / `infra/continuous-formalizer-queue-47` がmerge後に有効
-- Highest-priority seeded implementation item: `S1.1-T1iii` (`work/s1-1-t1iii`)
-- If that branch is already claimed: scan the next executable queue item rather than idle
+- Continuous-worker protocol: active on main via #47 / PR #48
+- Highest-priority seeded implementation item: #49 / `S1.1-T1iii` (`work/s1-1-t1iii`) — `READY`
+- Additional productive fallback: #50 / `S1.2-MultGroup`, #51 / `S2.1-PowerSums`, #52 / `S2.2-Chevalley` are `PREFLIGHT`
+- If a canonical branch is already claimed: do not idle; scan the next executable queue item or resume owned work
 - Blockers: none
 
 ## Short resume prompt

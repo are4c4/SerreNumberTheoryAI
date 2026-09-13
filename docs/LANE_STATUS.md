@@ -6,19 +6,21 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | workflow redesign #47 | `infra/continuous-formalizer-queue-47` | merge queue/work-stealing infrastructure, then maintain dependency graph and queue health |
-| B | End-to-end Formalizer | 🟡 ready | none | none | after #47 merge, restore any live work or claim highest-priority executable queue item |
-| C | End-to-end Formalizer | 🟡 ready | none | none | after #47 merge, restore any live work or claim highest-priority executable queue item |
-| D | End-to-end Formalizer | 🟡 ready | none | none | after #47 merge, restore any live work or claim highest-priority executable queue item |
-| E | End-to-end Formalizer | 🟡 ready | none | none | after #47 merge, restore any live work or claim highest-priority executable queue item |
+| A | Scheduler / Design | 🟡 ready | none | none | maintain dependency graph / queue health; resolve ambiguity or conflicts without becoming a per-item approval gate |
+| B | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
+| C | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
+| D | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
+| E | End-to-end Formalizer | 🟡 ready | none | none | restore any live owned work or atomic-claim the highest-priority executable queue item |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Coordination model
 
+- Issue #47 / PR #48 is merged: the continuous worker-pool protocol is active on main.
 - B/C/D/Eは固定専門レーンではなく同等のformalizer worker。
 - workerは `docs/WORK_QUEUE.md` をscanし、canonical branch作成をownership lockとしてclaimする。
-- branchが既に存在するwork itemを別workerが奪わない。
+- claim後はfocused Issueへowner lane / branch / base SHAを記録する。
+- branchが既に存在するwork itemを、`RELEASED` / `REASSIGNED` なしに別workerが奪わない。
 - PR作成・CI pending・1 item完了・item固有blockerはchat停止条件ではない。実行時間が残っていればwork stealingする。
 - 1 workerの未merge実装PRは原則2本まで。
 - downstream stackはupstreamが `STACK-READY` を明記した場合だけ許可する。
@@ -28,11 +30,13 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 `S1.1.Theorem1(ii)` まではInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIがmain上でcompleteです。
 
-新workflowのseed queue:
+Active seed queue:
 
-- `S1.1-T1iii` — `READY`
-- `S1.2-MultGroup` — `PREFLIGHT`
-- `S2.1-PowerSums` — `PREFLIGHT`。本実装前に必要なS1.2 resultを明示する
-- `S2.2-Chevalley` — `PREFLIGHT`。本実装前に必要なS2.1 resultを明示する
+- #49 `S1.1-T1iii` — `READY`
+- #50 `S1.2-MultGroup` — `PREFLIGHT`
+- #51 `S2.1-PowerSums` — `PREFLIGHT`。本実装前に必要なS1.2 resultを明示する
+- #52 `S2.2-Chevalley` — `PREFLIGHT`。本実装前に必要なS2.1 resultを明示する
+
+Issueが存在するだけではownershipではありません。canonical branch lockを最初に取得したworkerがownerです。
 
 後続targetの細かいdependencyは推測せずpreflightで確定します。actual dependencyがある場合は上流 `DONE` または `STACK-READY` まで本proofを待ちますが、worker自身は別workへ移って稼働を続けます。
