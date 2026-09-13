@@ -47,29 +47,30 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ### Live ownership
 
-- B: #78 `C1-Supp-GaussLemma`; #96 `C2S1.3-QpField`; #99 `C2S2.1-RootLiftingExistence` / PR #103; #100 `C2S2.1-PrimitiveHomogeneousZeros` preflight.
+- B: #78 `C1-Supp-GaussLemma`; #96 `C2S1.3-QpField`; #99 `C2S2.1-RootLiftingExistence` / PR #103; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting` preflight complete.
 - C: #56 `S3.2-LegendreSymbol` / PR #98; #64 `S3.3-QuadraticReciprocity`.
 - D: #72 `C2S1.2-ZpProperties` / PR #92; #89 `C2S1.2-ZpMetric` preflight complete.
 - E: no mathematical ownership at latest check.
-- Unclaimed: #102 `C2S2.2-HenselLifting`, #104 `C2S2.2-HenselQuadraticOdd`, #105 `C2S2.2-HenselQuadraticTwo`.
+- Unclaimed: #104 `C2S2.2-HenselQuadraticOdd`, #105 `C2S2.2-HenselQuadraticTwo`, #108 `C2S3.1-UnitFiltration`.
 
 ### Dependency / integration state
 
-- #56/C retains exact frozen `STACK-READY` head `45bde2eff8e75e901282151760b0c5dfc41a869a` **for #64 only**. Theorem 5(iii) previously reached green CI #217; later source-shaped cleanup moved through local commutativity normalization and the latest checked head `e1d5bf9ed6dbcaa9c5ab1beea6019d23cbf9e9c6` now fails CI #229 only at two numeral/algebraMap coercion goals for `2` in `AlgebraicClosure (ZMod p)`. A routed an explicit `map_natCast`/local `h2` normalization route. The old downstream freeze remains green and unchanged. Independent Blueprint exposition/linkage and final latest-main integration remain after proof stabilization.
-- #64/C is legally STACKABLE from exactly `45bde2ef…`. The canonical branch was still on its old preflight base at the latest branch check, so no implicit move to a later #56 head is allowed. If #56 merges before #64 adds proof commits, #64 should resync to main instead.
-- #78/B needs a smaller subset already present in the #64 freeze, but the owner promise explicitly scopes itself to #64. A has requested a separate #78 promise; #78 remains WAITING until that appears or #56 merges.
-- #72/D live head `81bc0f88d6960611264194cf7923118f015f262a` passed CI #219. It now proves the projection-kernel / `p^(n+1)` divisibility equivalence and source unit criteria, but does not yet provide the full `p^n * unit` decomposition, project valuation, or domain conclusion. Therefore it is too early to release #89/#96.
+- #56/C retains exact frozen `STACK-READY` head `45bde2eff8e75e901282151760b0c5dfc41a869a` **for #64 only**. The moving live branch repaired the later Theorem 5(iii) coercion/normalization work; latest checked head `e681e2155e34022a181f2b7eafbaa55886bda9a0` passed CI #232. The old downstream freeze remains green and unchanged. Independent Blueprint exposition/linkage and final latest-main integration remain before #56 is DONE.
+- #64/C is legally STACKABLE from exactly `45bde2ef…`. Later #56 declarations must not leak into #64 unless C publishes a replacement freeze or #56 merges.
+- #78/B needs a smaller subset already present in the #64 freeze, but the owner promise explicitly scopes itself to #64. #78 remains WAITING until a separate exact promise appears or #56 merges.
+- #72/D live head `81bc0f88d6960611264194cf7923118f015f262a` passed CI #219. It proves projection-kernel / `p^(n+1)` divisibility and unit criteria, but does not yet expose the full `p^n * unit` decomposition, project valuation, or domain conclusion. Therefore #89/#96 and proof implementation of #102 remain gated.
 - #89/D preflight remains complete and waits for a stable #72 valuation + divisibility/topology bridge.
 - #96/B preflight remains complete; algebraic `Q_p` waits for #72 domain/decomposition/valuation, while Proposition 4 additionally needs a minimal #89 topology/density subset.
-- #99/B draft PR #103 current checked head `fe1a173e9665595b584d7f8235c5122b4f0cc373` passed CI #226 after repairing coefficient-level `MvPolynomial.map` and mapped-evaluation compatibility. Proposition 5 and Blueprint work are green in isolated form. The temporary top-level import hook remains until #98 frees `Formalization.lean`; final integration then moves the import into the normal aggregator and reruns full CI.
-- #100/B was claimed while #99 was root occupied. Its current mandate is source/API/dependency preflight only; proof waits for #99/#72/#96 interfaces.
-- #102 remains the core Hensel one-step + multivariate theorem + simple-root Corollary 1 boundary, preflight safe but proof expected to need #72/#89.
-- Because #100 was claimed, A independently checked the immediately following source page and split Corollaries 2–3 into #104 (odd `p`) and #105 (`p=2`). These are preflight-safe and depend on #102 plus the appropriate #72 primitive/unit/valuation/congruence interface rather than on `Q_p`.
+- #99/B draft PR #103 current checked head `fe1a173e9665595b584d7f8235c5122b4f0cc373` passed CI #226. Proposition 5 and Blueprint work are green in isolated form, and B explicitly froze a downstream-only subset for #100. The temporary top-level import hook remains until #98 frees `Formalization.lean`; final integration then moves imports into the normal aggregators and reruns full CI.
+- #100/B may use the frozen #99 downstream subset for interface/preflight work, but its full Proposition 6 proof still needs #72 primitive/unit and #96 `Q_p` scaling.
+- #102/B completed source/API preflight. It fixed the source-shaped one-step Taylor proof plan, exact #72 congruence/decomposition contract, and minimal #89 completeness contract. The canonical branch is intentionally proof-code-clean while those interfaces are unavailable.
+- #104/#105 remain the two source quadratic Hensel corollaries, preflight-safe and proof-dependent on #102 plus #72.
+- Because #102 was claimed, A independently checked the next source boundary, Chapter 2 §3.1 (printed pp.22–24 / uploaded PDF pp.32–34), and seeded #108. The core Proposition 7 unit-filtration/splitting work depends on #71 plus stable #72 units/divisibility; only its final corollary inside project `Q_p` needs #96.
 
 ### Shared-hotspot coordination
 
-1. #98 / C keeps the next normal `Formalization.lean` integration slot while its final local Theorem 5(iii) cast repair and Blueprint/final §3.2 work finish. The explicit #64 frozen head is isolated from the moving live branch.
-2. #103 / B is isolated-CI green; after #98 frees the shared root, B should resync latest main, move `RootExistence` into the normal `Formalization.lean` aggregator, remove the temporary top-level hook, and re-run full CI before merge.
+1. #98 / C keeps the next normal `Formalization.lean` integration slot now that its latest proof head is green; Blueprint/final §3.2 work and latest-main verification remain.
+2. #103 / B is isolated-CI green; after #98 frees the shared root, B should resync latest main, move `RootExistence` into the normal Formalization/Blueprint aggregators, remove the temporary top-level hook, and re-run full CI before merge.
 3. #92 / D may continue isolated algebraic proof work, but final Blueprint/root linkage should wait until its theorem interface is stable.
 
 A #106 / PR #107 owns only:
@@ -85,19 +86,19 @@ No worker mathematical file is edited.
 
 Unclaimed safe capacity:
 
-- #102 `C2S2.2-HenselLifting` — PREFLIGHT; implementation expected to wait #72/#89.
 - #104 `C2S2.2-HenselQuadraticOdd` — PREFLIGHT; source Corollary 2, proof waits #102/#72.
 - #105 `C2S2.2-HenselQuadraticTwo` — PREFLIGHT; source Corollary 3, proof waits #102/#72.
+- #108 `C2S3.1-UnitFiltration` — PREFLIGHT; Proposition 7/core unit filtration waits stable #72, final `Q_p` corollary waits #96.
 
-Owned executable/near-executable work includes #56/#64/#72/#99. Owned preflight now includes #100. Dependency-waiting but fully preflighted work includes #78/#89/#96. This preserves multiple safe lanes without creating unrelated busywork.
+Owned executable/near-executable work includes #56/#64/#72/#99. Owned preflight/waiting work includes #100/#102; dependency-waiting but fully preflighted work also includes #78/#89/#96. This preserves multiple safe lanes without creating unrelated busywork.
 
 ### Next A actions
 
-1. keep PR #107 synchronized with structural live state, then land it after latest-head CI and four-file self-review are green; rapid worker proof-head changes remain governed by live GitHub precedence;
-2. monitor #98 repair/Blueprint completion; once it clears `Formalization.lean`, route #103 to normal root integration from its green isolated proof;
-3. monitor #72 for the first genuinely stable valuation/decomposition subset before releasing #89/#96;
-4. monitor #64 consuming the exact frozen #56 head and #56 publishing a separate #78 freeze or merging;
-5. monitor claims of #102/#104/#105 and refill only when safe capacity thins again.
+1. land PR #107 after latest-head CI and four-file self-review are green;
+2. monitor #98 Blueprint/final integration; once it clears `Formalization.lean`, route #103 to normal root integration from its green isolated head;
+3. monitor #72 for the first genuinely stable valuation/decomposition subset before releasing #89/#96 and #102 proof work;
+4. monitor #64's exact frozen stack and #56 publishing a separate #78 freeze or merging;
+5. monitor claims of #104/#105/#108 and refill only when safe capacity thins again.
 
 ## Scheduler health target
 
