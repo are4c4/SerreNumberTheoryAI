@@ -48,9 +48,10 @@
 
 - Focused Issue: #8 post-merge lane-state synchronization
 - Branch: `integration/post-merge-lane-sync-8`
-- PR: none yet
-- Next: synchronize `docs/LANE_STATUS.md` and this handoff with merged PR #5 / closed #4, confirm the `main` push CI for merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691`, then open a focused E PR and merge only after CI is green
-- Blockers: the post-merge `main` CI must be green before #8 is completed
+- PR: #13
+- Next: wait for #13 CI, perform one final live ownership/PR check, then merge if green and synchronize #4/#8 metadata
+- Blockers: #13 CI must be green before merge
+- Verified: the post-merge `main` CI for PR #5 merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691` completed successfully
 - Shared-hotspot routing: A #11 owns `FORMALIZATION_PROGRESS.md`; E detected stale Phase 0 / Interpretation entries and routed them to #11 instead of keeping an overlapping edit
 - Cross-lane dependency: #6 is the completed canonical contract for `S1.1.Theorem1(ii)`; B #7 owns Lean, C #9 owns Blueprint / exposition, and D #10 owns API research. E does not take those mathematical deliverables and will run the integration gate after B/C artifacts are ready
 
