@@ -95,52 +95,67 @@ section PrimePowerSubfield
 open Polynomial
 
 variable (Ω : Type*) [Field Ω] [IsAlgClosed Ω]
-variable (p f : ℕ) (hp : Nat.Prime p) (hf : 0 < f) [CharP Ω p]
+variable (p f : ℕ) [CharP Ω p]
 
 /-- The polynomial whose roots are the candidates for the `p^f`-element subfield. -/
-def primePowerPolynomial : Ω[X] := X ^ (p ^ f) - X
+noncomputable def primePowerPolynomial : Ω[X] := X ^ (p ^ f) - X
 
 /--
 The elements fixed by the `p^f`-power Frobenius form a subfield.
 This is constructed directly from the characteristic-`p` power identities.
 -/
-def primePowerFixedSubfield : Subfield Ω := by
+noncomputable def primePowerFixedSubfield (hp : Nat.Prime p) : Subfield Ω := by
   letI : Fact p.Prime := ⟨hp⟩
-  refine
+  let S : Subring Ω :=
     { carrier := {x : Ω | x ^ (p ^ f) = x}
-      zero_mem' := ?_
-      one_mem' := ?_
-      add_mem' := ?_
-      neg_mem' := ?_
-      mul_mem' := ?_
-      inv_mem' := ?_ }
-  · exact zero_pow (pow_ne_zero f hp.ne_zero)
-  · exact one_pow (p ^ f)
-  · intro x y hx hy
-    simpa [hx, hy] using (add_pow_char_pow x y p f)
-  · intro x hx
-    simpa [hx, pow_ne_zero f hp.ne_zero] using
-      (sub_pow_char_pow (0 : Ω) x f (p := p))
-  · intro x y hx hy
-    simpa [mul_pow, hx, hy]
-  · intro x hx
-    simpa [inv_pow, hx]
+      zero_mem' := by
+        change (0 : Ω) ^ (p ^ f) = 0
+        exact zero_pow (pow_ne_zero f hp.ne_zero)
+      add_mem' := by
+        intro x y hx hy
+        change x ^ (p ^ f) = x at hx
+        change y ^ (p ^ f) = y at hy
+        change (x + y) ^ (p ^ f) = x + y
+        rw [add_pow_char_pow x y p f, hx, hy]
+      one_mem' := by
+        change (1 : Ω) ^ (p ^ f) = 1
+        exact one_pow (p ^ f)
+      mul_mem' := by
+        intro x y hx hy
+        change x ^ (p ^ f) = x at hx
+        change y ^ (p ^ f) = y at hy
+        change (x * y) ^ (p ^ f) = x * y
+        rw [mul_pow, hx, hy]
+      neg_mem' := by
+        intro x hx
+        change x ^ (p ^ f) = x at hx
+        change (-x) ^ (p ^ f) = -x
+        simpa [hx, zero_pow (pow_ne_zero f hp.ne_zero)] using
+          (sub_pow_char_pow (0 : Ω) x f (p := p)) }
+  exact
+    { S with
+      inv_mem' := by
+        intro x hx
+        change x ^ (p ^ f) = x at hx
+        change (x⁻¹) ^ (p ^ f) = x⁻¹
+        rw [inv_pow, hx] }
 
 @[simp]
-theorem mem_primePowerFixedSubfield (x : Ω) :
+theorem mem_primePowerFixedSubfield (hp : Nat.Prime p) (x : Ω) :
     x ∈ primePowerFixedSubfield Ω p f hp ↔ x ^ (p ^ f) = x :=
   Iff.rfl
 
 /-- The defining polynomial has degree exactly `p^f`. -/
-theorem primePowerPolynomial_natDegree :
+theorem primePowerPolynomial_natDegree (hp : Nat.Prime p) (hf : 0 < f) :
     (primePowerPolynomial Ω p f).natDegree = p ^ f := by
   unfold primePowerPolynomial
   rw [natDegree_sub_eq_left_of_natDegree_lt]
   · simp
-  · simpa using Nat.one_lt_pow hf.ne' hp.one_lt
+  · simpa using Nat.one_lt_pow (Nat.ne_of_gt hf) hp.one_lt
 
 /-- In particular, the defining polynomial is nonzero. -/
-theorem primePowerPolynomial_ne_zero : primePowerPolynomial Ω p f ≠ 0 := by
+theorem primePowerPolynomial_ne_zero (hp : Nat.Prime p) (hf : 0 < f) :
+    primePowerPolynomial Ω p f ≠ 0 := by
   intro hzero
   have hdeg := congrArg Polynomial.natDegree hzero
   rw [primePowerPolynomial_natDegree Ω p f hp hf] at hdeg
@@ -148,42 +163,41 @@ theorem primePowerPolynomial_ne_zero : primePowerPolynomial Ω p f ≠ 0 := by
   exact (pow_ne_zero f hp.ne_zero) hdeg
 
 /--
-`X^(p^f) - X` has no repeated roots.  The proof only uses the elementary
-characteristic-`p` separability criterion for `a X^n + b X + c`.
+`X^(p^f) - X` has no repeated roots. The proof computes its derivative in
+characteristic `p`, where the coefficient `p^f` vanishes.
 -/
-theorem primePowerPolynomial_separable :
+theorem primePowerPolynomial_separable (hf : 0 < f) :
     (primePowerPolynomial Ω p f).Separable := by
-  have hdiv : p ∣ p ^ f := dvd_pow_self p hf.ne'
-  have hsep :=
-    separable_C_mul_X_pow_add_C_mul_X_add_C'
-      (R := Ω) p (p ^ f) (1 : Ω) (-1 : Ω) 0 hdiv (by simp)
-  simpa [primePowerPolynomial] using hsep
+  rw [Polynomial.separable_def]
+  have hdiv : p ∣ p ^ f := dvd_pow_self p (Nat.ne_of_gt hf)
+  have hcast : (p ^ f : Ω) = 0 := (CharP.cast_eq_zero_iff Ω p (p ^ f)).2 hdiv
+  simp [primePowerPolynomial, Polynomial.derivative_sub, Polynomial.derivative_X_pow, hcast]
 
 /--
 The fixed-point description agrees exactly with the roots of `X^(p^f) - X`
 in the ambient algebraically closed field.
 -/
-theorem coe_primePowerFixedSubfield_eq_rootSet :
+theorem coe_primePowerFixedSubfield_eq_rootSet (hp : Nat.Prime p) (hf : 0 < f) :
     ((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω) =
       (primePowerPolynomial Ω p f).rootSet Ω := by
   ext x
-  simp [primePowerPolynomial, primePowerPolynomial_ne_zero Ω p f hp hf,
-    mem_primePowerFixedSubfield]
+  rw [mem_primePowerFixedSubfield Ω p f hp]
+  rw [Polynomial.mem_rootSet_of_ne (primePowerPolynomial_ne_zero Ω p f hp hf)]
+  simp [primePowerPolynomial]
 
 /-- The defining polynomial has exactly `p^f` distinct roots in `Ω`. -/
-theorem primePowerPolynomial_rootSet_card :
+theorem primePowerPolynomial_rootSet_card (hp : Nat.Prime p) (hf : 0 < f) :
     Fintype.card ((primePowerPolynomial Ω p f).rootSet Ω) = p ^ f := by
   have hsplit :
       ((primePowerPolynomial Ω p f).map (algebraMap Ω Ω)).Splits := by
     simpa using (IsAlgClosed.splits (primePowerPolynomial Ω p f))
   have hcard :=
-    (card_rootSet_eq_natDegree_iff_of_splits
-      (primePowerPolynomial_ne_zero Ω p f hp hf) hsplit).2
-      (primePowerPolynomial_separable Ω p f hp hf)
+    Polynomial.card_rootSet_eq_natDegree
+      (primePowerPolynomial_separable Ω p f hf) hsplit
   simpa [primePowerPolynomial_natDegree Ω p f hp hf] using hcard
 
 /-- The fixed-point subfield has exactly `p^f` elements. -/
-theorem primePowerFixedSubfield_natCard :
+theorem primePowerFixedSubfield_natCard (hp : Nat.Prime p) (hf : 0 < f) :
     Nat.card (primePowerFixedSubfield Ω p f hp) = p ^ f := by
   calc
     Nat.card (primePowerFixedSubfield Ω p f hp) =
@@ -205,16 +219,13 @@ Any subfield of `Ω` with `p^f` elements is contained in the fixed-point
 subfield: every element of a finite field satisfies `x^(#F) = x`.
 -/
 theorem subfield_le_primePowerFixedSubfield_of_natCard
+    (hp : Nat.Prime p) (hf : 0 < f)
     (E : Subfield Ω) (hcard : Nat.card E = p ^ f) :
     E ≤ primePowerFixedSubfield Ω p f hp := by
-  have hq_ne_zero : p ^ f ≠ 0 := pow_ne_zero f hp.ne_zero
-  have hfinite : Finite E := by
-    rcases finite_or_infinite E with hE | hE
-    · exact hE
-    · exfalso
-      have hzero : Nat.card E = 0 := Nat.card_eq_zero_of_infinite
-      exact hq_ne_zero (hcard ▸ hzero)
-  letI : Finite E := hfinite
+  have hcard_pos : 0 < Nat.card E := by
+    rw [hcard]
+    exact pow_pos hp.pos f
+  letI : Finite E := (Nat.card_pos_iff.mp hcard_pos).2
   letI : Fintype E := Fintype.ofFinite E
   have hcard' : Fintype.card E = p ^ f := by
     rw [← Nat.card_eq_fintype_card]
@@ -231,6 +242,7 @@ Consequently, the `p^f`-element subfield inside the fixed algebraically closed
 ambient field is unique.
 -/
 theorem subfield_eq_primePowerFixedSubfield_of_natCard
+    (hp : Nat.Prime p) (hf : 0 < f)
     (E : Subfield Ω) (hcard : Nat.card E = p ^ f) :
     E = primePowerFixedSubfield Ω p f hp := by
   apply SetLike.ext'
@@ -253,7 +265,7 @@ characteristic `p`, there is exactly one subfield with `p^f` elements (`f > 0`),
 and its elements are precisely the roots of `X^(p^f) - X`, equivalently the
 solutions of `x^(p^f) = x`.
 -/
-theorem serre_theorem1_ii :
+theorem serre_theorem1_ii (hp : Nat.Prime p) (hf : 0 < f) :
     (∃! F : Subfield Ω, Nat.card F = p ^ f) ∧
       (((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω) =
         {x : Ω | x ^ (p ^ f) = x}) ∧
