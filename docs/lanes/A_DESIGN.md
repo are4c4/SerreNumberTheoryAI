@@ -43,33 +43,32 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
 ## Current handoff
 
 - State: active scheduler coordination
-- Active A coordination: #64 / PR #69 — refill queue with `S3.3-QuadraticReciprocity` PREFLIGHT and synchronize dependency state
-- Canonical A branch: `design/refill-quadratic-reciprocity-64`
-- Historical A PR #66 auto-closed during latest-main rebase and is superseded by #69
+- Active A coordination: #73 — Chapter 2 p-adic integer preflight refill and live-state synchronization
+- Canonical A branch: `design/refill-ch2-zp-73`
+- Completed recent scheduler checkpoint:
+  - A #64 / PR #69 — §3.3 quadratic-reciprocity PREFLIGHT seed merged; C subsequently atomically claimed `work/s3-3-quadratic-reciprocity`
 - Completed recent mathematical checkpoints:
   - C #49 / PR #58 — `S1.1-T1iii` end-to-end complete on `main`
   - B #50 / PR #59 — `S1.2-MultGroup` end-to-end complete on `main`
-  - D #51 / PR #62 — `S2.1-PowerSums` end-to-end complete on `main`; source three-case formula and Chevalley-facing low-exponent vanishing corollary are stable
+  - D #51 / PR #62 — `S2.1-PowerSums` end-to-end complete on `main`
 - Live ownership at the latest check:
-  - C owns #56 / `work/s3-2-legendre-symbol` for dependency-safe preflight
-  - D owns #52 / `work/s2-2-chevalley` and #55 / `work/s3-1-quadratic-elements`
-  - B and E have no unfinished mathematical work item at the latest check
+  - B owns #70 / `work/s2-2-chevalley-cor1-nontrivial-zero` for dependency-safe preflight
+  - C owns #56 / `work/s3-2-legendre-symbol` and #64 / `work/s3-3-quadratic-reciprocity` as preflights
+  - D owns #52 / `work/s2-2-chevalley` (draft PR #68 active) and #55 / `work/s3-1-quadratic-elements`
+  - E has no current canonical work item
 - Dependency gates:
-  - #52 proof gate is now open because #51 is `DONE`; D has already opened draft PR #68 from current main
+  - #52 implementation gate is open because #51 is `DONE`
+  - #70 proof waits for #52 `DONE` or explicit `STACK-READY`
   - #55 full proof gate is open because #50 is `DONE`
-  - #56 proof waits for #55 `DONE` or explicit `STACK-READY`; C may continue preflight
-  - #64 / `S3.3-QuadraticReciprocity` proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit roots-of-unity, Gauss-sum, finite-sum, Frobenius and algebraic-closure APIs now
-- §3.3 source boundary fixed for queue purposes:
-  - distinct odd primes `l,p`
-  - Theorem 6: `(l/p) = (p/l)(-1)^(ε(l)ε(p))`
-  - source proof via primitive `l`-th root `w`, Gauss sum `y`, `y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)`, then Theorem 5 from §3.2
-- Queue health: #52/#55/#56 are owned; #64 is the fresh unclaimed PREFLIGHT candidate. The first B/C/D/E worker that creates `work/s3-3-quadratic-reciprocity` owns it.
-- Shared-hotspot coordination:
-  - A #64 / PR #69 owns `docs/WORK_QUEUE.md` and this A handoff only.
-  - duplicate queue-only PR #67 was closed as redundant.
-  - B cleanup PR #63 has dropped its overlapping `docs/WORK_QUEUE.md` diff and retains its other coordination files; A deliberately does not touch `FORMALIZATION_PROGRESS.md` or `docs/LANE_STATUS.md` in #69.
+  - #56 proof waits for #55 `DONE` or explicit `STACK-READY`
+  - #64 proof waits for #56 `DONE` or explicit `STACK-READY`
+- New Chapter 2 capacity:
+  - #71 `C2S1.1-ZpConstruction` is a fresh unclaimed `PREFLIGHT`. It is mathematically independent of the active Chapter 1 theorem chain and may stabilize the `A_n = ℤ/p^nℤ` inverse-limit representation, ring/topology structure, and canonical integer embedding from current main.
+  - #72 `C2S1.2-ZpProperties` is a fresh unclaimed `PREFLIGHT`. Its proof implementation must wait for #71 `DONE`/`STACK-READY`, but source/API/theorem-strength preflight may run now.
+- Queue health: B/C/D each own work; E is available; #71 and #72 provide independent unclaimed preflight capacity without stealing another lane's branch.
+- Shared hotspots reserved by A while #73 is active: `docs/WORK_QUEUE.md`, `docs/LANE_STATUS.md`, and this A handoff only. Worker implementation files and worker-specific handoffs remain untouched.
 - Blockers: none at A level
-- Next A action: finish #69 after latest-head CI, then monitor #52/#55 implementation and #55/#56 `STACK-READY`/DONE edges while keeping at least one unclaimed safe PREFLIGHT visible.
+- Next A action: merge #73 after CI and final hotspot check, then monitor #52/#55 implementation, #70/#56/#64 dependency transitions, and Chapter 2 claims. Refill again only when unclaimed executable/preflight capacity becomes thin.
 
 ## Scheduler health target
 
