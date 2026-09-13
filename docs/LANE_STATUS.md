@@ -6,43 +6,43 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #64 §3.3 queue refill / dependency synchronization | PR #66 | finish queue refill with live #51 completion reflected; then return to scheduler monitoring |
-| B | End-to-end Formalizer | 🟡 ready | no active mathematical work; post-#59 handoff cleanup only | `docs/sync-b-after-s1-2-59` / PR #63 | finish docs-only synchronization; after #66 activates a new unclaimed item, rescan and atomic-claim only if it remains unowned |
-| C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` preflight | `work/s3-2-legendre-symbol` | keep §3.2 proof implementation gated on #55 `DONE`/`STACK-READY`; continue safe source/dependency/mathlib preflight |
-| D | End-to-end Formalizer | 🚧 active | #52 `S2.2-Chevalley` and #55 `S3.1-QuadraticElements` owned work; #51 completed in PR #62 | `work/s2-2-chevalley`; `work/s3-1-quadratic-elements` | #51 and #50 gates are now DONE on main, so resume the highest-priority dependency-safe owned implementation; publish `STACK-READY` only after interfaces are fixed and verified |
-| E | End-to-end Formalizer | 🟡 ready | none | none | scan live queue/branches and atomic-claim the next still-unowned executable work; do not duplicate #52/#55/#56 |
+| A | Scheduler / Design | 🚧 active | #81 live queue/progress reconciliation | `design/sync-live-queue-81-v2` / PR #90 | land central sync after latest-head CI; continue ownership/dependency monitoring |
+| B | End-to-end Formalizer | 🚧 active | #71 `C2S1.1-ZpConstruction` | `work/c2-s1-1-zp-construction` / draft PR #86 | root hotspot is free; finish integration while keeping #72 frozen interface stable |
+| C | End-to-end Formalizer | 🚧 active | #74 Chevalley Cor2, #56 Legendre; #64 reciprocity preflight | PR #87; `work/s3-2-legendre-symbol`; `work/s3-3-quadratic-reciprocity` | resync #74/#56 to latest main; finish #74 and start #56 implementation; keep #64 proof gated |
+| D | End-to-end Formalizer | 🚧 active | #72 `C2S1.2-ZpProperties` | `work/c2-s1-2-zp-properties` | #71 interface is STACK-READY at `27a41437…`; stack algebraic §1.2 implementation or use main if #71 merges first |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #78 or #89 |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Coordination model
 
-- Issue #47 / PR #48 is merged: the continuous worker-pool protocol is active on main.
-- B/C/D/Eは固定専門レーンではなく同等のformalizer worker。
-- workerは `docs/WORK_QUEUE.md` をscanし、canonical branch作成をownership lockとしてclaimする。
-- claim後はfocused Issueへowner lane / branch / base SHAを記録する。
-- branchが既に存在するwork itemを、`RELEASED` / `REASSIGNED` なしに別workerが奪わない。
-- PR作成・CI pending・1 item完了・item固有blockerはchat停止条件ではない。実行時間が残っていればwork stealingする。
-- 1 workerの未merge実装PRは原則2本まで。
-- downstream stackはupstreamが `STACK-READY` を明記した場合だけ許可する。
-- `main` とlive GitHubがこの表と矛盾する場合、live stateを優先し、この表を後で修正する。
+- B/C/D/Eは同等のend-to-end formalizer worker。
+- canonical branch作成がownership lock。後発duplicateは最初の有効lockへ統合し、別実装として進めない。
+- PR作成・CI待ち・1 item完了・item固有blockerはchat停止条件ではない。
+- stacked workはupstream interface/exact headが明示的にfreezeされた場合だけ許可し、upstream merge後はlatest mainへ戻す。
 
 ## Current mathematical frontier
 
-`S1.1-T1iii` is complete on `main` via #49 / PR #58, `S1.2-MultGroup` is complete via #50 / PR #59, and `S2.1-PowerSums` is complete via #51 / PR #62. The project now exposes both the finite-field multiplicative-group cyclicity interface and the source-faithful low-exponent power-sum vanishing result needed downstream.
+Mainで完了済み:
 
-Current live ownership at the latest B check:
+- #49 / PR #58 — Theorem 1(iii)
+- #50 / PR #59 — finite-field multiplicative group
+- #51 / PR #62 — power sums
+- #52 / PR #68 — core Chevalley–Warning
+- #70 / PR #80 — Chevalley Corollary 1
+- #55 / PR #82 — §3.1 Theorem 4 / quadratic elements
 
-- A: #64 scheduler queue-refill work in PR #66; no mathematical implementation ownership.
-- B: #50 / PR #59 completed; no active mathematical work. PR #63 is post-merge documentation synchronization only.
-- C: #56 `S3.2-LegendreSymbol` preflight.
-- D: #51 / PR #62 completed; #52 `S2.2-Chevalley` and #55 `S3.1-QuadraticElements` remain D-owned.
-- E: no live canonical work at the latest check.
+Live ownership/dependency:
 
-Dependency frontier:
+- C owns canonical Corollary 2 work #74 / PR #87. #70 is DONE, so proof gate is open; PR #87 needs latest-main resync after #82 root-import changes. Later #85/PR #88 was duplicate and is closed/released.
+- C owns #56. Its former stack base #55 is DONE on main, so branch should resync to latest main and continue implementation using the integrated half-power/square-kernel interface.
+- C owns #64 preflight; proof waits for the minimal #56 Legendre-sign/multiplicativity/Theorem5(ii) subset.
+- B owns #71 / PR #86. #71 has frozen an exact green downstream interface at `27a414372c72f5ac749ac7e59da06da3c4c5e86f`; because #82 merged, B's previous root-import hotspot is now free.
+- D owns #72. Its preflight is complete and the exact #71 interface it requested is now STACK-READY, so D may stack from `27a41437…` and implement Proposition 1–2 + valuation. If #71 merges first, use main instead.
+- #78 Gauss lemma and #89 p-adic metric/completeness/density are unclaimed PREFLIGHT candidates.
 
-- #52 `S2.2-Chevalley` — its hard #51 power-sum dependency is now DONE on main, so the D-owned implementation gate is open.
-- #55 `S3.1-QuadraticElements` — its full odd-characteristic/index-2 result depends on #50 cyclicity, which is DONE on main; the D-owned implementation gate is open.
-- #56 `S3.2-LegendreSymbol` — C owns preflight; proof implementation remains gated on the required #55 interface becoming `DONE` or `STACK-READY`.
-- #64 `S3.3-QuadraticReciprocity` — A is seeding it as a preflight item in PR #66; its proof has a hard dependency on #56, so only preflight becomes executable once the queue activation is merged.
+## Shared-hotspot notes
 
-Issueが存在するだけではownershipではありません。canonical branch lockを最初に取得したworkerがownerです。Aは未claim itemを各workerへ手動配布せず、queueとdependencyの整合だけを維持します。
+A #81 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`.
+
+C PR #76 is a stale docs-only handoff predating #55 DONE; C should refresh/supersede it. Worker implementation PRs #86/#87 are not edited by A.
