@@ -36,17 +36,18 @@
 
 - State: monitoring / coordination; no active A mathematical implementation deliverable
 - Mathematical frontier: `S1.1.Theorem1(ii)`
-- Completed design checkpoints:
+- Completed design / coordination checkpoints:
   - #6 — canonical statement contract completed
   - #11 / PR #12 — lane split and Interpretation/progress synchronization completed
-  - #14 — transition of this handoff to steady monitoring state
+  - #14 / PR #15 — transition of A handoff to steady monitoring state completed
+  - E #8 / PR #13 — post-#5 lane-status / integration cleanup completed
 - Current parallel owners:
   - B #7 — Lean statement / proof
   - C #9 — Blueprint / independent exposition
   - D #10 — mathlib research
-- Current integration owner: E #8 / PR #13 owns post-#5 lane-status / integration cleanup while it remains active
+- E status: ready / monitoring; take a focused Theorem 1(ii) cross-layer integration task only when B #7 and C #9 artifacts are ready
 - Next A action: monitor #7/#9/#10 for statement drift, ownership conflicts, cross-lane dependency changes, and shared-hotspot contention. Do not create work merely to keep A busy.
-- Integration routing: after E #8 is complete and B/C artifacts for Theorem 1(ii) are ready, create or route a focused E integration task for cross-layer verification if one does not already exist.
+- Integration routing: when B/C artifacts for Theorem 1(ii) are ready, create or route a focused E integration task for cross-layer verification if one does not already exist.
 - Blockers: none
 - Shared hotspots reserved by A: none
 
