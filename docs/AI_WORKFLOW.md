@@ -17,7 +17,7 @@
 | A | Design / Coordination | 全体設計、Issue分割、依存関係、ownership、進捗整合 | `docs/`, Issue本文、運用文書 |
 | B | Lean Formalization | Lean statement / proof、Lean固有補助lemma | `SerreNumberTheoryAI/Formalization/**` |
 | C | Blueprint / Exposition | Blueprint node、独立した自然言語説明、依存関係 | `SerreNumberTheoryAI/Blueprint/**` |
-| D | Mathlib Research | API探索、既存定理の強さ判定、候補の比較 | Issueコメント、`docs/lanes/MATHLIB.md` |
+| D | Mathlib Research | API探索、既存定理の強さ判定、候補の比較 | Issueコメント、`docs/lanes/D_MATHLIB.md` |
 | E | Integration / CI | build、policy、cross-layer整合、CI障害、統合監査 | CI、workflow、統合文書。数学実装は原則しない |
 
 必要になればBを章・節単位で `B1`, `B2`, ... に分割できる。その場合も同じ成果物のownerは一つだけとする。
@@ -107,7 +107,7 @@ shared hotspotを触る必要がある場合は、PR本文に理由と競合確�
 - cross-lane dependencies
 - shared hotspots touched / reserved
 
-PRをmergeしたら、同じ作業内でlane handoffを更新する。チャットだけに進捗を書き残して終了しない。
+PRをmergeするときは、handoffがmerge後に古いactive PRを指し続けないようにする。必要ならmerge直後にAまたはEが小さなcoordination PRで `docs/LANE_STATUS.md` とlane handoffを最新mainへ同期する。チャットだけに進捗を書き残して終了しない。
 
 ## 7. PR と merge
 
