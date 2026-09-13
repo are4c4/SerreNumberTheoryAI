@@ -2,135 +2,97 @@
 
 このファイルは、B/C/D/E の end-to-end formalizer が次に何を実行できるかを判断するための依存関係付き作業キューです。
 
-`main` 上のこの表は計画の source of truth ですが、**live の branch / Issue / PR / CI が表より新しい場合は live GitHub state を優先**します。claim直後は表の更新がまだmergeされていないことがあるため、必ずlive stateも確認してください。
+`main` 上のこの表は計画の source of truth ですが、**live の branch / Issue / PR / CI が表より新しい場合は live GitHub state を優先**します。
 
 ## 1. Queue states
 
-- `READY` — 必要な上流が `main` 上で安定しており、ただちに本実装をclaimできる。
-- `PREFLIGHT` — 本実装前の source確認・statement整理・dependency確認・mathlib探索を進めてよい。依存が満たされたと確認できれば同じworkerが `READY` 相当として本実装へ進めてよい。
-- `STACKABLE` — 必要な上流が未mergeだが、上流PRで数学的interfaceが明示的に `STACK-READY` とされている。上流headをbaseにstacked branchを作ってよい。
-- `WAITING` — 必要な上流が不安定または未確定。本実装は禁止。別work itemへ移る。
-- `CLAIMED` — canonical branchが存在し、workerが所有中。
-- `CI-WAIT` — PRのCI待ち。work itemは所有中だが、workerは別の `READY` / `PREFLIGHT` workをstealしてよい。
-- `BLOCKED` — そのwork item固有の停止条件。worker全体の停止を意味しない。
+- `READY` — 必要な上流が `main` 上で安定し、ただちに本実装をclaimできる。
+- `PREFLIGHT` — source確認・statement整理・dependency確認・mathlib探索を進めてよい。本proofはgate成立後。
+- `STACKABLE` — 未merge upstream が statement / interface / exact head SHA を `STACK-READY` として固定済み。
+- `WAITING` — upstream interfaceが未安定。本実装は禁止。
+- `CLAIMED` — canonical branchが存在しworker所有中。
+- `CI-WAIT` — PRのCI待ち。ownerは別の安全なworkをstealしてよい。
+- `BLOCKED` — item固有の停止条件。
 - `DONE` — mainへ統合済みで、必要なprogress / Blueprint / Lean / verificationが同期済み。
 
 ## 2. Atomic claim
 
-各work itemには **canonical branch** を1つだけ割り当てます。branch作成をownership lockとして使います。
+各work itemには **canonical branch** を1つだけ割り当て、branch作成をownership lockとして使います。
 
 1. queue、open Issue / PR、既存branchを再確認する。
-2. `READY`、または条件を満たす `STACKABLE` itemを選ぶ。実装可能itemがなければ `PREFLIGHT` を選べる。
-3. 指定されたcanonical branchを、`main` または許可されたupstream head SHAから作成する。
-4. branch作成に成功したworkerがowner。branchが既に存在する場合はclaimせず、Issue/PRのowner stateを確認する。
-5. claim直後、focused Issueへ `OWNER: <lane>`, canonical branch, base mode, base SHA をコメントする。
-6. focused Issueがまだ無ければ、**branch lock取得後に** worker自身がIssueを作成する。Aの事前承認は不要。
-7. PRにはwork id、dependency、base mode、canonical branchを記録する。
-
-branch作成というGitHub側の一意操作を先に行うことで、複数chatが同じitemを同時にclaimする競合を避けます。
+2. `READY`、条件を満たす `STACKABLE`、または安全な `PREFLIGHT` を選ぶ。
+3. 指定canonical branchを `main` または許可されたupstream exact headから作成する。
+4. branch作成に成功したworkerがowner。既存branchを `RELEASED` / `REASSIGNED` なしに奪わない。
+5. focused Issueへ `OWNER: <lane>`、canonical branch、base mode、base SHAを記録する。
+6. Issueが無ければ、branch lock取得後にworker自身が作成してよい。A承認待ちは不要。
 
 ### 2.1 Resume / release / reassignment
 
-branchが存在することだけで永久lockにはしません。
-
-- 同じowner laneの新しいchatはIssue/PR/handoffを読んで既存canonical branchをresumeしてよい。
-- ownerが別workへ移っても、CI-WAIT等でそのbranchのownershipは維持される。
+- 同じowner laneの新chatは既存canonical branchをresumeしてよい。
 - itemを手放す場合はIssueへ `RELEASED` とcurrent stateを記録する。
-- owner chatが失われた、または明らかにstaleな場合、AはIssueへ `REASSIGNED: <lane>` と根拠を記録できる。新ownerは既存canonical branchをresumeする。branchを二重作成しない。
-- `RELEASED` / `REASSIGNED` が無い他workerは既存branchを奪わない。
+- stale owner等の場合、AはIssueへ `REASSIGNED: <lane>` と根拠を記録できる。
 
 ## 3. Work stealing
 
-B/C/D/E は固定担当領域を持ちません。現在のworkが次の状態になったら、実行時間が残っている限りqueueを再走査します。
+PR作成、CI pending、1 item merge、item固有blocker、upstream待ちはchat停止条件ではありません。実行時間が残っていればqueueを再走査し、別の `READY` / `STACKABLE` / `PREFLIGHT` を進めます。
 
-- PRを作成した
-- CIがpendingになった
-- 1 work itemをmergeした
-- work item固有の `BLOCKED:` を記録した
-- upstream待ちになった
-
-その時点で最高priorityの実行可能itemをclaimします。**PR作成、CI pending、1 Issue完了はchat停止条件ではありません。**
-
-1 workerが同時に持つ未mergeの実装PRは原則2本までとします。2本ともCI待ち等なら、追加の本実装branchは増やさず、preflight、レビュー、dependency整理、CI再確認、handoff同期を行います。
+1 workerの未merge実装PRは原則2本までです。2本とも待機中なら追加実装branchを増やさず、preflight、レビュー、dependency整理、CI確認、handoff同期を行います。
 
 ## 4. Stacked branch gate
 
-下流workを未merge上流へstackしてよいのは、上流ownerがIssueまたはPRに `STACK-READY` を記録し、少なくとも次を固定した場合だけです。
+stackしてよいのはupstream ownerが少なくとも次を固定した場合だけです。
 
 - 数学的statement / assumptions
-- 下流が利用する主要なLean declaration名・型、またはそれに相当する明確なinterface
-- 変更が下流を破壊する場合の通知先
+- downstreamが使う主要Lean declaration名・型
+- exact head SHA
+- interface変更時の通知先
 
-stacked workはupstream PRの**特定head SHA**をbranch historyへ取り込み、PR本文に `Stack base PR` と `Stack base SHA` を記録します。upstreamがmergeしたら、downstreamは最新mainへrebase/更新し、PR baseをmainへ戻してからmergeします。
+stacked branchはそのexact upstream headをbase/historyへ取り込み、PR本文に Stack base PR / SHA を記録します。upstream merge後は最新mainへ戻して統合検証します。
 
-上流statementがまだ揺れている場合はstackしてはいけません。source順に後だからという理由だけでinterfaceを推測しないでください。
-
-### 4.1 PREFLIGHT → STACKABLE transition
-
-`PREFLIGHT` itemはdependency gateが確定するまで**formalization codeをcommitしない**のを原則とし、調査結果はIssueコメントへ残します。これによりcanonical branchはmainと同じ位置に保てます。
-
-preflightの結果、未mergeupstreamへのstackが必要になった場合:
-
-1. upstreamが `STACK-READY` になるまでproof実装を待つ。
-2. preflight branchに固有code commitが無いことを確認する。
-3. canonical branchをapproved upstream headへfast-forward/updateしてから実装を開始する。
-4. もしpreflight中にbranch固有commitを作ってしまった場合は、stack開始前に安全なrebase/merge計画をIssueへ記録し、履歴を曖昧にしたままproofを進めない。
+`PREFLIGHT` branchは原則proof-code-cleanに保ち、gate成立後に approved head へfast-forward/updateして実装します。
 
 ## 5. Dependency rule
 
-依存は章番号ではなく、実際に使う数学的結果で管理します。
-
-- `A → B` のdependencyがあるなら、Aが `DONE` または `STACK-READY` になるまでBの本実装を始めない。
-- dependencyが不明なら `PREFLIGHT` で確認する。
-- preflightで「実は依存しない」と確認できた場合、Issueに根拠を残して本実装へ進めてよい。
-- preflightで新しい依存が判明した場合、Issueとこのqueueを更新し、そのitemだけを `WAITING` / `BLOCKED` にする。
-
-典型例として、後続のべき乗和の議論が有限体の乗法群の結果を使うなら、そのedgeを明示し、乗法群のinterfaceが安定する前にべき乗和のproofを完成させようとはしません。
+依存は章番号ではなく、実際に使う数学的結果で管理します。dependency不明なら `PREFLIGHT` で確認し、依存しないと分かればIssueに根拠を残して進めてよいです。新しいhard edgeが判明したitemだけを `WAITING` / `BLOCKED` にします。
 
 ## 6. Current queue
 
-Theorem 1(ii), Theorem 1(iii), §1.2 finite-field multiplicative group, and §2.1 power sums are now end-to-end complete on `main`.
+現在mainでend-to-end完了している主要sliceは Theorem 1(ii)/(iii)、§1.2 multiplicative group、§2.1 power sums、§2.2 core Chevalley–Warning、そしてその系1です。
 
-書籍上の実際の証明依存は次のとおりです。
+Live dependency graph:
 
-- `S1.2-MultGroup` は Theorem 1(iii) を必要としない。
-- `S2.1-PowerSums` は `S1.2-MultGroup` の巡回性を明示的に使う。#51 / PR #62 はそのproject interfaceからsource三分岐式とChevalley向け低指数消滅系まで完成し、mainへmerge済み。
-- `S2.2-Chevalley` は `S2.1-PowerSums` の低指数消滅系を明示的に使う。#51がDONEになったため、D-owned #52 のfull proof gateは現在open。
-- §3.1平方数は §2 系列とは独立。characteristic-2 halfはPhase 1/Frobeniusのみで進み、full odd-characteristic/index-2 resultは `S1.2-MultGroup` を使う。#50がDONEなのでD-owned #55 のfull implementation gateもopen。
-- §3.2 Legendre記号は §3.1 の平方部分群 / half-power character interfaceを使う。
-- §3.3平方剰余の相互法則は §3.2 Legendre記号 / 定理5を明示的に使う。source proofは primitive `l`-th root とGauss sumを導入し、`y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)` を示した後にTheorem 5を用いて相互法則を得る。
+- `S2.2-Chevalley-Cor1` は #70 / PR #80 で `DONE`。後発の #84 はduplicateとしてclosed。
+- `S2.2-Chevalley-Cor2` / #85 は系1のspecializationであり、#70がDONEなので現在 `READY`。
+- `S3.1-QuadraticElements` / #55 はD-owned。PR #82 exact head `ead063fff3e3714a77c9b340ffc339f4c8f74dfd` がCI-greenで、§3.2向け half-power / square-kernel interfaceを `STACK-READY` としてfreeze済み。ただしPR #82自体は最新mainへの再同期後にDがmergeする。
+- `S3.2-LegendreSymbol` / #56 はC-owned。#55のexact frozen headを使って今は `STACKABLE`。Cはそのheadへstackしてproof実装へ進めてよい。
+- `S3.3-QuadraticReciprocity` / #64 はC-owned `PREFLIGHT`。full proofは #56 が characteristic-independent Legendre sign、field-core compatibility、multiplicativity、Theorem 5(ii) at `-1` を `STACK-READY` にするまで待つ。Theorem 5(iii) at `2` はhard dependencyではない。
+- `C1-Supp-GaussLemma` / #78 はunclaimed `PREFLIGHT`。#64には依存せず、proofはminimal #56 Legendre/half-power interface待ち。
+- `C2S1.1-ZpConstruction` / #71 はB-owned、draft PR #86で実装中。後発 #79 はduplicateとしてclosed。
+- `C2S1.2-ZpProperties` / #72 はD-owned `PREFLIGHT`。source/API preflightは完了し、proofは #71 public representation/projection/integer-map interface `DONE`/`STACK-READY` 待ち。D preflightは #72 をProposition 1–2 + valuationのalgebraic sliceとし、Proposition 3 metric/completeness/densityをfollow-upへ分けることを推奨している。
 
 | Priority | Work ID | Target | State | Required before implementation | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `DONE` | PR #58 merged green | `work/s1-1-t1iii` | #49 / C complete |
-| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `DONE` | PR #59 merged green | `work/s1-2-mult-group` | #50 / B complete |
-| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `DONE` | PR #62 merged green | `work/s2-1-power-sums` | #51 / D complete |
-| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `CLAIMED` | #51 is DONE on main; D may move branch to latest main and implement the core theorem end-to-end | `work/s2-2-chevalley` | #52 / D |
-| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | #50 is DONE; D preflight fixed the split and may implement the full source target from latest main | `work/s3-1-quadratic-elements` | #55 / D |
-| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | full proof waits for the required §3.1 interface `DONE` or `STACK-READY`; preflight may continue | `work/s3-2-legendre-symbol` | #56 / C |
-| P6 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `PREFLIGHT` | full proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit Gauss-sum / roots-of-unity / Frobenius APIs now | `work/s3-3-quadratic-reciprocity` | #64 / unclaimed |
+| P0 | `S1.1-T1iii` | 定理1(iii) | `DONE` | PR #58 merged green | `work/s1-1-t1iii` | #49 / complete |
+| P1 | `S1.2-MultGroup` | 有限体の乗法群 / 定理2 | `DONE` | PR #59 merged green | `work/s1-2-mult-group` | #50 / complete |
+| P2 | `S2.1-PowerSums` | 有限体上のべき乗和 | `DONE` | PR #62 merged green | `work/s2-1-power-sums` | #51 / complete |
+| P3 | `S2.2-Chevalley` | core Chevalley–Warning | `DONE` | PR #68 merged green | `work/s2-2-chevalley` | #52 / complete |
+| P4 | `S2.2-Chevalley-Cor1` | 系1: 原点以外の共通零点 | `DONE` | PR #80 merged green | `work/s2-2-chevalley-cor1-nontrivial-zero` | #70 / B complete |
+| P5 | `S2.2-Chevalley-Cor2` | 系2: 3変数以上の2次形式 | `READY` | #70 DONE; use project Corollary 1 | `work/s2-2-chevalley-cor2` | #85 / unclaimed |
+| P6 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | PR #82 green; D resync/merge pending | `work/s3-1-quadratic-elements` | #55 / D |
+| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `STACKABLE` | stack on #55 head `ead063fff3e3…` | `work/s3-2-legendre-symbol` | #56 / C |
+| P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `PREFLIGHT` | wait for minimal #56 subset `STACK-READY`/DONE | `work/s3-3-quadratic-reciprocity` | #64 / C |
+| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | proof waits for minimal #56 interface | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
+| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse-limit construction | `CLAIMED` | no Chapter 1 dependency | `work/c2-s1-1-zp-construction` | #71 / B / PR #86 |
+| P11 | `C2S1.2-ZpProperties` | 第2章 §1.2 Proposition 1–2 + valuation | `WAITING` | #71 public interface DONE/STACK-READY; preflight complete | `work/c2-s1-2-zp-properties` | #72 / D |
 
-Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。`CLAIMED` 行についてはIssue上の `OWNER:` コメントとlive branchを優先します。
+Issueが存在するだけではownershipではありません。canonical branch / Issue `OWNER:` / live PRを優先します。
 
-`PREFLIGHT` 行は「本proofを開始してよい」という意味ではありません。dependency gateが未成立なら、source / statement / dependency / mathlib調査だけを進め、結果をIssueへ残して別の実行可能itemへ移ります。
+## 7. Queue health / refill
 
-## 7. Queue refill
+現在unclaimedで安全に着手できる候補は少なくとも #85 (`READY`) と #78 (`PREFLIGHT`) です。加えて #56 はowner Cがstack実装可能、#71はBが実装中、#72はDがpreflight済み待機中です。
 
-Aはqueue healthを監視し、可能なら常時3〜6個程度の `READY` / `PREFLIGHT` / `STACKABLE` 候補を見える状態に保ちます。ただしAは各workの開始許可ゲートではありません。
-
-B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが明白になった場合はfocused Issueやqueue更新を提案・実装してよいです。曖昧なstatement、dependency conflict、shared-hotspot conflictだけをAへrouteします。
-
-§3.3は#64でPREFLIGHT seed済みです。次のrefillでは、§3.3のpreflightからsource/dependency boundaryが安定するまで、それより先のproof dependencyを推測しません。queue capacityが再び薄くなったら、次のsource targetを独立性・dependencyの観点からpreflightします。
+Aはduplicate workを作らず、3〜6個程度の実行候補を維持します。#85/#78がclaimされた場合は、Dの#72 preflightで切り出された §1.2 Proposition 3 metric/completeness/density follow-up など、source/dependency boundaryが既に明確なものから次のseedを検討します。
 
 ## 8. End-of-run handoff
 
-利用可能な実行時間を早く切り上げるためのhandoffではありません。作業を継続し、終了が近いと判断した段階で最後に次を残します。
-
-- owned canonical branches / PRs（最大2本のin-flight実装PRを含む）
-- current proof / Blueprint state
-- CI state
-- `STACK-READY` の有無と固定interface
-- blocked itemと理由
-- 次にclaim可能なqueue item
-
-新しいchatはhandoffだけを信じず、必ずlive GitHub stateを再確認します。
+終了前にはowned canonical branches / PRs、proof/Blueprint state、CI、`STACK-READY` interface、blocker、次にclaim可能なitemを残します。新chatはhandoffだけでなくlive GitHub stateを必ず再確認します。
