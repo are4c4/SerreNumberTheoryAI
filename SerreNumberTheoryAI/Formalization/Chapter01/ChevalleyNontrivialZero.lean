@@ -16,7 +16,7 @@ open MvPolynomial
 section ChevalleyNontrivialZero
 
 variable {K σ ι : Type*} [Fintype K] [Field K] [Fintype σ] [DecidableEq σ]
-variable [DecidableEq K] (p : ℕ) [CharP K p]
+variable [DecidableEq K]
 
 /--
 If a finite family of multivariate polynomials has total-degree sum smaller
@@ -28,6 +28,7 @@ theorem: the origin is one common zero, while a singleton common-zero set
 cannot have cardinality divisible by the characteristic.
 -/
 theorem serre_chevalleyWarning_exists_nontrivial_zero
+    (p : ℕ) [CharP K p]
     {s : Finset ι} {f : ι → MvPolynomial σ K}
     (hdeg : (∑ i ∈ s, (f i).totalDegree) < Fintype.card σ)
     (hzero : ∀ i ∈ s, eval (0 : σ → K) (f i) = 0) :
