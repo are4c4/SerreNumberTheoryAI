@@ -39,16 +39,18 @@
 - Completed design / coordination checkpoints:
   - #6 — canonical statement contract completed
   - #11 / PR #12 — lane split and Interpretation/progress synchronization completed
-  - #14 / PR #15 — transition of A handoff to steady monitoring state completed
-  - E #8 / PR #13 — post-#5 lane-status / integration cleanup completed
-- Current parallel owners:
-  - B #7 — Lean statement / proof
-  - C #9 — Blueprint / independent exposition
-  - D #10 — mathlib research
-- E status: ready / monitoring; take a focused Theorem 1(ii) cross-layer integration task only when B #7 and C #9 artifacts are ready
-- Next A action: monitor #7/#9/#10 for statement drift, ownership conflicts, cross-lane dependency changes, and shared-hotspot contention. Do not create work merely to keep A busy.
-- Integration routing: when B/C artifacts for Theorem 1(ii) are ready, create or route a focused E integration task for cross-layer verification if one does not already exist.
-- Blockers: none
+  - #14 / PR #15 — transition to steady A monitoring state completed
+  - E #8 / PR #13 — post-lane-infrastructure integration cleanup completed
+  - #27 / PR #29 — central lane board and Theorem 1(ii) progress synchronized after C/D completion
+- Completed supporting deliverables:
+  - C #9 / PR #18 — independent explanation and Blueprint nodes merged; final `lean :=` linkage remains an integration dependency
+  - D #10 / PR #24 — mathlib research merged; no `TARGET-THEOREM-ONLY` blocker found
+- Current active mathematical owner:
+  - B #7 / draft PR #25 — Lean statement / proof; A semantic review against #6 passed, current work is Lean/API CI repair
+- E status: ready / monitoring; open a focused Theorem 1(ii) cross-layer integration task once B #7 is stable. C artifact is already on `main`.
+- Next A action: monitor B #7 / PR #25 for statement drift, ownership conflict, or a new semantic blocker. Route CI/API errors to B rather than editing B-owned Lean files.
+- Integration routing: once B is green/stable, route E to add final Blueprint `lean :=` linkage, run cross-layer build/policy checks, and synchronize remaining progress columns.
+- Blockers: none at A level
 - Shared hotspots reserved by A: none
 
 ## Theorem 1(ii) coordination contract
@@ -63,7 +65,7 @@ Abstract uniqueness up to field isomorphism belongs to Theorem 1(iii), not this 
 
 ## Monitoring rules
 
-- If B/C interpret the target differently from #6, stop the affected work and route `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` to A.
+- If B or the merged C artifact diverges from #6, stop the affected work and route `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` to A.
 - If two lanes claim the same deliverable or shared hotspot, do not resolve it by concurrent edits; route the conflict through A.
 - D findings are advisory; B must still verify exact theorem assumptions and theorem strength before use.
 - Do not advance to Theorem 1(iii) merely because A is idle. The current target should reach a stable integrated state first unless the dependency graph is explicitly changed.
