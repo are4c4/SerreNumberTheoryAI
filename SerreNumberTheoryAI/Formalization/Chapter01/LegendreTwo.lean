@@ -237,7 +237,7 @@ theorem twoSupplementExponent_even_of_mod_eight
       rw [hpform]
       ring
     have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 2 * k) := by omega
-    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    rw [hsub, Nat.mul_div_right _ (by norm_num : 0 < 8)]
     refine ⟨4 * k ^ 2 + k, ?_⟩
     ring
   · let k := p / 8
@@ -250,7 +250,7 @@ theorem twoSupplementExponent_even_of_mod_eight
       rw [hpform]
       ring
     have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 14 * k + 6) := by omega
-    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    rw [hsub, Nat.mul_div_right _ (by norm_num : 0 < 8)]
     refine ⟨4 * k ^ 2 + 7 * k + 3, ?_⟩
     ring
 
@@ -269,7 +269,7 @@ theorem twoSupplementExponent_odd_of_mod_eight
       rw [hpform]
       ring
     have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 6 * k + 1) := by omega
-    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    rw [hsub, Nat.mul_div_right _ (by norm_num : 0 < 8)]
     refine ⟨4 * k ^ 2 + 3 * k, ?_⟩
     ring
   · let k := p / 8
@@ -282,7 +282,7 @@ theorem twoSupplementExponent_odd_of_mod_eight
       rw [hpform]
       ring
     have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 10 * k + 3) := by omega
-    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    rw [hsub, Nat.mul_div_right _ (by norm_num : 0 < 8)]
     refine ⟨4 * k ^ 2 + 5 * k + 1, ?_⟩
     ring
 
