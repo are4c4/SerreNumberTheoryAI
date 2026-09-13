@@ -9,7 +9,7 @@ Independent formalization infrastructure for Serre, Chapter 1, §3.3, Theorem 6.
 Source metadata only: Japanese edition, printed pp. 10–11, uploaded PDF pp. 20–21.
 
 The target reciprocity theorem is intentionally not closed by mathlib's ready-made
-quadratic-reciprocity or Gauss-sum theorems.  This file starts from the source objects:
+quadratic-reciprocity or Gauss-sum theorems. This file starts from the source objects:
 a primitive `l`-th root of unity and a Gauss sum with the project Legendre sign.
 -/
 
@@ -22,7 +22,6 @@ variable (l p : ℕ) [Fact l.Prime] [Fact p.Prime]
 /-- Distinct primes remain nonzero after casting `l` into the prime field of characteristic `p`. -/
 theorem zmod_prime_cast_ne_zero_of_distinct (hlp : l ≠ p) :
     (l : ZMod p) ≠ 0 := by
-  change ((l : ℕ) : ZMod p) ≠ 0
   rw [ne_eq, ZMod.natCast_eq_zero_iff]
   intro hdiv
   rcases (Nat.dvd_prime (Fact.out : l.Prime)).mp hdiv with hp1 | hpl
@@ -78,7 +77,8 @@ theorem legendreSign_sq_eq_one_of_ne_zero
 theorem legendreSign_neg
     (hl : l ≠ 2) (x : ZMod l) :
     legendreSign l (-x) = legendreSignInt l (-1) * legendreSign l x := by
-  simpa [legendreSignInt, neg_eq_neg_one_mul] using
+  change legendreSign l (-x) = legendreSign l (-1 : ZMod l) * legendreSign l x
+  simpa only [neg_one_mul] using
     legendreSign_mul l hl (-1 : ZMod l) x
 
 end QuadraticReciprocity
