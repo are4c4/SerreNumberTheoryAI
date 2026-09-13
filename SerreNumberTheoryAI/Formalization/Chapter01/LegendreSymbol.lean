@@ -161,6 +161,7 @@ theorem intCast_legendreSign_eq_legendreValue
       have hsign : legendreSign p x = -1 := by
         simp only [legendreSign, if_neg hx, if_neg hne]
       rw [hsign, h]
+      norm_num
 
 end OddPrime
 
