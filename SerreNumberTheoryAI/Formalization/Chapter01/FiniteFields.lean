@@ -311,9 +311,10 @@ noncomputable def finiteFieldEquivPrimePowerFixedSubfield
   letI : Algebra (ZMod p) Ω := ZMod.algebra Ω p
   letI : Module.Finite (ZMod p) K := .of_finite
   letI : Algebra.IsAlgebraic (ZMod p) K := Algebra.IsAlgebraic.of_finite (ZMod p) K
-  obtain ⟨φ⟩ : Nonempty (K →ₐ[ZMod p] Ω) := by
-    apply IntermediateField.nonempty_algHom_of_splits
-    exact fun x => ⟨Algebra.IsIntegral.isIntegral x, IsAlgClosed.splits _⟩
+  let φ : K →ₐ[ZMod p] Ω :=
+    Classical.choice (by
+      apply IntermediateField.nonempty_algHom_of_splits
+      exact fun x => ⟨Algebra.IsIntegral.isIntegral x, IsAlgClosed.splits _⟩)
   let E : Subfield Ω := φ.toRingHom.fieldRange
   have hEcard : Nat.card E = p ^ f := by
     calc
