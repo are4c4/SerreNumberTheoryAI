@@ -53,8 +53,8 @@ Live dependency graph:
 - `S3.2-LegendreSymbol` #56 はC-owned。stack baseだった#55がmerge済みなのでstack-only gateは解除。canonical branchをlatest mainへresyncし、通常のCLAIMED implementationとして進めてよい。
 - `S3.3-QuadraticReciprocity` #64 はC-owned PREFLIGHT。proofは #56 が characteristic-independent Legendre sign/value、field-core compatibility、multiplicativity、Theorem 5(ii) at `-1` をDONEまたはSTACK-READYにするまで待つ。Theorem 5(iii) at `2` はhard dependencyではない。
 - `C1-Supp-GaussLemma` #78 はunclaimed PREFLIGHT。#64には依存せず、proofはminimal #56 interface待ち。
-- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR #86で実装中。後発 #79 はduplicateとしてclosed。
-- `C2S1.2-ZpProperties` #72 はD-owned。preflight complete、proofは #71 public representation/projection/integer-map interface待ち。source boundaryはProposition 1–2 + valuationのalgebraic sliceへ絞る。
+- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR #86で実装中。Bはexact green head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` を #72 向け `STACK-READY` としてfreeze済み。後発 #79 はduplicateとしてclosed。
+- `C2S1.2-ZpProperties` #72 はD-owned、preflight complete。#71のfrozen project-local `SerrePadicInt` / projection / integer-map interfaceが揃ったため、algebraic Proposition 1–2 + valuation sliceは **STACKABLE**。#71が先にmergeした場合はlatest mainを使う。
 - `C2S1.2-ZpMetric` #89 はunclaimed PREFLIGHT。#72 preflightで切り出されたProposition 3（metric / topology compatibility / completeness / density）。proofは#72 valuation/topology-relevant interface待ち。
 
 | Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
@@ -69,15 +69,15 @@ Live dependency graph:
 | P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | #55 DONE; resync to latest main and implement | `work/s3-2-legendre-symbol` | #56 / C |
 | P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `PREFLIGHT` | wait for minimal #56 subset DONE/STACK-READY | `work/s3-3-quadratic-reciprocity` | #64 / C |
 | P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | preflight safe; proof waits for #56 | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
-| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | implementation active in PR #86 | `work/c2-s1-1-zp-construction` | #71 / B |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `WAITING` | preflight done; wait #71 interface | `work/c2-s1-2-zp-properties` | #72 / D |
+| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86; #72 interface STACK-READY at `27a41437…` | `work/c2-s1-1-zp-construction` | #71 / B |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `STACKABLE` | stack on #71 `27a41437…`, or latest main after #71 merge | `work/c2-s1-2-zp-properties` | #72 / D |
 | P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `PREFLIGHT` | preflight safe; proof waits #72 | `work/c2-s1-2-zp-metric` | #89 / unclaimed |
 
-Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work.
+Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work。
 
 ## 7. Queue health
 
-Unclaimed safe capacity is currently #78 and #89 (`PREFLIGHT`). Meanwhile C has executable #74 and #56, B has #71, D has #72 preflight completed/waiting, so no worker should be globally blocked by one dependency chain.
+Unclaimed safe capacity is currently #78 and #89 (`PREFLIGHT`). Owned executable capacity includes #74, #56, #71, and now stackable #72. Thus no worker should be globally blocked by one dependency chain.
 
 A should refill only when these candidates are claimed/thin, and should prefer source/dependency boundaries already exposed by current work rather than inventing unrelated tasks.
 
