@@ -6,11 +6,11 @@
 
 | Lane | State | Focus | Issue | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A Design | 🟡 ready | S1.1 Theorem 1(ii) contract handed off / integration monitored | none | none | monitor B #7 / PR #25 latest-head CI/merge and keep E #36 gated until B is stable on `main` |
-| B Formalization | 🚧 active | S1.1 Theorem 1(ii) Lean formalization | #7 | `formalize/s1-1-theorem1-ii-7` / #25 (draft) | mathematical implementation is green on run #59; complete latest-head CI/self-review/merge without changing #6 |
-| C Blueprint | 🟡 ready | S1.1 Theorem 1(ii) exposition merged | completed #9 | PR #18 merged | remain mathematically idle; final `lean :=` linkage belongs to E #36 after B names are stable |
-| D Mathlib | 🟡 ready | S1.1 Theorem 1(ii) research complete | completed #10 | PR #24 merged | remain advisory/idle unless B/E requests a new focused API investigation |
-| E Integration | 🟡 ready | S1.1 Theorem 1(ii) cross-layer integration queued | #36 (gated) | no branch yet | activate #36 only after B #25 merges or final declaration names are explicitly frozen without ownership conflict |
+| A Design | 🟡 ready | S1.1 Theorem 1(ii) integration monitored | none | none | monitor E #36 for cross-layer drift/blockers; do not start Theorem 1(iii) before integration completes |
+| B Formalization | 🟡 ready | S1.1 Theorem 1(ii) Lean formalization merged | completed #7 | PR #25 merged | remain idle unless E #36 routes a concrete Lean integration blocker; do not claim a new target |
+| C Blueprint | 🟡 ready | S1.1 Theorem 1(ii) exposition merged | completed #9 | PR #18 merged | remain mathematically idle; E #36 owns final `lean :=` linkage to the now-stable B declarations |
+| D Mathlib | 🟡 ready | S1.1 Theorem 1(ii) research complete | completed #10 | PR #24 merged | remain advisory/idle unless E #36 requests a focused API investigation |
+| E Integration | 🚧 active | S1.1 Theorem 1(ii) cross-layer integration | #36 | branch / PR pending | start from latest `main`: link merged Blueprint nodes to stable B declarations, run policy/build/vbp, and synchronize progress/status |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -24,4 +24,4 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Current mathematical frontier
 
-`FORMALIZATION_PROGRESS.md` に従い、Phase 1「有限体」を継続する。最初のslice（導入・Frobenius補題・定理1(i)）は完了済み。定理1(ii)のcanonical statement contractは #6 で完成・close済み。C #9 / PR #18 の独立説明とBlueprint nodes、およびD #10 / PR #24 のmathlib調査は `main` へmerge済みである。Blueprintの最終 `lean :=` 対応は、Bの宣言名が安定した後のcross-layer integrationまで保留している。現在の数学実装ownerは B #7 / draft PR #25 で、Aは現行実装を #6 に照らしてsemantic review済み・statement driftなしと確認している。Bの数学実装head `72b1769…` はCI run #59でpolicy・`lake build`・`lake exe vbp build`がすべてgreenになった。その後の変更はB handoff / CI retryのみであり、Bがlatest-head CIとself-review/mergeを完了するまでownershipはBに残る。Eのfocused integration Issue #36は既に作成済みだが、B #25が`main`へmergeされるか最終宣言名が明示的にfreezeされるまでactivationしない。activation後はmerged C artifactとの`lean :=` linkage、full build/policy、progress整合をEが担当する。Theorem 1(ii)が統合完了するまではTheorem 1(iii)へ進まない。
+`FORMALIZATION_PROGRESS.md` に従い、Phase 1「有限体」を継続する。最初のslice（導入・Frobenius補題・定理1(i)）は完了済み。定理1(ii)のcanonical statement contractは #6 で完成・close済み。C #9 / PR #18 の独立説明とBlueprint nodes、D #10 / PR #24 のmathlib調査、B #7 / PR #25 のLean statement/proofはすべて `main` へmerge済みである。B #25 はlatest-head CI run #66でrepository policy・`lake build`・`lake exe vbp build`がすべてgreenとなり、Aのsemantic reviewでも #6 からのstatement driftは確認されなかった。したがってE #36のactivation gateは満たされ、現在のactive ownerはE Integrationのみである。Eはmerged C artifactへstable B declarationの最終 `lean :=` linkageを追加・検証し、integrated stateでpolicy/build/vbpを再実行し、`FORMALIZATION_PROGRESS.md` とlane handoff/statusを実態どおりに完了させる。統合でsemantic mismatchが判明した場合は `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` としてAへ戻す。Theorem 1(ii)が統合完了するまではTheorem 1(iii)へ進まない。
