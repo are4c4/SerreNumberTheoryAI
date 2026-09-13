@@ -68,7 +68,9 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| べき乗和の定義と基本補題 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| べき乗和の定義と基本補題 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+#51 / PR #62 では、§2.1（印刷頁6 / uploaded PDF p.16）の有限体上のべき乗和をend-to-endで完成した。`S1.2-MultGroup` のproject cyclicity interfaceから指数のdivisibility判定を導き、`u = 0`、`q - 1 ∣ u`、非divisibleの三場合をsource-faithfulに形式化し、#52が必要とする低指数消滅corollaryまでLean/Blueprintで同期した。近すぎるmathlibのfinite-field power-sum完成定理は使わず、policy・`lake build`・`lake exe vbp build`がgreenの状態でmainへmerge済みである。
 
 開始条件: Phase 2の乗法群巡回性が `DONE` またはstacking可能なstable interfaceになっていること。A #54 のsource auditで、§2.1 proofがこの巡回性を明示的に使うdependency edgeを確認済み。
 
