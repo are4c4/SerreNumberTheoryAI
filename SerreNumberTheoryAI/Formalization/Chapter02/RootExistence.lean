@@ -56,10 +56,12 @@ theorem padicPolynomialReduction_compat
     MvPolynomial.map (padicReduction p n)
         (padicPolynomialReduction p (n + 1) f) =
       padicPolynomialReduction p n f := by
-  rw [padicPolynomialReduction, padicPolynomialReduction, MvPolynomial.map_map]
-  congr 1
-  ext x
-  exact serrePadicIntProj_compat p n x
+  have hcomp :
+      (padicReduction p n).comp (serrePadicIntProj p (n + 1)) =
+        serrePadicIntProj p n := by
+    ext x
+    exact serrePadicIntProj_compat p n x
+  rw [padicPolynomialReduction, padicPolynomialReduction, MvPolynomial.map_map, hcomp]
 
 /-- Common zeros of a polynomial family after reduction to one residue level. -/
 def padicReducedCommonZeroSet
@@ -76,8 +78,17 @@ theorem padicReducedCommonZeroSet_mapsTo_reduction
       (padicReducedCommonZeroSet p n f) := by
   intro x hx i
   rw [← padicPolynomialReduction_compat p n (f i)]
-  rw [← MvPolynomial.map_eval]
-  rw [hx i, map_zero]
+  calc
+    MvPolynomial.eval (fun s => padicReduction p n (x s))
+        (MvPolynomial.map (padicReduction p n)
+          (padicPolynomialReduction p (n + 1) (f i))) =
+        padicReduction p n
+          (MvPolynomial.eval x (padicPolynomialReduction p (n + 1) (f i))) := by
+      symm
+      simpa [Function.comp_def] using
+        (MvPolynomial.map_eval (padicReduction p n) x
+          (padicPolynomialReduction p (n + 1) (f i)))
+    _ = 0 := by rw [hx i, map_zero]
 
 /--
 P-adic tuples whose values on every polynomial vanish after projection to level `n`.
