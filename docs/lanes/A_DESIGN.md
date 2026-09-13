@@ -55,21 +55,21 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ### Dependency / integration state
 
-- #56/C retains exact frozen `STACK-READY` head `45bde2eff8e75e901282151760b0c5dfc41a869a` **for #64 only**. A later Theorem 5(iii) head `527533d4…` was green in CI #217, after which C continued source-shaped cleanup. CI #220/#223 then exposed only local additive-commutativity normalization in `LegendreTwo.lean`; A routed exact diagnostics. Current observed repair head `90996cbe1c4e1f2a6c2a2c2916d53467df8c94e0` is queued in CI #225. The old downstream freeze remains green and unchanged. Independent Blueprint exposition/linkage and final latest-main integration remain after proof stabilization.
+- #56/C retains exact frozen `STACK-READY` head `45bde2eff8e75e901282151760b0c5dfc41a869a` **for #64 only**. Theorem 5(iii) previously reached green CI #217; later source-shaped cleanup moved through local commutativity normalization and the latest checked head `e1d5bf9ed6dbcaa9c5ab1beea6019d23cbf9e9c6` now fails CI #229 only at two numeral/algebraMap coercion goals for `2` in `AlgebraicClosure (ZMod p)`. A routed an explicit `map_natCast`/local `h2` normalization route. The old downstream freeze remains green and unchanged. Independent Blueprint exposition/linkage and final latest-main integration remain after proof stabilization.
 - #64/C is legally STACKABLE from exactly `45bde2ef…`. The canonical branch was still on its old preflight base at the latest branch check, so no implicit move to a later #56 head is allowed. If #56 merges before #64 adds proof commits, #64 should resync to main instead.
 - #78/B needs a smaller subset already present in the #64 freeze, but the owner promise explicitly scopes itself to #64. A has requested a separate #78 promise; #78 remains WAITING until that appears or #56 merges.
 - #72/D live head `81bc0f88d6960611264194cf7923118f015f262a` passed CI #219. It now proves the projection-kernel / `p^(n+1)` divisibility equivalence and source unit criteria, but does not yet provide the full `p^n * unit` decomposition, project valuation, or domain conclusion. Therefore it is too early to release #89/#96.
 - #89/D preflight remains complete and waits for a stable #72 valuation + divisibility/topology bridge.
 - #96/B preflight remains complete; algebraic `Q_p` waits for #72 domain/decomposition/valuation, while Proposition 4 additionally needs a minimal #89 topology/density subset.
-- #99/B draft PR #103 previously reached green head `bf91ce4a…` in CI #218 with Proposition 5 and Blueprint work. Subsequent polynomial reduction compatibility refinement currently fails only in B-owned `RootExistence.lean`: observed head `6f4fe68e9276a5658a7bb091172f7dff24c22f83` fails CI #224 at coefficient-level `MvPolynomial.map` compatibility and the mapped-evaluation rewrite. A routed exact diagnostics; no cross-lane intervention is needed. The temporary top-level import hook remains until isolated proof CI is green and #98 frees `Formalization.lean`.
-- #100/B was claimed while #99 was root/CI occupied. Its current mandate is source/API/dependency preflight only; proof waits for #99/#72/#96 interfaces.
+- #99/B draft PR #103 current checked head `fe1a173e9665595b584d7f8235c5122b4f0cc373` passed CI #226 after repairing coefficient-level `MvPolynomial.map` and mapped-evaluation compatibility. Proposition 5 and Blueprint work are green in isolated form. The temporary top-level import hook remains until #98 frees `Formalization.lean`; final integration then moves the import into the normal aggregator and reruns full CI.
+- #100/B was claimed while #99 was root occupied. Its current mandate is source/API/dependency preflight only; proof waits for #99/#72/#96 interfaces.
 - #102 remains the core Hensel one-step + multivariate theorem + simple-root Corollary 1 boundary, preflight safe but proof expected to need #72/#89.
 - Because #100 was claimed, A independently checked the immediately following source page and split Corollaries 2–3 into #104 (odd `p`) and #105 (`p=2`). These are preflight-safe and depend on #102 plus the appropriate #72 primitive/unit/valuation/congruence interface rather than on `Q_p`.
 
 ### Shared-hotspot coordination
 
-1. #98 / C keeps the next normal `Formalization.lean` integration slot while local Theorem 5(iii) repair and Blueprint/final §3.2 work finish. The explicit #64 frozen head is isolated from the moving live branch.
-2. #103 / B stays isolated while `RootExistence.lean` is repaired; after isolated CI is green and #98 frees the shared root, B should resync latest main, move `RootExistence` into the normal `Formalization.lean` aggregator, remove the temporary top-level hook, and re-run full CI before merge.
+1. #98 / C keeps the next normal `Formalization.lean` integration slot while its final local Theorem 5(iii) cast repair and Blueprint/final §3.2 work finish. The explicit #64 frozen head is isolated from the moving live branch.
+2. #103 / B is isolated-CI green; after #98 frees the shared root, B should resync latest main, move `RootExistence` into the normal `Formalization.lean` aggregator, remove the temporary top-level hook, and re-run full CI before merge.
 3. #92 / D may continue isolated algebraic proof work, but final Blueprint/root linkage should wait until its theorem interface is stable.
 
 A #106 / PR #107 owns only:
@@ -93,8 +93,8 @@ Owned executable/near-executable work includes #56/#64/#72/#99. Owned preflight 
 
 ### Next A actions
 
-1. keep PR #107 synchronized with live worker state, then land it after its latest-head CI and four-file self-review are green;
-2. monitor #98 repair/Blueprint completion; once it clears `Formalization.lean`, route #103 to normal root integration after its own isolated proof is green;
+1. keep PR #107 synchronized with structural live state, then land it after latest-head CI and four-file self-review are green; rapid worker proof-head changes remain governed by live GitHub precedence;
+2. monitor #98 repair/Blueprint completion; once it clears `Formalization.lean`, route #103 to normal root integration from its green isolated proof;
 3. monitor #72 for the first genuinely stable valuation/decomposition subset before releasing #89/#96;
 4. monitor #64 consuming the exact frozen #56 head and #56 publishing a separate #78 freeze or merging;
 5. monitor claims of #102/#104/#105 and refill only when safe capacity thins again.
