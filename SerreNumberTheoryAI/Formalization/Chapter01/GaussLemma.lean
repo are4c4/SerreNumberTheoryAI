@@ -143,6 +143,117 @@ theorem gaussSignedPermutation_legendreSign
     exact False.elim (ZMod.neg_one_ne_one hbad)
   · rw [hleft, hright]
 
+/--
+A source-shaped half-system of nonzero residues: exactly half of the units are chosen,
+every unit occurs in the chosen half or as the negative of one, and the two halves are disjoint.
+-/
+structure GaussHalfSystem (p : ℕ) where
+  carrier : Finset (ZMod p)ˣ
+  card_eq : carrier.card = (p - 1) / 2
+  mem_or_neg_mem : ∀ u : (ZMod p)ˣ, u ∈ carrier ∨ -u ∈ carrier
+  neg_not_mem : ∀ u : (ZMod p)ˣ, u ∈ carrier → -u ∉ carrier
+
+/-- The chosen representative of `a*s` in the half-system, after forgetting its sign. -/
+def gaussRepresentative {p : ℕ}
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) (s : ↥H.carrier) : ↥H.carrier := by
+  classical
+  by_cases h : a * s.1 ∈ H.carrier
+  · exact ⟨a * s.1, h⟩
+  · exact ⟨-(a * s.1), (H.mem_or_neg_mem (a * s.1)).resolve_left h⟩
+
+/-- The sign needed to return `a*s` to the chosen half-system. -/
+def gaussSign {p : ℕ}
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) (s : ↥H.carrier) : ℤ := by
+  classical
+  exact if a * s.1 ∈ H.carrier then 1 else -1
+
+@[simp]
+theorem gaussSign_eq_one_or_neg_one {p : ℕ}
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) (s : ↥H.carrier) :
+    gaussSign H a s = 1 ∨ gaussSign H a s = -1 := by
+  classical
+  by_cases h : a * s.1 ∈ H.carrier
+  · left
+    simp [gaussSign, h]
+  · right
+    simp [gaussSign, h]
+
+/-- The representative and sign satisfy the defining signed-decomposition identity. -/
+theorem gaussSign_mul_representative {p : ℕ}
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) (s : ↥H.carrier) :
+    (a : ZMod p) * (s.1 : ZMod p) =
+      ((gaussSign H a s : ℤ) : ZMod p) *
+        ((gaussRepresentative H a s).1 : ZMod p) := by
+  classical
+  by_cases h : a * s.1 ∈ H.carrier
+  · simp [gaussSign, gaussRepresentative, h]
+  · simp [gaussSign, gaussRepresentative, h]
+
+/-- Multiplication followed by returning to the chosen half-system is injective. -/
+theorem gaussRepresentative_injective {p : ℕ}
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) :
+    Function.Injective (gaussRepresentative H a) := by
+  classical
+  intro s t hst
+  by_cases hs : a * s.1 ∈ H.carrier
+  · by_cases ht : a * t.1 ∈ H.carrier
+    · have hmul : a * s.1 = a * t.1 := by
+        simpa [gaussRepresentative, hs, ht] using
+          congrArg (fun x : ↥H.carrier => x.1) hst
+      have hst' : s.1 = t.1 := mul_left_cancel hmul
+      exact Subtype.ext hst'
+    · have hmul : a * s.1 = -(a * t.1) := by
+        simpa [gaussRepresentative, hs, ht] using
+          congrArg (fun x : ↥H.carrier => x.1) hst
+      have hst' : s.1 = -t.1 := by
+        apply mul_left_cancel (a := a)
+        simpa using hmul
+      have hnegmem : -t.1 ∈ H.carrier := by
+        rw [← hst']
+        exact s.2
+      exact False.elim ((H.neg_not_mem t.1 t.2) hnegmem)
+  · by_cases ht : a * t.1 ∈ H.carrier
+    · have hmul : -(a * s.1) = a * t.1 := by
+        simpa [gaussRepresentative, hs, ht] using
+          congrArg (fun x : ↥H.carrier => x.1) hst
+      have hst' : t.1 = -s.1 := by
+        apply mul_left_cancel (a := a)
+        simpa using hmul.symm
+      have hnegmem : -s.1 ∈ H.carrier := by
+        rw [← hst']
+        exact t.2
+      exact False.elim ((H.neg_not_mem s.1 s.2) hnegmem)
+    · have hmul : -(a * s.1) = -(a * t.1) := by
+        simpa [gaussRepresentative, hs, ht] using
+          congrArg (fun x : ↥H.carrier => x.1) hst
+      have hmul' : a * s.1 = a * t.1 := by
+        simpa using congrArg (fun u : (ZMod p)ˣ => -u) hmul
+      have hst' : s.1 = t.1 := mul_left_cancel hmul'
+      exact Subtype.ext hst'
+
+/-- On the finite half-system, the representative map is therefore a permutation. -/
+theorem gaussRepresentative_bijective {p : ℕ}
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) :
+    Function.Bijective (gaussRepresentative H a) := by
+  have hinj := gaussRepresentative_injective H a
+  exact ⟨hinj, Finite.injective_iff_surjective.mp hinj⟩
+
+/--
+Gauss's lemma in source form: the Legendre sign of `a` is the product of the signs obtained
+when multiplication by `a` is returned to a chosen half-system of nonzero residue classes.
+-/
+theorem serre_gaussLemma
+    (p : ℕ) [Fact p.Prime] (hp : p ≠ 2)
+    (H : GaussHalfSystem p) (a : (ZMod p)ˣ) :
+    legendreSign p (a : ZMod p) =
+      ∏ s : ↥H.carrier, gaussSign H a s := by
+  exact gaussSignedPermutation_legendreSign
+    p hp H.carrier a (gaussSign H a) (gaussRepresentative H a)
+    (gaussSign_eq_one_or_neg_one H a)
+    (gaussRepresentative_bijective H a)
+    (gaussSign_mul_representative H a)
+    H.card_eq
+
 end GaussLemma
 
 end SerreNumberTheoryAI
