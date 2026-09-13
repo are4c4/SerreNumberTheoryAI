@@ -1,4 +1,5 @@
 import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
+import Mathlib.NumberTheory.MulChar.Basic
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
 
@@ -81,6 +82,24 @@ theorem legendreSign_neg
   rw [legendreSignInt, hminus]
   simpa only [neg_one_mul] using
     legendreSign_mul l hl (-1 : ZMod l) x
+
+/-- Package the project Legendre sign as a generic multiplicative character. -/
+noncomputable def serreLegendreMulChar (hl : l ≠ 2) : MulChar (ZMod l) ℤ where
+  toFun := legendreSign l
+  map_one' := legendreSign_one l
+  map_mul' := legendreSign_mul l hl
+  map_nonunit' := by
+    intro x hx
+    have hx0 : x = 0 := by
+      by_contra hne
+      exact hx (isUnit_iff_ne_zero.mpr hne)
+    subst x
+    exact legendreSign_zero l
+
+@[simp]
+theorem serreLegendreMulChar_apply (hl : l ≠ 2) (x : ZMod l) :
+    serreLegendreMulChar l hl x = legendreSign l x :=
+  rfl
 
 end QuadraticReciprocity
 
