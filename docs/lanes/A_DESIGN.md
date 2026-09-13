@@ -58,10 +58,11 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
   - #64 does not need all of Theorem 5 before stacking; the minimal #56 subset is the sign layer, multiplicativity, Theorem 5(ii) at `-1`, and cross-characteristic sign compatibility. Theorem 5(iii) at `2` is not required for §3.3.
 - Queue refill prepared by A:
   - #84 `S2.2-Chevalley-Cor1` — fresh unclaimed READY item. Core #52 is DONE; the source proof is the cardinality contradiction excluding `V={0}`
+  - #85 `S2.2-Chevalley-Cor2` — fresh unclaimed PREFLIGHT; source is the quadratic-form specialization of #84, so proof waits for #84 `DONE`/`STACK-READY`
   - #78 `C1-Supp-GaussLemma` — fresh unclaimed PREFLIGHT; depends on the minimal #56 Legendre/half-power interface but not on #64
   - #79 `C2.1.1-ZpInverseLimit` — fresh unclaimed PREFLIGHT for Chapter 2 §1.1; independent of the Chapter 1 quadratic-residue dependency chain
 - Source boundaries checked independently from the uploaded Japanese edition:
-  - #84: §2.2 Corollary 1, printed p.7 / uploaded PDF p.17
+  - #84/#85: §2.2 Corollaries 1/2, printed p.7 / uploaded PDF p.17
   - #78: Chapter 1 supplement (i), printed pp.12–13 / uploaded PDF pp.22–23
   - #79: Chapter 2 §1.1, printed pp.15–16 / uploaded PDF pp.25–26, ending before §1.2 Proposition 1
 - Shared-hotspot coordination:
@@ -70,7 +71,7 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
   - D PR #82 touches worker mathematical artifacts and is likewise disjoint from A central files
   - A does not modify worker Lean/Blueprint mathematical artifacts
 - Blockers: none at A level
-- Next A action: merge #83 after latest-head CI and final hotspot check; then monitor #55 for a stable interface, #56/#64 stack transitions, and claims of #84/#78/#79. Refill again before executable capacity becomes thin.
+- Next A action: merge #83 after latest-head CI and final hotspot check; then monitor #55 for a stable interface, #56/#64 stack transitions, and claims of #84/#85/#78/#79. Refill again before executable capacity becomes thin.
 
 ## Scheduler health target
 
