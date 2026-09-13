@@ -31,21 +31,20 @@ Cは固定のBlueprint専任ではありません。`docs/WORK_QUEUE.md` から�
 
 ## Current handoff
 
-- State: active worker
-- Active work: #49 / `S1.1-T1iii` — Serre 1.1 Theorem 1(iii), end-to-end
-- Canonical branch: `work/s1-1-t1iii`
+- State: active worker; `S3.2-LegendreSymbol` preflight complete, upstream-gated
+- Active work: #56 / `S3.2-LegendreSymbol`
+- Canonical branch: `work/s3-2-legendre-symbol`
 - Base mode: `main`
-- Base SHA at claim: `0be2db71439109d00fdbf4cf6b5a66e60632f536`
-- Statement: for prime `p`, `f > 0`, fixed algebraically closed `Ω` of characteristic `p`, every finite field `K` with `Fintype.card K = p ^ f` is ring-equivalent to `primePowerFixedSubfield Ω p f hp`
-- Source interpretation: fixed independently from Japanese edition Chapter 1 §1.1 Theorem 1(iii); abstract field-isomorphism uniqueness, distinct from Theorem 1(ii)'s equality of subfields inside one ambient field
-- Proof strategy: derive `CharP K p` from cardinality; view `K` as a finite algebraic `ZMod p`-extension; embed it into `Ω`; identify the image with the unique `p^f`-element subfield from Theorem 1(ii); compose equivalences
-- Strong near-target theorem intentionally avoided: mathlib's finite-field equal-cardinality equivalence/classification result
-- Implementation: Lean + Blueprint/exposition committed on the canonical branch; CI/compilation verification pending
-- PR: not opened yet
-- CI: not run yet
-- STACK-READY: no
-- Blockers: none currently; Lean API/elaboration still needs CI verification
-- Next safe action: open PR, use CI as compile feedback, repair any Lean/Verso errors, self-review statement integrity, then merge when green; while CI is pending, scan #50+ for productive preflight within the in-flight cap
+- Base SHA at claim: `8d682413d4fc45cc957502f5fc93f80ae7ce64e7`
+- Last completed work: #49 / `S1.1-T1iii` via PR #58, merged on main as `8d682413d4fc45cc957502f5fc93f80ae7ce64e7`; CI run #95 passed repository policy, `lake build`, and `lake exe vbp build`
+- Current source boundary: Japanese edition Chapter 1 §3.2, printed pp. 8–9 / uploaded PDF pp. 18–19; §3.3 quadratic reciprocity is excluded from this work item
+- Preflight: source statement, exact dependency split, mathlib boundary, theorem-strength audit, and the source primitive-eighth-root/Frobenius strategy for Theorem 5(iii) are recorded on #56
+- Required upstream from #55 / `S3.1-QuadraticElements`: a frozen odd-characteristic half-power `{±1}` interface and a theorem identifying value `1` / kernel with the nonzero-square subgroup
+- `S1.2-MultGroup` is now integrated on main via PR #59; #56 still depends on #55 rather than consuming §1.2 directly
+- Implementation state: no #56 proof-code commit yet; the canonical branch is intentionally kept clean until #55 is `DONE` or explicitly `STACK-READY`
+- STACK-READY: no for #56; waiting for #55 to publish exact declaration names/types and head SHA
+- Blocker: #55 has not yet published the required `STACK-READY` interface at the latest live check
+- Next safe action: monitor #55; once its exact interface is frozen, move `work/s3-2-legendre-symbol` to the approved stack base following `WORK_QUEUE.md`, then implement Lean + Blueprint + CI end-to-end. Until then, do not guess §3.1 declaration names or commit dependent proof code.
 
 ## Short resume prompt
 
