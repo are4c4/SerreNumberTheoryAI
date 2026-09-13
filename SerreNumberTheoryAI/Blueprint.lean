@@ -13,6 +13,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter01.QuadraticElements
 import SerreNumberTheoryAI.Blueprint.Chapter01.LegendreSymbol
 import SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyQuadraticForm
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers
+import SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -43,6 +44,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyQuadraticForm}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence}
 
 # 定理の依存関係
 

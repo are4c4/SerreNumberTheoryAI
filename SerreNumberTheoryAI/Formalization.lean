@@ -8,6 +8,7 @@ import SerreNumberTheoryAI.Formalization.Chapter01.ChevalleyQuadraticForm
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreTwo
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegers
+import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 
 /-!
 # Formalization root
