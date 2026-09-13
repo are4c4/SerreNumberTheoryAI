@@ -40,6 +40,23 @@ theorem primitive_eighth_root_pow_four_eq_neg_one
     convert hα.pow_of_dvd (by norm_num : 4 ≠ 0) (by norm_num : 4 ∣ 8) using 1 <;> norm_num
   exact hα4.eq_neg_one_of_two_right
 
+/-- If `α` is a primitive eighth root, then the source element `α + α⁻¹` squares to `2`. -/
+theorem primitive_eighth_root_add_inv_sq
+    {K : Type*} [Field K] {α : K} (hα : IsPrimitiveRoot α 8) :
+    (α + α⁻¹) ^ 2 = 2 := by
+  have hα0 : α ≠ 0 := (hα.isUnit (by norm_num : (8 : ℕ) ≠ 0)).ne_zero
+  have hα4 : α ^ 4 = -1 := primitive_eighth_root_pow_four_eq_neg_one hα
+  have hidentity : (((α + α⁻¹) ^ 2 - 2) * α ^ 2) = α ^ 4 + 1 := by
+    field_simp [hα0]
+    ring
+  have hz : (((α + α⁻¹) ^ 2 - 2) * α ^ 2) = 0 := by
+    rw [hidentity, hα4]
+    simp
+  have hα2 : α ^ 2 ≠ 0 := pow_ne_zero 2 hα0
+  have hdiff : (α + α⁻¹) ^ 2 - 2 = 0 :=
+    (mul_eq_zero.mp hz).resolve_right hα2
+  exact sub_eq_zero.mp hdiff
+
 end LegendreTwo
 
 end SerreNumberTheoryAI
