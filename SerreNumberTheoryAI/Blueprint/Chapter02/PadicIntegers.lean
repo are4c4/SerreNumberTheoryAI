@@ -37,6 +37,11 @@ level `n+1` から level `n` への写像は、より高い `p` の冪を法と�
 各隣接剰余写像は全射である。
 :::
 
+:::lemma_ "padic_reduction_kernel" (lean := "SerreNumberTheoryAI.mem_ker_padicReduction_iff") (uses := "padic_reduction")
+level `n+1` から level `n` への剰余写像の核は、source levelでの `p^(n+1)` の倍数全体である。
+これは書籍の `ker(φ_m)=p^(m-1)A_m` を0始まりの添字へ移した形である。
+:::
+
 ## 整合列としてのp進整数
 
 :::definition "padic_compatible" (lean := "SerreNumberTheoryAI.padicCompatible") (uses := "padic_reduction")
@@ -57,6 +62,14 @@ level `n+1` の成分を下げると level `n` の成分になることである
 隣り合う射影は剰余写像と可換する。
 :::
 
+:::lemma_ "serre_padic_projection_surjective" (lean := "SerreNumberTheoryAI.serrePadicIntProj_surjective") (uses := "serre_padic_projection")
+各有限levelへの射影は全射である。
+:::
+
+:::lemma_ "serre_padic_extensionality" (lean := "SerreNumberTheoryAI.serrePadicInt_ext") (uses := "serre_padic_projection")
+すべての有限levelで同じ剰余成分を持つ2つのp進整数は等しい。
+:::
+
 ## 位相とコンパクト性
 
 各有限剰余環には離散位相を入れ、直積には積位相を入れる。
@@ -70,12 +83,20 @@ level `n+1` の成分を下げると level `n` の成分になることである
 `p` が素数なら、`SerrePadicInt p` は積位相から誘導される位相でコンパクトである。
 :::
 
+:::lemma_ "serre_padic_projection_continuous" (lean := "SerreNumberTheoryAI.serrePadicIntProj_continuous") (uses := "serre_padic_projection")
+各有限levelへの射影は積位相から誘導される位相について連続である。
+:::
+
 ## 整数の標準埋め込み
 
 整数 `a` を各 `p^(n+1)` で割った剰余類の列へ送ると、その列は自動的に整合する。
 
 :::definition "serre_padic_int_int_cast" (lean := "SerreNumberTheoryAI.serrePadicIntIntCast") (uses := "serre_padic_int")
 整数をその整合剰余列へ送る標準環準同型 `ℤ → SerrePadicInt p` を定める。
+:::
+
+:::lemma_ "serre_padic_int_int_cast_projection" (lean := "SerreNumberTheoryAI.serrePadicIntIntCast_proj") (uses := "serre_padic_int_int_cast, serre_padic_projection")
+整数 `a` の level `n` 成分は、`a` を `p^(n+1)` で割った通常の剰余類である。
 :::
 
 :::theorem "serre_padic_int_int_cast_injective" (lean := "SerreNumberTheoryAI.serrePadicIntIntCast_injective") (uses := "serre_padic_int_int_cast")
