@@ -36,7 +36,7 @@
 
 - Current focused Issue: #11 — A handoff / interpretation progress synchronization
 - Current branch: `design/s1-1-theorem1-ii-handoff-11`
-- Current PR: not yet opened
+- Current PR: #12
 - Mathematical frontier: `S1.1.Theorem1(ii)`
 - Completed design contract: #6 — assumptions, uniqueness scope, exact cardinality, and root-set characterization are fixed
 - Parallel owners:
@@ -45,7 +45,7 @@
   - D #10 — mathlib research
 - E status: E #8 currently owns the post-#5 lane-state integration cleanup; A must not edit `docs/LANE_STATUS.md` or `docs/lanes/E_INTEGRATION.md` while that ownership is active
 - Completed infrastructure: #4 / PR #5 are merged on main
-- Next: merge #11 after CI, then monitor #7/#9/#10 for statement drift, ownership conflict, or shared-hotspot contention; create/route the Theorem 1(ii) E integration Issue only after E #8 is complete and B/C artifacts are ready
+- Next: merge #12 after CI, then monitor #7/#9/#10 for statement drift, ownership conflict, or shared-hotspot contention; create/route the Theorem 1(ii) E integration Issue only after E #8 is complete and B/C artifacts are ready
 - Blockers: none
 - Shared hotspot currently touched by A: `FORMALIZATION_PROGRESS.md` only, to mark Theorem 1(ii) Interpretation complete; no other progress columns change
 
