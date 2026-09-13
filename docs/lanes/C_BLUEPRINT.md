@@ -31,15 +31,21 @@ Cは固定のBlueprint専任ではありません。`docs/WORK_QUEUE.md` から�
 
 ## Current handoff
 
-- State: ready worker
-- Active work: none
-- Active branch / PR: none
-- Last completed historical work: `S1.1.Theorem1(ii)` Blueprint / exposition (#9 / PR #18); target全体もmain上でintegration complete
-- Continuous-worker protocol: active on main via #47 / PR #48
-- Highest-priority seeded implementation item: #49 / `S1.1-T1iii` (`work/s1-1-t1iii`) — `READY`
-- Additional productive fallback: #50 / `S1.2-MultGroup`, #51 / `S2.1-PowerSums`, #52 / `S2.2-Chevalley` are `PREFLIGHT`
-- If a canonical branch is already claimed: do not idle; scan the next executable queue item or resume owned work
-- Blockers: none
+- State: active worker
+- Active work: #49 / `S1.1-T1iii` — Serre 1.1 Theorem 1(iii), end-to-end
+- Canonical branch: `work/s1-1-t1iii`
+- Base mode: `main`
+- Base SHA at claim: `0be2db71439109d00fdbf4cf6b5a66e60632f536`
+- Statement: for prime `p`, `f > 0`, fixed algebraically closed `Ω` of characteristic `p`, every finite field `K` with `Fintype.card K = p ^ f` is ring-equivalent to `primePowerFixedSubfield Ω p f hp`
+- Source interpretation: fixed independently from Japanese edition Chapter 1 §1.1 Theorem 1(iii); abstract field-isomorphism uniqueness, distinct from Theorem 1(ii)'s equality of subfields inside one ambient field
+- Proof strategy: derive `CharP K p` from cardinality; view `K` as a finite algebraic `ZMod p`-extension; embed it into `Ω`; identify the image with the unique `p^f`-element subfield from Theorem 1(ii); compose equivalences
+- Strong near-target theorem intentionally avoided: mathlib's finite-field equal-cardinality equivalence/classification result
+- Implementation: Lean + Blueprint/exposition committed on the canonical branch; CI/compilation verification pending
+- PR: not opened yet
+- CI: not run yet
+- STACK-READY: no
+- Blockers: none currently; Lean API/elaboration still needs CI verification
+- Next safe action: open PR, use CI as compile feedback, repair any Lean/Verso errors, self-review statement integrity, then merge when green; while CI is pending, scan #50+ for productive preflight within the in-flight cap
 
 ## Short resume prompt
 
