@@ -48,14 +48,15 @@ Mainでend-to-end完了:
 
 Live dependency graph:
 
-- `S2.2-Chevalley-Cor2` のcanonical workは **#74 / C**。Cが先に `work/s2-2-chevalley-cor2-quadratic-form` をclaimし、source/representation preflight済み。#70がDONEなので実装gateはopen、draft PR #87がactive。後発 #85 / PR #88 / branch `work/s2-2-chevalley-cor2` はduplicate/released。
+- `S2.2-Chevalley-Cor2` のcanonical workは **#74 / C**。Cが先に `work/s2-2-chevalley-cor2-quadratic-form` をclaimし、source/representation preflight済み。#70がDONEなので実装gateはopen。旧draft PR #87はsupersededされ、clean current PR **#94** がactive。head `596b6341…` はgreenだがA #90後のlatest mainへresyncしてから統合する。
 - `S3.1-QuadraticElements` #55 / PR #82 は main commit `329184fa3aa1e6ee748061b1cf5cb539e2c72778` でDONE。half-power / square-kernel interfaceはmainでstable。
-- `S3.2-LegendreSymbol` #56 はC-owned。stack baseだった#55がmerge済みなのでstack-only gateは解除。canonical branchをlatest mainへresyncし、通常のCLAIMED implementationとして進めてよい。
+- `S3.2-LegendreSymbol` #56 はC-owned、draft PR **#93** で実装中。#55はDONEなのでstack-only gateは解除済み。current head `83d03bc…` のCIはstatement/dependencyではなく`LegendreSymbol.lean`のsign/cast proof 1箇所で失敗しており、Cへrepairをroute済み。
 - `S3.3-QuadraticReciprocity` #64 はC-owned PREFLIGHT。proofは #56 が characteristic-independent Legendre sign/value、field-core compatibility、multiplicativity、Theorem 5(ii) at `-1` をDONEまたはSTACK-READYにするまで待つ。Theorem 5(iii) at `2` はhard dependencyではない。
-- `C1-Supp-GaussLemma` #78 はunclaimed PREFLIGHT。#64には依存せず、proofはminimal #56 interface待ち。
-- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR #86で実装中。Bはexact green head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` を #72 向け `STACK-READY` としてfreeze済み。後発 #79 はduplicateとしてclosed。
-- `C2S1.2-ZpProperties` #72 はD-owned、preflight complete。#71のfrozen project-local `SerrePadicInt` / projection / integer-map interfaceが揃ったため、algebraic Proposition 1–2 + valuation sliceは **STACKABLE**。#71が先にmergeした場合はlatest mainを使う。
+- `C1-Supp-GaussLemma` #78 は **B-owned**。canonical branch `work/c1-supp-gauss-lemma` が存在し、source/package/API preflightはcomplete。proofはminimal #56 sign/half-power interfaceがDONE/STACK-READYになるまでWAITING。#64には依存しない。
+- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR **#86**。Bはexact green head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` を #72 向け `STACK-READY` としてfreeze済み。current PR headはpolicy / `lake build` を通過し、`vbp build`のduplicate Blueprint tagだけがfailure; Bへrepairをroute済み。後発 #79 はduplicateとしてclosed。
+- `C2S1.2-ZpProperties` #72 はD-owned、draft stacked PR **#92**。#71のfrozen project-local `SerrePadicInt` / projection / integer-map interfaceをexact anchor `27a41437…` からconsumeし、current head `a6ffdf7a…` はCI green。algebraic Proposition 1–2 + valuation sliceを継続する。
 - `C2S1.2-ZpMetric` #89 はunclaimed PREFLIGHT。#72 preflightで切り出されたProposition 3（metric / topology compatibility / completeness / density）。proofは#72 valuation/topology-relevant interface待ち。
+- `C2S1.3-QpField` #96 はunclaimed PREFLIGHT。Definition 2のproject `Z_p` のfraction fieldとしての `Q_p`、valuation extension、Proposition 4のlocal compactness / `Z_p` open compact / `Q` densityをsource boundaryとする。algebraic proofは#72待ちで、metric側が#89のどの最小interfaceを必要とするかはpreflightで確定する。
 
 | Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -64,23 +65,34 @@ Live dependency graph:
 | P2 | `S2.1-PowerSums` | べき乗和 | `DONE` | PR #62 merged | `work/s2-1-power-sums` | #51 complete |
 | P3 | `S2.2-Chevalley` | core Chevalley–Warning | `DONE` | PR #68 merged | `work/s2-2-chevalley` | #52 complete |
 | P4 | `S2.2-Chevalley-Cor1` | 系1: 原点以外の共通零点 | `DONE` | PR #80 merged | `work/s2-2-chevalley-cor1-nontrivial-zero` | #70 complete |
-| P5 | `S2.2-Chevalley-Cor2` | 系2: 3変数以上の2次形式 | `CLAIMED` | #70 DONE; PR #87をlatest mainへresync | `work/s2-2-chevalley-cor2-quadratic-form` | #74 / C |
+| P5 | `S2.2-Chevalley-Cor2` | 系2: 3変数以上の2次形式 | `CLAIMED` | PR #94 green; resync current main, then self-review/merge | `work/s2-2-chevalley-cor2-quadratic-form` | #74 / C |
 | P6 | `S3.1-QuadraticElements` | 3.1 平方数 / 定理4 | `DONE` | PR #82 merged | `work/s3-1-quadratic-elements` | #55 complete |
-| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | #55 DONE; resync to latest main and implement | `work/s3-2-legendre-symbol` | #56 / C |
+| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | PR #93; repair implementation-local Lean goal, continue isolated module | `work/s3-2-legendre-symbol` | #56 / C |
 | P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `PREFLIGHT` | wait for minimal #56 subset DONE/STACK-READY | `work/s3-3-quadratic-reciprocity` | #64 / C |
-| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | preflight safe; proof waits for #56 | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
-| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86; #72 interface STACK-READY at `27a41437…` | `work/c2-s1-1-zp-construction` | #71 / B |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `STACKABLE` | stack on #71 `27a41437…`, or latest main after #71 merge | `work/c2-s1-2-zp-properties` | #72 / D |
+| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `WAITING` | B preflight complete; proof waits minimal #56 interface | `work/c1-supp-gauss-lemma` | #78 / B |
+| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86; repair duplicate vbp tag; #72 interface stays frozen at `27a41437…` | `work/c2-s1-1-zp-construction` | #71 / B |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `STACKABLE` | PR #92 green on exact #71 anchor; continue algebraic slice | `work/c2-s1-2-zp-properties` | #72 / D |
 | P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `PREFLIGHT` | preflight safe; proof waits #72 | `work/c2-s1-2-zp-metric` | #89 / unclaimed |
+| P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `PREFLIGHT` | preflight safe; algebraic proof waits #72, metric edge to #89 to be minimized | `work/c2-s1-3-qp-field` | #96 / unclaimed |
 
-Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work。
+Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work。旧Corollary-2 PR #87も#94にsupersede済み。
 
-## 7. Queue health
+## 7. Shared-hotspot order
 
-Unclaimed safe capacity is currently #78 and #89 (`PREFLIGHT`). Owned executable capacity includes #74, #56, #71, and now stackable #72. Thus no worker should be globally blocked by one dependency chain.
+Current worker PRs overlap root imports:
+
+1. **#94 / C** is already end-to-end green and gets the next root `Formalization.lean` / `Blueprint.lean` integration slot after resync to latest main.
+2. **#86 / B** also touches both root imports. Repair its local Blueprint tag first, then rebase after #94 lands before final integrated CI.
+3. **#93 / C** currently touches root `Formalization.lean` but remains an in-progress §3.2 slice. Keep proof work isolated; rebase/add final root integration only after #94 rather than racing the shared hotspot.
+
+A does not modify these worker mathematical branches.
+
+## 8. Queue health
+
+Unclaimed safe capacity is currently #89 and #96 (`PREFLIGHT`). Owned executable/stackable work includes #74, #56, #71, and #72; #64 and #78 retain owned dependency-safe preflight/waiting state. Thus no worker should be globally blocked by one dependency chain.
 
 A should refill only when these candidates are claimed/thin, and should prefer source/dependency boundaries already exposed by current work rather than inventing unrelated tasks.
 
-## 8. End-of-run handoff
+## 9. End-of-run handoff
 
 Record owned branches/PRs, current proof/Blueprint state, CI, STACK-READY interfaces, blockers, and next claimable items. New chats must recheck live GitHub rather than trusting this file alone.
