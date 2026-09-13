@@ -9,6 +9,8 @@ import SerreNumberTheoryAI.Blueprint.Chapter01.MultiplicativeGroup
 import SerreNumberTheoryAI.Blueprint.Chapter01.PowerSums
 import SerreNumberTheoryAI.Blueprint.Chapter01.Chevalley
 import SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyNontrivialZero
+import SerreNumberTheoryAI.Blueprint.Chapter01.QuadraticElements
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -31,6 +33,10 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.Chevalley}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyNontrivialZero}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter01.QuadraticElements}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers}
 
 # 定理の依存関係
 
