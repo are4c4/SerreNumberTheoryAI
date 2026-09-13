@@ -2,6 +2,7 @@ import SerreNumberTheoryAI.Formalization.Chapter01.FiniteFields
 import SerreNumberTheoryAI.Formalization.Chapter01.MultiplicativeGroup
 import SerreNumberTheoryAI.Formalization.Chapter01.PowerSums
 import SerreNumberTheoryAI.Formalization.Chapter01.Chevalley
+import SerreNumberTheoryAI.Formalization.Chapter01.ChevalleyNontrivialZero
 
 /-!
 # Formalization root
