@@ -35,21 +35,23 @@
 ## Current handoff
 
 - State: monitoring / coordination; no active A mathematical implementation deliverable
-- Mathematical frontier: `S1.1.Theorem1(ii)`
+- Mathematical frontier: `S1.1.Theorem1(ii)` cross-layer integration
 - Completed design / coordination checkpoints:
   - #6 — canonical statement contract completed
   - #11 / PR #12 — lane split and Interpretation/progress synchronization completed
   - #14 / PR #15 — transition to steady A monitoring state completed
   - E #8 / PR #13 — post-lane-infrastructure integration cleanup completed
   - #27 / PR #29 — central lane board and Theorem 1(ii) progress synchronized after C/D completion
+  - #31 / PR #32 — A monitoring handoff refreshed after C/D completion
+  - #37 / PR #38 — central lane board updated after B completion and E activation
 - Completed supporting deliverables:
-  - C #9 / PR #18 — independent explanation and Blueprint nodes merged; final `lean :=` linkage remains an integration dependency
+  - C #9 / PR #18 — independent explanation and Blueprint nodes merged; final `lean :=` linkage remains an E integration task
   - D #10 / PR #24 — mathlib research merged; no `TARGET-THEOREM-ONLY` blocker found
-- Current active mathematical owner:
-  - B #7 / draft PR #25 — Lean statement / proof; A semantic review against #6 passed, current work is Lean/API CI repair
-- E status: ready / monitoring; open a focused Theorem 1(ii) cross-layer integration task once B #7 is stable. C artifact is already on `main`.
-- Next A action: monitor B #7 / PR #25 for statement drift, ownership conflict, or a new semantic blocker. Route CI/API errors to B rather than editing B-owned Lean files.
-- Integration routing: once B is green/stable, route E to add final Blueprint `lean :=` linkage, run cross-layer build/policy checks, and synchronize remaining progress columns.
+  - B #7 / PR #25 — Lean statement/proof merged after latest-head green policy, `lake build`, and `lake exe vbp build`; declaration names are frozen on `main`
+- Current active owner:
+  - E #36 — Theorem 1(ii) cross-layer integration: verify merged B/C semantic correspondence, add final Blueprint `lean :=` linkage, run integrated policy/build/vbp checks, and synchronize completion state
+- Next A action: monitor E #36 for `BLOCKED: CROSS-LANE-STATEMENT-DRIFT`, ownership/shared-hotspot conflict, or a new semantic blocker. Do not edit E-owned integration files unless work is explicitly routed back to A.
+- Target transition rule: do not open or route Theorem 1(iii) implementation merely because B/C/D are idle. Wait until E #36 completes Theorem 1(ii) integration unless the dependency graph is explicitly changed.
 - Blockers: none at A level
 - Shared hotspots reserved by A: none
 
@@ -65,11 +67,12 @@ Abstract uniqueness up to field isomorphism belongs to Theorem 1(iii), not this 
 
 ## Monitoring rules
 
-- If B or the merged C artifact diverges from #6, stop the affected work and route `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` to A.
+- If E finds that the merged B declaration or merged C Blueprint/exposition diverges from #6, stop integration and route `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` to A.
 - If two lanes claim the same deliverable or shared hotspot, do not resolve it by concurrent edits; route the conflict through A.
-- D findings are advisory; B must still verify exact theorem assumptions and theorem strength before use.
-- Do not advance to Theorem 1(iii) merely because A is idle. The current target should reach a stable integrated state first unless the dependency graph is explicitly changed.
+- B/C/D are completed for this target and should remain idle unless E routes a concrete focused blocker back to the relevant lane.
+- D findings remain advisory; integration must preserve the theorem-strength restrictions from `AGENTS.md`.
+- Do not advance to Theorem 1(iii) merely because A is idle. Theorem 1(ii) should first reach a stable integrated state unless the dependency graph is explicitly changed.
 
 ## Short resume prompt
 
-`Aレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、A_DESIGN.md、FORMALIZATION_PROGRESS.mdをsource of truthとして再確認し、設計・Issue分割・ownership・dependency管理を進めて。B/C/D/Eの実装は奪わないで。`
+`Aレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、A_DESIGN.md、FORMALIZATION_PROGRESS.mdをsource of truthとして再確認し、E #36のTheorem 1(ii)統合を監視して。semantic drift・ownership conflict・shared-hotspot conflict・新しい設計blockerだけをAへrouteし、B/C/D/Eの実装は奪わないで。`
