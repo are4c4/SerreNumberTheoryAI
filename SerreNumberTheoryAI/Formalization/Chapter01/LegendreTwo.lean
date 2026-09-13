@@ -130,7 +130,7 @@ theorem primitive_eighth_root_add_inv_pow_prime_eq_self
         _ = α⁻¹ := primitive_eighth_root_pow_seven_eq_inv hα
     calc
       (α + α⁻¹) ^ p = α ^ p + (α⁻¹) ^ p := hchar
-      _ = α + α⁻¹ := by rw [inv_pow, hpow]; simp [hpow]
+      _ = α + α⁻¹ := by rw [inv_pow, hpow]; simp [add_comm]
 
 /-- In residue classes `3` and `5` modulo `8`, Frobenius negates `α + α⁻¹`. -/
 theorem primitive_eighth_root_add_inv_pow_prime_eq_neg_self
@@ -147,14 +147,14 @@ theorem primitive_eighth_root_add_inv_pow_prime_eq_neg_self
         _ = -α⁻¹ := primitive_eighth_root_pow_three_eq_neg_inv hα
     calc
       (α + α⁻¹) ^ p = α ^ p + (α⁻¹) ^ p := hchar
-      _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp [hpow]; ring
+      _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp
   · have hpow : α ^ p = -α := by
       calc
         α ^ p = α ^ 5 := primitive_eighth_root_pow_eq_pow_of_mod_eight hα p 5 hr (by norm_num)
         _ = -α := primitive_eighth_root_pow_five_eq_neg hα
     calc
       (α + α⁻¹) ^ p = α ^ p + (α⁻¹) ^ p := hchar
-      _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp [hpow]; ring
+      _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp
 
 end LegendreTwo
 
