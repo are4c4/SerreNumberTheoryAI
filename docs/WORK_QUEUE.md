@@ -29,7 +29,9 @@ PR作成、CI pending、1 item merge、item固有blocker、upstream待ちはchat
 
 ## 4. Stacked branch gate
 
-未merge upstreamへstackしてよいのは、upstream ownerが数学的statement/assumptions、downstream interface、exact head SHA、interface変更時の通知先を固定した場合だけです。upstream merge後はstack-only状態を解除し、downstream branchを最新mainへresyncしてから統合します。
+未merge upstreamへstackしてよいのは、upstream ownerが数学的statement/assumptions、downstream interface、exact head SHA、interface変更時の通知先を固定した場合だけです。upstream merge後はstack-only状態を解除し、downstream branchをlatest mainへresyncしてから統合します。
+
+STACK-READYを後からwithdrawした場合、既存downstream commitは保存してよいが、replacement exact green SHAまたはupstream mergeまでは新しいdependent proofを追加しない。
 
 ## 5. Dependency rule
 
@@ -44,18 +46,21 @@ Mainでend-to-end完了:
 - §2.1 power sums
 - §2.2 core Chevalley–Warning
 - §2.2 Corollary 1 (nontrivial common zero)
+- §2.2 Corollary 2 (homogeneous quadratic form in at least three variables)
 - §3.1 Theorem 4 (square elements in finite fields)
 
 Live dependency graph:
 
-- `S2.2-Chevalley-Cor2` のcanonical workは **#74 / C**。Cが先に `work/s2-2-chevalley-cor2-quadratic-form` をclaimし、source/representation preflight済み。#70がDONEなので実装gateはopen、draft PR #87がactive。後発 #85 / PR #88 / branch `work/s2-2-chevalley-cor2` はduplicate/released。
-- `S3.1-QuadraticElements` #55 / PR #82 は main commit `329184fa3aa1e6ee748061b1cf5cb539e2c72778` でDONE。half-power / square-kernel interfaceはmainでstable。
-- `S3.2-LegendreSymbol` #56 はC-owned。stack baseだった#55がmerge済みなのでstack-only gateは解除。canonical branchをlatest mainへresyncし、通常のCLAIMED implementationとして進めてよい。
-- `S3.3-QuadraticReciprocity` #64 はC-owned PREFLIGHT。proofは #56 が characteristic-independent Legendre sign/value、field-core compatibility、multiplicativity、Theorem 5(ii) at `-1` をDONEまたはSTACK-READYにするまで待つ。Theorem 5(iii) at `2` はhard dependencyではない。
-- `C1-Supp-GaussLemma` #78 はunclaimed PREFLIGHT。#64には依存せず、proofはminimal #56 interface待ち。
-- `C2S1.1-ZpConstruction` #71 はB-owned、draft PR #86で実装中。Bはexact green head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` を #72 向け `STACK-READY` としてfreeze済み。後発 #79 はduplicateとしてclosed。
-- `C2S1.2-ZpProperties` #72 はD-owned、preflight complete。#71のfrozen project-local `SerrePadicInt` / projection / integer-map interfaceが揃ったため、algebraic Proposition 1–2 + valuation sliceは **STACKABLE**。#71が先にmergeした場合はlatest mainを使う。
-- `C2S1.2-ZpMetric` #89 はunclaimed PREFLIGHT。#72 preflightで切り出されたProposition 3（metric / topology compatibility / completeness / density）。proofは#72 valuation/topology-relevant interface待ち。
+- `S2.2-Chevalley-Cor2` #74 / PR #94 is **DONE** on main at `f4921a0e6c65ae7521376229ac78bfc95f68fc1c`.
+- `S3.2-LegendreSymbol` #56 is C-owned, current draft PR #98. Core head `45bde2eff8e75e901282151760b0c5dfc41a869a` passed CI #198. A asked C to publish an exact-head minimal `STACK-READY` subset for #78 as soon as the sign/half-power declarations are frozen; #64 still needs the stronger Theorem 5(ii) at `-1` subset.
+- `S3.3-QuadraticReciprocity` #64 is C-owned PREFLIGHT. Proof waits for #56 characteristic-independent Legendre sign/value, field compatibility, multiplicativity, and Theorem 5(ii) at `-1`. Theorem 5(iii) at `2` is not a hard dependency.
+- `C1-Supp-GaussLemma` #78 is B-owned. Source/package/API preflight is complete; proof waits only for the minimal #56 sign/half-power interface and does not depend on #64.
+- `C2S1.1-ZpConstruction` #71 is B-owned, draft PR #86. The old exact `STACK-READY` at `27a41437…` was withdrawn because that run had not root-compiled the Chapter 2 module. Current root-integrated head `2a22858d4cf7a3bb89c2409a3f281e67e73807fd` is fully green in CI #199. B has been routed to publish a replacement exact `STACK-READY`, notify #72, then mark ready/self-merge.
+- `C2S1.2-ZpProperties` #72 is D-owned, draft PR #92. Existing work on the formerly approved anchor is preserved and its own head was green, but new upstream-dependent proof is **WAITING** until #71 publishes a replacement root-integrated exact green SHA or merges.
+- `C2S1.2-ZpMetric` #89 is D-owned. Proposition 3 source/API preflight is complete; proof waits for #72 to freeze the valuation / `p^n Z_p` bridge. D recommends a project-local additive valuation plus divisibility/projection-kernel characterization and source-normalized metric.
+- `C2S1.3-QpField` #96 is B-owned. Preflight is complete; algebraic implementation waits for #72 integral-domain / unit-decomposition / valuation interface, while Proposition 4 additionally needs only the minimal #89 topology/neighborhood/density subset.
+- `C2S2.1-RootLiftingExistence` #99 is unclaimed PREFLIGHT. It isolates §2.1 Proposition 5: common roots in `(Z_p)^m` iff common roots exist at every finite residue level. Implementation should depend on #71 plus polynomial reduction/evaluation compatibility, not on #72/#96.
+- `C2S2.1-PrimitiveHomogeneousZeros` #100 is unclaimed PREFLIGHT. It isolates §2.1 Proposition 6: nonzero `Q_p` common zero ↔ primitive `Z_p` common zero ↔ primitive common zeros at every finite level. Proof will need #72, #96 and the reusable inverse-limit root machinery from #99 as actually exposed.
 
 | Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -64,23 +69,38 @@ Live dependency graph:
 | P2 | `S2.1-PowerSums` | べき乗和 | `DONE` | PR #62 merged | `work/s2-1-power-sums` | #51 complete |
 | P3 | `S2.2-Chevalley` | core Chevalley–Warning | `DONE` | PR #68 merged | `work/s2-2-chevalley` | #52 complete |
 | P4 | `S2.2-Chevalley-Cor1` | 系1: 原点以外の共通零点 | `DONE` | PR #80 merged | `work/s2-2-chevalley-cor1-nontrivial-zero` | #70 complete |
-| P5 | `S2.2-Chevalley-Cor2` | 系2: 3変数以上の2次形式 | `CLAIMED` | #70 DONE; PR #87をlatest mainへresync | `work/s2-2-chevalley-cor2-quadratic-form` | #74 / C |
+| P5 | `S2.2-Chevalley-Cor2` | 系2: 3変数以上の2次形式 | `DONE` | PR #94 merged at `f4921a0e…` | `work/s2-2-chevalley-cor2-quadratic-form` | #74 complete |
 | P6 | `S3.1-QuadraticElements` | 3.1 平方数 / 定理4 | `DONE` | PR #82 merged | `work/s3-1-quadratic-elements` | #55 complete |
-| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | #55 DONE; resync to latest main and implement | `work/s3-2-legendre-symbol` | #56 / C |
-| P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `PREFLIGHT` | wait for minimal #56 subset DONE/STACK-READY | `work/s3-3-quadratic-reciprocity` | #64 / C |
-| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | preflight safe; proof waits for #56 | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
-| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86; #72 interface STACK-READY at `27a41437…` | `work/c2-s1-1-zp-construction` | #71 / B |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `STACKABLE` | stack on #71 `27a41437…`, or latest main after #71 merge | `work/c2-s1-2-zp-properties` | #72 / D |
-| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `PREFLIGHT` | preflight safe; proof waits #72 | `work/c2-s1-2-zp-metric` | #89 / unclaimed |
+| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | PR #98 core green; finish Theorem 5 / Blueprint; optionally freeze minimal #78 subset first | `work/s3-2-legendre-symbol` | #56 / C |
+| P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `PREFLIGHT` | wait stronger #56 subset incl. Theorem 5(ii) at `-1` | `work/s3-3-quadratic-reciprocity` | #64 / C |
+| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `WAITING` | B preflight complete; resume on minimal #56 STACK-READY/DONE | `work/c1-supp-gauss-lemma` | #78 / B |
+| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `CLAIMED` | PR #86 head `2a22858…` CI #199 green; publish replacement STACK-READY then merge | `work/c2-s1-1-zp-construction` | #71 / B |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `WAITING` | preserve PR #92; resume after replacement #71 STACK-READY or #71 merge | `work/c2-s1-2-zp-properties` | #72 / D |
+| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `WAITING` | D preflight complete; proof waits #72 valuation/topology interface | `work/c2-s1-2-zp-metric` | #89 / D |
+| P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `WAITING` | B preflight complete; algebraic proof waits #72; topology subset waits #89 | `work/c2-s1-3-qp-field` | #96 / B |
+| P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `PREFLIGHT` | preflight safe; implementation waits #71 | `work/c2-s2-1-root-existence` | #99 / unclaimed |
+| P15 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 命題6 | `PREFLIGHT` | preflight safe; implementation waits #72/#96 and reusable #99 interface | `work/c2-s2-1-primitive-homogeneous-zeros` | #100 / unclaimed |
 
-Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work。
+Duplicate records #79/#84/#85 and PR #88 are closed and are not queue work。旧Corollary-2 PR #87は#94に、旧Legendre draft PR #93は#98にsupersede済み。
 
-## 7. Queue health
+## 7. Shared-hotspot order
 
-Unclaimed safe capacity is currently #78 and #89 (`PREFLIGHT`). Owned executable capacity includes #74, #56, #71, and now stackable #72. Thus no worker should be globally blocked by one dependency chain.
+#94がmainへmerge済みなので、現在のroot-import競合は次の順で扱う。
 
-A should refill only when these candidates are claimed/thin, and should prefer source/dependency boundaries already exposed by current work rather than inventing unrelated tasks.
+1. **#86 / B** — current latest-main-integrated head is fully green; replacement STACK-READY公開後に最優先でmerge可能。
+2. **#98 / C** — current coreはgreenだがwork itemは未完了。#86が先にmergeした場合はlatest mainへresyncしてからfinal root/Blueprint integrationを行う。
+3. stacked/downstream PR #92はroot integrationを急がず、#71 replacement gateが成立してからupstreamを取り直す。
 
-## 8. End-of-run handoff
+Aはworkerの数学ファイルを変更しない。
+
+## 8. Queue health
+
+#89と#96はすでにclaimされpreflight completeになったため、Aはsource上で隣接する§2.1をdependency-safeに分割し、#99/#100を新しいunclaimed PREFLIGHTとして補充した。
+
+現時点のunclaimed safe capacityは #99 と #100。owned executable/near-executable workは #56 / #71、dependency待ちだがpreflight completeなworkは #64 / #78 / #72 / #89 / #96。したがって単一dependency chainでworker pool全体が止まる必要はない。
+
+Aはこの2候補がclaimされてcapacityが薄くなったときだけ次のsource-adjacent boundaryを補充する。
+
+## 9. End-of-run handoff
 
 Record owned branches/PRs, current proof/Blueprint state, CI, STACK-READY interfaces, blockers, and next claimable items. New chats must recheck live GitHub rather than trusting this file alone.
