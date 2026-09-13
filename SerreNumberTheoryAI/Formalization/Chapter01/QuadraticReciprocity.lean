@@ -101,6 +101,41 @@ theorem serreLegendreMulChar_apply (hl : l ≠ 2) (x : ZMod l) :
     serreLegendreMulChar l hl x = legendreSign l x :=
   rfl
 
+/-- The project Legendre multiplicative character is nontrivial for an odd prime. -/
+theorem serreLegendreMulChar_ne_one (hl : l ≠ 2) :
+    serreLegendreMulChar l hl ≠ 1 := by
+  obtain ⟨u, hu, _⟩ :=
+    (Subgroup.index_eq_two_iff_exists_notMem_and).mp
+      (finiteFieldNonzeroSquares_index (ZMod l) l hl)
+  have hhalf_ne : finiteFieldHalfPowerCharacter (ZMod l) u ≠ 1 := by
+    intro hhalf
+    exact hu ((mem_finiteFieldNonzeroSquares_iff_halfPowerCharacter_eq_one
+      (ZMod l) l hl u).mpr hhalf)
+  have hhalf_neg : finiteFieldHalfPowerCharacter (ZMod l) u = -1 :=
+    (finiteFieldHalfPowerCharacter_eq_one_or_neg_one (ZMod l) l hl u).resolve_left hhalf_ne
+  have hval_neg : legendreValue l (u : ZMod l) = -1 := by
+    rw [legendreValue_eq_halfPowerCharacter_coe l (u : ZMod l) u.ne_zero]
+    simpa using congrArg (fun v : (ZMod l)ˣ => (v : ZMod l)) hhalf_neg
+  have hl3 : 3 ≤ l := by
+    have hl2 : 2 ≤ l := (Fact.out : l.Prime).two_le
+    omega
+  letI : Fact (2 < l) := ⟨by omega⟩
+  have hsign_neg : legendreSign l (u : ZMod l) = -1 := by
+    simp [legendreSign, u.ne_zero, hval_neg]
+  intro htriv
+  have happ := congrArg (fun χ : MulChar (ZMod l) ℤ => χ (u : ZMod l)) htriv
+  have hone : (1 : MulChar (ZMod l) ℤ) (u : ZMod l) = 1 :=
+    MulChar.one_apply u.isUnit
+  rw [serreLegendreMulChar_apply, hsign_neg, hone] at happ
+  norm_num at happ
+
+/-- The sum of the project Legendre signs over the prime field is zero. -/
+theorem sum_legendreSign_eq_zero (hl : l ≠ 2) :
+    ∑ x : ZMod l, legendreSign l x = 0 := by
+  simpa using
+    (MulChar.sum_eq_zero_of_ne_one
+      (R := ZMod l) (R' := ℤ) (serreLegendreMulChar_ne_one l hl))
+
 end QuadraticReciprocity
 
 end SerreNumberTheoryAI
