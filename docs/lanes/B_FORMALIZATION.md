@@ -39,15 +39,20 @@
 
 ## Current handoff
 
-- Focused Issue: none
+- Focused Issue: #7
 - Parent: #2 Phase 1 finite fields
-- Target candidate: Theorem 1(ii)
-- Branch / PR: none
+- Target id: `S1.1.Theorem1(ii)`
+- Canonical statement contract: #6 (completed)
+- Branch: `formalize/s1-1-theorem1-ii-7`
+- PR: pending initial CI
 - Completed on main: opening notation, Frobenius lemma, Theorem 1(i)
-- Next: wait for A to create a focused Lean Issue and fix the statement boundary
-- Blockers: ownership not yet assigned
-- Shared hotspots: do not edit root import aggregators unless required and conflict-checked
+- Work in branch: direct fixed-point subfield construction; `X^(p^f)-X` root characterization; separability/root count; exact `Nat.card = p^f`; uniqueness among subfields of the fixed algebraically closed ambient field; umbrella theorem `serre_theorem1_ii`.
+- Mathlib use: general polynomial root/splitting/separability APIs and `FiniteField.pow_card`; deliberately not using a theorem that constructs or classifies the target finite subfield.
+- Cross-lane: C owns #9 Blueprint/exposition and must not be edited here; D #10 research is advisory; E integrates after B/C artifacts stabilize.
+- Next: run PR CI, repair Lean/API errors, then self-review statement integrity and merge if green and no blocker remains.
+- Blockers: none currently; CI has not yet checked the initial implementation.
+- Shared hotspots: none edited; `FORMALIZATION_PROGRESS.md`, root import aggregators, and `docs/LANE_STATUS.md` remain untouched in this branch.
 
 ## Short resume prompt
 
-`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、割り当て済みfocused IssueのLean実装だけを進めて。statementを変更せず、C所有のBlueprintは編集しないで。`
+`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、#7 / formalize/s1-1-theorem1-ii-7 のLean実装とCI修正だけを進めて。statement #6を変更せず、C所有のBlueprintは編集しないで。`
