@@ -85,30 +85,29 @@ preflightの結果、未mergeupstreamへのstackが必要になった場合:
 - preflightで「実は依存しない」と確認できた場合、Issueに根拠を残して本実装へ進めてよい。
 - preflightで新しい依存が判明した場合、Issueとこのqueueを更新し、そのitemだけを `WAITING` / `BLOCKED` にする。
 
-典型例として、後続のべき乗和の議論が有限体の乗法群の結果を使うなら、そのedgeを明示し、乗法群のinterfaceが安定する前にべき乗和のproofを完成させようとはしません。
-
 ## 6. Current queue
 
-Theorem 1(ii), Theorem 1(iii), §1.2 finite-field multiplicative group, and §2.1 power sums are now end-to-end complete on `main`.
+Theorem 1(ii), Theorem 1(iii), §1.2 finite-field multiplicative group, §2.1 power sums, and the §2.2 core Chevalley–Warning theorem are end-to-end complete on `main`.
 
-書籍上の実際の証明依存は次のとおりです。
+Current dependency graph:
 
-- `S1.2-MultGroup` は Theorem 1(iii) を必要としない。
-- `S2.1-PowerSums` は `S1.2-MultGroup` の巡回性を明示的に使う。#51 / PR #62 はそのproject interfaceからsource三分岐式とChevalley向け低指数消滅系まで完成し、mainへmerge済み。
-- `S2.2-Chevalley` は `S2.1-PowerSums` の低指数消滅系を明示的に使う。#51がDONEになったため、D-owned #52 のfull proof gateは現在open。
-- §3.1平方数は §2 系列とは独立。characteristic-2 halfはPhase 1/Frobeniusのみで進み、full odd-characteristic/index-2 resultは `S1.2-MultGroup` を使う。#50がDONEなのでD-owned #55 のfull implementation gateもopen。
-- §3.2 Legendre記号は §3.1 の平方部分群 / half-power character interfaceを使う。
-- §3.3平方剰余の相互法則は §3.2 Legendre記号 / 定理5を明示的に使う。source proofは primitive `l`-th root とGauss sumを導入し、`y²=(-1)^ε(l)l`, `y^(p-1)=(p/l)` を示した後にTheorem 5を用いて相互法則を得る。
+- `S3.1-QuadraticElements` (#55) is independent of §2.1/§2.2; its only new hard edge was §1.2 cyclicity, which is DONE. D owns it and may implement from latest main.
+- `S3.2-LegendreSymbol` (#56) needs the §3.1 half-power `{±1}` / square-kernel interface. C owns the preflight and proof waits for #55 `DONE` or explicit `STACK-READY`.
+- `S3.3-QuadraticReciprocity` (#64) is C-owned. Its preflight refined the hard edge: it can stack once #56 freezes the Legendre sign layer, multiplicativity, Theorem 5(ii) at `-1`, and cross-characteristic sign compatibility; Theorem 5(iii) at `2` is not required.
+- `C1-Supp-GaussLemma` (#78) is an alternative-proof supplement, not downstream of #64. Its implementation also waits for the minimal §3.2 Legendre/half-power interface, while preflight is safe now.
+- `C2.1.1-ZpInverseLimit` (#79) starts Chapter 2 and is mathematically independent of the active Chapter 1 chain. It may preflight quotient-ring / inverse-limit / topology representation immediately and then implement from main once its representation is stabilized.
 
 | Priority | Work ID | Target | State | Required before implementation | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
 | P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `DONE` | PR #58 merged green | `work/s1-1-t1iii` | #49 / C complete |
 | P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `DONE` | PR #59 merged green | `work/s1-2-mult-group` | #50 / B complete |
 | P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `DONE` | PR #62 merged green | `work/s2-1-power-sums` | #51 / D complete |
-| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `CLAIMED` | #51 is DONE on main; D may move branch to latest main and implement the core theorem end-to-end | `work/s2-2-chevalley` | #52 / D |
-| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | #50 is DONE; D preflight fixed the split and may implement the full source target from latest main | `work/s3-1-quadratic-elements` | #55 / D |
-| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | full proof waits for the required §3.1 interface `DONE` or `STACK-READY`; preflight may continue | `work/s3-2-legendre-symbol` | #56 / C |
-| P6 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `PREFLIGHT` | full proof waits for #56 `DONE` or explicit `STACK-READY`; preflight may audit Gauss-sum / roots-of-unity / Frobenius APIs now | `work/s3-3-quadratic-reciprocity` | #64 / unclaimed |
+| P3 | `S2.2-Chevalley` | 2.2 core Chevalley–Warning theorem | `DONE` | PR #68 merged green | `work/s2-2-chevalley` | #52 / D complete |
+| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | #50 is DONE; full implementation is allowed from latest main | `work/s3-1-quadratic-elements` | #55 / D |
+| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | proof waits for #55 `DONE` or a frozen `STACK-READY` half-power/square-kernel interface | `work/s3-2-legendre-symbol` | #56 / C |
+| P6 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `CLAIMED` | proof waits for #56 `DONE` or the minimal Legendre-sign/Theorem5(ii) subset explicitly `STACK-READY` | `work/s3-3-quadratic-reciprocity` | #64 / C |
+| P7 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | proof waits for #56 minimal Legendre/half-power interface; no dependency on #64 | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
+| P8 | `C2.1.1-ZpInverseLimit` | 第2章 §1.1 `Z_p` の射影極限定義 | `PREFLIGHT` | no project theorem dependency; stabilize representation/API boundary first | `work/c2-1-1-zp-inverse-limit` | #79 / unclaimed |
 
 Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。`CLAIMED` 行についてはIssue上の `OWNER:` コメントとlive branchを優先します。
 
@@ -118,9 +117,9 @@ Issueが存在するだけではownershipではありません。canonical branc
 
 Aはqueue healthを監視し、可能なら常時3〜6個程度の `READY` / `PREFLIGHT` / `STACKABLE` 候補を見える状態に保ちます。ただしAは各workの開始許可ゲートではありません。
 
-B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが明白になった場合はfocused Issueやqueue更新を提案・実装してよいです。曖昧なstatement、dependency conflict、shared-hotspot conflictだけをAへrouteします。
+#78 と #79 は、#64がCにclaimされた後のparallel capacityを補うための新しいunclaimed PREFLIGHTです。特に #79 はChapter 1の依存鎖から独立しているため、B/E等の空きworkerが長く待つ必要はありません。
 
-§3.3は#64でPREFLIGHT seed済みです。次のrefillでは、§3.3のpreflightからsource/dependency boundaryが安定するまで、それより先のproof dependencyを推測しません。queue capacityが再び薄くなったら、次のsource targetを独立性・dependencyの観点からpreflightします。
+B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが明白になった場合はfocused Issueやqueue更新を提案・実装してよいです。曖昧なstatement、dependency conflict、shared-hotspot conflictだけをAへrouteします。
 
 ## 8. End-of-run handoff
 
