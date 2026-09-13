@@ -120,8 +120,11 @@ theorem serreLegendreMulChar_ne_one (hl : l ≠ 2) :
     have hl2 : 2 ≤ l := (Fact.out : l.Prime).two_le
     omega
   letI : Fact (2 < l) := ⟨by omega⟩
+  have hval_ne : legendreValue l (u : ZMod l) ≠ 1 := by
+    rw [hval_neg]
+    exact ZMod.neg_one_ne_one
   have hsign_neg : legendreSign l (u : ZMod l) = -1 := by
-    simp [legendreSign, u.ne_zero, hval_neg]
+    simp [legendreSign, u.ne_zero, hval_ne]
   intro htriv
   have happ := congrArg (fun χ : MulChar (ZMod l) ℤ => χ (u : ZMod l)) htriv
   have hone : (1 : MulChar (ZMod l) ℤ) (u : ZMod l) = 1 :=
