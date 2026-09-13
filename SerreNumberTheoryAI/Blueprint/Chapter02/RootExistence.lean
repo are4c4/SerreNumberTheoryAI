@@ -36,8 +36,18 @@ p進整数の組で多項式を評価してからlevel `n` へ射影した値は
 係数と各変数をlevel `n` へ還元して評価した値に一致する。
 :::
 
+:::lemma_ "padic_polynomial_reduction_compat" (lean := "SerreNumberTheoryAI.padicPolynomialReduction_compat") (uses := "padic_polynomial_reduction")
+level `n+1` へ係数還元した多項式を自然な剰余写像でさらにlevel `n` へ送ると、
+初めからlevel `n` へ係数還元した多項式と一致する。
+:::
+
 :::definition "padic_reduced_common_zero_set" (lean := "SerreNumberTheoryAI.padicReducedCommonZeroSet") (uses := "padic_polynomial_reduction")
 level `n` で、還元された多項式族をすべて0にする点の集合を有限level共通零点集合とする。
+:::
+
+:::lemma_ "padic_reduced_common_zero_maps_to_reduction" (lean := "SerreNumberTheoryAI.padicReducedCommonZeroSet_mapsTo_reduction") (uses := "padic_polynomial_reduction_compat, padic_reduced_common_zero_set")
+level `n+1` の共通零点を各座標ごとに自然な剰余写像でlevel `n` へ送ると、
+還元された方程式族のlevel `n` 共通零点になる。したがって有限levelの零点集合は自然な逆系をなす。
 :::
 
 :::definition "padic_approx_common_zero_set" (lean := "SerreNumberTheoryAI.padicApproxCommonZeroSet")
