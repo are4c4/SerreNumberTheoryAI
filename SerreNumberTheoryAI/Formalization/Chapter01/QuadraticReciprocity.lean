@@ -77,7 +77,8 @@ theorem legendreSign_sq_eq_one_of_ne_zero
 theorem legendreSign_neg
     (hl : l ≠ 2) (x : ZMod l) :
     legendreSign l (-x) = legendreSignInt l (-1) * legendreSign l x := by
-  simp only [legendreSignInt, Int.cast_neg, Int.cast_one]
+  have hminus : ((-1 : ℤ) : ZMod l) = -1 := by norm_num
+  rw [legendreSignInt, hminus]
   simpa only [neg_one_mul] using
     legendreSign_mul l hl (-1 : ZMod l) x
 
