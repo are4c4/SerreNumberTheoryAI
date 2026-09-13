@@ -74,10 +74,12 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | 補助多項式・必要な中間結果 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Chevalleyの対象定理 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 系1: 原点以外の共通零点 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 系2: 3変数以上の2次形式の非自明零点 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 #52 / PR #68 で、§2.2（印刷頁7 / uploaded PDF p.17）の**core Chevalley–Warning theorem**をend-to-endで完成した。project-local full-grid sum vanishing、indicator polynomial `∏ᵢ (1 - fᵢ^(q-1))`、degree bound、common-zero cardinalityの標数による可除性までを、#51 の低指数power-sum interfaceからsource-shapedに証明した。mathlibのnear-target Chevalley–Warning / `MvPolynomial.sum_eval_eq_zero` / finite-field power-sum完成定理はcompletion argumentとして使っていない。PR #68はpolicy・Lean build・Verso Blueprint buildがgreenでmainへmerge済みである。
 
-このsliceはcore theoremまで。本文直後の2つの系は別のdownstream targetとして残る。
+#84 は本文直後の系1を `READY` itemとしてseedした。仮定は `∑ deg(f_α)<n` と全 `f_α(0)=0` で、source proofは共通零点集合が `{0}` だけなら `Card(V)=1` となりTheorem 3の標数可除性と矛盾するというcardinality argument。系2は系1の2次形式へのspecializationなので、現時点では別future targetとして残す。
 
 ## Phase 5 — 平方剰余の相互法則への有限体準備
 
@@ -92,7 +94,7 @@ Source continuation: 第1章・§3 と補遺。
 
 Current source/dependency state:
 
-- 3.1 / #55: D preflightはsource statementとchar-2 / odd-characteristic splitを固定済み。§1.2 cyclicityはDONEなのでfull implementation gateはopen。
+- 3.1 / #55: D preflightはsource statementとchar-2 / odd-characteristic splitを固定済み。§1.2 cyclicityはDONEなのでfull implementation gateはopen。draft PR #82で実装中で、Aは最新CIのLean compile errorsをDへroute済み。
 - 3.2 / #56: C preflightはsource boundary・mathlib boundaryを固定済み。proofは#55のhalf-power `{±1}` / square-kernel interface `DONE`/`STACK-READY`待ち。
 - 3.3 / #64: C preflightはGauss-sum proofのsource boundaryを固定し、必要な#56 interfaceをLegendre sign layer・multiplicativity・Theorem 5(ii) at `-1`・cross-characteristic sign compatibilityまで狭めた。Theorem 5(iii) at `2` はsource dependencyではない。
 - 補遺 (i) / #78: fresh PREFLIGHT candidate。#64の完了は不要で、minimal #56 Legendre/half-power interfaceのみがproof dependency。
