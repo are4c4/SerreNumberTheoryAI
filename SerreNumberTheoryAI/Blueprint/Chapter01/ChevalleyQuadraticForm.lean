@@ -8,9 +8,9 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Informal
 
-#doc (Manual) "2.2 Chevalley–Warning の第二系" =>
+#doc (Manual) "2.2 Chevalley–Warning Corollary 2" =>
 
-# 2.2 Chevalley–Warning の第二系
+# 2.2 Chevalley–Warning Corollary 2（二次形式）
 
 *出典メタデータ:* J.-P. セール著・弥永健一訳『数論講義』日本語版、
 第1部・第1章・§2・2.2、印刷頁7（uploaded PDF page 17）。
