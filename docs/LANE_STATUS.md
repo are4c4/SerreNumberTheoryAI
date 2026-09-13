@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #64 §3.3 queue refill / dependency synchronization | PR #66 | finish queue refill with live #51 completion reflected; then return to scheduler monitoring |
-| B | End-to-end Formalizer | 🟡 ready | no active mathematical work; post-#59 handoff cleanup only | `docs/sync-b-after-s1-2-59` / PR #63 | finish docs-only synchronization; after #66 activates a new unclaimed item, rescan and atomic-claim only if it remains unowned |
-| C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` preflight | `work/s3-2-legendre-symbol` | keep §3.2 proof implementation gated on #55 `DONE`/`STACK-READY`; continue safe source/dependency/mathlib preflight |
-| D | End-to-end Formalizer | 🚧 active | #52 `S2.2-Chevalley` and #55 `S3.1-QuadraticElements` owned work; #51 completed in PR #62 | `work/s2-2-chevalley`; `work/s3-1-quadratic-elements` | #51 and #50 gates are now DONE on main, so resume the highest-priority dependency-safe owned implementation; publish `STACK-READY` only after interfaces are fixed and verified |
-| E | End-to-end Formalizer | 🟡 ready | none | none | scan live queue/branches and atomic-claim the next still-unowned executable work; do not duplicate #52/#55/#56 |
+| A | Scheduler / Design | 🚧 active | #81 post-Chevalley queue/progress sync and refill | `design/sync-post-chevalley-refill-81` / PR pending | land central sync, then monitor #55→#56→#64 gates and fresh #78/#79 claims |
+| B | End-to-end Formalizer | 🟡 ready | none | none | rescan queue after #81 lands; #78/#79 are fresh unclaimed PREFLIGHT candidates unless live branch state changes |
+| C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` and #64 `S3.3-QuadraticReciprocity` preflights | `work/s3-2-legendre-symbol`; `work/s3-3-quadratic-reciprocity`; docs PR #76 | keep proof code gated; #64 can stack once the minimal #56 sign/multiplicativity/Theorem5(ii) subset is explicitly `STACK-READY` |
+| D | End-to-end Formalizer | 🚧 active | #55 `S3.1-QuadraticElements`; #52 completed | `work/s3-1-quadratic-elements` | proceed end-to-end from latest main and publish a stable half-power/square-kernel interface for #56 when verified |
+| E | End-to-end Formalizer | 🟡 ready | none | none | rescan queue after #81 lands; atomic-claim only a still-unowned candidate, especially independent #79 |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -28,21 +28,22 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Current mathematical frontier
 
-`S1.1-T1iii` is complete on `main` via #49 / PR #58, `S1.2-MultGroup` is complete via #50 / PR #59, and `S2.1-PowerSums` is complete via #51 / PR #62. The project now exposes both the finite-field multiplicative-group cyclicity interface and the source-faithful low-exponent power-sum vanishing result needed downstream.
+`S1.1-T1iii` (#49/#58), `S1.2-MultGroup` (#50/#59), `S2.1-PowerSums` (#51/#62), and the core `S2.2-Chevalley` theorem (#52/#68) are end-to-end complete on `main`.
 
-Current live ownership at the latest B check:
+Current live ownership at the latest A check:
 
-- A: #64 scheduler queue-refill work in PR #66; no mathematical implementation ownership.
-- B: #50 / PR #59 completed; no active mathematical work. PR #63 is post-merge documentation synchronization only.
-- C: #56 `S3.2-LegendreSymbol` preflight.
-- D: #51 / PR #62 completed; #52 `S2.2-Chevalley` and #55 `S3.1-QuadraticElements` remain D-owned.
-- E: no live canonical work at the latest check.
+- A: #81 scheduler-only synchronization/refill; no mathematical implementation ownership.
+- B: no unfinished mathematical work.
+- C: #56 `S3.2-LegendreSymbol` preflight and #64 `S3.3-QuadraticReciprocity` preflight; #64's focused issue is open again and records C ownership.
+- D: #55 `S3.1-QuadraticElements`; its §1.2 cyclicity dependency is DONE, so full implementation is allowed.
+- E: no unfinished mathematical work.
 
 Dependency frontier:
 
-- #52 `S2.2-Chevalley` — its hard #51 power-sum dependency is now DONE on main, so the D-owned implementation gate is open.
-- #55 `S3.1-QuadraticElements` — its full odd-characteristic/index-2 result depends on #50 cyclicity, which is DONE on main; the D-owned implementation gate is open.
-- #56 `S3.2-LegendreSymbol` — C owns preflight; proof implementation remains gated on the required #55 interface becoming `DONE` or `STACK-READY`.
-- #64 `S3.3-QuadraticReciprocity` — A is seeding it as a preflight item in PR #66; its proof has a hard dependency on #56, so only preflight becomes executable once the queue activation is merged.
+- #55 → no remaining project gate; D can implement both characteristic-2 and odd-characteristic source cases from main.
+- #56 → waits for #55's half-power `{±1}` / square-kernel interface `DONE` or explicit `STACK-READY`.
+- #64 → waits for a smaller stable subset of #56: Legendre sign layer, multiplicativity, Theorem 5(ii) at `-1`, and cross-characteristic sign compatibility. Theorem 5(iii) at `2` is not needed for the source §3.3 proof.
+- #78 `C1-Supp-GaussLemma` → fresh unclaimed PREFLIGHT. It is an alternative-proof supplement, independent of #64, but its proof also waits for the minimal #56 Legendre/half-power interface.
+- #79 `C2.1.1-ZpInverseLimit` → fresh unclaimed PREFLIGHT for Chapter 2 §1.1. It is independent of the Chapter 1 quadratic-residue chain and may proceed from main after representation/API preflight.
 
 Issueが存在するだけではownershipではありません。canonical branch lockを最初に取得したworkerがownerです。Aは未claim itemを各workerへ手動配布せず、queueとdependencyの整合だけを維持します。
