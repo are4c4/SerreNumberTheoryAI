@@ -44,7 +44,7 @@
 - Target id: `S1.1.Theorem1(ii)`
 - Semantic contract: #6
 - Branch: `blueprint/s1-1-theorem1-ii-9`
-- PR: not opened yet
+- PR: #18 (draft)
 - Completed on branch:
   - independent explanation of the fixed-point set `{x : Ω | x^q = x}`
   - Blueprint definition id `q_power_fixed_points`
@@ -54,11 +54,11 @@
   - proof explanation for existence, exact cardinality, uniqueness inside the fixed ambient algebraic closure, and root-set characterization
 - Shared hotspots touched: none
 - Next:
-  - run Blueprint/CI validation through the PR
+  - keep PR #18 draft while CI validates the current Blueprint syntax/build
   - wait for B #7 to stabilize declaration names, then add final `lean :=` linkage without changing the semantic statement
 - Blockers: final Lean declaration names are not yet stable
 - Cross-lane dependency: B #7 final declaration names and any material proof-strategy deviation that must be documented
 
 ## Short resume prompt
 
-`Cレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認し、#9 のBlueprintと独立説明を進めて。B #7 のLean declaration名が安定したら lean linkage を追加するが、B所有のLean proofは編集しないで。`
+`Cレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認し、#9 / PR #18 のBlueprintと独立説明を進めて。B #7 のLean declaration名が安定したら lean linkage を追加するが、B所有のLean proofは編集しないで。`
