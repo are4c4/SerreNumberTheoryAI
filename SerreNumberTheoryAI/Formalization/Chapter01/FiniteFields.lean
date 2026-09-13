@@ -168,10 +168,13 @@ characteristic `p`, where the coefficient `p^f` vanishes.
 -/
 theorem primePowerPolynomial_separable (hf : 0 < f) :
     (primePowerPolynomial Ω p f).Separable := by
-  rw [Polynomial.separable_def]
   have hdiv : p ∣ p ^ f := dvd_pow_self p (Nat.ne_of_gt hf)
-  have hcast : (p ^ f : Ω) = 0 := (CharP.cast_eq_zero_iff Ω p (p ^ f)).2 hdiv
-  simp [primePowerPolynomial, Polynomial.derivative_sub, Polynomial.derivative_X_pow, hcast]
+  have hcast : (((p ^ f : ℕ) : Ω)) = 0 :=
+    (CharP.cast_eq_zero_iff Ω p (p ^ f)).2 hdiv
+  rw [Polynomial.separable_def]
+  convert! isCoprime_one_right.neg_right (R := Ω[X]) using 1
+  rw [primePowerPolynomial, Polynomial.derivative_sub, Polynomial.derivative_X,
+    Polynomial.derivative_X_pow, hcast, C_0, zero_mul, zero_sub]
 
 /--
 The fixed-point description agrees exactly with the roots of `X^(p^f) - X`
@@ -181,7 +184,7 @@ theorem coe_primePowerFixedSubfield_eq_rootSet (hp : Nat.Prime p) (hf : 0 < f) :
     ((primePowerFixedSubfield Ω p f hp : Subfield Ω) : Set Ω) =
       (primePowerPolynomial Ω p f).rootSet Ω := by
   ext x
-  rw [mem_primePowerFixedSubfield Ω p f hp]
+  change x ^ (p ^ f) = x ↔ x ∈ (primePowerPolynomial Ω p f).rootSet Ω
   rw [Polynomial.mem_rootSet_of_ne (primePowerPolynomial_ne_zero Ω p f hp hf)]
   simp [primePowerPolynomial]
 
