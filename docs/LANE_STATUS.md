@@ -9,7 +9,7 @@
 | A | Scheduler / Design | 🚧 active | #81 post-Chevalley queue/progress sync and refill | `design/sync-post-chevalley-refill-81` / PR #83 | land central sync, then monitor #55→#56→#64 gates and fresh #84/#85/#78/#79 claims |
 | B | End-to-end Formalizer | 🟡 ready | none | none | after #83 lands, rescan queue; #84 is READY and #85/#78/#79 are PREFLIGHT unless live branch state changes |
 | C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` and #64 `S3.3-QuadraticReciprocity` preflights | `work/s3-2-legendre-symbol`; `work/s3-3-quadratic-reciprocity`; docs PR #76 | keep proof code gated; #64 can stack once the minimal #56 sign/multiplicativity/Theorem5(ii) subset is explicitly `STACK-READY` |
-| D | End-to-end Formalizer | 🚧 active | #55 `S3.1-QuadraticElements`; #52 completed | `work/s3-1-quadratic-elements` / draft PR #82 | repair current Lean build failure, then publish a stable half-power/square-kernel interface for #56 when green |
+| D | End-to-end Formalizer | 🚧 active | #55 `S3.1-QuadraticElements`; #52 completed | `work/s3-1-quadratic-elements` / draft PR #82 | latest head is CI-green; finish self-review/freeze interface, publish `STACK-READY` for #56 if stable, then merge under D ownership |
 | E | End-to-end Formalizer | 🟡 ready | none | none | after #83 lands, atomic-claim only a still-unowned candidate; #84 is immediately executable and #79 is an independent preflight |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
@@ -35,14 +35,14 @@ Current live ownership at the latest A check:
 - A: #81 / PR #83 scheduler-only synchronization/refill; no mathematical implementation ownership.
 - B: no unfinished mathematical work.
 - C: #56 `S3.2-LegendreSymbol` preflight and #64 `S3.3-QuadraticReciprocity` preflight; docs-only PR #76 is green and disjoint from A central files.
-- D: #55 `S3.1-QuadraticElements`, draft PR #82. CI run #147 passed policy but failed `lake build`; A routed the two concrete Lean compile errors back to D without modifying the branch.
+- D: #55 `S3.1-QuadraticElements`, draft PR #82. After A routed the first compile failures, D repaired them; latest head `ead063f…` is green on policy/build/vbp. A has asked D to publish exact `STACK-READY` declarations/head for #56 once final self-review confirms the interface is frozen.
 - E: no unfinished mathematical work.
 
 Dependency / capacity frontier:
 
 - #84 `S2.2-Chevalley-Cor1` → fresh unclaimed READY item. Core #52 is DONE; implementation can start directly from main.
 - #85 `S2.2-Chevalley-Cor2` → fresh unclaimed PREFLIGHT. Its source proof specializes #84 to one quadratic form in at least three variables, so proof waits for #84 `DONE`/`STACK-READY`.
-- #55 → no remaining project gate. D owns implementation/CI repair; once the half-power `{±1}` / square-kernel declarations are stable and green, D may publish `STACK-READY` for #56.
+- #55 → no remaining project gate. D owns finalization/merge; once the half-power `{±1}` / square-kernel declarations are frozen, D may publish `STACK-READY` for #56 from the green head.
 - #56 → waits for #55's half-power `{±1}` / square-kernel interface `DONE` or explicit `STACK-READY`.
 - #64 → waits for a smaller stable subset of #56: Legendre sign layer, multiplicativity, Theorem 5(ii) at `-1`, and cross-characteristic sign compatibility. Theorem 5(iii) at `2` is not needed for the source §3.3 proof.
 - #78 `C1-Supp-GaussLemma` → fresh unclaimed PREFLIGHT. It is an alternative-proof supplement, independent of #64, but its proof also waits for the minimal #56 Legendre/half-power interface.
