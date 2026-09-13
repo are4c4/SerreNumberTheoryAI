@@ -31,21 +31,44 @@ Cは固定のBlueprint専任ではありません。`docs/WORK_QUEUE.md` から�
 
 ## Current handoff
 
-- State: active worker; `S3.2-LegendreSymbol` preflight complete, upstream-gated
-- Active work: #56 / `S3.2-LegendreSymbol`
-- Canonical branch: `work/s3-2-legendre-symbol`
-- Base mode: `main`
-- Base SHA at claim: `8d682413d4fc45cc957502f5fc93f80ae7ce64e7`
-- Last completed work: #49 / `S1.1-T1iii` via PR #58, merged on main as `8d682413d4fc45cc957502f5fc93f80ae7ce64e7`; CI run #95 passed repository policy, `lake build`, and `lake exe vbp build`
-- Current source boundary: Japanese edition Chapter 1 §3.2, printed pp. 8–9 / uploaded PDF pp. 18–19; §3.3 quadratic reciprocity is excluded from this work item
-- Preflight: source statement, exact dependency split, mathlib boundary, theorem-strength audit, and the source primitive-eighth-root/Frobenius strategy for Theorem 5(iii) are recorded on #56
-- Required upstream from #55 / `S3.1-QuadraticElements`: a frozen odd-characteristic half-power `{±1}` interface and a theorem identifying value `1` / kernel with the nonzero-square subgroup
-- `S1.2-MultGroup` is now integrated on main via PR #59; #56 still depends on #55 rather than consuming §1.2 directly
-- Implementation state: no #56 proof-code commit yet; the canonical branch is intentionally kept clean until #55 is `DONE` or explicitly `STACK-READY`
-- STACK-READY: no for #56; waiting for #55 to publish exact declaration names/types and head SHA
-- Blocker: #55 has not yet published the required `STACK-READY` interface at the latest live check
-- Next safe action: monitor #55; once its exact interface is frozen, move `work/s3-2-legendre-symbol` to the approved stack base following `WORK_QUEUE.md`, then implement Lean + Blueprint + CI end-to-end. Until then, do not guess §3.1 declaration names or commit dependent proof code.
+- State: active worker with two dependency-safe PREFLIGHT items; no dependent proof code committed yet
+- Owned work:
+  - #56 / `S3.2-LegendreSymbol`, canonical branch `work/s3-2-legendre-symbol`
+  - #64 / `S3.3-QuadraticReciprocity`, canonical branch `work/s3-3-quadratic-reciprocity`
+- Current clean base: both canonical branches were fast-forwarded without C proof commits to main `baab91a17712e33417d6471634a8b035ba1acfe4`
+- Last completed mathematical work: #49 / `S1.1-T1iii` via PR #58, merged green on main
+
+### #56 `S3.2-LegendreSymbol`
+
+- Source boundary: Japanese edition Chapter 1 §3.2, printed pp. 8–9 / uploaded PDF pp. 18–19; §3.3 is excluded from this work item
+- Preflight complete on #56: source statement, exact dependency split, theorem-strength audit, primitive-eighth-root/Frobenius route for Theorem 5(iii), and a source-faithful half-power representation
+- Required upstream from #55 / `S3.1-QuadraticElements`: frozen odd-characteristic half-power `{±1}` interface and value-`1` / square-kernel characterization
+- Representation refinement from downstream audit: besides the primary `ZMod p`-valued half-power core, #56 should expose a characteristic-independent sign layer with values `-1, 0, 1` (for example integer-valued) plus cast compatibility; this is needed to use `(x/l)` as a coefficient in characteristic `p ≠ l` in §3.3
+- Minimal future `STACK-READY` subset for #64: Legendre sign/core compatibility, multiplicativity, routine sign facts, and Theorem 5(ii) at `-1`. Theorem 5(iii) at `2` is not a dependency of §3.3 and need not delay downstream stacking once that subset is frozen
+- Implementation gate: no #56 proof-code commit until #55 is `DONE` or explicitly `STACK-READY` with exact declarations/head SHA
+
+### #64 `S3.3-QuadraticReciprocity`
+
+- C atomically claimed the A-seeded PREFLIGHT via canonical branch creation; the just-merged queue row may still say `unclaimed`, but live branch + OWNER comment are authoritative
+- Source boundary: Japanese edition Chapter 1 §3.3, printed pp. 10–11 / uploaded PDF pp. 20–21
+- Target: distinct odd primes `l,p`; quadratic reciprocity via the source Gauss-sum proof
+- Source proof decomposition fixed on #64:
+  - choose a primitive `l`-th root `w` in an algebraic closure of `F_p`
+  - define the Gauss sum with project Legendre signs as coefficients
+  - prove `y² = (-1)^ε(l) * l`
+  - prove `y^(p-1) = (p/l)` by Frobenius and reindexing
+  - combine with §3.2 multiplicativity and the `-1` supplementary law
+- Pinned general infrastructure found: `HasEnoughRootsOfUnity.exists_primitiveRoot`, `AddChar.zmodChar`, `IsPrimitiveRoot.geom_sum_eq_zero`, finite-sum bijection/reindexing, and project `frobeniusPowerMap`
+- Near-target mathlib completion arguments explicitly excluded: `gaussSum_sq`, `MulChar.IsQuadratic.gaussSum_frob`, `Char.card_pow_card`, `quadraticChar_card_card`, `quadraticChar_odd_prime`, ready-made Legendre/quadratic-character replacement, and quadratic-reciprocity theorems
+- Implementation gate: branch remains preflight-only until the minimal #56 interface is `DONE` or explicitly `STACK-READY`
+
+### Coordination / next action
+
+- #55 is D-owned and its implementation gate is open, but at the latest live check it has not published the §3.1 interface needed by #56. Do not steal or guess its declaration names.
+- #52 / Chevalley is concurrently D-owned; C does not modify it.
+- A was notified that #64 is now claimed and that the next source block after §3.3 is the Chapter 1 Supplement (printed pp. 12–14), followed by Chapter 2 on printed p. 15. C has not claimed that next target.
+- Next safe action: monitor #55. If it becomes `STACK-READY`, move #56 to that exact head and implement §3.2. Once the minimal #56 subset is stable, explicitly publish a downstream `STACK-READY` head for #64; §3.3 can then proceed even if Theorem 5(iii) is still being finished.
 
 ## Short resume prompt
 
-`Cレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認して。Cはend-to-end formalizerなので固定Blueprint担当として待機せず、active workを復元するかcanonical branch lockで最高priorityの実行可能workをclaimし、source解釈・mathlib調査・Lean・Blueprint・CIまで進めて。PR作成やCI pendingで止まらず、実行時間が残る限りwork stealingして。`
+`Cレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認して。Cはend-to-end formalizer。#56 / work/s3-2-legendre-symbol と #64 / work/s3-3-quadratic-reciprocity のlive ownershipを復元し、依存gateが開いたitemを最優先で実装する。gate待ちならsource/dependency/mathlib preflightを進め、proof-code-clean branchを保つ。PR作成・CI pending・1 item完了で止まらず、in-flight上限の範囲でwork stealingする。`
