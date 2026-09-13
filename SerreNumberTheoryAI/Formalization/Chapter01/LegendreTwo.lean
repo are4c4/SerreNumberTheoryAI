@@ -18,6 +18,7 @@ variable (p : ℕ) [Fact p.Prime]
 /-- For an odd prime `p`, the class of `8` is nonzero in `ZMod p`. -/
 theorem zmod_eight_ne_zero_of_prime_ne_two (hp : p ≠ 2) :
     (8 : ZMod p) ≠ 0 := by
+  change ((8 : ℕ) : ZMod p) ≠ 0
   rw [ne_eq, ZMod.natCast_eq_zero_iff]
   intro hdiv
   have hpow : p ∣ 2 ^ 3 := by
