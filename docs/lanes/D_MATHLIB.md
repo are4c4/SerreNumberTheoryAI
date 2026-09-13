@@ -31,15 +31,19 @@ Dは固定のmathlib research専任ではありません。`docs/WORK_QUEUE.md` 
 
 ## Current handoff
 
-- State: ready worker
-- Active work: none
-- Active branch / PR: none
-- Last completed historical work: `S1.1.Theorem1(ii)` mathlib research (#10 / PR #24); target全体もmain上でintegration complete
+- State: active end-to-end worker
+- Primary active work: #51 / `S2.1-PowerSums`
+- Primary branch / PR: `work/s2-1-power-sums` / PR #62
+- #51 state: source/dependency/mathlib preflight complete; Lean + Blueprint + linkage implemented; latest recorded CI run #113 passed policy, `lake build`, and `lake exe vbp build`; final latest-head integration/self-review remains before merge
+- Stable #51 downstream interface for #52 includes `SerreNumberTheoryAI.powerSum_eq_zero_of_lt_card_sub_one`
+- Secondary owned work: #52 / `S2.2-Chevalley`, canonical branch `work/s2-2-chevalley`; preflight complete and proof implementation waits for #51 `DONE` or an explicitly frozen stack interface
+- Additional owned work: #55 / `S3.1-QuadraticElements`, canonical branch `work/s3-1-quadratic-elements`; preflight complete, #50 dependency is now satisfied on main, implementation gate is open
+- #56 / `S3.2-LegendreSymbol` is owned by C; D must not claim or modify that work item
+- Completed upstream: #50 / PR #59 (`S1.2-MultGroup`) is merged; #51 and #55 consume the project theorem `finiteField_units_isCyclic`
+- Shared queue/progress synchronization currently has separate coordination PRs; avoid taking shared hotspots unless live ownership changes
+- Last completed historical specialist work: `S1.1.Theorem1(ii)` mathlib research (#10 / PR #24)
 - Continuous-worker protocol: active on main via #47 / PR #48
-- Highest-priority seeded implementation item: #49 / `S1.1-T1iii` (`work/s1-1-t1iii`) — `READY`
-- Additional productive fallback: #50 / `S1.2-MultGroup`, #51 / `S2.1-PowerSums`, #52 / `S2.2-Chevalley` are `PREFLIGHT`
-- If a canonical branch is already claimed: do not idle; scan the next executable queue item or resume owned work
-- Blockers: none
+- Blockers: none; continue #51 to merge, and use #52/#55 for safe work stealing while CI/integration is pending
 
 ## Short resume prompt
 

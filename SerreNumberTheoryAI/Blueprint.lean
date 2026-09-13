@@ -6,6 +6,7 @@ import VersoBlueprint.Commands.Summary
 
 import SerreNumberTheoryAI.Blueprint.Chapter01.FiniteFields
 import SerreNumberTheoryAI.Blueprint.Chapter01.MultiplicativeGroup
+import SerreNumberTheoryAI.Blueprint.Chapter01.PowerSums
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -22,6 +23,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.FiniteFields}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.MultiplicativeGroup}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter01.PowerSums}
 
 # 定理の依存関係
 

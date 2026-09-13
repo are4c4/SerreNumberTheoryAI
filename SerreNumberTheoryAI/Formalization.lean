@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter01.FiniteFields
 import SerreNumberTheoryAI.Formalization.Chapter01.MultiplicativeGroup
+import SerreNumberTheoryAI.Formalization.Chapter01.PowerSums
 
 /-!
 # Formalization root
