@@ -49,16 +49,15 @@ Aは「次の仕事を1件ずつ配る」のではなく、常時3〜6件程度�
 - Live ownership at the latest check:
   - C owns #49 / `work/s1-1-t1iii` / draft PR #58; semantic target is abstract uniqueness up to isomorphism
   - B owns #50 / `work/s1-2-mult-group` / draft PR #59; source/dependency preflight confirmed Theorem 1(iii) is not required
-  - D owns #51 / `work/s2-1-power-sums` and #52 / `work/s2-2-chevalley` as dependency-safe preflights
+  - D owns #51 / `work/s2-1-power-sums`, #52 / `work/s2-2-chevalley`, and #55 / `work/s3-1-quadratic-elements` as dependency-safe preflights
   - E has no live canonical branch at the latest check
 - Queue capacity:
-  - #55 `S3.1-QuadraticElements` — unclaimed `PREFLIGHT`
   - #56 `S3.2-LegendreSymbol` — unclaimed `PREFLIGHT`
   - next refill candidate when depth drops: §3.3 quadratic reciprocity
 - Dependency gates:
   - #51 proof waits for #50 `DONE` or explicit `STACK-READY`
   - #52 proof waits for #51 `DONE` or explicit `STACK-READY`
-  - #55 odd-characteristic proof is expected to use #50 cyclicity; preflight may refine the exact interface now
+  - #55 odd-characteristic proof is expected to use #50 cyclicity; D may refine the exact interface in preflight now
   - #56 proof waits for the required #55 interface
 - Current worker PR state: #58 and #59 are active draft implementation PRs; each worker owns its own CI repair and end-to-end completion
 - Blockers: none at A level
@@ -75,7 +74,7 @@ A should prefer this state:
 - no duplicate canonical branch ownership
 - no worker waiting merely because another specialist lane has not produced a handoff
 
-Current queue has two active implementation fronts (#49/#50), two owned preflights (#51/#52), and two unclaimed preflights (#55/#56). This is healthy queue depth; do not create extra work merely to keep A busy.
+Current queue has two active implementation fronts (#49/#50), three owned preflights (#51/#52/#55), and one unclaimed preflight (#56). This remains healthy queue depth; do not create extra work merely to keep A busy.
 
 ## Short resume prompt
 
