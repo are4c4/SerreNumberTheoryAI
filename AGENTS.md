@@ -1,6 +1,6 @@
 # AGENTS.md
 
-このファイルは `SerreNumberTheoryAI` で作業するAIエージェントの最上位ルールです。形式化・Blueprint・自然言語説明・CI・GitHub運用のすべてに適用します。
+このファイルは `SerreNumberTheoryAI` で作業するAIエージェントの最上位ルールです。形式化・Blueprint・自然言語説明・mathlib調査・CI・GitHub運用のすべてに適用します。
 
 ## 0. プロジェクトの目的
 
@@ -12,18 +12,39 @@
 
 「Leanが通ること」だけでなく、「セールで扱われている数学を忠実に形式化すること」を優先する。
 
-## 1. Source of truth
+## 1. Source of truth とレーン起動
 
 作業開始時に必ず確認する。
 
 1. `AGENTS.md`
-2. `FORMALIZATION_PROGRESS.md`
-3. `docs/SOURCE_AND_COPYRIGHT_POLICY.md`
-4. 最新 `main`
-5. open Issue / PR / CI
-6. 対象節に対応する本リポジトリ内の既存Blueprint / formalization
+2. `docs/AI_WORKFLOW.md`
+3. `docs/LANE_STATUS.md`
+4. 自分の `docs/lanes/*.md`
+5. `FORMALIZATION_PROGRESS.md`
+6. `docs/SOURCE_AND_COPYRIGHT_POLICY.md`
+7. 最新 `main`
+8. open Issue / PR / CI
+9. 対象節に対応する本リポジトリ内の既存Blueprint / formalization
 
-既存のactive PRと重複する作業を開始しない。
+GitHub上のmain・Issue・PR・CI・lane handoffが共有状態であり、チャット履歴だけに存在する情報はsource of truthではない。
+
+複数チャットの並列運用は `docs/AI_WORKFLOW.md` に従う。初期レーンは以下。
+
+- A — Design / Coordination
+- B — Lean Formalization
+- C — Blueprint / Exposition
+- D — Mathlib Research
+- E — Integration / CI
+
+新しいチャットで「Bレーンとして作業を続けて」のように指示された場合、上記の読込順でGitHubから現在地を復元してから作業する。
+
+### 1.1 Ownership hard rule
+
+- 同じdeliverableを複数レーンが同時に所有してはならない。
+- 同じ数学的targetでも、Lean / Blueprint / research / integrationのように成果物が分離され、focused Issueとownerが明示されていれば並列作業してよい。
+- active PRと重複する作業を開始しない。
+- shared hotspotを編集する前にopen PRを確認する。
+- 広いparent Issueしかない場合、Aレーンがfocused Issueへ分割するまで新規実装をclaimしない。
 
 ## 2. 人間版リポジトリからの独立性 — hard rule
 
@@ -74,7 +95,7 @@ Lean toolchain、Verso、CI等の**一般的インフラ互換性**を合わせ�
 - 定義を都合よく変更する
 - 対象定理と異なる定理を同じ名前で登録する
 
-書籍の主張に複数の自然な形式化があり、一意に決められない場合は停止する。
+書籍の主張に複数の自然な形式化があり、一意に決められない場合は停止する。レーン間でstatement解釈が一致しない場合もAへrouteして停止する。
 
 ### 4.2 証明方針の優先順位
 
@@ -109,6 +130,8 @@ Lean toolchain、Verso、CI等の**一般的インフラ互換性**を合わせ�
 
 PR本文には主要なmathlib依存と、意図的に使用しなかった「強すぎる」定理を記録する。
 
+Dレーンの調査結果は候補情報であり、Bレーンは実装時に型・仮定・定理の強さを再確認する。
+
 ## 6. 禁止された証明穴
 
 formalization sourceでは以下を禁止する。
@@ -135,30 +158,39 @@ formalization sourceでは以下を禁止する。
 
 Lean proofと自然言語proofの数学的戦略が大きく異なる場合、Blueprintに差異を明記する。
 
-## 8. 自律作業フロー
+CレーンがBレーンと並列に作業する場合、未確定のLean declaration名やstatementを独断で固定しない。依存をhandoffへ記録する。
+
+## 8. 並列自律作業フロー
 
 通常は人間への逐次確認なしに以下を進めてよい。
 
-1. 最新main / Issue / PR / CIの再確認
-2. `FORMALIZATION_PROGRESS.md` から次の安全な対象を選ぶ
-3. 対象の数学的statementを整理する
-4. mathlib APIを調査する
-5. Blueprintのノードと自然言語説明を設計する
-6. Lean statement / proofを実装する
-7. policy checkを通す
-8. `lake build`
-9. `lake exe vbp build`
-10. branchへcommit / push
-11. PRを作成
-12. CI failureがあればログを読み修正
-13. `FORMALIZATION_PROGRESS.md` を更新
-14. CIがgreenで、停止条件に該当せず、PRの内容がDefinition of Doneを満たすことを再確認する
-15. AI自身でPRをmergeする
-16. 最新mainを再確認して次の安全なsliceへ進む
+1. 最新main / Issue / PR / CIを再確認
+2. `docs/LANE_STATUS.md` と自分のlane handoffからassigned focused Issueを確認
+3. ownership・dependency・shared hotspotを確認
+4. 自分のlane deliverableを実装または調査
+5. lane handoffを更新
+6. 必要な検証を実行
+7. branchへcommit / push
+8. PRを作成
+9. CI failureがあれば担当範囲内で修正、または適切なlaneへroute
+10. CIがgreenで、停止条件に該当せず、PRの内容がlane deliverableのDone条件を満たすことを再確認
+11. AI自身でPRをmerge
+12. 最新mainを再確認し、handoff / `docs/LANE_STATUS.md` / progressのdriftを修正
+13. 同じlaneに安全な次のassigned workがある場合のみ続行
 
-AIは通常、人間レビューを待たずにformalization PRをmergeしてよい。
+AIは通常、人間レビューを待たずにPRをmergeしてよい。
 ただし、`BLOCKED:` 停止条件、著作権判断、statementの曖昧性、仮定変更、数学的整合性に疑義がある場合はmergeしてはならない。
 CI greenだけを理由に数学的レビューを省略せず、PR本文・diff・依存・statement integrityをAI自身で再監査してからmergeする。
+
+### 8.1 レーン別の境界
+
+- A: 設計・Issue分割・owner・dependency。B/C/D/Eの実装を奪わない。
+- B: Lean formalization。CのBlueprintを編集しない。
+- C: Blueprint / exposition。BのLean proofを編集しない。
+- D: mathlib research。完成proofを奪わない。
+- E: integration / CI。通常は新規数学proofを書かない。
+
+詳細は `docs/AI_WORKFLOW.md` と `docs/lanes/*.md` に従う。
 
 ## 9. 停止条件
 
@@ -172,10 +204,28 @@ CI greenだけを理由に数学的レビューを省略せず、PR本文・diff
 - `BLOCKED: MAJOR-PROOF-DEVIATION` — セールと大きく異なる強力な数学が必要
 - `BLOCKED: SOURCE-QUOTE-REVIEW` — 直接引用等の公開判断が必要
 - `BLOCKED: INFRASTRUCTURE` — CI / toolchain / dependency問題で数学作業を安全に進められない
+- `BLOCKED: OWNERSHIP-CONFLICT` — 同じdeliverableに別のactive owner / PRがある
+- `BLOCKED: CROSS-LANE-STATEMENT-DRIFT` — LeanとBlueprint等でstatement解釈が一致しない
+
+ownership conflictやshared hotspot競合を見つけた場合は仕事を奪わず、Aへrouteする。
 
 ## 10. Definition of Done
 
-1つの形式化sliceは最低限次を満たす。
+### 10.1 Lane PR のDone
+
+レーン単位のPRは、担当deliverableだけを完成させてmergeしてよい。最低限:
+
+- focused Issueとlane ownerが明確
+- 担当成果物が自己完結している
+- statement integrityを壊していない
+- 他レーン所有ファイルを不必要に変更していない
+- 必要なbuild / policy checksが成功
+- handoffが更新されている
+- cross-lane dependencyがPR本文に明記されている
+
+### 10.2 数学的slice全体のDone
+
+1つの数学的sliceを `FORMALIZATION_PROGRESS.md` でcompleteにするには最低限次を満たす。
 
 - statementの数学的意味が記録されている
 - Blueprint nodeがある
@@ -186,13 +236,18 @@ CI greenだけを理由に数学的レビューを省略せず、PR本文・diff
 - `lake exe vbp build` 成功
 - policy check成功
 - 進捗ファイル更新
-- PR本文に数学的方針・mathlib依存・セールとの差異を記載
+- 必要なPR本文に数学的方針・mathlib依存・セールとの差異が記録されている
+- EまたはAがcross-layer整合を確認している
+
+Bだけ、Cだけが先にmergeされても、その時点ではslice全体をcompleteにしない。
 
 ## 11. PRの粒度
 
-原則として「1つの小節」または「密接に依存する1つの定理群」を1 PRとする。
+原則として「1つの小節」「密接に依存する1つの定理群」または「その中の1つのlane deliverable」を1 PRとする。
 
 巨大PRにしない。下流の定理に進む前に、上流の数学的statementが安定していることを確認する。
+
+shared hotspotだけをまとめるinfra/integration PRは数学PRから分離する。
 
 ## 12. 初期実験の範囲
 
@@ -203,4 +258,4 @@ CI greenだけを理由に数学的レビューを省略せず、PR本文・diff
 3. 有限体上のべき乗和
 4. Chevalleyの定理周辺
 
-この範囲を終えるまでは、プロジェクト全体を一気に自動生成しない。問題を発見したら先に本規約を改善する。
+この範囲を終えるまでは、プロジェクト全体を一気に自動生成しない。問題を発見したら先に本規約・lane workflowを改善する。
