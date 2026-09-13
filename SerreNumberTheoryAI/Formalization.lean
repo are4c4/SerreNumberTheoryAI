@@ -1,3 +1,5 @@
+import SerreNumberTheoryAI.Formalization.Chapter01.FiniteFields
+
 /-!
 # Formalization root
 
@@ -6,8 +8,6 @@
 数学的内容は章・節単位の子モジュールへ追加し、このファイルからimportします。
 人間版 `are4c4/SerreNumberTheoryBlueprint` のformalizationを数学的ソースとしてimport・コピーしません。
 -/
-
-import SerreNumberTheoryAI.Formalization.Chapter01.FiniteFields
 
 namespace SerreNumberTheoryAI
 
