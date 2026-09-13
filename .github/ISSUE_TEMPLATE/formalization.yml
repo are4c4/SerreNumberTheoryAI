@@ -1,18 +1,28 @@
-name: Formalization slice
-description: セール『数論講義』の1小節・定理群をBlueprint + Leanで独立に形式化する
+name: End-to-end formalization work item
+description: セール『数論講義』のdependency-safeなwork itemを解釈・Lean・Blueprint・CIまでend-to-endで形式化する
 title: "Formalize: "
 body:
   - type: markdown
     attributes:
       value: |
         書籍本文・ページ画像はIssueへ転載せず、章・節・定理番号などの参照情報と数学的目標を記載してください。
+        B/C/D/Eは同等のend-to-end formalizerです。claimは `docs/WORK_QUEUE.md` のcanonical branchをownership lockとして行います。
+
+  - type: input
+    id: work_id
+    attributes:
+      label: Work ID
+      description: docs/WORK_QUEUE.md と一致する安定ID。
+      placeholder: "例: S1.1-T1iii"
+    validations:
+      required: true
 
   - type: input
     id: source
     attributes:
       label: Source location
       description: 章・節・定理番号・ページなど。本文そのものは貼らない。
-      placeholder: "例: 第1章 §... / 命題 ..."
+      placeholder: "例: 第1章 §1 1.1 定理1(iii)"
     validations:
       required: true
 
@@ -20,36 +30,77 @@ body:
     id: target
     attributes:
       label: Mathematical target
-      description: 形式化したい数学的内容を独立した言葉で記載する。
+      description: 形式化したい数学的内容を独立した言葉で記載する。未確定部分があれば明記する。
     validations:
       required: true
 
   - type: textarea
     id: dependencies
     attributes:
-      label: Expected dependencies
-      description: 既にmainにある定義・補題、一般的なmathlib APIなど。
+      label: Mathematical dependencies
+      description: main上で必要な定理、upstream work/PR、またはpreflightで確認すべきdependencyを記載する。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: queue_state
+    attributes:
+      label: Initial queue state
+      options:
+        - READY
+        - PREFLIGHT
+        - STACKABLE
+        - WAITING
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: Canonical branch
+      description: ownership lockとして使うwork item固有branch。
+      placeholder: "例: work/s1-1-t1iii"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: base_mode
+    attributes:
+      label: Base mode
+      options:
+        - main
+        - stacked
+    validations:
+      required: true
+
+  - type: textarea
+    id: stack_base
+    attributes:
+      label: Stack base if applicable
+      description: stackedの場合のみ、upstream PR、固定head SHA、STACK-READY interfaceを記載する。mainなら N/A。
 
   - type: checkboxes
     id: outputs
     attributes:
-      label: Required outputs
+      label: End-to-end outputs
       options:
-        - label: Mathematical interpretation
+        - label: Mathematical interpretation and dependency audit
+          required: true
+        - label: Mathlib API / near-target theorem review
+          required: true
+        - label: Lean statement and proof without placeholders
           required: true
         - label: Independent natural-language explanation
           required: true
-        - label: Blueprint nodes / dependencies
+        - label: Blueprint nodes / dependencies / Lean linkage
           required: true
-        - label: Lean statement
+        - label: Policy / lake build / vbp build / CI
           required: true
-        - label: Lean proof without placeholders
-          required: true
-        - label: CI / policy checks
+        - label: Progress / queue / handoff synchronization as needed
           required: true
 
   - type: textarea
     id: risk
     attributes:
       label: Ambiguities / stop conditions
-      description: statementの解釈、強すぎるmathlib定理、出典上の懸念などが分かっていれば記載する。
+      description: statementの解釈、dependency不確定、強すぎるmathlib定理、出典上の懸念、shared hotspot等を記載する。
