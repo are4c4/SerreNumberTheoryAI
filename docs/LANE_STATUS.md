@@ -6,11 +6,11 @@
 
 | Lane | State | Focus | Issue | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A Design | 🚧 active | parallel-lane infrastructure | #4 | `infra/parallel-lane-coordination-4` / #5 | self-review and merge #5, then split next mathematical work into focused Issues |
-| B Formalization | 🟡 ready | Phase 1 finite fields follow-up | parent #2 | none | wait for focused Lean Issue for Theorem 1(ii) |
-| C Blueprint | 🟡 ready | Phase 1 finite fields follow-up | parent #2 | none | wait for focused Blueprint/exposition Issue |
-| D Mathlib | 🟡 ready | support Phase 1 finite fields | parent #2 | none | research only after a focused request or blocker |
-| E Integration | 🚧 active | verify lane infrastructure | #4 | review #5 | inspect changed files and CI; after merge monitor B/C integration |
+| A Design | 🚧 active | S1.1 Theorem 1(ii) statement contract | #6 | none | finish/close the canonical contract and split any remaining focused C/D work without taking B implementation |
+| B Formalization | 🚧 active | S1.1 Theorem 1(ii) Lean formalization | #7 | none yet | implement the #6 contract in Lean; keep Blueprint ownership separate |
+| C Blueprint | 🟡 ready | S1.1 Theorem 1(ii) exposition | parent #2 / contract #6 | none | wait for a focused C Issue before editing the Blueprint deliverable |
+| D Mathlib | 🟡 ready | support S1.1 Theorem 1(ii) | contract #6 | none | perform API research only after a focused D request/Issue or concrete blocker |
+| E Integration | 🚧 active | post-merge lane-state synchronization | #8 | `integration/post-merge-lane-sync-8` / none yet | reconcile #4/#5 metadata and Phase 0 progress, verify main push CI, then monitor B/C integration |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -24,4 +24,4 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Current mathematical frontier
 
-`FORMALIZATION_PROGRESS.md` に従い、Phase 1「有限体」を継続する。最初のslice（導入・Frobenius補題・定理1(i)）は完了済み。次の候補は定理1(ii)だが、Aレーンがstatement境界と成果物をfocused Issueへ分割してからB/C/Dを開始する。
+`FORMALIZATION_PROGRESS.md` に従い、Phase 1「有限体」を継続する。最初のslice（導入・Frobenius補題・定理1(i)）は完了済み。定理1(ii)については、Aのcanonical statement contractが #6、BのLean deliverableが #7 として分離された。C/Dは focused Issue または具体的な依頼が作られるまで既存成果物を奪わず待機し、Eは #8 でPR #5 merge後の統合状態を同期する。
