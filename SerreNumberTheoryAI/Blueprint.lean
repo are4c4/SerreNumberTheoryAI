@@ -5,6 +5,7 @@ import VersoBlueprint.Commands.Graph
 import VersoBlueprint.Commands.Summary
 
 import SerreNumberTheoryAI.Blueprint.Chapter01.FiniteFields
+import SerreNumberTheoryAI.Blueprint.Chapter01.MultiplicativeGroup
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -19,6 +20,8 @@ open Informal
 書籍本文を転載・逐語的に言い換えるのではなく、数学的内容を定義・補題・命題・定理へ分解し、各ノードをLean declarationへ対応付ける。
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.FiniteFields}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter01.MultiplicativeGroup}
 
 # 定理の依存関係
 

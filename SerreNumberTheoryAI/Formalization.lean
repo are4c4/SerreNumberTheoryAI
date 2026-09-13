@@ -1,4 +1,5 @@
 import SerreNumberTheoryAI.Formalization.Chapter01.FiniteFields
+import SerreNumberTheoryAI.Formalization.Chapter01.MultiplicativeGroup
 
 /-!
 # Formalization root

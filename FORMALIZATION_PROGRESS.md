@@ -56,7 +56,9 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| 有限体の乗法群に関する対象節 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 有限体の乗法群に関する対象節 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+#50 / PR #59 では、§1.2（印刷頁5–6 / uploaded PDF pages 15–16）をsource boundaryとして、Euler関数の約数和、有限群のpower-root boundからの巡回性、有限体単元群での多項式根数評価、`Kˣ` の巡回性と `Nat.card Kˣ = Nat.card K - 1` をend-to-endで形式化した。Lean/Blueprint declaration linkageを含む実装headでrepository policy・`lake build`・`lake exe vbp build`がgreenとなり、Theorem 1(iii)を前提としないsource-derived dependencyも確認済みである。
 
 開始条件: A #54 のsource/dependency auditにより、定理1(iii)はこのsource proofの前提ではないと確認した。定理1(ii)までのstable mainから本実装可能であり、live ownerは `docs/LANE_STATUS.md` / canonical branchを参照する。
 
