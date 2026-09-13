@@ -36,11 +36,11 @@
 
 - Focused Issue: #4 parallel AI lane coordination
 - Branch: `infra/parallel-lane-coordination-4`
-- PR: none yet
-- Completed: initial repository bootstrap and first finite-field slice already exist on main
-- Next: finish and merge #4; then split parent #2 follow-up into focused artifact Issues for Theorem 1(ii)
+- PR: #5
+- Completed: initial repository bootstrap and first finite-field slice already exist on main; parallel-lane docs and rules are implemented on #5
+- Next: self-review / CI / merge #5; then split parent #2 follow-up into focused artifact Issues for Theorem 1(ii)
 - Blockers: none
-- Cross-lane dependency: B/C/D/E should not claim Theorem 1(ii) deliverables until focused Issues are created
+- Cross-lane dependency: B/C/D should not claim Theorem 1(ii) deliverables until focused Issues are created; E owns integration review of #5
 - Shared hotspots: `AGENTS.md`, `README.md`, `FORMALIZATION_PROGRESS.md`, `.github/pull_request_template.md`
 
 ## Short resume prompt
