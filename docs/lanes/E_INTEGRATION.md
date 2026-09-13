@@ -1,62 +1,45 @@
-# E lane — Integration / CI
+# E lane — End-to-end Formalizer
 
 ## Mission
 
-複数レーンの成果がmain上で一貫していることを監査し、build・policy・CI・Lean/Blueprint linkage・進捗同期を維持する。通常は新しい数学的証明を実装しない。
+Eは固定のintegration / CI専任ではありません。`docs/WORK_QUEUE.md` から安全なwork itemをatomic claimし、そのitemをsource interpretationからmathlib調査・Lean・Blueprint・CI・mergeまでend-to-endで進めるformalizer workerです。
 
 ## Startup
 
 1. `AGENTS.md`
 2. `docs/AI_WORKFLOW.md`
-3. `docs/LANE_STATUS.md`
-4. このファイル
-5. `FORMALIZATION_PROGRESS.md`
-6. open PR / CI / latest main
+3. `docs/WORK_QUEUE.md`
+4. `docs/LANE_STATUS.md`
+5. このファイル
+6. `FORMALIZATION_PROGRESS.md`
+7. live branch / Issue / PR / CI / latest main
+8. 対象のFormalization / Blueprint
 
-## Owned work
+## Worker loop
 
-- `lake build` / `lake exe vbp build` の統合確認
-- policy check
-- workflow failureの原因切り分けとinfra修正
-- Blueprint `lean :=` linkage / imports / generated siteの整合
-- completed sliceのDefinition of Done監査
-- merged PR後のhandoff / progress drift検出
+- 自分のactive canonical branch / PRがあれば最優先で復元する。
+- active workがCI待ち・upstream待ち・item固有blockerならqueueを再走査する。
+- `READY` / eligible `STACKABLE` / `PREFLIGHT` をcanonical branch作成でclaimする。
+- source / dependency / mathlib / statementを確認する。
+- 安全ならLean + Blueprint + independent exposition + verificationを同じwork itemで進める。
+- PR作成やCI pendingで停止せず、in-flight上限の範囲でwork stealingする。
+- blockerはwork itemに記録し、別の安全なworkへ移る。
 
-## Normally do not own
+## Historical note
 
-- 新規Lean proof
-- 新規Blueprint proof
-- 新しい数学的statementの決定
-- broad mathlib research
-
-## Integration gate
-
-数学的sliceをcompleteにする前に最低限確認する。
-
-- Interpretationが固定されている
-- Explanationが独立した文章になっている
-- Blueprint node / dependenciesがある
-- Lean statement / proofがある
-- BlueprintとLean declarationが対応する
-- `sorry` / `admit` / proof-hole `axiom` がない
-- policy checkが通る
-- `lake build` が通る
-- `lake exe vbp build` が通る
-- `FORMALIZATION_PROGRESS.md` とlane handoffがmainの実状態に一致する
+このファイル名は旧「E = Integration / CI」時代との互換性のため残します。現在はB/C/D/Eに専門分業の差はありません。各workerが自分のformalization workについてintegrationとCIまで担当します。
 
 ## Current handoff
 
-- Focused Issue: none
-- Last completed integration work: #36 / PR #45 — `S1.1.Theorem1(ii)` Lean↔Blueprint cross-layer integration
-- Branch / PR: none after PR #45 merges
-- Completed upstream artifacts: canonical contract #6; C #9 / PR #18 Blueprint + independent explanation; D #10 / PR #24 research; B #7 / PR #25 Lean statement + proof
-- Statement-integrity audit: `SerreNumberTheoryAI.serre_theorem1_ii` matches #6 — prime `p`, positive `f`, fixed algebraically closed ambient field `Ω` of characteristic `p`, unique `p^f`-element subfield inside `Ω`, with carrier both `{x | x^(p^f)=x}` and the root set of `X^(p^f)-X`; Theorem 1(iii) remains separate
-- Linkage completed: the merged C nodes are linked to stable B declarations `primePowerFixedSubfield`, `mem_primePowerFixedSubfield`, `primePowerFixedSubfield_natCard`, and `serre_theorem1_ii` without rewriting C's exposition
-- Integration gate: repository policy, `lake build`, and `lake exe vbp build` passed on the integrated PR head; PR #45 is merged only after the final documentation head passes the same CI gate
-- Progress synchronization: Theorem 1(ii) is complete across Interpretation / Explanation / Blueprint / Lean statement / Lean proof / CI in `FORMALIZATION_PROGRESS.md`
-- Next: remain ready/idle. Do not start Theorem 1(iii) as E; A should first establish the next focused semantic contract and ownership, then E returns only for downstream integration or a concrete CI/linkage problem
+- State: ready worker
+- Active work: none
+- Active branch / PR: none
+- Last completed historical work: `S1.1.Theorem1(ii)` cross-layer integration (#36 / PR #45); targetはmain上でcomplete
+- New workflow infrastructure: #47 / `infra/continuous-formalizer-queue-47` がmerge後に有効
+- Highest-priority seeded implementation item: `S1.1-T1iii` (`work/s1-1-t1iii`)
+- If that branch is already claimed: scan the next executable queue item rather than idle
 - Blockers: none
 
 ## Short resume prompt
 
-`Eレーンとして作業を続けて。最新main、open Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認し、統合・CI・policy・Lean/Blueprint対応・handoff driftを監査して。数学的statement/proofは他laneから奪わないで。`
+`Eレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認して。Eはend-to-end formalizerなのでCI監視だけで待機せず、active workを復元するかcanonical branch lockで最高priorityの実行可能workをclaimし、source解釈・mathlib調査・Lean・Blueprint・CIまで進めて。PR作成やCI pendingで止まらず、実行時間が残る限りwork stealingして。`
