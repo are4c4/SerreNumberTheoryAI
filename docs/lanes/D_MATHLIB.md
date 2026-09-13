@@ -32,18 +32,25 @@ Dは固定のmathlib research専任ではありません。`docs/WORK_QUEUE.md` 
 ## Current handoff
 
 - State: active end-to-end worker
-- Primary active work: #51 / `S2.1-PowerSums`
-- Primary branch / PR: `work/s2-1-power-sums` / PR #62
-- #51 state: source/dependency/mathlib preflight complete; Lean + Blueprint + linkage implemented; latest recorded CI run #113 passed policy, `lake build`, and `lake exe vbp build`; final latest-head integration/self-review remains before merge
-- Stable #51 downstream interface for #52 includes `SerreNumberTheoryAI.powerSum_eq_zero_of_lt_card_sub_one`
-- Secondary owned work: #52 / `S2.2-Chevalley`, canonical branch `work/s2-2-chevalley`; preflight complete and proof implementation waits for #51 `DONE` or an explicitly frozen stack interface
-- Additional owned work: #55 / `S3.1-QuadraticElements`, canonical branch `work/s3-1-quadratic-elements`; preflight complete, #50 dependency is now satisfied on main, implementation gate is open
-- #56 / `S3.2-LegendreSymbol` is owned by C; D must not claim or modify that work item
-- Completed upstream: #50 / PR #59 (`S1.2-MultGroup`) is merged; #51 and #55 consume the project theorem `finiteField_units_isCyclic`
-- Shared queue/progress synchronization currently has separate coordination PRs; avoid taking shared hotspots unless live ownership changes
+- Completed D work on main:
+  - #51 / PR #62 `S2.1-PowerSums` — merged; downstream low-exponent interface is `SerreNumberTheoryAI.powerSum_eq_zero_of_lt_card_sub_one`
+  - #52 / PR #68 `S2.2-Chevalley` — merged; core theorem is `SerreNumberTheoryAI.serre_chevalleyWarning`
+- Primary active work: #55 / `S3.1-QuadraticElements`
+- Primary branch / PR: `work/s3-1-quadratic-elements` / draft PR #82
+- #55 implementation: Lean + Blueprint + root linkage implemented from current main; characteristic-2 proof uses the project Frobenius map, and odd-characteristic proof consumes project `finiteField_units_isCyclic`
+- Stable downstream-facing declarations being verified for #56:
+  - `SerreNumberTheoryAI.finiteFieldHalfPowerCharacter`
+  - `SerreNumberTheoryAI.finiteFieldHalfPowerCharacter_eq_one_or_neg_one`
+  - `SerreNumberTheoryAI.finiteFieldNonzeroSquares_eq_ker_halfPowerCharacter`
+  - `SerreNumberTheoryAI.mem_finiteFieldNonzeroSquares_iff_halfPowerCharacter_eq_one`
+- Near-target `FiniteField.isSquare_*` and `quadraticChar*` results are not used as completion arguments
+- PR #82 mathematical head `aedcf0b8e91cc9f308a91750ea6b76fd0c559760` passed repository policy, `lake build`, and `lake exe vbp build` in CI #149; this handoff-only commit requires a fresh final CI before merge
+- #56 / `S3.2-LegendreSymbol` and #64 / `S3.3-QuadraticReciprocity` are owned by C; D must not claim or modify them
+- B owns #70 and #71; D must not claim those branches
+- Shared queue/status/progress files have separate coordination owners; avoid those hotspots unless live ownership changes
 - Last completed historical specialist work: `S1.1.Theorem1(ii)` mathlib research (#10 / PR #24)
 - Continuous-worker protocol: active on main via #47 / PR #48
-- Blockers: none; continue #51 to merge, and use #52/#55 for safe work stealing while CI/integration is pending
+- Blockers: none; finish #55 latest-head CI/self-review, publish a fixed `STACK-READY` interface for #56, then merge PR #82
 
 ## Short resume prompt
 
