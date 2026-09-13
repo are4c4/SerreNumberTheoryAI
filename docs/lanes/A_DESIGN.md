@@ -34,14 +34,30 @@
 
 ## Current handoff
 
-- Focused Issue: #4 parallel AI lane coordination
-- Branch: `infra/parallel-lane-coordination-4`
-- PR: #5
-- Completed: initial repository bootstrap and first finite-field slice already exist on main; parallel-lane docs and rules are implemented on #5
-- Next: self-review / CI / merge #5; then split parent #2 follow-up into focused artifact Issues for Theorem 1(ii)
+- Current focused Issue: #11 — A handoff / interpretation progress synchronization
+- Current branch: `design/s1-1-theorem1-ii-handoff-11`
+- Current PR: not yet opened
+- Mathematical frontier: `S1.1.Theorem1(ii)`
+- Completed design contract: #6 — assumptions, uniqueness scope, exact cardinality, and root-set characterization are fixed
+- Parallel owners:
+  - B #7 — Lean statement / proof
+  - C #9 — Blueprint / independent exposition
+  - D #10 — mathlib research
+- E status: E #8 currently owns the post-#5 lane-state integration cleanup; A must not edit `docs/LANE_STATUS.md` or `docs/lanes/E_INTEGRATION.md` while that ownership is active
+- Completed infrastructure: #4 / PR #5 are merged on main
+- Next: merge #11 after CI, then monitor #7/#9/#10 for statement drift, ownership conflict, or shared-hotspot contention; create/route the Theorem 1(ii) E integration Issue only after E #8 is complete and B/C artifacts are ready
 - Blockers: none
-- Cross-lane dependency: B/C/D should not claim Theorem 1(ii) deliverables until focused Issues are created; E owns integration review of #5
-- Shared hotspots: `AGENTS.md`, `README.md`, `FORMALIZATION_PROGRESS.md`, `.github/pull_request_template.md`
+- Shared hotspot currently touched by A: `FORMALIZATION_PROGRESS.md` only, to mark Theorem 1(ii) Interpretation complete; no other progress columns change
+
+## Theorem 1(ii) coordination contract
+
+The semantic source of truth is #6. In summary, for prime `p`, positive `f`, `q = p^f`, and a fixed algebraically closed field `Ω` of characteristic `p`, the target requires:
+
+- existence of a subfield of `Ω` with exactly `q` elements;
+- uniqueness of that subfield inside the fixed ambient `Ω`;
+- equality of its carrier with the set of `x : Ω` satisfying `x^q = x`, equivalently the roots of `X^q - X`.
+
+Abstract uniqueness up to field isomorphism belongs to Theorem 1(iii), not this target.
 
 ## Short resume prompt
 
