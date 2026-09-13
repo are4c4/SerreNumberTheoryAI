@@ -222,6 +222,131 @@ theorem legendreValue_two_eq_neg_one_of_mod_eight
   apply (algebraMap (ZMod p) (AlgebraicClosure (ZMod p))).injective
   simpa only [legendreValue, map_pow, map_ofNat, map_neg, map_one, Nat.cast_ofNat] using hK
 
+/-- The exponent `(p^2-1)/8` is even in the `1` and `7` residue classes modulo `8`. -/
+theorem twoSupplementExponent_even_of_mod_eight
+    (hr : p % 8 = 1 ∨ p % 8 = 7) :
+    Even ((p ^ 2 - 1) / 8) := by
+  rcases hr with hr | hr
+  · let k := p / 8
+    have hpform : p = 8 * k + 1 := by
+      have hdecomp := Nat.mod_add_div p 8
+      rw [hr] at hdecomp
+      dsimp [k]
+      omega
+    have hsquare : p ^ 2 = 8 * (8 * k ^ 2 + 2 * k) + 1 := by
+      rw [hpform]
+      ring
+    have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 2 * k) := by omega
+    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    refine ⟨4 * k ^ 2 + k, ?_⟩
+    ring
+  · let k := p / 8
+    have hpform : p = 8 * k + 7 := by
+      have hdecomp := Nat.mod_add_div p 8
+      rw [hr] at hdecomp
+      dsimp [k]
+      omega
+    have hsquare : p ^ 2 = 8 * (8 * k ^ 2 + 14 * k + 6) + 1 := by
+      rw [hpform]
+      ring
+    have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 14 * k + 6) := by omega
+    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    refine ⟨4 * k ^ 2 + 7 * k + 3, ?_⟩
+    ring
+
+/-- The exponent `(p^2-1)/8` is odd in the `3` and `5` residue classes modulo `8`. -/
+theorem twoSupplementExponent_odd_of_mod_eight
+    (hr : p % 8 = 3 ∨ p % 8 = 5) :
+    Odd ((p ^ 2 - 1) / 8) := by
+  rcases hr with hr | hr
+  · let k := p / 8
+    have hpform : p = 8 * k + 3 := by
+      have hdecomp := Nat.mod_add_div p 8
+      rw [hr] at hdecomp
+      dsimp [k]
+      omega
+    have hsquare : p ^ 2 = 8 * (8 * k ^ 2 + 6 * k + 1) + 1 := by
+      rw [hpform]
+      ring
+    have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 6 * k + 1) := by omega
+    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    refine ⟨4 * k ^ 2 + 3 * k, ?_⟩
+    ring
+  · let k := p / 8
+    have hpform : p = 8 * k + 5 := by
+      have hdecomp := Nat.mod_add_div p 8
+      rw [hr] at hdecomp
+      dsimp [k]
+      omega
+    have hsquare : p ^ 2 = 8 * (8 * k ^ 2 + 10 * k + 3) + 1 := by
+      rw [hpform]
+      ring
+    have hsub : p ^ 2 - 1 = 8 * (8 * k ^ 2 + 10 * k + 3) := by omega
+    rw [hsub, Nat.mul_div_left _ (by norm_num : 0 < 8)]
+    refine ⟨4 * k ^ 2 + 5 * k + 1, ?_⟩
+    ring
+
+/-- In the `1` and `7` residue classes, the integer-valued Legendre sign of `2` is `1`. -/
+theorem legendreSignInt_two_eq_one_of_mod_eight
+    (hp : p ≠ 2) (hr : p % 8 = 1 ∨ p % 8 = 7) :
+    legendreSignInt p 2 = 1 := by
+  have htwo : (2 : ZMod p) ≠ 0 :=
+    CharP.cast_ne_zero_of_ne_of_prime _ Nat.prime_two hp
+  have hval : legendreValue p (2 : ZMod p) = 1 :=
+    legendreValue_two_eq_one_of_mod_eight p hp hr
+  simp [legendreSignInt, legendreSign, htwo, hval]
+
+/-- In the `3` and `5` residue classes, the integer-valued Legendre sign of `2` is `-1`. -/
+theorem legendreSignInt_two_eq_neg_one_of_mod_eight
+    (hp : p ≠ 2) (hr : p % 8 = 3 ∨ p % 8 = 5) :
+    legendreSignInt p 2 = -1 := by
+  have hp3 : 3 ≤ p := by
+    have hp2 : 2 ≤ p := (Fact.out : p.Prime).two_le
+    omega
+  letI : Fact (2 < p) := ⟨by omega⟩
+  have htwo : (2 : ZMod p) ≠ 0 :=
+    CharP.cast_ne_zero_of_ne_of_prime _ Nat.prime_two hp
+  have hval : legendreValue p (2 : ZMod p) = -1 :=
+    legendreValue_two_eq_neg_one_of_mod_eight p hp hr
+  have hne : legendreValue p (2 : ZMod p) ≠ 1 := by
+    rw [hval]
+    exact ZMod.neg_one_ne_one
+  simp [legendreSignInt, legendreSign, htwo, hne]
+
+/-- Serre's Theorem 5(iii): the supplementary law at `2`. -/
+theorem serre_theorem5_iii
+    (hp : p ≠ 2) :
+    legendreSignInt p 2 = (-1 : ℤ) ^ ((p ^ 2 - 1) / 8) := by
+  rcases odd_prime_mod_eight_cases p hp with h1 | h3 | h5 | h7
+  · have hsign : legendreSignInt p 2 = 1 :=
+      legendreSignInt_two_eq_one_of_mod_eight p hp (Or.inl h1)
+    have heven : Even ((p ^ 2 - 1) / 8) :=
+      twoSupplementExponent_even_of_mod_eight p (Or.inl h1)
+    calc
+      legendreSignInt p 2 = 1 := hsign
+      _ = (-1 : ℤ) ^ ((p ^ 2 - 1) / 8) := heven.neg_one_pow.symm
+  · have hsign : legendreSignInt p 2 = -1 :=
+      legendreSignInt_two_eq_neg_one_of_mod_eight p hp (Or.inl h3)
+    have hodd : Odd ((p ^ 2 - 1) / 8) :=
+      twoSupplementExponent_odd_of_mod_eight p (Or.inl h3)
+    calc
+      legendreSignInt p 2 = -1 := hsign
+      _ = (-1 : ℤ) ^ ((p ^ 2 - 1) / 8) := hodd.neg_one_pow.symm
+  · have hsign : legendreSignInt p 2 = -1 :=
+      legendreSignInt_two_eq_neg_one_of_mod_eight p hp (Or.inr h5)
+    have hodd : Odd ((p ^ 2 - 1) / 8) :=
+      twoSupplementExponent_odd_of_mod_eight p (Or.inr h5)
+    calc
+      legendreSignInt p 2 = -1 := hsign
+      _ = (-1 : ℤ) ^ ((p ^ 2 - 1) / 8) := hodd.neg_one_pow.symm
+  · have hsign : legendreSignInt p 2 = 1 :=
+      legendreSignInt_two_eq_one_of_mod_eight p hp (Or.inr h7)
+    have heven : Even ((p ^ 2 - 1) / 8) :=
+      twoSupplementExponent_even_of_mod_eight p (Or.inr h7)
+    calc
+      legendreSignInt p 2 = 1 := hsign
+      _ = (-1 : ℤ) ^ ((p ^ 2 - 1) / 8) := heven.neg_one_pow.symm
+
 end LegendreTwo
 
 end SerreNumberTheoryAI
