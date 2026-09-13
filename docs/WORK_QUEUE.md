@@ -91,7 +91,8 @@ Theorem 1(ii), Theorem 1(iii), §1.2 finite-field multiplicative group, §2.1 po
 
 Current dependency graph:
 
-- `S3.1-QuadraticElements` (#55) is independent of §2.1/§2.2; its only new hard edge was §1.2 cyclicity, which is DONE. D owns it and may implement from latest main.
+- `S2.2-Chevalley-Cor1` (#84) is the immediate first corollary of merged #52. Its source proof is only the cardinality contradiction `V={0} ⇒ Card(V)=1`, so it is `READY` with no remaining project gate.
+- `S3.1-QuadraticElements` (#55) is independent of §2.1/§2.2; its only new hard edge was §1.2 cyclicity, which is DONE. D owns it; PR #82 is active and current CI repair remains D-local.
 - `S3.2-LegendreSymbol` (#56) needs the §3.1 half-power `{±1}` / square-kernel interface. C owns the preflight and proof waits for #55 `DONE` or explicit `STACK-READY`.
 - `S3.3-QuadraticReciprocity` (#64) is C-owned. Its preflight refined the hard edge: it can stack once #56 freezes the Legendre sign layer, multiplicativity, Theorem 5(ii) at `-1`, and cross-characteristic sign compatibility; Theorem 5(iii) at `2` is not required.
 - `C1-Supp-GaussLemma` (#78) is an alternative-proof supplement, not downstream of #64. Its implementation also waits for the minimal §3.2 Legendre/half-power interface, while preflight is safe now.
@@ -103,11 +104,12 @@ Current dependency graph:
 | P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `DONE` | PR #59 merged green | `work/s1-2-mult-group` | #50 / B complete |
 | P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `DONE` | PR #62 merged green | `work/s2-1-power-sums` | #51 / D complete |
 | P3 | `S2.2-Chevalley` | 2.2 core Chevalley–Warning theorem | `DONE` | PR #68 merged green | `work/s2-2-chevalley` | #52 / D complete |
-| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | #50 is DONE; full implementation is allowed from latest main | `work/s3-1-quadratic-elements` | #55 / D |
-| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | proof waits for #55 `DONE` or a frozen `STACK-READY` half-power/square-kernel interface | `work/s3-2-legendre-symbol` | #56 / C |
-| P6 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `CLAIMED` | proof waits for #56 `DONE` or the minimal Legendre-sign/Theorem5(ii) subset explicitly `STACK-READY` | `work/s3-3-quadratic-reciprocity` | #64 / C |
-| P7 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | proof waits for #56 minimal Legendre/half-power interface; no dependency on #64 | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
-| P8 | `C2.1.1-ZpInverseLimit` | 第2章 §1.1 `Z_p` の射影極限定義 | `PREFLIGHT` | no project theorem dependency; stabilize representation/API boundary first | `work/c2-1-1-zp-inverse-limit` | #79 / unclaimed |
+| P4 | `S2.2-Chevalley-Cor1` | 2.2 系1: 原点以外の共通零点 | `READY` | core #52 is DONE; source cardinality contradiction only | `work/s2-2-chevalley-cor1` | #84 / unclaimed |
+| P5 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `CLAIMED` | #50 is DONE; PR #82 active under D | `work/s3-1-quadratic-elements` | #55 / D |
+| P6 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | proof waits for #55 `DONE` or a frozen `STACK-READY` half-power/square-kernel interface | `work/s3-2-legendre-symbol` | #56 / C |
+| P7 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余の相互法則 / 定理6 | `CLAIMED` | proof waits for #56 `DONE` or the minimal Legendre-sign/Theorem5(ii) subset explicitly `STACK-READY` | `work/s3-3-quadratic-reciprocity` | #64 / C |
+| P8 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `PREFLIGHT` | proof waits for #56 minimal Legendre/half-power interface; no dependency on #64 | `work/c1-supp-gauss-lemma` | #78 / unclaimed |
+| P9 | `C2.1.1-ZpInverseLimit` | 第2章 §1.1 `Z_p` の射影極限定義 | `PREFLIGHT` | no project theorem dependency; stabilize representation/API boundary first | `work/c2-1-1-zp-inverse-limit` | #79 / unclaimed |
 
 Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。`CLAIMED` 行についてはIssue上の `OWNER:` コメントとlive branchを優先します。
 
@@ -117,7 +119,7 @@ Issueが存在するだけではownershipではありません。canonical branc
 
 Aはqueue healthを監視し、可能なら常時3〜6個程度の `READY` / `PREFLIGHT` / `STACKABLE` 候補を見える状態に保ちます。ただしAは各workの開始許可ゲートではありません。
 
-#78 と #79 は、#64がCにclaimされた後のparallel capacityを補うための新しいunclaimed PREFLIGHTです。特に #79 はChapter 1の依存鎖から独立しているため、B/E等の空きworkerが長く待つ必要はありません。
+#84 は即実装可能な `READY` capacity、#78/#79 はdependency-safeな `PREFLIGHT` capacityです。特に #79 はChapter 1の依存鎖から独立しているため、B/E等の空きworkerが長く待つ必要はありません。
 
 B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが明白になった場合はfocused Issueやqueue更新を提案・実装してよいです。曖昧なstatement、dependency conflict、shared-hotspot conflictだけをAへrouteします。
 
