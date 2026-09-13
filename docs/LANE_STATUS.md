@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #81 live queue/progress reconciliation | `design/sync-live-queue-81-v2` / PR #90 | land central sync after latest-head CI; continue ownership/dependency monitoring |
-| B | End-to-end Formalizer | 🚧 active | #71 `C2S1.1-ZpConstruction` | `work/c2-s1-1-zp-construction` / draft PR #86 | root hotspot is free; finish integration while keeping #72 frozen interface stable |
-| C | End-to-end Formalizer | 🚧 active | #74 Chevalley Cor2, #56 Legendre; #64 reciprocity preflight | PR #87; `work/s3-2-legendre-symbol`; `work/s3-3-quadratic-reciprocity` | resync #74/#56 to latest main; finish #74 and start #56 implementation; keep #64 proof gated |
-| D | End-to-end Formalizer | 🚧 active | #72 `C2S1.2-ZpProperties` | `work/c2-s1-2-zp-properties` | #71 interface is STACK-READY at `27a41437…`; stack algebraic §1.2 implementation or use main if #71 merges first |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #78 or #89 |
+| A | Scheduler / Design | 🚧 active | #95 post-#90 ownership/hotspot synchronization | `design/sync-post-90-live-95` | sync #78/#94/#93/#86/#92 live state and keep unclaimed PREFLIGHT capacity visible |
+| B | End-to-end Formalizer | 🚧 active | #71 `C2S1.1-ZpConstruction`; #78 Gauss-lemma preflight complete/waiting | PR #86; `work/c1-supp-gauss-lemma` | repair #86 duplicate vbp tag, then rebase after #94; keep #78 proof gated on minimal #56 interface |
+| C | End-to-end Formalizer | 🚧 active | #74 Chevalley Cor2; #56 Legendre; #64 reciprocity preflight | PR #94; PR #93; `work/s3-3-quadratic-reciprocity` | resync/land green #94 first; repair #93 local Lean goal; keep #64 proof gated on minimal #56 subset |
+| D | End-to-end Formalizer | 🚧 active | #72 `C2S1.2-ZpProperties` stacked implementation | `work/c2-s1-2-zp-properties` / PR #92 | continue algebraic §1.2 from approved #71 anchor; current head green |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #89 or #96 |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -34,15 +34,20 @@ Mainで完了済み:
 
 Live ownership/dependency:
 
-- C owns canonical Corollary 2 work #74 / PR #87. #70 is DONE, so proof gate is open; PR #87 needs latest-main resync after #82 root-import changes. Later #85/PR #88 was duplicate and is closed/released.
-- C owns #56. Its former stack base #55 is DONE on main, so branch should resync to latest main and continue implementation using the integrated half-power/square-kernel interface.
+- C owns canonical Corollary 2 work #74. Old PR #87 is superseded; clean PR #94 is current, head `596b6341…` is green/mergeable on the pre-#90 base. #90 changed only A-owned docs, so C should resync to current main, rerun integrated CI and self-merge if still green.
+- C owns #56 / draft PR #93. #55 is DONE on main. Current head `83d03bc…` fails one implementation-local sign/cast goal in `LegendreSymbol.lean`; A routed the concrete goal back to C. No statement/dependency blocker is known.
 - C owns #64 preflight; proof waits for the minimal #56 Legendre-sign/multiplicativity/Theorem5(ii) subset.
-- B owns #71 / PR #86. #71 has frozen an exact green downstream interface at `27a414372c72f5ac749ac7e59da06da3c4c5e86f`; because #82 merged, B's previous root-import hotspot is now free.
-- D owns #72. Its preflight is complete and the exact #71 interface it requested is now STACK-READY, so D may stack from `27a41437…` and implement Proposition 1–2 + valuation. If #71 merges first, use main instead.
-- #78 Gauss lemma and #89 p-adic metric/completeness/density are unclaimed PREFLIGHT candidates.
+- B owns #71 / draft PR #86. #71 keeps its exact downstream STACK-READY interface at `27a414372c72f5ac749ac7e59da06da3c4c5e86f`. Current #86 policy and Lean build pass; only `vbp build` fails on a duplicate Chapter-2 Blueprint tag, routed back to B.
+- B also owns #78 `C1-Supp-GaussLemma`; source/package/API preflight is complete and proof is WAITING on the minimal #56 sign/half-power interface.
+- D owns #72 / draft PR #92. It consumes the exact #71 frozen anchor; current head `a6ffdf7a…` is CI green and continues Proposition 1–2 + valuation.
+- #89 p-adic metric/completeness/density and #96 `Q_p` field §1.3 are unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
 
-A #81 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`.
+Root import overlap is active:
 
-C PR #76 is a stale docs-only handoff predating #55 DONE; C should refresh/supersede it. Worker implementation PRs #86/#87 are not edited by A.
+1. #94 / C gets the next root `Formalization.lean` + `Blueprint.lean` slot because it is already end-to-end green.
+2. #86 / B also touches both root imports; repair its local Blueprint tag, then rebase after #94 before final integrated CI.
+3. #93 / C touches root `Formalization.lean` but is still an in-progress slice; keep proof work isolated and perform final root integration after #94 rather than racing it.
+
+A #95 edits only `docs/WORK_QUEUE.md`, this file, and `docs/lanes/A_DESIGN.md`. It does not touch worker mathematical artifacts or `FORMALIZATION_PROGRESS.md` because no new mathematical slice has merged since #90.
