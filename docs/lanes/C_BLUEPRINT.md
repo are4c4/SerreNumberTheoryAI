@@ -44,7 +44,7 @@
 - Target id: `S1.1.Theorem1(ii)`
 - Semantic contract: #6
 - Branch: `blueprint/s1-1-theorem1-ii-9`
-- PR: #18 (draft)
+- PR: #18
 - Completed on branch:
   - independent explanation of the fixed-point set `{x : Ω | x^q = x}`
   - Blueprint definition id `q_power_fixed_points`
@@ -52,13 +52,14 @@
   - cardinality node `q_power_fixed_points_cardinality`
   - main theorem node `finite_subfield_cardinality_q_unique`
   - proof explanation for existence, exact cardinality, uniqueness inside the fixed ambient algebraic closure, and root-set characterization
+  - repository policy check, `lake build`, and `lake exe vbp build` all passed in PR #18 CI after correcting Blueprint dependency metadata syntax
 - Shared hotspots touched: none
 - Next:
-  - keep PR #18 draft while CI validates the current Blueprint syntax/build
-  - wait for B #7 to stabilize declaration names, then add final `lean :=` linkage without changing the semantic statement
-- Blockers: final Lean declaration names are not yet stable
-- Cross-lane dependency: B #7 final declaration names and any material proof-strategy deviation that must be documented
+  - self-review and merge PR #18 once the final head is green
+  - after merge, leave final `lean :=` linkage to the B/E integration step when B #7 stabilizes declaration names; do not invent names in C
+- Blockers: none for the C-owned exposition/Blueprint deliverable
+- Cross-lane dependency: B #7 final declaration names and any material proof-strategy deviation that must be documented during integration
 
 ## Short resume prompt
 
-`Cレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認し、#9 / PR #18 のBlueprintと独立説明を進めて。B #7 のLean declaration名が安定したら lean linkage を追加するが、B所有のLean proofは編集しないで。`
+`Cレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認し、#9 / PR #18 の最終状態を確認して。C成果物がmerge済みなら新しい仕事を作らず、B #7 の安定したLean declaration名が必要なcross-layer linkageはE/Aへrouteして。`
