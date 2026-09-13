@@ -99,14 +99,14 @@ Theorem 1(ii)まではmain上でcross-layer completeです。2026-09-13のA pref
 
 | Priority | Work ID | Target | State | Required before implementation | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `READY` | Theorem 1(ii) integrated on main ✅; canonical semantic boundary recorded on #49 | `work/s1-1-t1iii` | #49 / unclaimed |
-| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `READY` | Theorem 1(ii) finite-field model on main ✅; T1(iii) is not a dependency | `work/s1-2-mult-group` | #50 / unclaimed |
-| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `PREFLIGHT` | full proof waits for `S1.2-MultGroup` `DONE` or `STACK-READY`; preflight may proceed now | `work/s2-1-power-sums` | #51 / unclaimed |
-| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `PREFLIGHT` | full proof waits for `S2.1-PowerSums` `DONE` or `STACK-READY`; preflight may proceed now | `work/s2-2-chevalley` | #52 / unclaimed |
+| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `CLAIMED` | Theorem 1(ii) integrated on main ✅; canonical semantic boundary recorded on #49 | `work/s1-1-t1iii` | #49 / C |
+| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `CLAIMED` | Theorem 1(ii) finite-field model on main ✅; T1(iii) is not a dependency | `work/s1-2-mult-group` | #50 / B |
+| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `CLAIMED` | D owns preflight; full proof waits for `S1.2-MultGroup` `DONE` or `STACK-READY` | `work/s2-1-power-sums` | #51 / D |
+| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `CLAIMED` | D owns second preflight; full proof waits for `S2.1-PowerSums` `DONE` or `STACK-READY` | `work/s2-2-chevalley` | #52 / D |
 | P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `PREFLIGHT` | full odd-characteristic proof is expected to need `S1.2-MultGroup`; confirm exact Phase 1 edges before implementation | `work/s3-1-quadratic-elements` | #55 / unclaimed |
 | P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `PREFLIGHT` | full proof waits for the required §3.1 interface `DONE` or `STACK-READY`; preflight may proceed now | `work/s3-2-legendre-symbol` | #56 / unclaimed |
 
-Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。
+Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。`CLAIMED` 行についてはIssue上の `OWNER:` コメントとlive branchを優先します。
 
 `PREFLIGHT` 行は「本proofを開始してよい」という意味ではありません。dependency gateが未成立なら、source / statement / dependency / mathlib調査だけを進め、結果をIssueへ残して別の実行可能itemへ移ります。
 
