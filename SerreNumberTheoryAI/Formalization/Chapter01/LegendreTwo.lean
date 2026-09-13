@@ -154,7 +154,7 @@ theorem primitive_eighth_root_add_inv_pow_prime_eq_neg_self
         _ = -α := primitive_eighth_root_pow_five_eq_neg hα
     calc
       (α + α⁻¹) ^ p = α ^ p + (α⁻¹) ^ p := hchar
-      _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp
+      _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp [add_comm]
 
 end LegendreTwo
 
