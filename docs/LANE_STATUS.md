@@ -6,13 +6,13 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #106 central sync + queue refill | `design/refill-hensel-corollaries-106` / PR #107 | land latest central sync; monitor #98→#103 root order and #72 downstream interfaces |
+| A | Scheduler / Design | 🟡 monitoring | no active mathematical work; latest sync #106 / PR #107 complete | none | monitor #98→#103 root order, #72 downstream interface releases, and claims of #104/#105/#108; refill only when safe capacity thins |
 | B | End-to-end Formalizer | 🚧 active | #99 Prop.5 isolated green; #100 Prop.6 preflight; #102 Hensel preflight complete/waiting; #78/#96 waiting | PR #103; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-lifting`; `work/c1-supp-gauss-lemma`; `work/c2-s1-3-qp-field` | #103 `fe1a173e…` CI #226 green; continue safe preflight while #102 proof waits #72/#89 and final #103 integration waits #98 |
 | C | End-to-end Formalizer | 🚧 active | #56 Legendre finalization; #64 reciprocity stackable | PR #98; `work/s3-3-quadratic-reciprocity` | latest checked #56 `e681e215…` CI #232 green; finish Blueprint/latest-main integration while keeping #64 exactly on frozen `45bde2ef…` |
 | D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric preflight complete | PR #92; `work/c2-s1-2-zp-metric` | #92 head `81bc0f88…` CI #219 green; continue `p^n*unit` decomposition/valuation/domain, then freeze minimal downstream interface when stable |
 | E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #104, #105, or #108 |
 
-Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
+Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
 
 ## Coordination model
 
@@ -46,7 +46,7 @@ Live ownership/dependency:
 - B owns #99 / draft PR #103. Current checked head `fe1a173e…` passed CI #226 and includes Proposition 5 + Blueprint work in isolated form, with a downstream-only frozen subset for #100. Final normal root integration waits for #98 to free the shared `Formalization.lean` hotspot.
 - B owns #100 for source/API/dependency preflight; full proof remains gated on #99/#72/#96 interfaces.
 - B owns #102. Hensel source/API preflight is complete and the branch remains proof-code-clean; proof waits on #72 valuation/congruence/decomposition and #89 compatible metric/completeness.
-- #104 odd-`p` quadratic lifting, #105 dyadic quadratic lifting, and new #108 Chapter 2 §3.1 unit filtration / Proposition 7 are unclaimed PREFLIGHT candidates.
+- #104 odd-`p` quadratic lifting, #105 dyadic quadratic lifting, and #108 Chapter 2 §3.1 unit filtration / Proposition 7 are unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
 
@@ -54,4 +54,4 @@ Live ownership/dependency:
 2. #103 / B is isolated-CI green; after #98 clears, B should resync latest main, move imports into the normal aggregators, remove the temporary top-level hook, and re-run full CI.
 3. #92 / D remains isolated to its algebraic module for now; final Blueprint/root linkage comes after its interface stabilizes.
 
-A #106 / PR #107 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`; no worker mathematical artifact is edited.
+Latest completed A central sync is #106 / PR #107, merged as `f3d0f5b22b1e306720d6c313185f98692110f3a8`. A currently has no mathematical ownership and remains available for dependency/queue coordination.
