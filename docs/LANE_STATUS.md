@@ -6,13 +6,13 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #95 live sync / dependency refill | `design/sync-post-94-live-95-v2` / PR #101 | land central sync; monitor #56 downstream freezes and #72/#99 progress |
-| B | End-to-end Formalizer | 🚧 active | #78 Gauss waiting; #96 `Q_p` preflight complete; #99 Prop.5 claimed | `work/c1-supp-gauss-lemma`; `work/c2-s1-3-qp-field`; `work/c2-s2-1-root-existence` | preflight/implement #99 now #71 is DONE; resume #78/#96 only when gates open |
-| C | End-to-end Formalizer | 🚧 active | #56 Legendre; #64 reciprocity now stackable | PR #98; `work/s3-3-quadratic-reciprocity` | finish #56; #64 may stack exactly on frozen `45bde2ef…`; publish separate #78 promise if intended |
-| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric preflight complete | PR #92; `work/c2-s1-2-zp-metric` | #71 is DONE: resync #72 to main and resume; #89 proof waits #72 interface |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #100 or #102 |
+| A | Scheduler / Design | 🟡 monitoring | no active mathematical work; latest sync #106 / PR #107 complete | none | monitor #98→#103 root order, #72 downstream interface releases, and claims of #104/#105/#108; refill only when safe capacity thins |
+| B | End-to-end Formalizer | 🚧 active | #99 Prop.5 isolated green; #100 Prop.6 preflight; #102 Hensel preflight complete/waiting; #78/#96 waiting | PR #103; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-lifting`; `work/c1-supp-gauss-lemma`; `work/c2-s1-3-qp-field` | #103 `fe1a173e…` CI #226 green; continue safe preflight while #102 proof waits #72/#89 and final #103 integration waits #98 |
+| C | End-to-end Formalizer | 🚧 active | #56 Legendre finalization; #64 reciprocity stackable | PR #98; `work/s3-3-quadratic-reciprocity` | latest checked #56 `e681e215…` CI #232 green; finish Blueprint/latest-main integration while keeping #64 exactly on frozen `45bde2ef…` |
+| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric preflight complete | PR #92; `work/c2-s1-2-zp-metric` | #92 head `81bc0f88…` CI #219 green; continue `p^n*unit` decomposition/valuation/domain, then freeze minimal downstream interface when stable |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #104, #105, or #108 |
 
-Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
+Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
 
 ## Coordination model
 
@@ -33,25 +33,25 @@ Mainで完了済み:
 - #70 / PR #80 — Chevalley Corollary 1
 - #55 / PR #82 — §3.1 Theorem 4 / quadratic elements
 - #74 / PR #94 — Chevalley Corollary 2
-- #71 / PR #86 — Chapter 2 §1.1 project-local `Z_p` inverse limit, main `2f4366622121ce0d56e76d8e9a41c25c6917da8b`
+- #71 / PR #86 — Chapter 2 §1.1 project-local `Z_p` inverse limit
 
 Live ownership/dependency:
 
-- C owns #56 / draft PR #98. Frozen head `45bde2ef…` is green in CI #198 and explicitly STACK-READY **for #64**, including Theorem 5(ii). The live #56 branch has since moved; downstream #64 must use the exact frozen head unless a newer promise is published.
-- C owns #64 and may now begin stacked implementation from `45bde2ef…`; A routed this gate transition. Theorem 5(iii) remains outside the frozen dependency.
-- B owns #78; Gauss preflight is complete. Its smaller required interface is present on the frozen #56 head, but the upstream promise explicitly says “for #64 only”, so #78 still waits for an explicit #78 promise or #56 merge.
-- D owns #72 / draft PR #92. #71 is DONE; #92 has been retargeted to main, so D should resync and resume Proposition 1–2 + valuation after checking the merged interface.
+- C owns #56 / draft PR #98. Frozen head `45bde2ef…` remains STACK-READY only for #64. The moving live branch has repaired the later Theorem 5(iii) coercion issues; latest checked head `e681e215…` passed CI #232. Blueprint/final latest-main integration remains.
+- C owns #64 and may stack exactly on `45bde2ef…`; later #56 declarations are not implicitly available.
+- B owns #78; Gauss preflight is complete but still waits for an explicit #78 freeze or #56 merge.
+- D owns #72 / draft PR #92. Live head `81bc0f88…` passed CI #219 and has quotient/kernel, power-divisibility and unit criteria, but the source decomposition/valuation/domain layer is still unfinished. #89/#96 therefore remain gated.
 - D owns #89; Proposition 3 metric/topology/completeness/density preflight is complete and proof waits #72.
 - B owns #96; `Q_p` preflight is complete, algebraic proof waits #72 and Proposition 4 needs minimal #89 topology/density.
-- B claimed #99 after #71 merged. Proposition 5 preflight/implementation can now proceed without waiting for #72/#96 unless a new actual dependency is discovered.
-- #100 Proposition 6 and #102 Hensel core are unclaimed PREFLIGHT candidates.
+- B owns #99 / draft PR #103. Current checked head `fe1a173e…` passed CI #226 and includes Proposition 5 + Blueprint work in isolated form, with a downstream-only frozen subset for #100. Final normal root integration waits for #98 to free the shared `Formalization.lean` hotspot.
+- B owns #100 for source/API/dependency preflight; full proof remains gated on #99/#72/#96 interfaces.
+- B owns #102. Hensel source/API preflight is complete and the branch remains proof-code-clean; proof waits on #72 valuation/congruence/decomposition and #89 compatible metric/completeness.
+- #104 odd-`p` quadratic lifting, #105 dyadic quadratic lifting, and #108 Chapter 2 §3.1 unit filtration / Proposition 7 are unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
 
-#86 is merged and its former root hotspot is free.
+1. #98 / C keeps the next normal `Formalization.lean` integration slot while Blueprint/final §3.2 work completes; #64's frozen stack head is unaffected.
+2. #103 / B is isolated-CI green; after #98 clears, B should resync latest main, move imports into the normal aggregators, remove the temporary top-level hook, and re-run full CI.
+3. #92 / D remains isolated to its algebraic module for now; final Blueprint/root linkage comes after its interface stabilizes.
 
-1. #98 / C is the next active root-integration candidate once Theorem 5 / Blueprint are complete; its live branch must remain integrated with latest main.
-2. #92 / D is ungated by #71, but should stabilize the algebraic proof interface before final Blueprint/root linkage.
-3. #99 / B should keep its Proposition 5 module isolated until its interface is stable, then coordinate root imports with the current queue.
-
-A #95 v2 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`; no worker mathematical artifact is edited.
+Latest completed A central sync is #106 / PR #107, merged as `f3d0f5b22b1e306720d6c313185f98692110f3a8`. A currently has no mathematical ownership and remains available for dependency/queue coordination.

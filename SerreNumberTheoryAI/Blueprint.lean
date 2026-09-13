@@ -10,6 +10,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter01.PowerSums
 import SerreNumberTheoryAI.Blueprint.Chapter01.Chevalley
 import SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyNontrivialZero
 import SerreNumberTheoryAI.Blueprint.Chapter01.QuadraticElements
+import SerreNumberTheoryAI.Blueprint.Chapter01.LegendreSymbol
 import SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyQuadraticForm
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers
 import SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence
@@ -37,6 +38,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyNontrivialZero}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.QuadraticElements}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter01.LegendreSymbol}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyQuadraticForm}
 
