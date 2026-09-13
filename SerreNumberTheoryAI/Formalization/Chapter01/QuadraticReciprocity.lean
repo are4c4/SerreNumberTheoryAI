@@ -1,3 +1,4 @@
+import Mathlib.Algebra.GroupWithZero.Units.Equiv
 import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
 import Mathlib.NumberTheory.MulChar.Basic
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
@@ -138,6 +139,42 @@ theorem sum_legendreSign_eq_zero (hl : l ≠ 2) :
   simpa using
     (MulChar.sum_eq_zero_of_ne_one
       (R := ZMod l) (R' := ℤ) (serreLegendreMulChar_ne_one l hl))
+
+/--
+The source coefficient `C_u`, written as a total field sum. The term at `t = 0` is always `1`,
+so subtracting `1` is exactly the source's restriction to `t ≠ 0`.
+-/
+noncomputable def serreGaussCoefficient (u : ZMod l) : ℤ :=
+  (∑ t : ZMod l, legendreSign l (1 - u / t)) - 1
+
+/-- The source coefficient at zero is `l - 1`. -/
+theorem serreGaussCoefficient_zero :
+    serreGaussCoefficient l 0 = (l : ℤ) - 1 := by
+  simp [serreGaussCoefficient, ZMod.card]
+
+/-- Every nonzero source coefficient is `-1`. -/
+theorem serreGaussCoefficient_eq_neg_one_of_ne_zero
+    (hl : l ≠ 2) (u : ZMod l) (hu : u ≠ 0) :
+    serreGaussCoefficient l u = -1 := by
+  let eSub : Equiv.Perm (ZMod l) :=
+    { toFun := fun z => 1 - z
+      invFun := fun z => 1 - z
+      left_inv := by
+        intro z
+        simp
+      right_inv := by
+        intro z
+        simp }
+  let e : Equiv.Perm (ZMod l) := (Equiv.divLeft₀ u hu).trans eSub
+  have he_apply (t : ZMod l) : e t = 1 - u / t := by
+    rfl
+  have hsum :
+      (∑ t : ZMod l, legendreSign l (1 - u / t)) =
+        ∑ s : ZMod l, legendreSign l s := by
+    exact Fintype.sum_bijective e e.bijective _ _ fun t => by
+      rw [he_apply]
+  rw [serreGaussCoefficient, hsum, sum_legendreSign_eq_zero l hl]
+  norm_num
 
 end QuadraticReciprocity
 
