@@ -30,7 +30,7 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - State: active scheduler coordination
 - Active A Issue: #113
 - Canonical A branch: `design/sync-post-legendre-113`
-- Current A PR: not opened yet at this edit point
+- Current A PR: #117
 - Latest A housekeeping: #109 / PR #110, merge `272885ad850d12fa1ee06d60c75f101bae54413c`
 - Latest completed A central sync: #106 / PR #107, merge `f3d0f5b22b1e306720d6c313185f98692110f3a8`
 - Previous completed A central sync: #95 / PR #101, merge `9d232f844e4de88967483e82bd783a4b6b155345`
@@ -79,7 +79,7 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 2. #114 / C is the next active normal `Formalization.lean` integration candidate. C should remove its temporary top-level hook before final merge.
 3. #92 / D may continue isolated algebraic work and publish stable downstream subsets, but final root/Blueprint integration should not race #114.
 
-A #113 owns only:
+A #113 / PR #117 owns only:
 
 - `docs/WORK_QUEUE.md`
 - `docs/LANE_STATUS.md`
@@ -100,7 +100,7 @@ Owned executable/near-executable work includes #64/#78/#72 and stackable #89. Ow
 
 ### Next A actions
 
-1. land #113 after latest-main recheck, exact four-file self-review, and latest-head CI;
+1. land #113 / PR #117 after latest-main recheck, exact four-file self-review, and latest-head CI;
 2. monitor #114 normal-root integration now #103 is DONE;
 3. monitor #72 for any additional explicit downstream freeze(s) before releasing #96/#102/#100/#108;
 4. monitor #89 implementation from exact `c43d7f09…` and #78 latest-main resync;
