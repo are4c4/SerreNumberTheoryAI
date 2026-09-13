@@ -35,8 +35,8 @@ Cは固定のBlueprint専任ではありません。`docs/WORK_QUEUE.md` から�
 - Owned work:
   - #56 / `S3.2-LegendreSymbol`, canonical branch `work/s3-2-legendre-symbol`
   - #64 / `S3.3-QuadraticReciprocity`, canonical branch `work/s3-3-quadratic-reciprocity`
-- Current clean base: both canonical branches were fast-forwarded without C proof commits to main `baab91a17712e33417d6471634a8b035ba1acfe4`
-- Last completed mathematical work: #49 / `S1.1-T1iii` via PR #58, merged green on main
+- Current clean base: both canonical branches were fast-forwarded without C proof commits to main `fcd6b439a9c4eaa1e46fe97c5d9eb053aa16f40d` after #52 / PR #68 merged
+- Last completed mathematical work by C: #49 / `S1.1-T1iii` via PR #58, merged green on main
 
 ### #56 `S3.2-LegendreSymbol`
 
@@ -64,8 +64,7 @@ Cは固定のBlueprint専任ではありません。`docs/WORK_QUEUE.md` から�
 
 ### Coordination / next action
 
-- #55 is D-owned and its implementation gate is open, but at the latest live check it has not published the §3.1 interface needed by #56. Do not steal or guess its declaration names.
-- #52 / Chevalley is concurrently D-owned; C does not modify it.
+- #55 is D-owned and its implementation gate is open. #52 / PR #68 is now complete on main, so D is no longer occupied by the Chevalley core; nevertheless #55 still has not published the §3.1 interface needed by #56 at the latest live check. Do not steal or guess its declaration names.
 - A was notified that #64 is now claimed and that the next source block after §3.3 is the Chapter 1 Supplement (printed pp. 12–14), followed by Chapter 2 on printed p. 15. C has not claimed that next target.
 - Next safe action: monitor #55. If it becomes `STACK-READY`, move #56 to that exact head and implement §3.2. Once the minimal #56 subset is stable, explicitly publish a downstream `STACK-READY` head for #64; §3.3 can then proceed even if Theorem 5(iii) is still being finished.
 
