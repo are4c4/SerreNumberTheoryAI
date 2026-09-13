@@ -74,7 +74,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | 補遺 (i) Gaussの補題 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成済み。
-- #56 / PR #98 はC-owned。#64向けfrozen head `45bde2ef…` はLegendre value/sign、multiplicativity、cast-back、Theorem 5(i)/(ii)を含むCI-green interface。live head `527533d4…` はTheorem 5(iii) compile repair後にCI #217 green。独立Blueprint exposition/linkageとfinal latest-main integrationは未完了。
+- #56 / PR #98 はC-owned。#64向けfrozen head `45bde2ef…` はLegendre value/sign、multiplicativity、cast-back、Theorem 5(i)/(ii)を含むCI-green interface。Theorem 5(iii)本体は一度CI #217 greenまで到達した後、source-shaped cleanupで局所的な加法可換性normalization failureがCI #220/#223に出現し、Aがdiagnosticをroute済み。current observed repair head `90996cbe…` はCI #225 queued。独立Blueprint exposition/linkageとfinal latest-main integrationはproof安定後に残る。
 - #64 はC preflight completeで、frozen `45bde2ef…` からstacked implementation可能。latest checkではcanonical branchはまだそのheadをconsumeしていない。
 - #78 はB preflight complete。必要なminimal #56 interfaceは存在するが現在のupstream promiseは#64専用なので、別freezeまたは#56 merge待ち。
 
@@ -102,7 +102,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 3: dyadic quadratic lifting | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #99 / PR #103 はB-owned。latest checked head `bf91ce4a…` はCI #218 greenで、finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proofとBlueprint workを含む。最終のnormal root integrationは#98 shared hotspot解消後に行う。
+- #99 / PR #103 はB-owned。earlier `bf91ce4a…` はCI #218 greenでfinite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proofとBlueprint workを含んだ。その後のcompatibility refinementでcurrent observed head `6f4fe68e…` はCI #224 local Lean failureとなり、coefficient-level `MvPolynomial.map` compatibilityとmapped evaluation rewriteのdiagnosticをAがBへroute済み。最終normal root integrationはisolated proofがgreenかつ#98 shared hotspot解消後に行う。
 - #100 はBがclaimしてsource/API/dependency preflight中。命題6を命題5と分離し、primitive/unit criterionは#72、`Q_p` scalingは#96、finite-level inverse-limit machineryは#99の実際の公開interfaceへ依存させる。proof codeはgate成立まで追加しない。
 - #102 はunclaimed PREFLIGHT。§2.2のone-step improvement、multivariate Hensel theorem、simple-root Corollary 1を対象とし、source-shaped iterative/Cauchy proofを予定。proofは#72 valuation/congruenceと#89 completeness interface待ちが見込まれる。
 - #104 はunclaimed PREFLIGHT。odd `p` の非退化対称二次形式についてprimitive mod-`p` solutionからsimple-root条件を導き#102 Corollary 1でliftするsource Corollary 2を対象とする。
