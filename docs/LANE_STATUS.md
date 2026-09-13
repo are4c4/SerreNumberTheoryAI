@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #81 post-Chevalley queue/progress sync and refill | `design/sync-post-chevalley-refill-81` / PR pending | land central sync, then monitor #55→#56→#64 gates and fresh #78/#79 claims |
-| B | End-to-end Formalizer | 🟡 ready | none | none | rescan queue after #81 lands; #78/#79 are fresh unclaimed PREFLIGHT candidates unless live branch state changes |
+| A | Scheduler / Design | 🚧 active | #81 post-Chevalley queue/progress sync and refill | `design/sync-post-chevalley-refill-81` / PR #83 | land central sync, then monitor #55→#56→#64 gates and fresh #84/#78/#79 claims |
+| B | End-to-end Formalizer | 🟡 ready | none | none | after #83 lands, rescan queue; #84 is READY and #78/#79 are PREFLIGHT unless live branch state changes |
 | C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` and #64 `S3.3-QuadraticReciprocity` preflights | `work/s3-2-legendre-symbol`; `work/s3-3-quadratic-reciprocity`; docs PR #76 | keep proof code gated; #64 can stack once the minimal #56 sign/multiplicativity/Theorem5(ii) subset is explicitly `STACK-READY` |
-| D | End-to-end Formalizer | 🚧 active | #55 `S3.1-QuadraticElements`; #52 completed | `work/s3-1-quadratic-elements` | proceed end-to-end from latest main and publish a stable half-power/square-kernel interface for #56 when verified |
-| E | End-to-end Formalizer | 🟡 ready | none | none | rescan queue after #81 lands; atomic-claim only a still-unowned candidate, especially independent #79 |
+| D | End-to-end Formalizer | 🚧 active | #55 `S3.1-QuadraticElements`; #52 completed | `work/s3-1-quadratic-elements` / draft PR #82 | repair current Lean build failure, then publish a stable half-power/square-kernel interface for #56 when green |
+| E | End-to-end Formalizer | 🟡 ready | none | none | after #83 lands, atomic-claim only a still-unowned candidate; #84 is immediately executable and #79 is an independent preflight |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -32,15 +32,16 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 Current live ownership at the latest A check:
 
-- A: #81 scheduler-only synchronization/refill; no mathematical implementation ownership.
+- A: #81 / PR #83 scheduler-only synchronization/refill; no mathematical implementation ownership.
 - B: no unfinished mathematical work.
-- C: #56 `S3.2-LegendreSymbol` preflight and #64 `S3.3-QuadraticReciprocity` preflight; #64's focused issue is open again and records C ownership.
-- D: #55 `S3.1-QuadraticElements`; its §1.2 cyclicity dependency is DONE, so full implementation is allowed.
+- C: #56 `S3.2-LegendreSymbol` preflight and #64 `S3.3-QuadraticReciprocity` preflight; docs-only PR #76 is green and disjoint from A central files.
+- D: #55 `S3.1-QuadraticElements`, draft PR #82. CI run #147 passed policy but failed `lake build`; A routed the two concrete Lean compile errors back to D without modifying the branch.
 - E: no unfinished mathematical work.
 
-Dependency frontier:
+Dependency / capacity frontier:
 
-- #55 → no remaining project gate; D can implement both characteristic-2 and odd-characteristic source cases from main.
+- #84 `S2.2-Chevalley-Cor1` → fresh unclaimed READY item. Core #52 is DONE; implementation can start directly from main.
+- #55 → no remaining project gate. D owns implementation/CI repair; once the half-power `{±1}` / square-kernel declarations are stable and green, D may publish `STACK-READY` for #56.
 - #56 → waits for #55's half-power `{±1}` / square-kernel interface `DONE` or explicit `STACK-READY`.
 - #64 → waits for a smaller stable subset of #56: Legendre sign layer, multiplicativity, Theorem 5(ii) at `-1`, and cross-characteristic sign compatibility. Theorem 5(iii) at `2` is not needed for the source §3.3 proof.
 - #78 `C1-Supp-GaussLemma` → fresh unclaimed PREFLIGHT. It is an alternative-proof supplement, independent of #64, but its proof also waits for the minimal #56 Legendre/half-power interface.
