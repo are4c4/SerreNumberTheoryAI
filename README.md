@@ -33,28 +33,41 @@ Public GitHub には原則として次を置きません。
 
 ## 複数AIチャットの並列運用
 
-複数のChatGPTチャットを役割別のlaneとして同時に動かします。チャット履歴そのものは共有状態にせず、**GitHubのmain・Issue・PR・CI・handoff文書をsource of truth**にします。
+複数のChatGPT chatを同時に動かしますが、職種別pipelineにはしません。チャット履歴そのものは共有状態にせず、**GitHubのmain・branch・Issue・PR・CI・queue文書をsource of truth**にします。
 
-初期構成:
+現在の構成:
 
 | Lane | Role |
 | --- | --- |
-| A | Design / Coordination — 設計、Issue分割、依存関係、ownership |
-| B | Lean Formalization — Lean statement / proof |
-| C | Blueprint / Exposition — Blueprintと独立自然言語説明 |
-| D | Mathlib Research — API探索、near-target theoremの判定 |
-| E | Integration / CI — build、policy、cross-layer整合 |
+| A | Scheduler / Design — dependency graph、queue health、曖昧なstatement、ownership conflict |
+| B | End-to-end Formalizer |
+| C | End-to-end Formalizer |
+| D | End-to-end Formalizer |
+| E | End-to-end Formalizer |
+
+B/C/D/Eは同等workerです。work itemをclaimしたworkerが、そのitemについてsource解釈、mathlib調査、Lean、Blueprint、自然言語説明、CI、mergeまで可能な限りend-to-endで担当します。
 
 共有状態:
 
-- [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md) — 並列運用プロトコル
-- [`docs/LANE_STATUS.md`](docs/LANE_STATUS.md) — 全laneの現在地
-- `docs/lanes/*.md` — 各laneのhandoff
+- [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md) — worker-pool / work-stealing / stacked-branch protocol
+- [`docs/WORK_QUEUE.md`](docs/WORK_QUEUE.md) — dependency-aware executable queue
+- [`docs/LANE_STATUS.md`](docs/LANE_STATUS.md) — workerの現在地
+- `docs/lanes/*.md` — 各chatの短いhandoff
 - [`FORMALIZATION_PROGRESS.md`](FORMALIZATION_PROGRESS.md) — 数学的進捗
 
-たとえば新しいチャットで `Bレーンとして作業を続けて` と指示すれば、Bは上記文書とGitHubの最新状態を読み、割り当て済みfocused Issueから再開する設計です。
+新しいchatで `Bレーンとして作業を続けて` とだけ指示しても、Bはlive GitHubとqueueを復元し、active workがなければcanonical branch lockで最高priorityの安全なworkをclaimします。
 
-同じ数学的targetでも、LeanとBlueprintのように成果物とownerが分離されていれば並列作業できます。ただし **1 deliverable = 1 active owner** を守り、statement解釈が一致していることを前提とします。
+### Work stealing
+
+PR作成、CI pending、1 Issue完了、1 item固有blockerはchat停止条件ではありません。実行時間が残っていれば次の `READY` / `STACKABLE` / `PREFLIGHT` itemへ移ります。
+
+1 workerの未merge実装PRは原則2本までとし、それ以上は増やさずCI修正・preflight・dependency整理を行います。
+
+### Dependency first
+
+並列化は章番号ではなく実際の数学的依存関係に従います。後続節が前節の定理を使うなら、そのdependencyをqueueへ明記し、上流が安定するまでdownstream proofを推測しません。
+
+一方、上流PRが未mergeでもstatementとLean interfaceが十分安定し `STACK-READY` と明示された場合は、その特定head SHAをbaseにstacked branchを作って下流を進められます。upstream merge後はmainへ戻して再検証します。
 
 ## mathlib の利用原則
 
@@ -75,21 +88,23 @@ Public GitHub には原則として次を置きません。
 ## 自律作業の基本フロー
 
 ```text
-A: target / statement境界 / focused Issue を設計
-                 ↓
-       ┌─────────┼─────────┐
-       ↓         ↓         ↓
- B: Lean      C: Blueprint D: mathlib research
-       └─────────┼─────────┘
-                 ↓
-          E: integration / CI
-                 ↓
-             merge / next
+A: dependency graph / queue を先回りして整備
+                    │
+          ┌─────────┼─────────┬─────────┐
+          ↓         ↓         ↓         ↓
+          B         C         D         E
+        formalizer formalizer formalizer formalizer
+          │         │         │         │
+          └──── READY / STACKABLE / PREFLIGHT ────┘
+                    │
+               work stealing
+                    │
+      source → mathlib → Lean → Blueprint → CI → merge
 ```
 
-各laneはbranch・commit・PR作成・CI修正まで自律的に進めます。`AGENTS.md` の停止条件に該当せず、担当範囲の自己レビューとCIが通っていれば、**AI自身でPRをmergeしてよく、人間レビューを通常は待ちません**。
+各formalizerはbranch・commit・PR作成・CI修正まで自律的に進めます。`AGENTS.md` の停止条件に該当せず、担当workの自己レビューとCIが通っていれば、**AI自身でPRをmergeしてよく、人間レビューを通常は待ちません**。
 
-statementの曖昧性、仮定変更、著作権判断、重大な証明方針の逸脱などは `BLOCKED:` として停止します。
+statementの曖昧性、仮定変更、著作権判断、重大な証明方針の逸脱などはwork item単位で `BLOCKED:` とします。別の安全なqueue workがある限りworker chat自体は継続します。
 
 ## 進捗
 
@@ -102,7 +117,7 @@ statementの曖昧性、仮定変更、著作権判断、重大な証明方針�
 3. 有限体上のべき乗和
 4. Chevalley の定理周辺
 
-この範囲でAIの statement 設計、mathlib利用、Blueprint生成、自然言語説明、並列協調、停止条件を検証し、必要に応じて作業規約を改善します。
+この範囲でAIの statement 設計、mathlib利用、Blueprint生成、自然言語説明、dependency-aware parallelism、work stealing、stacked branch、停止条件を検証し、必要に応じて作業規約を改善します。
 
 ## ローカルでの確認
 
@@ -117,7 +132,7 @@ BlueprintのHTML出力は通常 `_out/site/html-multi` に生成されます。
 
 ## AI作業規約
 
-AIエージェントは作業開始前に必ず [`AGENTS.md`](AGENTS.md) を読み、[`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md) と自分のlane handoffを確認してから作業します。
+AIエージェントは作業開始前に必ず [`AGENTS.md`](AGENTS.md) を読み、[`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md)、[`docs/WORK_QUEUE.md`](docs/WORK_QUEUE.md)、live GitHub state、自分のhandoffを確認してから作業します。
 
 ## Reference
 
