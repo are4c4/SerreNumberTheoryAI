@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🟡 ready | none | #60 / PR #61 docs-only cleanup | finish #61 self-review/merge, then monitor queue health, worker claims, `STACK-READY` transitions, ambiguity/conflicts, and refill before capacity becomes thin |
-| B | End-to-end Formalizer | 🚧 active | #50 `S1.2-MultGroup` | `work/s1-2-mult-group` / draft PR #59 | continue end-to-end implementation and CI repair; T1(iii) is not a dependency |
-| C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` preflight | `work/s3-2-legendre-symbol` / PR pending | keep proof implementation gated on #55 `DONE`/`STACK-READY`; source/dependency/mathlib preflight may proceed now |
-| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums`, #52 `S2.2-Chevalley`, #55 `S3.1-QuadraticElements` preflights | `work/s2-1-power-sums`, `work/s2-2-chevalley`, `work/s3-1-quadratic-elements` | keep proof bodies gated on required upstream `DONE`/`STACK-READY`; use waiting time only for safe preflight |
-| E | End-to-end Formalizer | 🟡 ready | none | none | scan live queue/branches and atomic-claim the next still-unowned executable work; do not duplicate already-claimed #51/#52/#55/#56 |
+| A | Scheduler / Design | 🟡 ready | none | none | monitor queue health, worker claims, `STACK-READY` transitions, ambiguity/conflicts, and refill before capacity becomes thin |
+| B | End-to-end Formalizer | 🟡 ready | no active mathematical work; post-#59 handoff cleanup only | `docs/sync-b-after-s1-2-59` / PR #63 | finish docs-only synchronization, then rescan live queue and atomic-claim only a newly seeded or released executable item |
+| C | End-to-end Formalizer | 🚧 active | #56 `S3.2-LegendreSymbol` preflight | `work/s3-2-legendre-symbol` | keep §3.2 proof implementation gated on #55 `DONE`/`STACK-READY`; continue safe source/dependency/mathlib preflight |
+| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums` implementation; #52 `S2.2-Chevalley` and #55 `S3.1-QuadraticElements` owned downstream work | `work/s2-1-power-sums` / PR #62; `work/s2-2-chevalley`; `work/s3-1-quadratic-elements` | #50 is DONE, so #51 and the #50-dependent part of #55 may proceed from main; keep #52 gated on #51 `DONE`/`STACK-READY` |
+| E | End-to-end Formalizer | 🟡 ready | none | none | scan live queue/branches and atomic-claim the next still-unowned executable work; do not duplicate #51/#52/#55/#56 |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -28,23 +28,21 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
 ## Current mathematical frontier
 
-`S1.1.Theorem1(iii)` is now end-to-end complete on `main` via #49 / PR #58. The active implementation frontier is therefore no longer a single chapter-ordered target: B is implementing §1.2 while D/C are using dependency-safe preflight capacity further downstream.
+`S1.1-T1iii` is end-to-end complete on `main` via #49 / PR #58, and `S1.2-MultGroup` is end-to-end complete on `main` via #50 / PR #59. The stable project interface `SerreNumberTheoryAI.finiteField_units_isCyclic : IsCyclic Kˣ` is therefore available directly from main.
 
-Current live ownership at the latest A check:
+Current live ownership at the latest B check:
 
-- B: #50 `S1.2-MultGroup`, draft PR #59
-- C: #56 `S3.2-LegendreSymbol` preflight; #49 / PR #58 is completed and merged
-- D: #51 `S2.1-PowerSums`, #52 `S2.2-Chevalley`, and #55 `S3.1-QuadraticElements` preflights
-- E: no live canonical branch at the latest check
+- A: no active implementation work; ready scheduler.
+- B: #50 / PR #59 completed; no active mathematical work. PR #63 is post-merge documentation synchronization only.
+- C: #56 `S3.2-LegendreSymbol` preflight; post-Theorem-1(iii) handoff synchronization completed in PR #65.
+- D: #51 `S2.1-PowerSums` is in implementation with PR #62; #52 `S2.2-Chevalley` and #55 `S3.1-QuadraticElements` remain D-owned.
+- E: no live canonical work at the latest check.
 
-A #54 / PR #57 completed the source-level dependency refinement and queue refill:
+Dependency frontier:
 
-- #50 `S1.2-MultGroup` — source proof does **not** depend on T1(iii).
-- #51 `S2.1-PowerSums` — full proof depends on #50 cyclicity `DONE` or `STACK-READY`.
-- #52 `S2.2-Chevalley` — full proof depends on #51 power-sum interface `DONE` or `STACK-READY`.
-- #55 `S3.1-QuadraticElements` — D preflight confirmed the characteristic-2 half is independent of §1.2, while the full odd-characteristic/index-2 result has a hard edge to #50 cyclicity.
-- #56 `S3.2-LegendreSymbol` — now claimed by C for preflight; proof implementation remains gated on the required §3.1 interface.
-
-PR #57 passed repository policy, `lake build`, and `lake exe vbp build` and is merged. PR #58 subsequently completed Theorem 1(iii). A is therefore in scheduler/coordination mode rather than retaining either completed item as active ownership.
+- #51 `S2.1-PowerSums` — the #50 cyclicity gate is satisfied on main; D is implementing the source-faithful power-sum theorem.
+- #52 `S2.2-Chevalley` — full proof remains gated on #51 `DONE` or an explicit `STACK-READY` interface.
+- #55 `S3.1-QuadraticElements` — D preflight found the characteristic-2 half independent of §1.2, while the full odd-characteristic/index-2 result has a hard edge to #50; that #50 edge is now satisfied on main.
+- #56 `S3.2-LegendreSymbol` — C owns preflight; proof implementation remains gated on the required #55 interface becoming `DONE` or `STACK-READY`.
 
 Issueが存在するだけではownershipではありません。canonical branch lockを最初に取得したworkerがownerです。Aは未claim itemを各workerへ手動配布せず、queueとdependencyの整合だけを維持します。

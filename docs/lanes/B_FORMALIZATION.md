@@ -31,20 +31,18 @@ Bは固定のLean専任ではありません。`docs/WORK_QUEUE.md` から安全
 
 ## Current handoff
 
-- State: `S1.2-MultGroup` finalization / merge-ready after latest-main verification.
-- Owned work: #50, canonical branch `work/s1-2-mult-group`, draft PR #59.
-- Claim base: `0be2db71439109d00fdbf4cf6b5a66e60632f536`; Theorem 1(iii) was independently claimed by C, so B correctly advanced to the next executable queue item.
-- Source boundary: Serre Chapter 1 §1 1.2, printed pp. 5–6 / uploaded PDF pp. 15–16.
-- Dependency result: Theorem 1(iii) is not required for Theorem 2. The proof works from the finite-field foundations already on `main`.
-- Lean artifact: `SerreNumberTheoryAI/Formalization/Chapter01/MultiplicativeGroup.lean` with `totient_divisor_sum`, `finiteGroup_isCyclic_of_power_root_bound`, `finiteField_units_power_root_bound`, `finiteField_units_isCyclic`, `finiteField_units_natCard`, and umbrella theorem `serre_theorem2`.
-- Blueprint artifact: `SerreNumberTheoryAI/Blueprint/Chapter01/MultiplicativeGroup.lean`, independently written and linked to the stable declarations.
-- Mathlib boundary: uses general totient/cyclic-group/root-count/unit-cardinality infrastructure. The near-target `isCyclic_of_injective_ringHom` and the imported `IsCyclic Rˣ` instance are deliberately not used as the completion argument.
-- Verification: code/interface head `2c1ab685958c39aa7df6e723fd451c6a3e196fc2` passed repository policy, `lake build`, and `lake exe vbp build` in CI run #99.
-- Downstream: #50 is marked `STACK-READY` at head `2c1ab685958c39aa7df6e723fd451c6a3e196fc2`; the stable downstream declaration is `SerreNumberTheoryAI.finiteField_units_isCyclic` (plus the root-bound/cardinality helpers and `serre_theorem2`).
-- Remaining before merge: synchronize Phase 2 progress / queue state in this PR, obtain a green CI run on the final documentation-synchronized head against current `main`, self-review, then mark PR ready and merge.
-- Work stealing: #51/#52 and the seeded §3 preflight branches were already live-claimed by other workers at the latest check, so B must not take them without `RELEASED` / `REASSIGNED`.
+- State: ready worker after completing `S1.2-MultGroup`.
+- Active mathematical work: none.
+- Last completed work: #50 / PR #59, merged on main as `6c8c4c313e15cf19198963b2883f7bd0e9c2df5b`.
+- Source boundary completed: Serre Chapter 1 §1 1.2, printed pp. 5–6 / uploaded PDF pp. 15–16.
+- Lean artifact on main: `SerreNumberTheoryAI/Formalization/Chapter01/MultiplicativeGroup.lean` with `totient_divisor_sum`, `finiteGroup_isCyclic_of_power_root_bound`, `finiteField_units_power_root_bound`, `finiteField_units_isCyclic`, `finiteField_units_natCard`, and `serre_theorem2`.
+- Blueprint artifact on main: `SerreNumberTheoryAI/Blueprint/Chapter01/MultiplicativeGroup.lean` with independent exposition and stable `lean :=` linkage.
+- Verification: final latest-main head passed repository policy, `lake build`, and `lake exe vbp build` in CI run #106 before merge.
+- Downstream interface is now on main; #51 and #55 no longer need a stacked #50 base.
+- Live work-stealing scan after merge: #51/#52/#55 are owned by D and #56 is owned by C. B must not take them without `RELEASED` / `REASSIGNED`.
+- Next: remain ready and rescan live queue. Claim the highest-priority newly seeded or released `READY` / eligible `STACKABLE` / `PREFLIGHT` item by canonical branch lock when one exists.
 - Blockers: none.
 
 ## Short resume prompt
 
-`Bレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認して。Bはend-to-end formalizer。#50 / work/s1-2-mult-group / PR #59 がopenなら最優先でresumeし、最終progress/queue同期・latest-main CI・自己レビュー・mergeまで完了して。その後はqueueを再走査し、未claimのREADY/STACKABLE/PREFLIGHTがあればatomic claimして続行する。`
+`Bレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認して。Bはend-to-end formalizer。現在のowned workがあればresumeし、無ければlive queueを再走査して未claimの最高priority READY/eligible STACKABLE/PREFLIGHTをcanonical branch lockでclaimしてend-to-endで進める。既に別workerがclaimしたitemは奪わない。PR作成やCI pendingで止まらず、実行時間が残る限りwork stealingする。`

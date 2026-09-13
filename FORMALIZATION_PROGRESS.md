@@ -44,9 +44,11 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | 1.1 導入・Frobenius 補題・定理1(i) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 定理1(ii): `F_q` の存在・一意性と `X^q-X` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 定理1(iii): 位数 `q` の有限体の一意性 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 定理1(iii): 位数 `q` の有限体の一意性 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 定理1(ii)は、#6 のcanonical statement contract、C #9 / PR #18 の独立説明・Blueprint、B #7 / PR #25 のLean statement/proofをE #36 / PR #45で最終統合した。stable Lean declarationsへの`lean :=`対応を追加したintegrated headでrepository policy・`lake build`・`lake exe vbp build`がすべてgreenとなり、cross-layer statement driftも確認されなかったため、全列をcompleteとする。
+
+定理1(iii)は #49 / PR #58 でend-to-endに完成し、位数 `p^f` の任意の有限体をTheorem 1(ii)のcanonical `p^f`-element subfieldへ同型で移す構成をLean/Blueprintで同期した。PR #58は近すぎる有限体分類定理を完成証明に使わず、policy・Lean build・Verso Blueprint buildがgreenの状態でmainへmerge済みである。
 
 **開始条件:** Phase 0の数学作業に必要な基盤がmainへmergeされていること。達成済み。
 
