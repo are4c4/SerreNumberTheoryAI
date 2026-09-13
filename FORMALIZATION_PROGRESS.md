@@ -74,7 +74,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | 補遺 (i) Gaussの補題 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成し、main commit `329184fa3aa1e6ee748061b1cf5cb539e2c72778` へmerge済み。
-- #56 はC preflightでsource boundary / theorem-strength boundary / primitive-eighth-root routeを固定済み。#55がDONEになったため、canonical branchをlatest mainへresyncして実装へ進める。
+- #56 はC preflightでsource boundary / theorem-strength boundary / primitive-eighth-root routeを固定済み。#55がDONEになったためcanonical branchをlatest mainへresyncして実装へ進める。
 - #64 はC preflightでGauss-sum routeとminimal #56 dependencyを固定済み。proofはcharacteristic-independent Legendre sign、field compatibility、multiplicativity、Theorem 5(ii) subset待ち。
 - #78 Gauss lemma はunclaimed PREFLIGHT。#64には依存しない。
 
@@ -86,8 +86,8 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | §1.2 Proposition 1–2 + valuation | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §1.2 Proposition 3: metric / completeness / density | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #71 `C2S1.1-ZpConstruction` はB-owned draft PR #86で実装中。project-local inverse-limit constructionを使い、ready-made mathlib `PadicInt` をcompletion shortcutにしない。後発 #79 はduplicate closed。
-- #72 はD-owned preflight complete。source上 Proposition 1–2 + valuation をalgebraic sliceとして残し、proofは #71 public interface待ち。
+- #71 `C2S1.1-ZpConstruction` はB-owned draft PR #86で実装中。project-local inverse-limit constructionを使い、ready-made mathlib `PadicInt` をcompletion shortcutにしない。exact head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` はpolicy/build/vbp greenで、#72向けにtype/projection/extensionality/surjectivity/integer-map/compactness/continuity interfaceをSTACK-READYとしてfreeze済み。後発 #79 はduplicate closed。
+- #72 はD-owned preflight complete。source上 Proposition 1–2 + valuation をalgebraic sliceとして残す。必要な#71 interfaceがSTACK-READYになったため、proof implementationはそのexact headへstack可能。#71が先にmergeした場合はmainから進める。
 - #89 は #72 preflightから切り出したProposition 3 metric/topology/completeness/densityのunclaimed PREFLIGHT。proofは#72 valuation/topology-relevant interface待ち。
 
 ## Continuous parallelization rules
