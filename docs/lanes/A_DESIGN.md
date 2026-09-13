@@ -30,8 +30,9 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - State: active scheduler coordination
 - Active A Issue: #81
 - Canonical A branch: `design/sync-live-queue-81-v2`
-- Superseded stale A PRs: #75, #83（いずれもmergeせずclose）
-- Duplicate scheduler work cleaned:
+- Current A PR: #90
+- Superseded stale A PRs: #75, #83（mergeせずclose）
+- Duplicate scheduler/work conflicts cleaned:
   - #84 -> canonical #70 Corollary 1
   - #79 -> canonical #71 p-adic construction
   - #85 / PR #88 -> canonical #74 / PR #87 Corollary 2
@@ -49,17 +50,17 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 - B: #71 `C2S1.1-ZpConstruction`, draft PR #86.
 - C: #74 `S2.2-Chevalley-Cor2` / draft PR #87; #56 `S3.2-LegendreSymbol`; #64 `S3.3-QuadraticReciprocity` preflight.
-- D: #72 `C2S1.2-ZpProperties` preflight, completed and waiting on #71 interface.
+- D: #72 `C2S1.2-ZpProperties`.
 - E: no mathematical ownership at latest check.
 
 ### Dependency / integration state
 
-- #74/C is the valid first ownership lock for Corollary 2. #70 is DONE, so implementation gate is open. PR #87 predates #82 root-import merge and is currently nonmergeable; A routed latest-main resync back to C.
+- #74/C is the valid first ownership lock for Corollary 2. #70 is DONE, so implementation gate is open. PR #87 predates #82 root-import merge and is nonmergeable; A routed latest-main resync back to C.
 - #55 is DONE, so #56's former STACKABLE state is no longer needed. C's #56 branch had been moved to frozen #55 head; A routed resync to latest main before further proof commits.
 - #64 remains proof-gated on a smaller future #56 interface: characteristic-independent Legendre sign/value, field-half-power compatibility, multiplicativity, and Theorem 5(ii) at `-1`. Theorem 5(iii) at `2` is not required.
-- #71 is independent of Chapter 1 and is being implemented by B.
-- #72 source/API preflight recommends an algebraic slice (Proposition 1–2 + valuation) with proof waiting on #71.
-- #89 was seeded from that stable preflight as the separate Proposition 3 metric/topology/completeness/density PREFLIGHT. Its proof waits on #72.
+- #71 is independent of Chapter 1 and B published a green frozen interface at exact head `27a414372c72f5ac749ac7e59da06da3c4c5e86f`, covering the project inverse-limit type, projections/extensionality/surjectivity, integer map, compactness, and projection continuity. #82 has merged, so B's previous root-import hotspot is free.
+- #72 source/API preflight recommends an algebraic slice (Proposition 1–2 + valuation). Its requested #71 interface is now STACK-READY, so D may stack from `27a41437…`; if #71 merges first, use latest main.
+- #89 is the separate Proposition 3 metric/topology/completeness/density PREFLIGHT extracted from #72. Proof waits on #72.
 
 ### Queue health
 
@@ -68,24 +69,23 @@ Unclaimed safe capacity:
 - #78 `C1-Supp-GaussLemma` — PREFLIGHT; proof waits on minimal #56 interface, not on #64.
 - #89 `C2S1.2-ZpMetric` — PREFLIGHT; proof waits on #72.
 
-Owned executable work also exists (#74, #56, #71), so the worker pool has parallel capacity without inventing unrelated work.
+Owned executable/stackable work also exists (#74, #56, #71, #72), so the worker pool has parallel capacity without inventing unrelated work.
 
 ### Shared-hotspot coordination
 
-- A #81 branch owns only `docs/WORK_QUEUE.md`, `docs/LANE_STATUS.md`, this file, and `FORMALIZATION_PROGRESS.md`.
+- A #81 / PR #90 owns only `docs/WORK_QUEUE.md`, `docs/LANE_STATUS.md`, this file, and `FORMALIZATION_PROGRESS.md`.
 - C PR #76 is stale docs-only handoff and should be refreshed/superseded by C rather than edited by A.
 - A does not modify worker PR #86/#87 or their mathematical files.
 
 ### Next A actions
 
-1. open a fresh #81 coordination PR from this branch after final latest-main check;
-2. verify exactly four central files changed, run CI, self-merge when green/mergeable;
-3. continue monitoring #74/#56 latest-main resync, #71 public interface, and claims of #78/#89;
-4. refill only after visible unclaimed capacity becomes thin.
+1. wait for PR #90 latest-head CI, recheck main/live ownership, and self-merge when green/mergeable;
+2. monitor #74/#56 latest-main resync, #71 merge/interface stability, and #72 stack transition;
+3. monitor claims of #78/#89; refill only when visible unclaimed capacity becomes thin.
 
 ## Scheduler health target
 
-- at least one executable mathematical item when dependencies permit;
+- executable mathematical work when dependencies permit;
 - multiple safe PREFLIGHT candidates;
 - no duplicate ownership;
 - no global lane idle caused only by another lane's CI/upstream wait.
