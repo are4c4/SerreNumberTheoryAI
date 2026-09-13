@@ -20,7 +20,7 @@ open Informal
 Leanでは添字を0から始め、level `n` を `ℤ / p^(n+1)ℤ` とする。
 これは書籍の正の整数添字をずらしただけで、数学的対象は同じである。
 
-## 剰余環と遷移写像
+# 剰余環と遷移写像
 
 :::definition "padic_residue_ring" (lean := "SerreNumberTheoryAI.padicResidueRing")
 level `n` の剰余環を `ZMod (p^(n+1))` とする。
@@ -40,7 +40,7 @@ level `n+1` から level `n` への剰余写像の核は、source levelでの `p
 これは書籍の `ker(φ_m)=p^(m-1)A_m` を0始まりの添字へ移した形である。
 :::
 
-## 整合列としてのp進整数
+# 整合列としてのp進整数
 
 :::definition "padic_compatible" (lean := "SerreNumberTheoryAI.padicCompatible") (uses := "padic_reduction")
 剰余列 `x=(x_n)` が整合的であるとは、すべての `n` について
@@ -68,7 +68,7 @@ level `n+1` の成分を下げると level `n` の成分になることである
 すべての有限levelで同じ剰余成分を持つ2つのp進整数は等しい。
 :::
 
-## 位相とコンパクト性
+# 位相とコンパクト性
 
 各有限剰余環には離散位相を入れ、直積には積位相を入れる。
 整合条件は各座標についての等式の共通部分として閉条件になる。
@@ -85,7 +85,7 @@ level `n+1` の成分を下げると level `n` の成分になることである
 各有限levelへの射影は積位相から誘導される位相について連続である。
 :::
 
-## 整数の標準埋め込み
+# 整数の標準埋め込み
 
 整数 `a` を各 `p^(n+1)` で割った剰余類の列へ送ると、その列は自動的に整合する。
 
