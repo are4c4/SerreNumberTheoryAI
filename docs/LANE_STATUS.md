@@ -9,8 +9,8 @@
 | A | Scheduler / Design | 🟡 ready | none | none | monitor queue health, worker claims, `STACK-READY` transitions, ambiguity/conflicts; refill before executable/preflight capacity becomes thin |
 | B | End-to-end Formalizer | 🚧 active | #50 `S1.2-MultGroup` | `work/s1-2-mult-group` / draft PR #59 | repair latest-head CI and continue end-to-end self-review; T1(iii) is not a dependency |
 | C | End-to-end Formalizer | 🚧 active | #49 `S1.1-T1iii` | `work/s1-1-t1iii` / draft PR #58 | repair latest-head CI and preserve the stabilized abstract-isomorphism statement boundary |
-| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums` + #52 `S2.2-Chevalley` preflights | `work/s2-1-power-sums`, `work/s2-2-chevalley` | keep proof bodies gated on their upstream `DONE`/`STACK-READY`; use the second branch only for safe preflight while #51 waits |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim the highest-priority still-unclaimed executable preflight (#55 before #56 unless live state changes) |
+| D | End-to-end Formalizer | 🚧 active | #51 `S2.1-PowerSums`, #52 `S2.2-Chevalley`, #55 `S3.1-QuadraticElements` preflights | `work/s2-1-power-sums`, `work/s2-2-chevalley`, `work/s3-1-quadratic-elements` | keep proof bodies gated on required upstream `DONE`/`STACK-READY`; use waiting time only for safe preflight |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim the highest-priority still-unclaimed executable work; #56 is the visible unclaimed preflight at the latest check |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -34,7 +34,7 @@ Current live ownership at the latest A check:
 
 - C: #49 `S1.1-T1iii`, draft PR #58
 - B: #50 `S1.2-MultGroup`, draft PR #59
-- D: #51 `S2.1-PowerSums` preflight and #52 `S2.2-Chevalley` preflight
+- D: #51 `S2.1-PowerSums`, #52 `S2.2-Chevalley`, and #55 `S3.1-QuadraticElements` preflights
 - E: unclaimed
 
 A #54 / PR #57 completed the source-level dependency refinement and queue refill:
@@ -43,8 +43,8 @@ A #54 / PR #57 completed the source-level dependency refinement and queue refill
 - #50 `S1.2-MultGroup` — source proof does **not** depend on T1(iii).
 - #51 `S2.1-PowerSums` — full proof depends on #50 cyclicity `DONE` or `STACK-READY`.
 - #52 `S2.2-Chevalley` — full proof depends on #51 power-sum interface `DONE` or `STACK-READY`.
-- #55 `S3.1-QuadraticElements` — `PREFLIGHT`; branches from the multiplicative-group/finite-field path rather than requiring the §2 power-sum/Chevalley chain.
-- #56 `S3.2-LegendreSymbol` — `PREFLIGHT`; implementation depends on the required §3.1 interface.
+- #55 `S3.1-QuadraticElements` — `PREFLIGHT`; branches from the multiplicative-group/finite-field path rather than requiring the §2 power-sum/Chevalley chain. D acquired the canonical branch after #57 merged.
+- #56 `S3.2-LegendreSymbol` — unclaimed `PREFLIGHT`; implementation depends on the required §3.1 interface.
 
 PR #57 passed repository policy, `lake build`, and `lake exe vbp build` on its latest head and is merged. A is therefore back in ready scheduler state rather than retaining completed #54 as active ownership.
 
