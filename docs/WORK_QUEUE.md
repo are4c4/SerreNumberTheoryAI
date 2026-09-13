@@ -22,11 +22,22 @@
 1. queue、open Issue / PR、既存branchを再確認する。
 2. `READY`、または条件を満たす `STACKABLE` itemを選ぶ。実装可能itemがなければ `PREFLIGHT` を選べる。
 3. 指定されたcanonical branchを、`main` または許可されたupstream head SHAから作成する。
-4. branch作成に成功したworkerがowner。branchが既に存在する場合はclaimせず、live stateを再確認して別itemへ移る。
-5. focused Issueがまだ無ければ、**branch lock取得後に** worker自身がIssueを作成する。Aの事前承認は不要。
-6. Issue / PRにはwork id、dependency、base mode、canonical branchを記録する。
+4. branch作成に成功したworkerがowner。branchが既に存在する場合はclaimせず、Issue/PRのowner stateを確認する。
+5. claim直後、focused Issueへ `OWNER: <lane>`, canonical branch, base mode, base SHA をコメントする。
+6. focused Issueがまだ無ければ、**branch lock取得後に** worker自身がIssueを作成する。Aの事前承認は不要。
+7. PRにはwork id、dependency、base mode、canonical branchを記録する。
 
 branch作成というGitHub側の一意操作を先に行うことで、複数chatが同じitemを同時にclaimする競合を避けます。
+
+### 2.1 Resume / release / reassignment
+
+branchが存在することだけで永久lockにはしません。
+
+- 同じowner laneの新しいchatはIssue/PR/handoffを読んで既存canonical branchをresumeしてよい。
+- ownerが別workへ移っても、CI-WAIT等でそのbranchのownershipは維持される。
+- itemを手放す場合はIssueへ `RELEASED` とcurrent stateを記録する。
+- owner chatが失われた、または明らかにstaleな場合、AはIssueへ `REASSIGNED: <lane>` と根拠を記録できる。新ownerは既存canonical branchをresumeする。branchを二重作成しない。
+- `RELEASED` / `REASSIGNED` が無い他workerは既存branchを奪わない。
 
 ## 3. Work stealing
 
@@ -50,9 +61,20 @@ B/C/D/E は固定担当領域を持ちません。現在のworkが次の状態�
 - 下流が利用する主要なLean declaration名・型、またはそれに相当する明確なinterface
 - 変更が下流を破壊する場合の通知先
 
-stacked workはupstream PRの**特定head SHA**からcanonical branchを作り、PR本文に `Stack base PR` と `Stack base SHA` を記録します。upstreamがmergeしたら、downstreamは最新mainへrebase/更新し、PR baseをmainへ戻してからmergeします。
+stacked workはupstream PRの**特定head SHA**をbranch historyへ取り込み、PR本文に `Stack base PR` と `Stack base SHA` を記録します。upstreamがmergeしたら、downstreamは最新mainへrebase/更新し、PR baseをmainへ戻してからmergeします。
 
 上流statementがまだ揺れている場合はstackしてはいけません。source順に後だからという理由だけでinterfaceを推測しないでください。
+
+### 4.1 PREFLIGHT → STACKABLE transition
+
+`PREFLIGHT` itemはdependency gateが確定するまで**formalization codeをcommitしない**のを原則とし、調査結果はIssueコメントへ残します。これによりcanonical branchはmainと同じ位置に保てます。
+
+preflightの結果、未mergeupstreamへのstackが必要になった場合:
+
+1. upstreamが `STACK-READY` になるまでproof実装を待つ。
+2. preflight branchに固有code commitが無いことを確認する。
+3. canonical branchをapproved upstream headへfast-forward/updateしてから実装を開始する。
+4. もしpreflight中にbranch固有commitを作ってしまった場合は、stack開始前に安全なrebase/merge計画をIssueへ記録し、履歴を曖昧にしたままproofを進めない。
 
 ## 5. Dependency rule
 
@@ -88,7 +110,7 @@ B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが�
 
 利用可能な実行時間を早く切り上げるためのhandoffではありません。作業を継続し、終了が近いと判断した段階で最後に次を残します。
 
-- owned canonical branch / PR
+- owned canonical branches / PRs（最大2本のin-flight実装PRを含む）
 - current proof / Blueprint state
 - CI state
 - `STACK-READY` の有無と固定interface
