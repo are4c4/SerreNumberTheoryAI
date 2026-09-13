@@ -31,9 +31,9 @@ B/C/D/Eが成果物単位で並列作業することはできますが、上の�
 | Verso Blueprint scaffold | ✅ |
 | CI build + policy checks | ✅ |
 | Issue / PR templates | ✅ |
-| Parallel lane coordination | ✅ |
+| Parallel lane coordination | 🚧 |
 
-Parallel lane coordination was completed by Issue #4 / PR #5. Post-merge status synchronization is tracked separately by E in Issue #8 and does not alter the mathematical infrastructure result.
+Parallel lane coordination is tracked in Issue #4. It does not alter mathematical content.
 
 ## Phase 1 — 有限体
 
@@ -42,10 +42,8 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1.1 導入・Frobenius 補題・定理1(i) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 定理1(ii): `F_q` の存在・一意性と `X^q-X` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 定理1(ii): `F_q` の存在・一意性と `X^q-X` | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | 定理1(iii): 位数 `q` の有限体の一意性 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-
-定理1(ii)の Interpretation は Issue #6 で固定済み。Lean は #7、Blueprint / Explanation は #9、mathlib調査は #10 が分離して担当し、全成果物が揃った後にEが統合確認する。
 
 **開始条件:** Phase 0の数学作業に必要な基盤がmainへmergeされていること。達成済み。
 
