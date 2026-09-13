@@ -27,12 +27,13 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ## Current handoff
 
-- State: monitoring / ready for scheduler coordination
-- Active A mathematical Issue: none
-- Active A mathematical branch / PR: none
-- Latest completed A sync: #106 / PR #107, merge `f3d0f5b22b1e306720d6c313185f98692110f3a8`
-- Previous completed A sync: #95 / PR #101, merge `9d232f844e4de88967483e82bd783a4b6b155345`
-- Older completed A sync: #81 / PR #90, merge `6c39201ba0fd7fa2659d8fb499be836a20b5dfe5`
+- State: active scheduler coordination
+- Active A Issue: #113
+- Canonical A branch: `design/sync-post-legendre-113`
+- Current A PR: #117
+- Latest A housekeeping: #109 / PR #110, merge `272885ad850d12fa1ee06d60c75f101bae54413c`
+- Latest completed A central sync: #106 / PR #107, merge `f3d0f5b22b1e306720d6c313185f98692110f3a8`
+- Previous completed A central sync: #95 / PR #101, merge `9d232f844e4de88967483e82bd783a4b6b155345`
 
 ### Recent DONE checkpoints
 
@@ -44,52 +45,67 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - #55 / PR #82 — §3.1 Theorem 4 quadratic elements
 - #74 / PR #94 — Chevalley Corollary 2
 - #71 / PR #86 — Chapter 2 §1.1 project-local `Z_p`
+- #56 / PR #98 — §3.2 Legendre symbol / Theorem 5(i)–(iii), merge `7aa158673bf0df1c62e977b508297d2e6b88610a`
+- #99 / PR #103 — Chapter 2 §2.1 Proposition 5, merge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930`
 
 ### Live ownership
 
-- B: #78 `C1-Supp-GaussLemma`; #96 `C2S1.3-QpField`; #99 `C2S2.1-RootLiftingExistence` / PR #103; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting` preflight complete.
-- C: #56 `S3.2-LegendreSymbol` / PR #98; #64 `S3.3-QuadraticReciprocity`.
-- D: #72 `C2S1.2-ZpProperties` / PR #92; #89 `C2S1.2-ZpMetric` preflight complete.
+- B: #78 `C1-Supp-GaussLemma`; #96 `C2S1.3-QpField`; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting`; #104 `C2S2.2-HenselQuadraticOdd`.
+- C: #64 `S3.3-QuadraticReciprocity` / PR #114.
+- D: #72 `C2S1.2-ZpProperties` / PR #92; #89 `C2S1.2-ZpMetric`.
 - E: no mathematical ownership at latest check.
-- Unclaimed: #104 `C2S2.2-HenselQuadraticOdd`, #105 `C2S2.2-HenselQuadraticTwo`, #108 `C2S3.1-UnitFiltration`.
+- Unclaimed: #105 `C2S2.2-HenselQuadraticTwo`; #108 `C2S3.1-UnitFiltration`; #112 `C2S3.2-PrincipalUnits`.
 
 ### Dependency / integration state
 
-- #56/C retains exact frozen `STACK-READY` head `45bde2eff8e75e901282151760b0c5dfc41a869a` **for #64 only**. The moving live branch repaired the later Theorem 5(iii) coercion/normalization work; latest checked head `e681e2155e34022a181f2b7eafbaa55886bda9a0` passed CI #232. The old downstream freeze remains green and unchanged. Independent Blueprint exposition/linkage and final latest-main integration remain before #56 is DONE.
-- #64/C is legally STACKABLE from exactly `45bde2ef…`. Later #56 declarations must not leak into #64 unless C publishes a replacement freeze or #56 merges.
-- #78/B needs a smaller subset already present in the #64 freeze, but the owner promise explicitly scopes itself to #64. #78 remains WAITING until a separate exact promise appears or #56 merges.
-- #72/D live head `81bc0f88d6960611264194cf7923118f015f262a` passed CI #219. It proves projection-kernel / `p^(n+1)` divisibility and unit criteria, but does not yet expose the full `p^n * unit` decomposition, project valuation, or domain conclusion. Therefore #89/#96 and #102 proof implementation remain gated.
-- #89/D preflight remains complete and waits for a stable #72 valuation + divisibility/topology bridge.
-- #96/B preflight remains complete; algebraic `Q_p` waits for #72 domain/decomposition/valuation, while Proposition 4 additionally needs a minimal #89 topology/density subset.
-- #99/B draft PR #103 current checked head `fe1a173e9665595b584d7f8235c5122b4f0cc373` passed CI #226. Proposition 5 and Blueprint work are green in isolated form, and B explicitly froze a downstream-only subset for #100. The temporary top-level import hook remains until #98 frees `Formalization.lean`; final integration then moves imports into the normal aggregators and reruns full CI.
-- #100/B may use the frozen #99 downstream subset for interface/preflight work, but its full Proposition 6 proof still needs #72 primitive/unit and #96 `Q_p` scaling.
-- #102/B completed source/API preflight. It fixed the source-shaped one-step Taylor proof plan, exact #72 congruence/decomposition contract, and minimal #89 completeness contract. The canonical branch is intentionally proof-code-clean while those interfaces are unavailable.
-- #104/#105 remain the two source quadratic Hensel corollaries, preflight-safe and proof-dependent on #102 plus #72.
-- #108 is the next source-adjacent Chapter 2 §3.1 unit-filtration / Proposition 7 preflight. Core work depends on #71 plus a stable #72 units/divisibility interface; only the final roots-of-unity corollary phrased inside project `Q_p` needs #96.
+- #56 is DONE on main. Its former #64-only frozen stack head is no longer the gate for new work.
+- #64/C is implementing the source-shaped §3.3 route in draft PR #114. The canonical branch has resynced to merged §3.2 and now contains primitive-root/additive-character/Gauss-sum groundwork. #103 has since merged, so the temporary top-level compile hook described by #114 is no longer needed; C has been routed to normal `Formalization.lean` integration after latest-main resync.
+- #78/B preflight is complete and #56 merge removes its old WAITING reason. Its canonical branch is still based far before §3.2 at the latest check, so it must resync latest main before implementation.
+- #72/D exact head `c43d7f09c57a01418663965fd070c69ee16a73b6` passed CI #261. It provides projection/kernel, unit and power-divisibility bridges, unique `p^n * unit` decomposition, `serrePadicIntAddValuation` with multiplication/ultrametric laws, the domain instance, and independent Blueprint exposition.
+- D explicitly published `STACK-READY` from `c43d7f09…` **for #89 only**. A must not silently reuse that promise for #96/#102/#100/#108.
+- #89/D canonical branch already points exactly at the frozen `c43d7f09…`; Proposition 3 proof work is legally STACKABLE. A routed the gate-open transition.
+- #96/B remains proof-gated until #72 publishes a #96-scoped stable domain/decomposition/valuation subset or merges. Proposition 4 additionally needs minimal #89 topology/density.
+- #99/B is DONE on main. Its final head `1a86c84e…` passed CI #260 with normal Formalization/Blueprint integration; the earlier #100 downstream interface remains stable.
+- #100/B may consume #99 now without stacking. Full proof still needs #72 primitive/unit and #96 `Q_p` scaling.
+- #102/B completed source/API preflight. It needs more than the #89-scoped #72 freeze: the source congruence/decomposition interface plus a compatible completeness result from #89.
+- #104/B completed odd-prime quadratic-lifting preflight. It remains proof-code-clean until #102 is DONE/STACK-READY plus the minimal #72 primitive/unit/congruence subset.
+- #105 remains the dyadic Hensel corollary unclaimed preflight.
+- #108 is the Chapter 2 §3.1 unit-filtration / Proposition 7 preflight. Core work waits for an explicit stable #72 unit/divisibility subset; only the final roots-of-unity corollary phrased inside project `Q_p` needs #96.
+- #112 is the source-adjacent §3.2 principal-unit / Proposition 8 preflight. Core work depends on #108/#72; the final project `Q_p^×` decomposition statement also needs #96.
 
 ### Shared-hotspot coordination
 
-1. #98 / C keeps the next normal `Formalization.lean` integration slot now that its latest proof head is green; Blueprint/final §3.2 work and latest-main verification remain.
-2. #103 / B is isolated-CI green; after #98 frees the shared root, B should resync latest main, move `RootExistence` into the normal Formalization/Blueprint aggregators, remove the temporary top-level hook, and re-run full CI before merge.
-3. #92 / D may continue isolated algebraic proof work, but final Blueprint/root linkage should wait until its theorem interface is stable.
+1. #103 / B is DONE and its shared-root slot is clear.
+2. #114 / C is the next active normal `Formalization.lean` integration candidate. C should remove its temporary top-level hook before final merge.
+3. #92 / D may continue isolated algebraic work and publish stable downstream subsets, but final root/Blueprint integration should not race #114.
+
+A #113 / PR #117 owns only:
+
+- `docs/WORK_QUEUE.md`
+- `docs/LANE_STATUS.md`
+- this file
+- `FORMALIZATION_PROGRESS.md`
+
+No worker mathematical file is edited.
 
 ### Queue health
 
 Unclaimed safe capacity:
 
-- #104 `C2S2.2-HenselQuadraticOdd` — PREFLIGHT; source Corollary 2, proof waits #102/#72.
-- #105 `C2S2.2-HenselQuadraticTwo` — PREFLIGHT; source Corollary 3, proof waits #102/#72.
-- #108 `C2S3.1-UnitFiltration` — PREFLIGHT; Proposition 7/core unit filtration waits stable #72, final `Q_p` corollary waits #96.
+- #105 `C2S2.2-HenselQuadraticTwo` — PREFLIGHT; proof waits #102/#72.
+- #108 `C2S3.1-UnitFiltration` — PREFLIGHT; core waits an explicit #72 unit/divisibility subset, final `Q_p` corollary waits #96.
+- #112 `C2S3.2-PrincipalUnits` — PREFLIGHT; core waits #108/#72, final `Q_p^×` theorem waits #96.
 
-Owned executable/near-executable work includes #56/#64/#72/#99. Owned preflight/waiting work includes #100/#102; dependency-waiting but fully preflighted work also includes #78/#89/#96. This preserves multiple safe lanes without creating unrelated busywork.
+Owned executable/near-executable work includes #64/#78/#72 and stackable #89. Owned preflight/waiting work includes #100/#102/#104/#96. The pool therefore retains several useful paths without speculative work.
 
 ### Next A actions
 
-1. monitor #98 Blueprint/final integration; once it clears `Formalization.lean`, route #103 to normal root integration from its green isolated head;
-2. monitor #72 for the first genuinely stable valuation/decomposition subset before releasing #89/#96 and #102 proof work;
-3. monitor #64's exact frozen stack and #56 publishing a separate #78 freeze or merging;
-4. monitor claims of #104/#105/#108 and refill only when safe capacity thins again;
-5. do not create speculative implementation work merely to keep a lane busy.
+1. land #113 / PR #117 after latest-main recheck, exact four-file self-review, and latest-head CI;
+2. monitor #114 normal-root integration now #103 is DONE;
+3. monitor #72 for any additional explicit downstream freeze(s) before releasing #96/#102/#100/#108;
+4. monitor #89 implementation from exact `c43d7f09…` and #78 latest-main resync;
+5. monitor claims of #105/#108/#112 and refill only when safe capacity thins again;
+6. do not create speculative implementation work merely to keep a lane busy.
 
 ## Scheduler health target
 
