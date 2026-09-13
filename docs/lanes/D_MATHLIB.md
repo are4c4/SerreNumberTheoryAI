@@ -1,114 +1,45 @@
-# D lane — Mathlib Research
+# D lane — End-to-end Formalizer
 
 ## Mission
 
-assigned targetに必要なmathlib APIを調査し、使える一般定理・避けるべきnear-target theorem・型や仮定上の注意をB/Aへ渡す。原則として完成formalizationを実装しない。
+Dは固定のmathlib research専任ではありません。`docs/WORK_QUEUE.md` から安全なwork itemをatomic claimし、そのitemをsource interpretationからmathlib調査・Lean・Blueprint・CI・mergeまでend-to-endで進めるformalizer workerです。
 
 ## Startup
 
 1. `AGENTS.md`
 2. `docs/AI_WORKFLOW.md`
-3. `docs/LANE_STATUS.md`
-4. このファイル
-5. assigned focused Issue / latest main
+3. `docs/WORK_QUEUE.md`
+4. `docs/LANE_STATUS.md`
+5. このファイル
+6. `FORMALIZATION_PROGRESS.md`
+7. live branch / Issue / PR / CI / latest main
+8. 対象のFormalization / Blueprint
 
-## Owned work
+## Worker loop
 
-- theorem / definition search
-- API signature確認
-- minimal experiments for elaboration / coercion / namespace
-- strong near-target theoremの識別
-- B向けの候補一覧と注意点
+- 自分のactive canonical branch / PRがあれば最優先で復元する。
+- active workがCI待ち・upstream待ち・item固有blockerならqueueを再走査する。
+- `READY` / eligible `STACKABLE` / `PREFLIGHT` をcanonical branch作成でclaimする。
+- source / dependency / mathlib / statementを確認する。
+- 安全ならLean + Blueprint + independent exposition + verificationを同じwork itemで進める。
+- PR作成やCI pendingで停止せず、in-flight上限の範囲でwork stealingする。
+- blockerはwork itemに記録し、別の安全なworkへ移る。
 
-## Normally do not own
+## Historical note
 
-- target theoremの完成proof
-- Blueprint prose
-- roadmap / ownership決定
-- CI infrastructure
-
-## Research output format
-
-Issueコメントまたはこのhandoffに次を残す。
-
-- searched concepts / namespaces
-- candidate declarations and exact roles
-- assumptions / coercions / typeclass requirements
-- whether a candidate is too strong / near-target
-- recommended path for B
-- unresolved questions
-
-探索用コードをcommitする場合は、再利用価値がないものを完成PRに残さない。
+このファイル名は旧「D = Mathlib Research」時代との互換性のため残します。過去のresearch summaryはGitHub history / completed Issueに残っており、現在はB/C/D/Eに専門分業の差はありません。
 
 ## Current handoff
 
-- Focused Issue: none
-- Parent: #2 Phase 1 finite fields
-- Last completed target: #10 — mathlib research for `S1.1.Theorem1(ii)`
-- Semantic contract: #6
-- Completed PR: #24 (merged)
-- Completed: pinned mathlib `v4.32.0` API survey; detailed findings are in Issue #10 and the research summary below; B #7 consumed the handoff and PR #25 is now merged
-- Next: remain advisory/idle while E #36 performs cross-layer integration; resume only for a concrete D-focused research request or an E-routed API blocker
+- State: ready worker
+- Active work: none
+- Active branch / PR: none
+- Last completed historical work: `S1.1.Theorem1(ii)` mathlib research (#10 / PR #24); target全体もmain上でintegration complete
+- New workflow infrastructure: #47 / `infra/continuous-formalizer-queue-47` がmerge後に有効
+- Highest-priority seeded implementation item: `S1.1-T1iii` (`work/s1-1-t1iii`)
+- If that branch is already claimed: scan the next executable queue item rather than idle
 - Blockers: none
-- Cross-lane state: B #7 / PR #25 is completed and merged; C #9 / PR #18 is merged; E #36 is the active owner for Theorem 1(ii) integration
-- Frontier: do not claim E integration work and do not advance to Theorem 1(iii) until the current slice is integrated or A explicitly changes the dependency graph
-- Shared hotspots: none
-- Independence: human `are4c4/SerreNumberTheoryBlueprint` mathematical content was not inspected or used
-
-## S1.1 Theorem 1(ii) — research summary
-
-Recommended route for B:
-
-1. Construct the subfield with carrier `{x : Ω | x ^ (p ^ f) = x}` directly.
-2. Use characteristic-`p` power identities to prove closure.
-3. Let `g = X ^ (p ^ f) - X`; identify the carrier with `g.rootSet Ω`.
-4. Prove `g` separable by the elementary derivative calculation `g' = -1`.
-5. Use `[IsAlgClosed Ω]` to split `g` and `Polynomial.card_rootSet_eq_natDegree` to count exactly `p ^ f` distinct roots.
-6. For uniqueness, use the general finite identity `FiniteField.pow_card` on any competing finite subfield, obtain inclusion in the fixed-point subfield, then conclude equality from inclusion plus equal finite cardinality.
-
-### Main acceptable APIs
-
-- `IsAlgClosed.splits`
-- `Polynomial.mem_rootSet_of_ne`
-- `Polynomial.Separable` / `Polynomial.separable_def`
-- `Polynomial.card_rootSet_eq_natDegree`
-- `Polynomial.natDegree_X_pow`
-- `Polynomial.natDegree_sub_eq_left_of_natDegree_lt`
-- `add_pow_char_pow`, `sub_pow_char_pow`, `neg_one_pow_char_pow`
-- `mul_pow`, `inv_pow`
-- `CharP.cast_eq_zero_iff`
-- `dvd_pow_self`
-- `FiniteField.pow_card` — acceptable as the general finite-group power identity for the uniqueness inclusion step
-- `Nat.card_pos_iff`, `Fintype.ofFinite`, `Nat.card_eq_fintype_card`
-- `Set.Finite.eq_of_subset_of_card_le` for the final finite-set equality pattern
-
-### Prefer local/general lemmas over these conveniences
-
-- `galois_poly_separable` is logically below the target but lives in `Mathlib/FieldTheory/Finite/GaloisField.lean`, which also exposes many near-target finite-field constructions; prefer a local derivative proof.
-- `FiniteField.X_pow_card_pow_sub_X_natDegree_eq` / `_ne_zero` are unnecessary finite-field-flavored conveniences; generic polynomial degree lemmas are clearer.
-- `FixedPoints.subfield` would require group-action/Galois machinery and is unnecessary for the fixed set `{x | x^(p^f)=x}`.
-
-### Near-target results not to use as completion arguments
-
-The following are too strong or substantially at/beyond the target boundary under `AGENTS.md`:
-
-- `GaloisField p n`
-- `GaloisField.card`
-- `FiniteField.isSplittingField_of_card_eq`
-- `FiniteField.isSplittingField_of_nat_card_eq`
-- `FiniteField.algEquivGaloisFieldOfFintype`
-- `FiniteField.algEquivGaloisField`
-- `FiniteField.algEquivOfCardEq`
-- `FiniteField.ringEquivOfCardEq`
-
-`FiniteField.roots_X_pow_card_sub_X` is also stronger and more specialized than needed for the construction; prefer the generic root-set route above.
-
-### Implementation cautions for B
-
-- `Polynomial.card_rootSet_eq_natDegree` expects splitting of `p.map (algebraMap F K)`; for `F = K = Ω`, a `simpa` across the self-algebra map may be required.
-- Applying `FiniteField.pow_card` to a competitor `Subfield Ω` requires installing `Finite`/`Fintype` on its subtype from the cardinality hypothesis and managing subtype/coercion rewriting back into `Ω`.
-- These are elaboration/coercion details only; no mathematical blocker was found.
 
 ## Short resume prompt
 
-`Dレーンとして作業を続けて。最新main、Issue/PR、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、D_MATHLIB.mdを確認し、割り当てられたtargetのmathlib API調査だけを進めて。完成proofを奪わず、候補の強さ・仮定・near-target判定をBへhandoffして。`
+`Dレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、D_MATHLIB.md、FORMALIZATION_PROGRESS.mdを確認して。Dはend-to-end formalizerなのでmathlib調査だけで待機せず、active workを復元するかcanonical branch lockで最高priorityの実行可能workをclaimし、source解釈・mathlib調査・Lean・Blueprint・CIまで進めて。PR作成やCI pendingで止まらず、実行時間が残る限りwork stealingして。`

@@ -1,6 +1,6 @@
 # FORMALIZATION_PROGRESS.md
 
-このファイルはAI自律形式化の数学的進捗に関する source of truth です。チャット別の稼働状況・ownershipは `docs/LANE_STATUS.md` と `docs/lanes/*.md` で管理します。
+このファイルはAI自律形式化の**数学的進捗**に関する source of truth です。実行可能workとdependencyは `docs/WORK_QUEUE.md`、worker稼働状況は `docs/LANE_STATUS.md` とlive GitHub stateで管理します。
 
 ## Status legend
 
@@ -18,7 +18,7 @@
 - Lean proof
 - CI / policy checks
 
-B/C/D/Eが成果物単位で並列作業することはできますが、上の全項目が揃うまでslice全体をcompleteにはしません。
+B/C/D/Eは現在end-to-end formalizer workerです。通常は1つのworkerが1 work itemについて上記layerをまとめて完成させます。大きすぎるtargetは、職種別ではなく**数学的dependencyで安全に分けられるsub-slice**へ分割します。
 
 ## Phase 0 — Infrastructure
 
@@ -32,8 +32,9 @@ B/C/D/Eが成果物単位で並列作業することはできますが、上の�
 | CI build + policy checks | ✅ |
 | Issue / PR templates | ✅ |
 | Parallel lane coordination | ✅ |
+| Continuous worker queue / work stealing / stacked-branch protocol | 🚧 |
 
-Parallel lane coordination was completed by Issue #4 / PR #5. Post-merge lane-state cleanup is tracked separately by E and does not reopen the infrastructure item.
+Role-specialized lane coordination was introduced by Issue #4 / PR #5. Issue #47 replaces the specialized B/C/D/E pipeline with a scheduler + end-to-end worker pool while preserving the same mathematical safety rules.
 
 ## Phase 1 — 有限体
 
@@ -57,7 +58,7 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | 有限体の乗法群に関する対象節 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件: Phase 1の必要な前提がmain上で安定していること。
+開始条件: Phase 1の**必要な前提**が安定していること。どのPhase 1結果が実際に必要かは `S1.2-MultGroup` preflightで明示し、単なるsource順だけをdependencyとして仮定しない。
 
 ## Phase 3 — 有限体上のべき乗和
 
@@ -65,7 +66,7 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | べき乗和の定義と基本補題 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件: Phase 2の必要な前提がmain上で安定していること。
+開始条件: Phase 2の必要な前提が `DONE` またはstacking可能なstable interfaceになっていること。exact dependencyは `S2.1-PowerSums` preflightで記録する。
 
 ## Phase 4 — Chevalley の定理周辺
 
@@ -74,15 +75,18 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | 補助多項式・必要な中間結果 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Chevalleyの対象定理 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件: Phase 3の必要な前提がmain上で安定していること。
+開始条件: Phase 3の必要な前提が `DONE` またはstacking可能なstable interfaceになっていること。exact dependencyはpreflightで明示する。
 
-## 並列運用ルール
+## Continuous parallelization rules
 
-- globalにactive sliceを1つへ制限しない。代わりに、**1 deliverable = 1 active owner** を守る。
-- 各laneは原則1つのfocused Issueだけをactiveにする。BをB1/B2へ明示分割した場合は各sub-laneごとに1つまで。
-- 同じ数学的targetについてBのLeanとCのBlueprintを並列化してよいが、Interpretationが安定していることを前提とする。
-- 新しいdeliverableを始める前にopen PR / Issue / `docs/LANE_STATUS.md`との重複を確認する。
-- statementが曖昧な場合は進捗を⛔にし、`AGENTS.md` の停止条件に従う。
-- Lean proofのみ完成していても、Explanation / Blueprintが未完成ならslice全体を完了扱いにしない。
-- B/Cなどlane PRのmerge後、該当列だけを更新する。全列が揃った段階でEまたはAがcross-layer整合を確認する。
-- 主要な方針変更はこのファイルだけでなく `AGENTS.md` / `docs/AI_WORKFLOW.md` / READMEにも反映する。
+- globalにactive sliceを1つへ制限しない。ただし **1 work item = 1 active owner** を守る。
+- B/C/D/Eは固定専門レーンではなくend-to-end worker pool。
+- `docs/WORK_QUEUE.md` のactual dependency graphに従い、source順だけで並列化可否を決めない。
+- work claimはcanonical branch作成をatomic lockとして行う。
+- PR作成、CI pending、1 work item完了、1 item固有blockerはworker chatの停止条件ではない。
+- workerは実行時間が残る限り `READY` / eligible `STACKABLE` / `PREFLIGHT` をwork stealingする。
+- upstream未mergeのdownstream実装は、upstreamが `STACK-READY` とstatement / interface / head SHAを固定した場合だけ許可する。
+- 1 workerの未merge実装PRは原則2本まで。
+- blockerはそのitemだけを止め、別の安全なworkがあればworkerは継続する。
+- target完了はInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIが揃ってから記録する。
+- 主要なworkflow変更は `AGENTS.md` / `docs/AI_WORKFLOW.md` / `docs/WORK_QUEUE.md` / READMEにも反映する。

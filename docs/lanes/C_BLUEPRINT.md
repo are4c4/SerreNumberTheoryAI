@@ -1,63 +1,45 @@
-# C lane — Blueprint / Exposition
+# C lane — End-to-end Formalizer
 
 ## Mission
 
-確定済みの数学的targetについて、独立した自然言語説明、Blueprint node、依存関係、Lean declarationとの対応を整備する。
+Cは固定のBlueprint専任ではありません。`docs/WORK_QUEUE.md` から安全なwork itemをatomic claimし、そのitemをsource interpretationからmathlib調査・Lean・Blueprint・CI・mergeまでend-to-endで進めるformalizer workerです。
 
 ## Startup
 
 1. `AGENTS.md`
 2. `docs/AI_WORKFLOW.md`
-3. `docs/LANE_STATUS.md`
-4. このファイル
-5. `FORMALIZATION_PROGRESS.md`
-6. assigned focused Issue / open PR / CI / latest main
-7. relevant files under `SerreNumberTheoryAI/Blueprint/**`
+3. `docs/WORK_QUEUE.md`
+4. `docs/LANE_STATUS.md`
+5. このファイル
+6. `FORMALIZATION_PROGRESS.md`
+7. live branch / Issue / PR / CI / latest main
+8. 対象のFormalization / Blueprint
 
-## Owned work
+## Worker loop
 
-- independent exposition
-- Blueprint ids / nodes
-- `uses :=` dependencies
-- `lean :=` linkage
-- proof explanation at the mathematical-idea level
+- 自分のactive canonical branch / PRがあれば最優先で復元する。
+- active workがCI待ち・upstream待ち・item固有blockerならqueueを再走査する。
+- `READY` / eligible `STACKABLE` / `PREFLIGHT` をcanonical branch作成でclaimする。
+- source / dependency / mathlib / statementを確認する。
+- 安全ならLean + Blueprint + independent exposition + verificationを同じwork itemで進める。
+- PR作成やCI pendingで停止せず、in-flight上限の範囲でwork stealingする。
+- blockerはwork itemに記録し、別の安全なworkへ移る。
 
-## Normally do not own
+## Historical note
 
-- Lean proof implementation
-- mathlib exploration code
-- global roadmap
-- CI infrastructure
-
-## Rules specific to C
-
-- 書籍本文の翻訳・逐語的言い換えを作らない。
-- statement interpretationが未確定ならAへ戻す。
-- BのLean declaration名が未確定の場合、仮の名前を勝手に固定せずcross-lane dependencyとして記録する。
-- Lean proofと自然言語proofの戦略が異なる場合は差異を明示する。
-- B所有のformalization filesを編集しない。
+このファイル名は旧「C = Blueprint / Exposition」時代との互換性のため残します。現在はB/C/D/Eに専門分業の差はありません。
 
 ## Current handoff
 
-- Focused Issue: none
-- Parent: #2 Phase 1 finite fields
-- Last completed target: `S1.1.Theorem1(ii)`
-- Semantic contract: #6
-- Completed on main: C deliverable #9 via PR #18
-- Completed artifacts:
-  - independent explanation of the fixed-point set `{x : Ω | x^q = x}`
-  - Blueprint definition id `q_power_fixed_points`
-  - subfield-closure node `q_power_fixed_points_form_subfield`
-  - cardinality node `q_power_fixed_points_cardinality`
-  - main theorem node `finite_subfield_cardinality_q_unique`
-  - proof explanation for existence, exact cardinality, uniqueness inside the fixed ambient algebraic closure, and root-set characterization
-  - repository policy check, `lake build`, and `lake exe vbp build` passed before merge
-- Branch / PR: none active
-- Shared hotspots touched: none
-- Next: idle in C; do not create a new mathematical target without an assigned focused Issue. Final `lean :=` linkage for Theorem 1(ii) remains a cross-layer integration task after B #7 stabilizes declaration names and should be coordinated by E/A.
+- State: ready worker
+- Active work: none
+- Active branch / PR: none
+- Last completed historical work: `S1.1.Theorem1(ii)` Blueprint / exposition (#9 / PR #18); target全体もmain上でintegration complete
+- New workflow infrastructure: #47 / `infra/continuous-formalizer-queue-47` がmerge後に有効
+- Highest-priority seeded implementation item: `S1.1-T1iii` (`work/s1-1-t1iii`)
+- If that branch is already claimed: scan the next executable queue item rather than idle
 - Blockers: none
-- Cross-lane dependency: B #7 final declaration names and any material Lean proof-strategy deviation that integration should record
 
 ## Short resume prompt
 
-`Cレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認して。割り当て済みの新しいC focused Issueがなければ新しい仕事を作らずidleにして。Theorem 1(ii)の最終 lean linkage はB #7の安定後にE/Aへrouteして。`
+`Cレーンとして作業を続けて。最新mainとlive branch/Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、WORK_QUEUE.md、LANE_STATUS.md、C_BLUEPRINT.md、FORMALIZATION_PROGRESS.mdを確認して。Cはend-to-end formalizerなので固定Blueprint担当として待機せず、active workを復元するかcanonical branch lockで最高priorityの実行可能workをclaimし、source解釈・mathlib調査・Lean・Blueprint・CIまで進めて。PR作成やCI pendingで止まらず、実行時間が残る限りwork stealingして。`

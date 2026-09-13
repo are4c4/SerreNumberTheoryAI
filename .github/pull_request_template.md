@@ -1,9 +1,12 @@
-## Lane / ownership
+## Worker / ownership
 
-- Lane: <!-- A / B / C / D / E / infra -->
+- Worker lane: <!-- B / C / D / E / A-infra -->
+- Work ID: <!-- e.g. S1.1-T1iii or infra -->
 - Focused Issue: <!-- #... -->
-- Target id: <!-- e.g. S1.1.Theorem1(ii), or infra -->
-- Owned deliverable: <!-- design / Lean / Blueprint / research / integration -->
+- Canonical branch: <!-- work/... or infra/... -->
+- Base mode: <!-- main / stacked -->
+- Stack base PR / SHA: <!-- N/A for main; otherwise exact upstream PR + head SHA -->
+- Dependencies: <!-- DONE / STACK-READY / none; identify mathematical prerequisites -->
 - Shared hotspots touched: <!-- none, or list and explain conflict check -->
 
 ## Target
@@ -12,7 +15,11 @@
 
 ## Mathematical statement
 
-<!-- 数学PRでは何を形式化したかを独立した文章で説明する。infra PRなら N/A。 -->
+<!-- 数学PRでは何を形式化したかを独立した文章で説明する。statement boundaryとassumptionsを明確にする。infra PRなら N/A。 -->
+
+## Dependency audit
+
+<!-- このworkが実際に使う上流resultを記載する。source順だけをdependencyとみなさない。stackedならSTACK-READY interfaceとの対応を書く。 -->
 
 ## Proof idea
 
@@ -20,7 +27,11 @@
 
 ## Lean structure
 
-<!-- 追加・変更した主要 Definition / Lemma / Proposition / Theorem。Leanを触らないlaneなら N/A。 -->
+<!-- 追加・変更した主要 Definition / Lemma / Proposition / Theorem。 -->
+
+## Blueprint / exposition
+
+<!-- 追加したBlueprint node、uses、lean linkage、独立した説明。数学PRでは原則N/Aにしない。 -->
 
 ## Mathlib dependencies
 
@@ -34,12 +45,18 @@
 
 <!-- Lean固有の補題分割、別証明、追加した中間ステップ等。差異がなければその旨を記載する。 -->
 
-## Cross-lane coordination
+## Continuous-worker coordination
 
-- [ ] 同じdeliverableを所有するactive PRがないことを確認した
-- [ ] dependencyとなる他laneのPR / Issueを記載した、または dependencyなし
-- [ ] 他lane所有ファイルを不必要に変更していない
-- [ ] lane handoff / `docs/LANE_STATUS.md` の更新要否を確認した
+- [ ] canonical branch ownershipを取得し、重複active ownerがないことを確認した
+- [ ] dependency gateが `DONE` / eligible `STACK-READY` / dependencyなしのいずれかである
+- [ ] stackedの場合、upstreamの固定head SHAとinterfaceを記録した
+- [ ] 他worker所有branch / shared hotspotを不必要に変更していない
+- [ ] `docs/WORK_QUEUE.md` / `docs/LANE_STATUS.md` / handoffの更新要否を確認した
+- [ ] CI pendingだけを理由にworker chatを停止せず、in-flight上限内で次の安全なworkを検討した
+
+## STACK-READY gate
+
+<!-- downstreamをstack可能にする場合のみ記載。statement / assumptions / downstream-facing Lean interface / exact head SHA を明記する。stackを許可しない場合は `Not STACK-READY`。 -->
 
 ## Source / copyright check
 
@@ -53,9 +70,11 @@
 - [ ] `bash scripts/check_formalization_policy.sh`（該当する場合）
 - [ ] `lake build`（該当する場合）
 - [ ] `lake exe vbp build`（該当する場合）
+- [ ] PR-head CI
 - [ ] `FORMALIZATION_PROGRESS.md` の更新要否を確認した
-- [ ] 担当lane handoffを更新した
+- [ ] queue / lane handoffの更新要否を確認した
+- [ ] stacked workの場合、upstream merge後にlatest main上で再検証した
 
 ## Blockers / merge gate
 
-<!-- `BLOCKED:` 条件、statement上の判断、merge前に必要な別PRがあれば記載する。なければ none。 -->
+<!-- `BLOCKED:` 条件、statement上の判断、merge前に必要なupstream PRがあれば記載する。なければ none。 -->
