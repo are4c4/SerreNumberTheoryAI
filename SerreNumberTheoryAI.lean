@@ -1,2 +1,3 @@
 import SerreNumberTheoryAI.Formalization
+import SerreNumberTheoryAI.Formalization.Chapter01.QuadraticReciprocity
 import SerreNumberTheoryAI.Blueprint
