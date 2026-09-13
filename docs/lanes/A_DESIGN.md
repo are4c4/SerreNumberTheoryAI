@@ -28,14 +28,14 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 ## Current handoff
 
 - State: active scheduler coordination
-- Active A Issue: #81
-- Canonical A branch: `design/sync-live-queue-81-v2`
-- Current A PR: #90
+- Active A Issue: #95
+- Canonical A branch: `design/sync-post-90-live-95`
+- Last completed A sync: #81 / PR #90, merged green as `6c39201ba0fd7fa2659d8fb499be836a20b5dfe5`
 - Superseded stale A PRs: #75, #83（mergeせずclose）
-- Duplicate scheduler/work conflicts cleaned:
+- Duplicate scheduler/work conflicts already cleaned:
   - #84 -> canonical #70 Corollary 1
   - #79 -> canonical #71 p-adic construction
-  - #85 / PR #88 -> canonical #74 / PR #87 Corollary 2
+  - #85 / PR #88 -> canonical #74 Corollary 2
 
 ### Recent DONE checkpoints
 
@@ -48,40 +48,53 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ### Live ownership
 
-- B: #71 `C2S1.1-ZpConstruction`, draft PR #86.
-- C: #74 `S2.2-Chevalley-Cor2` / draft PR #87; #56 `S3.2-LegendreSymbol`; #64 `S3.3-QuadraticReciprocity` preflight.
-- D: #72 `C2S1.2-ZpProperties`.
+- B: #71 `C2S1.1-ZpConstruction`, draft PR #86; #78 `C1-Supp-GaussLemma` preflight complete / WAITING on #56.
+- C: #74 `S2.2-Chevalley-Cor2` / current draft PR #94; #56 `S3.2-LegendreSymbol` / draft PR #93; #64 `S3.3-QuadraticReciprocity` preflight.
+- D: #72 `C2S1.2-ZpProperties` / stacked draft PR #92.
 - E: no mathematical ownership at latest check.
 
 ### Dependency / integration state
 
-- #74/C is the valid first ownership lock for Corollary 2. #70 is DONE, so implementation gate is open. PR #87 predates #82 root-import merge and is nonmergeable; A routed latest-main resync back to C.
-- #55 is DONE, so #56's former STACKABLE state is no longer needed. C's #56 branch had been moved to frozen #55 head; A routed resync to latest main before further proof commits.
+- #74/C is the valid first ownership lock for Corollary 2. Old PR #87 is superseded; current PR #94 is green and mergeable at head `596b6341…`. A #90 advanced main only through central docs, so C should resync #94 to current main and land it before other root-import PRs.
+- #55 is DONE, so #56's former STACKABLE state is gone. C is actively implementing #56 in PR #93. Current head `83d03bc…` has one implementation-local sign/cast Lean goal; A routed the exact CI diagnostic to C. This is not an A-level statement/dependency blocker.
 - #64 remains proof-gated on a smaller future #56 interface: characteristic-independent Legendre sign/value, field-half-power compatibility, multiplicativity, and Theorem 5(ii) at `-1`. Theorem 5(iii) at `2` is not required.
-- #71 is independent of Chapter 1 and B published a green frozen interface at exact head `27a414372c72f5ac749ac7e59da06da3c4c5e86f`, covering the project inverse-limit type, projections/extensionality/surjectivity, integer map, compactness, and projection continuity. #82 has merged, so B's previous root-import hotspot is free.
-- #72 source/API preflight recommends an algebraic slice (Proposition 1–2 + valuation). Its requested #71 interface is now STACK-READY, so D may stack from `27a41437…`; if #71 merges first, use latest main.
+- #78 was claimed by B after the previous central snapshot. B completed source/package/API preflight and determined that the generic Gauss-product argument only needs the minimal #56 sign/half-power layer. The branch remains proof-code-clean and waits on #56 DONE/STACK-READY.
+- #71 remains independent of Chapter 1 and keeps a green frozen downstream interface at exact head `27a414372c72f5ac749ac7e59da06da3c4c5e86f`. Current PR #86 passes policy and `lake build` but fails `vbp build` on a duplicate Chapter-2 Blueprint tag; A routed this local integration defect back to B.
+- #72 has consumed the approved #71 frozen anchor in PR #92. Current head `a6ffdf7a…` is green, so D can continue Proposition 1–2 + valuation without waiting for #71 merge. Final retarget/rebase to main still waits for #71 integration.
 - #89 is the separate Proposition 3 metric/topology/completeness/density PREFLIGHT extracted from #72. Proof waits on #72.
+- #96 is newly seeded from Chapter 2 §1.3: project `Q_p` as fraction field of project `Z_p`, valuation extension, and Proposition 4 local compactness/open compactness/density. Preflight is safe now; algebraic proof waits on #72 and the metric edge to #89 must be minimized by preflight.
 
 ### Queue health
 
 Unclaimed safe capacity:
 
-- #78 `C1-Supp-GaussLemma` — PREFLIGHT; proof waits on minimal #56 interface, not on #64.
 - #89 `C2S1.2-ZpMetric` — PREFLIGHT; proof waits on #72.
+- #96 `C2S1.3-QpField` — PREFLIGHT; algebraic proof waits on #72, metric dependency to #89 to be refined.
 
-Owned executable/stackable work also exists (#74, #56, #71, #72), so the worker pool has parallel capacity without inventing unrelated work.
+Owned executable/stackable work also exists (#74, #56, #71, #72), while #64/#78 retain owned preflight/waiting state. The worker pool therefore has parallel capacity without inventing unrelated work.
 
 ### Shared-hotspot coordination
 
-- A #81 / PR #90 owns only `docs/WORK_QUEUE.md`, `docs/LANE_STATUS.md`, this file, and `FORMALIZATION_PROGRESS.md`.
-- C PR #76 is stale docs-only handoff and should be refreshed/superseded by C rather than edited by A.
-- A does not modify worker PR #86/#87 or their mathematical files.
+Current root import order is explicit:
+
+1. #94 / C first: already end-to-end green; resync current main and merge.
+2. #86 / B second among current root `Blueprint.lean` consumers: fix duplicate vbp tag, then rebase after #94 and rerun integrated CI.
+3. #93 / C remains an in-progress proof slice and should not race the root import; keep module work isolated and do final root integration after #94.
+
+A #95 owns only:
+
+- `docs/WORK_QUEUE.md`
+- `docs/LANE_STATUS.md`
+- this file
+
+No `FORMALIZATION_PROGRESS.md` change is needed because no new mathematical slice has merged since #90.
 
 ### Next A actions
 
-1. wait for PR #90 latest-head CI, recheck main/live ownership, and self-merge when green/mergeable;
-2. monitor #74/#56 latest-main resync, #71 merge/interface stability, and #72 stack transition;
-3. monitor claims of #78/#89; refill only when visible unclaimed capacity becomes thin.
+1. finish #95 central live-state sync and merge it after latest-head CI if the three-file scope remains clean;
+2. monitor #94 landing, then ensure #86/#93 rebase instead of racing shared root imports;
+3. monitor #56 for a minimal `STACK-READY` subset that can release both #64 and #78 without waiting on unrelated Theorem 5(iii);
+4. monitor claims of #89/#96 and refill only when unclaimed safe capacity becomes thin.
 
 ## Scheduler health target
 
