@@ -1,2 +1,3 @@
 import SerreNumberTheoryAI.Formalization
+import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 import SerreNumberTheoryAI.Blueprint
