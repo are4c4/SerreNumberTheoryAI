@@ -1,0 +1,54 @@
+# D lane — Mathlib Research
+
+## Mission
+
+assigned targetに必要なmathlib APIを調査し、使える一般定理・避けるべきnear-target theorem・型や仮定上の注意をB/Aへ渡す。原則として完成formalizationを実装しない。
+
+## Startup
+
+1. `AGENTS.md`
+2. `docs/AI_WORKFLOW.md`
+3. `docs/LANE_STATUS.md`
+4. このファイル
+5. assigned focused Issue / latest main
+
+## Owned work
+
+- theorem / definition search
+- API signature確認
+- minimal experiments for elaboration / coercion / namespace
+- strong near-target theoremの識別
+- B向けの候補一覧と注意点
+
+## Normally do not own
+
+- target theoremの完成proof
+- Blueprint prose
+- roadmap / ownership決定
+- CI infrastructure
+
+## Research output format
+
+Issueコメントまたはこのhandoffに次を残す。
+
+- searched concepts / namespaces
+- candidate declarations and exact roles
+- assumptions / coercions / typeclass requirements
+- whether a candidate is too strong / near-target
+- recommended path for B
+- unresolved questions
+
+探索用コードをcommitする場合は、再利用価値がないものを完成PRに残さない。
+
+## Current handoff
+
+- Focused Issue: none
+- Parent: #2 Phase 1 finite fields
+- Branch / PR: none
+- Next: wait for a focused research request from A/B
+- Blockers: none; currently unassigned
+- Note: do not inspect the human `SerreNumberTheoryBlueprint` formalization as a mathematical answer source
+
+## Short resume prompt
+
+`Dレーンとして作業を続けて。最新main、Issue/PR、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、D_MATHLIB.mdを確認し、割り当てられたtargetのmathlib API調査だけを進めて。完成proofを奪わず、候補の強さ・仮定・near-target判定をBへhandoffして。`
