@@ -156,6 +156,72 @@ theorem primitive_eighth_root_add_inv_pow_prime_eq_neg_self
       (α + α⁻¹) ^ p = α ^ p + (α⁻¹) ^ p := hchar
       _ = -(α + α⁻¹) := by rw [inv_pow, hpow]; simp [add_comm]
 
+/-- For `p ≡ 1,7 (mod 8)`, the source half-power Legendre value of `2` is `1`. -/
+theorem legendreValue_two_eq_one_of_mod_eight
+    (hp : p ≠ 2) (hr : p % 8 = 1 ∨ p % 8 = 7) :
+    legendreValue p (2 : ZMod p) = 1 := by
+  obtain ⟨α, hα⟩ := exists_primitive_eighth_root_algClosure p hp
+  let y : AlgebraicClosure (ZMod p) := α + α⁻¹
+  have hy2 : y ^ 2 = (2 : AlgebraicClosure (ZMod p)) := by
+    simpa [y] using primitive_eighth_root_add_inv_sq hα
+  have htwo : (2 : AlgebraicClosure (ZMod p)) ≠ 0 :=
+    CharP.cast_ne_zero_of_ne_of_prime _ Nat.prime_two hp
+  have hy0 : y ≠ 0 := by
+    intro hy
+    apply htwo
+    rw [← hy2, hy]
+    norm_num
+  have hyp : y ^ p = y := by
+    simpa [y] using primitive_eighth_root_add_inv_pow_prime_eq_self p hα hr
+  have hp1 : 1 ≤ p := by
+    exact (Fact.out : p.Prime).two_le.trans' (by norm_num)
+  have hyexp : y ^ (p - 1) = 1 := by
+    apply mul_right_cancel₀ hy0
+    calc
+      y ^ (p - 1) * y = y ^ p := by
+        rw [← pow_succ, Nat.sub_add_cancel hp1]
+      _ = y := hyp
+      _ = 1 * y := by simp
+  have heven : Even (p - 1) := (Fact.out : p.Prime).even_sub_one hp
+  have hhalf : 2 * ((p - 1) / 2) = p - 1 := Nat.two_mul_div_two_of_even heven
+  have hK : (2 : AlgebraicClosure (ZMod p)) ^ ((p - 1) / 2) = 1 := by
+    rw [← hy2, ← pow_mul, hhalf, hyexp]
+  apply (algebraMap (ZMod p) (AlgebraicClosure (ZMod p))).injective
+  simpa [legendreValue] using hK
+
+/-- For `p ≡ 3,5 (mod 8)`, the source half-power Legendre value of `2` is `-1`. -/
+theorem legendreValue_two_eq_neg_one_of_mod_eight
+    (hp : p ≠ 2) (hr : p % 8 = 3 ∨ p % 8 = 5) :
+    legendreValue p (2 : ZMod p) = -1 := by
+  obtain ⟨α, hα⟩ := exists_primitive_eighth_root_algClosure p hp
+  let y : AlgebraicClosure (ZMod p) := α + α⁻¹
+  have hy2 : y ^ 2 = (2 : AlgebraicClosure (ZMod p)) := by
+    simpa [y] using primitive_eighth_root_add_inv_sq hα
+  have htwo : (2 : AlgebraicClosure (ZMod p)) ≠ 0 :=
+    CharP.cast_ne_zero_of_ne_of_prime _ Nat.prime_two hp
+  have hy0 : y ≠ 0 := by
+    intro hy
+    apply htwo
+    rw [← hy2, hy]
+    norm_num
+  have hyp : y ^ p = -y := by
+    simpa [y] using primitive_eighth_root_add_inv_pow_prime_eq_neg_self p hα hr
+  have hp1 : 1 ≤ p := by
+    exact (Fact.out : p.Prime).two_le.trans' (by norm_num)
+  have hyexp : y ^ (p - 1) = -1 := by
+    apply mul_right_cancel₀ hy0
+    calc
+      y ^ (p - 1) * y = y ^ p := by
+        rw [← pow_succ, Nat.sub_add_cancel hp1]
+      _ = -y := hyp
+      _ = (-1) * y := by simp
+  have heven : Even (p - 1) := (Fact.out : p.Prime).even_sub_one hp
+  have hhalf : 2 * ((p - 1) / 2) = p - 1 := Nat.two_mul_div_two_of_even heven
+  have hK : (2 : AlgebraicClosure (ZMod p)) ^ ((p - 1) / 2) = -1 := by
+    rw [← hy2, ← pow_mul, hhalf, hyexp]
+  apply (algebraMap (ZMod p) (AlgebraicClosure (ZMod p))).injective
+  simpa [legendreValue] using hK
+
 end LegendreTwo
 
 end SerreNumberTheoryAI
