@@ -16,6 +16,8 @@ namespace SerreNumberTheoryAI
 
 open CategoryTheory
 
+noncomputable section
+
 section RootExistence
 
 universe u v
@@ -70,8 +72,6 @@ theorem padicApproxCommonZeroSet_antitone
   intro x hx i
   change serrePadicIntProj p n (MvPolynomial.eval x (f i)) = 0
   rw [← serrePadicIntProj_compat p n (MvPolynomial.eval x (f i))]
-  change padicReduction p n
-      (serrePadicIntProj p (n + 1) (MvPolynomial.eval x (f i))) = 0
   rw [show serrePadicIntProj p (n + 1) (MvPolynomial.eval x (f i)) = 0 by
     exact hx i]
   exact map_zero (padicReduction p n)
@@ -108,8 +108,7 @@ theorem padicApproxCommonZeroSet_isClosed
         proj ⁻¹' padicReducedCommonZeroSet p n f := by
     ext x
     constructor
-    · intro hx
-      intro i
+    · intro hx i
       change MvPolynomial.eval (proj x) (padicPolynomialReduction p n (f i)) = 0
       rw [← padicPolynomialReduction_eval p n (f i) x]
       exact hx i
