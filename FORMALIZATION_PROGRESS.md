@@ -58,7 +58,7 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | 有限体の乗法群に関する対象節 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件: Phase 1の**必要な前提**が安定していること。どのPhase 1結果が実際に必要かは `S1.2-MultGroup` preflightで明示し、単なるsource順だけをdependencyとして仮定しない。
+開始条件: A #54 のsource/dependency auditにより、定理1(iii)はこのsource proofの前提ではないと確認した。定理1(ii)までのstable mainから本実装可能であり、live ownerは `docs/LANE_STATUS.md` / canonical branchを参照する。
 
 ## Phase 3 — 有限体上のべき乗和
 
@@ -66,7 +66,7 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | --- | --- | --- | --- | --- | --- | --- |
 | べき乗和の定義と基本補題 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件: Phase 2の必要な前提が `DONE` またはstacking可能なstable interfaceになっていること。exact dependencyは `S2.1-PowerSums` preflightで記録する。
+開始条件: Phase 2の乗法群巡回性が `DONE` またはstacking可能なstable interfaceになっていること。A #54 のsource auditで、§2.1 proofがこの巡回性を明示的に使うdependency edgeを確認済み。
 
 ## Phase 4 — Chevalley の定理周辺
 
@@ -75,7 +75,23 @@ Source start: 日本語版『数論講義』第1部・第1章・§1・1.1、印�
 | 補助多項式・必要な中間結果 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Chevalleyの対象定理 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-開始条件: Phase 3の必要な前提が `DONE` またはstacking可能なstable interfaceになっていること。exact dependencyはpreflightで明示する。
+開始条件: Phase 3のpower-sum interfaceが `DONE` またはstacking可能なstable interfaceになっていること。A #54 のsource auditで、§2.2 proofが単項式和の消滅に§2.1を明示的に使うdependency edgeを確認済み。
+
+## Phase 5 — 平方剰余の相互法則への有限体準備
+
+Source continuation: 第1章・§3。queueではまず3.1と3.2をdependency-awareなpreflight targetとしてseedする。
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| 3.1 `F_q` の平方数 / 定理4 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3.2 Legendre記号 / 定理5 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3.3 平方剰余の相互法則 / 定理6 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+開始条件:
+
+- 3.1: odd-characteristic側は有限体乗法群の巡回性を使うため、`S1.2-MultGroup` の必要interfaceが `DONE` または `STACK-READY` であること。§2.1/§2.2の完了は論理的前提として仮定しない。
+- 3.2: §3.1の平方部分群・quadratic character記述の必要interfaceが安定していること。
+- 3.3: §3.2のLegendre記号interfaceが安定してからqueueへ本格seedする。現時点ではprogress上の将来targetとしてのみ記録する。
 
 ## Continuous parallelization rules
 

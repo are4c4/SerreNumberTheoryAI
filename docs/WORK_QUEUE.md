@@ -85,26 +85,38 @@ preflightの結果、未mergeupstreamへのstackが必要になった場合:
 - preflightで「実は依存しない」と確認できた場合、Issueに根拠を残して本実装へ進めてよい。
 - preflightで新しい依存が判明した場合、Issueとこのqueueを更新し、そのitemだけを `WAITING` / `BLOCKED` にする。
 
-典型例として、後続のべき乗和の議論が有限体の乗法群の結果を使うなら、そのedgeを明示し、乗法群のinterfaceが安定する前にべき乗和のproofを完成させようとしません。
+典型例として、後続のべき乗和の議論が有限体の乗法群の結果を使うなら、そのedgeを明示し、乗法群のinterfaceが安定する前にべき乗和のproofを完成させようとはしません。
 
 ## 6. Current queue
 
-Theorem 1(ii)まではmain上でcross-layer completeです。次の表は、**既存progress文書が保証している範囲だけ**をseedし、未確認の細かいdependencyはpreflightで確定します。
+Theorem 1(ii)まではmain上でcross-layer completeです。2026-09-13のA preflightで、書籍上の実際の証明依存を次のように明示しました。
+
+- `S1.2-MultGroup` は Theorem 1(iii) を必要としない。Theorem 1(ii) の安定した `F_q` modelと一般的な有限群・多項式根数の議論から進められる。
+- `S2.1-PowerSums` は `S1.2-MultGroup` の巡回性を明示的に使う。
+- `S2.2-Chevalley` は `S2.1-PowerSums` の単項式に対する和を明示的に使う。
+- §3.1平方数は §2 系列とは独立に、主として `S1.2-MultGroup` とPhase 1の有限体/Frobenius基盤に依存する。
+- §3.2 Legendre記号は §3.1 の平方部分群・指標の記述を使う。
 
 | Priority | Work ID | Target | State | Required before implementation | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `READY` | Theorem 1(ii) integrated on main ✅ | `work/s1-1-t1iii` | #49 / unclaimed |
-| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 | `PREFLIGHT` | exact Phase 1 prerequisites must be recorded by preflight; do not assume whether T1(iii) is logically needed | `work/s1-2-mult-group` | #50 / unclaimed |
-| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `PREFLIGHT` | identify the exact S1.2 result(s) used; implementation waits for those results to be `DONE` or `STACK-READY` | `work/s2-1-power-sums` | #51 / unclaimed |
-| P3 | `S2.2-Chevalley` | 2.2 Chevalleyの定理周辺 | `PREFLIGHT` | identify exact S2.1 prerequisites; implementation waits for them to be `DONE` or `STACK-READY` | `work/s2-2-chevalley` | #52 / unclaimed |
+| P0 | `S1.1-T1iii` | 1.1 定理1(iii): 位数 `q` の有限体の抽象同型一意性 | `CLAIMED` | Theorem 1(ii) integrated on main ✅; canonical semantic boundary recorded on #49 | `work/s1-1-t1iii` | #49 / C |
+| P1 | `S1.2-MultGroup` | 1.2 有限体の乗法群 / 定理2 | `CLAIMED` | Theorem 1(ii) finite-field model on main ✅; T1(iii) is not a dependency | `work/s1-2-mult-group` | #50 / B |
+| P2 | `S2.1-PowerSums` | 2.1 有限体上のべき乗和 | `CLAIMED` | D owns preflight; full proof waits for `S1.2-MultGroup` `DONE` or `STACK-READY` | `work/s2-1-power-sums` | #51 / D |
+| P3 | `S2.2-Chevalley` | 2.2 Chevalley–Warning theorem vicinity | `CLAIMED` | D owns second preflight; full proof waits for `S2.1-PowerSums` `DONE` or `STACK-READY` | `work/s2-2-chevalley` | #52 / D |
+| P4 | `S3.1-QuadraticElements` | 3.1 `F_q` の平方数 / 定理4 | `PREFLIGHT` | full odd-characteristic proof is expected to need `S1.2-MultGroup`; confirm exact Phase 1 edges before implementation | `work/s3-1-quadratic-elements` | #55 / unclaimed |
+| P5 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `PREFLIGHT` | full proof waits for the required §3.1 interface `DONE` or `STACK-READY`; preflight may proceed now | `work/s3-2-legendre-symbol` | #56 / unclaimed |
 
-Issue #49–#52はqueue seedとして事前作成済みです。ただし**Issueがあること自体はownershipを意味しません**。canonical branchを最初に作成したworkerがownerです。
+Issueが存在するだけではownershipではありません。canonical branchを最初に作成したworkerがownerです。`CLAIMED` 行についてはIssue上の `OWNER:` コメントとlive branchを優先します。
+
+`PREFLIGHT` 行は「本proofを開始してよい」という意味ではありません。dependency gateが未成立なら、source / statement / dependency / mathlib調査だけを進め、結果をIssueへ残して別の実行可能itemへ移ります。
 
 ## 7. Queue refill
 
 Aはqueue healthを監視し、可能なら常時3〜6個程度の `READY` / `PREFLIGHT` / `STACKABLE` 候補を見える状態に保ちます。ただしAは各workの開始許可ゲートではありません。
 
 B/C/D/Eも、現在のworkを進める中で次のsource targetとdependencyが明白になった場合はfocused Issueやqueue更新を提案・実装してよいです。曖昧なstatement、dependency conflict、shared-hotspot conflictだけをAへrouteします。
+
+次のrefill候補は §3.3 平方剰余の相互法則です。§3.2のstatement/interfaceが安定する前にproof dependencyを推測せず、queue depthが減った段階でPREFLIGHT seedを追加します。
 
 ## 8. End-of-run handoff
 
