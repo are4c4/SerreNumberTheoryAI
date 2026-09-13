@@ -39,22 +39,20 @@
 
 ## Current handoff
 
-- Focused Issue: #7
-- Parent: #2 Phase 1 finite fields
-- Target id: `S1.1.Theorem1(ii)`
-- Canonical statement contract: #6 (completed)
-- Branch: `formalize/s1-1-theorem1-ii-7`
-- PR: #25
-- Completed on main: opening notation, Frobenius lemma, Theorem 1(i); C #9 exposition / Blueprint and D #10 mathlib research are also merged.
-- Work in branch: direct fixed-point subfield construction; `X^(p^f)-X` root characterization; local separability/root count; exact `Nat.card = p^f`; uniqueness among subfields of the fixed algebraically closed ambient field; umbrella theorem `serre_theorem1_ii`.
-- Mathlib use: general characteristic-power, polynomial root/splitting/separability, set-cardinality APIs, plus the elementary identity `FiniteField.pow_card`; deliberately not using GaloisField or an existing finite-field existence/uniqueness classification theorem to close the target.
-- Verification: CI run #59 passed repository policy, `lake build`, and `lake exe vbp build` on code head `72b176993001c5039d8c9bfdd384f94f61dfac03`. The subsequent handoff-only run #63 ended with GitHub `startup_failure` before creating any job, so it did not report a code, policy, Lean, or Blueprint failure; this synchronization exists only to obtain a fresh final CI run on the unchanged Lean implementation.
-- Semantic review: A reported no drift from #6; B rechecked that the result is existence and uniqueness as an actual `Subfield Ω`, with carrier `{x | x^(p^f)=x}` and the root set of `X^(p^f)-X`, not Theorem 1(iii)'s abstract uniqueness up to isomorphism.
-- Cross-lane: C-owned Blueprint exposition is not edited here; final `lean :=` linkage and slice-wide progress completion belong to E integration after this PR merges.
-- Next: confirm the fresh final CI for this handoff snapshot, self-review PR #25, then merge if green and no new blocker appears. After merge, B should become idle until A assigns another focused Lean Issue; do not begin Theorem 1(iii) before integration completes.
-- Blockers: none; run #63 was an Actions startup failure without jobs, not a repository failure.
-- Shared hotspots: none edited; `FORMALIZATION_PROGRESS.md`, root import aggregators, `docs/LANE_STATUS.md`, and C-owned Blueprint files remain untouched in this branch.
+- State: idle / completed for `S1.1.Theorem1(ii)`.
+- Focused Issue: #7 — completed and closed.
+- Parent: #2 Phase 1 finite fields.
+- Canonical statement contract: #6 — completed.
+- PR #25 merged to `main` as `867596b045a44d09bce9a449c98bd306f6b14812`.
+- Completed Lean artifact: direct fixed-point subfield construction; `X^(p^f)-X` root characterization; local separability/root count; exact `Nat.card = p^f`; uniqueness among subfields of the fixed algebraically closed ambient field; umbrella theorem `serre_theorem1_ii`.
+- Verification: final PR-head CI run #66 passed repository policy, `lake build`, and `lake exe vbp build` on `042c35bdbddac2cdae01b2fbb046d02ce38b3f07`. Earlier run #63 was a GitHub Actions `startup_failure` before job creation and was superseded by the green run #66.
+- Semantic review: A found no drift from #6. The merged theorem is existence and uniqueness as an actual `Subfield Ω`, with carrier `{x | x^(p^f)=x}` and the root set of `X^(p^f)-X`; Theorem 1(iii)'s abstract uniqueness up to isomorphism remains separate.
+- Mathlib boundary: the proof uses general characteristic-power, polynomial root/splitting/separability, set-cardinality APIs, plus the elementary identity `FiniteField.pow_card`; it does not close the target through GaloisField or an existing finite-field existence/uniqueness classification theorem.
+- Downstream: E owns focused integration Issue #36 for stable `lean :=` Blueprint linkage, integrated build, progress synchronization, and completion of the Theorem 1(ii) slice. B has explicitly notified #36 that PR #25 is merged and declaration names are frozen.
+- Coordination: A Issue #37 owns the stale central `docs/LANE_STATUS.md` repair. B does not edit that shared board here.
+- Next: remain idle until A assigns a new focused Lean Issue. Do not start Theorem 1(iii) while E #36 is unfinished unless the dependency graph is explicitly changed.
+- Blockers: none for the completed B artifact.
 
 ## Short resume prompt
 
-`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認し、#7 / PR #25 の最終CIと自己レビューを確認して、greenかつblockerなしならmergeして。merge後はA/Eの統合handoffを確認し、新しいfocused Lean Issueが割り当てられるまで新規数学targetをclaimしないで。`
+`Bレーンとして作業を続けて。最新main、Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、B_FORMALIZATION.md、FORMALIZATION_PROGRESS.mdを確認して。#7 / PR #25 は完了済みなので、Aから新しいfocused Lean Issueが割り当てられていなければidleで停止し、E #36のintegrationやC所有Blueprintを奪わないで。Theorem 1(iii)はTheorem 1(ii)統合完了前にclaimしないで。`
