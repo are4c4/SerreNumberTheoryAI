@@ -46,24 +46,25 @@ Mainでend-to-end完了:
 - §2.1 power sums
 - §2.2 core Chevalley–Warning + Corollary 1 + Corollary 2
 - §3.1 Theorem 4 (square elements in finite fields)
+- §3.2 Legendre symbol / Theorem 5(i)–(iii)
 - Chapter 2 §1.1 project-local `Z_p` inverse-limit construction
+- Chapter 2 §2.1 Proposition 5
 
 Live dependency graph:
 
-- `S2.2-Chevalley-Cor2` #74 / PR #94 is DONE on main at `f4921a0e6c65ae7521376229ac78bfc95f68fc1c`.
-- `C2S1.1-ZpConstruction` #71 / PR #86 is DONE on main at `2f4366622121ce0d56e76d8e9a41c25c6917da8b`. The old withdrawn stack anchor is irrelevant after merge; merged project declarations are now the stable source for downstream work.
-- `S3.2-LegendreSymbol` #56 is C-owned, draft PR #98. Exact head `45bde2eff8e75e901282151760b0c5dfc41a869a` remains the frozen `STACK-READY` subset **for #64**. The moving live branch has now repaired the later Theorem 5(iii) coercion/normalization work: latest checked head `e681e2155e34022a181f2b7eafbaa55886bda9a0` passed CI #232. Independent Blueprint exposition/linkage and final latest-main integration remain before #56 is DONE. The old #64 freeze stays valid and isolated from later declarations.
-- `S3.3-QuadraticReciprocity` #64 is C-owned and **STACKABLE** from #56 exact head `45bde2ef…`. A already routed implementation resume; no later #56 declarations may be assumed unless C publishes a replacement freeze or #56 merges.
-- `C1-Supp-GaussLemma` #78 is B-owned with preflight complete. It needs only `legendreValue` plus the integer-sign↔field bridge, but C's current frozen promise explicitly names #64 only. #78 remains WAITING until #56 extends an exact STACK-READY promise to #78 or #56 merges.
-- `C2S1.2-ZpProperties` #72 is D-owned, draft PR #92. Live head `81bc0f88d6960611264194cf7923118f015f262a` passed CI #219 and now includes quotient/kernel, `p^(n+1)` divisibility detection, and unit criteria. The source `p^n * unit` decomposition, project valuation, and integral-domain conclusion are still unfinished, so downstream #89/#96 remain gated.
-- `C2S1.2-ZpMetric` #89 is D-owned with Proposition 3 preflight complete. Proof waits for #72 to freeze/merge the valuation and `p^n Z_p` bridge.
-- `C2S1.3-QpField` #96 is B-owned with preflight complete. Algebraic implementation waits for #72 integral-domain/unit-decomposition/valuation interface; Proposition 4 additionally needs the minimal #89 topology/neighborhood/density subset.
-- `C2S2.1-RootLiftingExistence` #99 is B-owned, draft PR #103. Current checked head `fe1a173e9665595b584d7f8235c5122b4f0cc373` passed CI #226 and contains Proposition 5 + Blueprint work in isolated form. It also freezes a downstream-only stable subset for #100. Final normal root integration remains coordinated behind #98 because #103 temporarily imports its module from the top-level root to avoid the C-owned `Formalization.lean` hotspot.
-- `C2S2.1-PrimitiveHomogeneousZeros` #100 is B-owned PREFLIGHT on `work/c2-s2-1-primitive-homogeneous-zeros`. It may consume the explicit #99 downstream subset for preflight/interface work, while full proof still waits for #72 primitive/unit and #96 `Q_p` scaling interfaces.
-- `C2S2.2-HenselLifting` #102 is now B-owned with preflight complete on `work/c2-s2-2-hensel-lifting`. The source-shaped one-step/Taylor API plan and exact #72/#89 downstream contracts are recorded; the branch remains proof-code-clean until #72 supplies valuation/congruence/decomposition and #89 supplies compatible metric/completeness.
-- `C2S2.2-HenselQuadraticOdd` #104 is unclaimed PREFLIGHT. It isolates source Corollary 2: for odd `p`, a primitive mod-`p` solution of a nondegenerate symmetric quadratic equation lifts by the simple-root Hensel criterion. Expected proof dependencies are #102 plus the project primitive/unit interface from #72.
+- `S3.2-LegendreSymbol` #56 / PR #98 is DONE on main at `7aa158673bf0df1c62e977b508297d2e6b88610a`, including Theorem 5(i)–(iii), independent Blueprint exposition/linkage, and green CI #252. The old #64-only frozen stack contract is retired for new work because the upstream is merged.
+- `S3.3-QuadraticReciprocity` #64 is C-owned, draft PR #114. The canonical branch has resynced from the old stack to merged §3.2/main and now contains source-shaped Gauss-sum groundwork. #103 has since merged, so C may replace PR #114's temporary top-level compile hook with the normal `Formalization.lean` aggregator before final integration.
+- `C1-Supp-GaussLemma` #78 is B-owned with preflight complete. #56 is now DONE, so the former freeze-specific WAITING gate is gone. Its old canonical branch must resync to latest main before proof implementation, then it may use the merged project Legendre value/sign bridge.
+- `C2S1.2-ZpProperties` #72 is D-owned, draft PR #92. Exact head `c43d7f09c57a01418663965fd070c69ee16a73b6` passed CI #261 and now includes projection/kernel, source power-divisibility, unit criteria, unique `p^n * unit` decomposition, project additive valuation with multiplicative/ultrametric laws, the domain instance, and independent Blueprint exposition. D explicitly froze this exact interface **for #89 only**; no other downstream proof gate is inferred from that promise.
+- `C2S1.2-ZpMetric` #89 is D-owned and now **STACKABLE** exactly on #72 head `c43d7f09…` (CI #261). Its canonical branch already points to that frozen head at the latest check. Proposition 3 proof implementation may proceed using only the promised valuation/divisibility/domain interface.
+- `C2S1.3-QpField` #96 is B-owned with preflight complete. Algebraic implementation still waits for #72 DONE or an explicit #96-scoped domain/decomposition/valuation freeze; Proposition 4 additionally needs the minimal #89 topology/neighborhood/density subset.
+- `C2S2.1-RootLiftingExistence` #99 / PR #103 is DONE on main at merge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930`; final head `1a86c84e…` passed CI #260 with normal Formalization/Blueprint aggregator integration. Its earlier downstream-only interface for #100 remains stable.
+- `C2S2.1-PrimitiveHomogeneousZeros` #100 is B-owned PREFLIGHT. It may consume the stable #99 finite-level reduction interface; full proof still waits for an explicit #72 primitive/unit subset and #96 `Q_p` scaling interface.
+- `C2S2.2-HenselLifting` #102 is B-owned with preflight complete. Proof still waits for #72's source congruence/decomposition/valuation interface and for a compatible metric/completeness interface from #89; #72's current promise is scoped only to #89.
+- `C2S2.2-HenselQuadraticOdd` #104 is B-owned with preflight complete and proof-code-clean. Proof waits for #102 DONE/STACK-READY and the minimal #72 primitive/unit/congruence interface.
 - `C2S2.2-HenselQuadraticTwo` #105 is unclaimed PREFLIGHT. It isolates source Corollary 3 at `p=2`: primitive mod-8 solution plus a partial derivative nonzero mod 4 lifts, with invertible determinant as a sufficient condition. Expected proof dependencies are #102 plus #72 dyadic valuation/congruence/primitive interfaces.
-- `C2S3.1-UnitFiltration` #108 is unclaimed PREFLIGHT. It starts Chapter 2 §3 from the source unit filtration `U_n`, successive quotients, the finite coprime-order splitting argument, and Proposition 7 `U = V × U_1` with `V ≃ (Z/pZ)ˣ`. Core proof should reuse #71 and wait for the stable #72 unit/divisibility interface; only the final corollary phrased inside project `Q_p` needs #96.
+- `C2S3.1-UnitFiltration` #108 is unclaimed PREFLIGHT. It covers the project unit filtration `U_n`, successive quotients, finite coprime-order splitting, and Proposition 7 `U = V × U_1` with `V ≃ (Z/pZ)ˣ`. Core proof waits for an explicit stable #72 unit/divisibility interface; only the final corollary inside project `Q_p` needs #96.
+- `C2S3.2-PrincipalUnits` #112 is unclaimed PREFLIGHT. It covers the source power-step lemma, Proposition 8 (`U_1 ≃ Z_p` for odd `p`; the dyadic sign/principal-unit split for `p=2`), the compatible finite-quotient inverse-limit argument, and the resulting multiplicative-group theorem. Core proof waits #108/#72; only the final project `Q_p^×` formulation needs #96.
 
 | Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -74,37 +75,38 @@ Live dependency graph:
 | P4 | `S2.2-Chevalley-Cor1` | 系1 | `DONE` | PR #80 merged | `work/s2-2-chevalley-cor1-nontrivial-zero` | #70 complete |
 | P5 | `S2.2-Chevalley-Cor2` | 系2 | `DONE` | PR #94 merged | `work/s2-2-chevalley-cor2-quadratic-form` | #74 complete |
 | P6 | `S3.1-QuadraticElements` | 3.1 平方数 / 定理4 | `DONE` | PR #82 merged | `work/s3-1-quadratic-elements` | #55 complete |
-| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `CLAIMED` | PR #98 head `e681e215…` CI #232 green; finish Blueprint / latest-main integration | `work/s3-2-legendre-symbol` | #56 / C |
-| P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `STACKABLE` | stack exactly on #56 `45bde2ef…`; do not assume later declarations | `work/s3-3-quadratic-reciprocity` | #64 / C |
-| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `WAITING` | preflight complete; wait explicit #78 freeze or #56 merge | `work/c1-supp-gauss-lemma` | #78 / B |
-| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `DONE` | PR #86 merged at `2f436662…` | `work/c2-s1-1-zp-construction` | #71 complete |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `CLAIMED` | PR #92 head `81bc0f88…` CI #219 green; continue decomposition/valuation/domain | `work/c2-s1-2-zp-properties` | #72 / D |
-| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `WAITING` | preflight complete; proof waits #72 valuation interface | `work/c2-s1-2-zp-metric` | #89 / D |
-| P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `WAITING` | preflight complete; algebraic proof waits #72; topology subset waits #89 | `work/c2-s1-3-qp-field` | #96 / B |
-| P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `CLAIMED` | PR #103 head `fe1a173e…` CI #226 green isolated; final normal root integration after #98 hotspot clears | `work/c2-s2-1-root-existence` | #99 / B |
-| P15 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 命題6 | `PREFLIGHT` | B preflight; may consume frozen #99 subset, proof still waits #72/#96 | `work/c2-s2-1-primitive-homogeneous-zeros` | #100 / B |
-| P16 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Cor.1 | `WAITING` | B preflight complete; proof waits #72 valuation/congruence + #89 completeness | `work/c2-s2-2-hensel-lifting` | #102 / B |
-| P17 | `C2S2.2-HenselQuadraticOdd` | §2.2 系2: odd-`p` quadratic lifting | `PREFLIGHT` | preflight safe; proof waits #102/#72 interfaces | `work/c2-s2-2-hensel-quadratic-odd` | #104 / unclaimed |
+| P7 | `S3.2-LegendreSymbol` | 3.2 Legendre記号 / 定理5 | `DONE` | PR #98 merged at `7aa15867…` | `work/s3-2-legendre-symbol` | #56 complete |
+| P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `CLAIMED` | PR #114 active; use merged §3.2 and normal root slot now #103 is DONE | `work/s3-3-quadratic-reciprocity` | #64 / C |
+| P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `CLAIMED` | preflight complete; resync old branch to latest main and implement from merged #56 | `work/c1-supp-gauss-lemma` | #78 / B |
+| P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `DONE` | PR #86 merged | `work/c2-s1-1-zp-construction` | #71 complete |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `CLAIMED` | PR #92 `c43d7f09…` CI #261 green; #89-only freeze published, other consumers still need explicit promise/merge | `work/c2-s1-2-zp-properties` | #72 / D |
+| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `STACKABLE` | exact #72 `c43d7f09…`; proof may proceed within frozen interface | `work/c2-s1-2-zp-metric` | #89 / D |
+| P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `WAITING` | wait #72 explicit #96 subset/merge; topology subset additionally waits #89 | `work/c2-s1-3-qp-field` | #96 / B |
+| P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `DONE` | PR #103 merged at `326c2aec…`, CI #260 green | `work/c2-s2-1-root-existence` | #99 complete |
+| P15 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 命題6 | `PREFLIGHT` | B preflight; #99 stable, full proof still waits #72/#96 | `work/c2-s2-1-primitive-homogeneous-zeros` | #100 / B |
+| P16 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Cor.1 | `WAITING` | B preflight complete; proof waits #72 congruence/decomposition + #89 completeness | `work/c2-s2-2-hensel-lifting` | #102 / B |
+| P17 | `C2S2.2-HenselQuadraticOdd` | §2.2 系2: odd-`p` quadratic lifting | `PREFLIGHT` | B preflight complete; proof waits #102/#72 interfaces | `work/c2-s2-2-hensel-quadratic-odd` | #104 / B |
 | P18 | `C2S2.2-HenselQuadraticTwo` | §2.2 系3: dyadic quadratic lifting | `PREFLIGHT` | preflight safe; proof waits #102/#72 interfaces | `work/c2-s2-2-hensel-quadratic-two` | #105 / unclaimed |
-| P19 | `C2S3.1-UnitFiltration` | §3.1 `Z_p^×` filtration / Proposition 7 | `PREFLIGHT` | preflight safe; core proof waits stable #72 units/divisibility; `Q_p` corollary waits #96 | `work/c2-s3-1-unit-filtration` | #108 / unclaimed |
+| P19 | `C2S3.1-UnitFiltration` | §3.1 `Z_p^×` filtration / Proposition 7 | `PREFLIGHT` | preflight safe; core proof waits explicit stable #72 unit/divisibility subset; `Q_p` corollary waits #96 | `work/c2-s3-1-unit-filtration` | #108 / unclaimed |
+| P20 | `C2S3.2-PrincipalUnits` | §3.2 principal units / Proposition 8 / multiplicative group theorem | `PREFLIGHT` | preflight safe; core proof waits #108/#72, final `Q_p^×` theorem waits #96 | `work/c2-s3-2-principal-units` | #112 / unclaimed |
 
-Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is superseded by merged #94; old Legendre draft #93 is superseded by #98.
+Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is superseded by merged #94; old Legendre draft #93 is superseded by merged #98.
 
 ## 7. Shared-hotspot order
 
-1. **#98 / C** remains the next active `Formalization.lean` root-integration candidate now that its latest Lean proof head is green; Blueprint/final §3.2 work and latest-main verification come before merge. The explicit #64 freeze remains isolated from the moving live branch.
-2. **#103 / B** is isolated-CI green at `fe1a173e…`; after #98 frees the shared root, B should resync latest main, move its import into the normal `Formalization.lean` / Blueprint aggregators, remove the temporary top-level hook, and re-run full CI before merge.
-3. **#92 / D** can continue its isolated algebraic module now; final Blueprint/root linkage should wait until the proof interface is stable rather than racing the two workers above.
+1. **#103 / B is DONE** and has cleared its `Formalization.lean` slot on main.
+2. **#114 / C** is the next active normal Formalization-root integration candidate. Its draft currently records a temporary top-level compile hook from the period when #103 owned the slot; C has been routed to remove that hook, resync latest main, and use the normal aggregator before merge.
+3. **#92 / D** may continue algebraic work and downstream freezes independently. Final root/Blueprint integration should wait until the active #114 root slot clears unless D can complete without touching the shared aggregator.
 
 A does not modify worker mathematical branches.
 
 ## 8. Queue health
 
-#102 was claimed by B and completed source/API/dependency preflight while remaining proof-gated. To keep the scheduler target of multiple unowned safe candidates, A independently checked the immediately following Chapter 2 §3.1 boundary and seeded #108 rather than inventing unrelated work.
+#104 was claimed by B and completed preflight, while #56 and #99 both moved to DONE. A therefore checked the next source-adjacent boundary and seeded #112 rather than inventing unrelated work.
 
-Current unclaimed safe capacity is #104, #105, and #108. Owned executable/near-executable work includes #56, #64, #72, #99; owned preflight/waiting work includes #100 and #102; dependency-waiting but fully preflighted work also includes #78, #89, #96. The worker pool retains multiple safe paths despite shared-root and dependency waits.
+Current unclaimed safe capacity is #105, #108, and #112. Owned executable/near-executable work includes #64, #78, #72, and stackable #89. Owned preflight/waiting work includes #100, #102, #104, #96. This preserves several independent safe paths while the p-adic dependency chain stabilizes.
 
-A should refill again only when #104/#105/#108 are claimed or cease to provide meaningful safe capacity.
+A should refill again only when #105/#108/#112 are claimed or cease to provide meaningful safe capacity.
 
 ## 9. End-of-run handoff
 
