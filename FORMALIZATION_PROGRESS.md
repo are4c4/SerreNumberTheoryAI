@@ -60,35 +60,49 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | --- | --- | --- | --- | --- | --- | --- |
 | §2.2 core Chevalley–Warning | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 系1: 原点以外の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 系2: 3変数以上の2次形式の非自明零点 | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
+| 系2: 3変数以上の2次形式の非自明零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-#52 / PR #68 でcore theorem、#70 / PR #80 で系1を統合済み。系2のcanonical workはC-owned #74 / draft PR #87。`MvPolynomial.IsHomogeneous f 2` と `3 ≤ Fintype.card σ` でsource statementを固定し、project-local系1へreduceする方針。#70はDONEなのでproof gateはopenだが、PR #87はlatest-main resync/verification中。後発 #85 / PR #88 はduplicateとしてclosed。
+#52 / PR #68 でcore theorem、#70 / PR #80 で系1、#74 / PR #94 で系2を統合済み。系2は `MvPolynomial.IsHomogeneous f 2` と `3 ≤ Fintype.card σ` のsource statementからproject-local系1へreduceするelementary proofでmainへ入った。
 
 ## Phase 5 — 平方剰余の相互法則への有限体準備
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | 3.1 `F_q` の平方数 / 定理4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 3.2 Legendre記号 / 定理5 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 3.2 Legendre記号 / 定理5 | ✅ | ⬜ | ⬜ | 🚧 | 🚧 | 🚧 |
 | 3.3 平方剰余の相互法則 / 定理6 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 補遺 (i) Gaussの補題 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 補遺 (i) Gaussの補題 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成し、main commit `329184fa3aa1e6ee748061b1cf5cb539e2c72778` へmerge済み。
-- #56 はC preflightでsource boundary / theorem-strength boundary / primitive-eighth-root routeを固定済み。#55がDONEになったためcanonical branchをlatest mainへresyncして実装へ進める。
-- #64 はC preflightでGauss-sum routeとminimal #56 dependencyを固定済み。proofはcharacteristic-independent Legendre sign、field compatibility、multiplicativity、Theorem 5(ii) subset待ち。
-- #78 Gauss lemma はunclaimed PREFLIGHT。#64には依存しない。
+- #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成済み。
+- #56 / PR #98 はC-owned。exact head `45bde2ef…` はCI #198 greenで、field-valued Legendre value、multiplicativity、half-power bridge、`±1`、square criterion、integer sign/cast-back、およびTheorem 5(i)/(ii)まで含む。このsubsetは#64向けにSTACK-READYとしてfreeze済み。Theorem 5(iii)、Blueprint、final integrationは未完了。
+- #64 はC preflight completeで、上記exact headからstacked implementation可能。
+- #78 はB preflight complete。Gauss product proofはminimal #56 sign/half-power interfaceだけを必要とするが、現在のupstream freezeは明示的に#64専用なので、別の#78 promiseまたは#56 merge待ち。
 
-## Phase 6 — 第2章 p進体
+## Phase 6 — 第2章 p進体 §1
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| §1.1 `Z_p` の射影極限構成 | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
-| §1.2 Proposition 1–2 + valuation | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| §1.2 Proposition 1–2 + valuation | ✅ | ⬜ | ⬜ | 🚧 | 🚧 | 🚧 |
 | §1.2 Proposition 3: metric / completeness / density | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #71 `C2S1.1-ZpConstruction` はB-owned draft PR #86で実装中。project-local inverse-limit constructionを使い、ready-made mathlib `PadicInt` をcompletion shortcutにしない。exact head `27a414372c72f5ac749ac7e59da06da3c4c5e86f` はpolicy/build/vbp greenで、#72向けにtype/projection/extensionality/surjectivity/integer-map/compactness/continuity interfaceをSTACK-READYとしてfreeze済み。後発 #79 はduplicate closed。
-- #72 はD-owned preflight complete。source上 Proposition 1–2 + valuation をalgebraic sliceとして残す。必要な#71 interfaceがSTACK-READYになったため、proof implementationはそのexact headへstack可能。#71が先にmergeした場合はmainから進める。
-- #89 は #72 preflightから切り出したProposition 3 metric/topology/completeness/densityのunclaimed PREFLIGHT。proofは#72 valuation/topology-relevant interface待ち。
+- #71 / PR #86 はmain `2f4366622121ce0d56e76d8e9a41c25c6917da8b` へend-to-end統合済み。project-local inverse-limit `SerrePadicInt`、residue projections、integer embedding、compactness/continuity、Blueprint linkage、policy/build/vbpが揃った。
+- #72 / PR #92 はD-owned。#71 mergeでupstream gateが解除され、PRはmainへretarget済み。既存groundworkからProposition 1–2、`p^n * unit` decomposition、project valuation、integral-domain conclusionへ継続中。
+- #89 はD preflight complete。source metric normalization、inverse-limit topologyとの一致、compact→complete、integer densityのAPI planを固定し、proofは#72 valuation / `p^n Z_p` bridge待ち。
+- #96 はB preflight complete。project `Q_p` を `FractionRing (SerrePadicInt p)` として構成する方針を固定。algebraic proofは#72、Proposition 4のtopology/density部分はminimal #89 interface待ち。
+
+## Phase 7 — 第2章 §2 p進方程式
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 Hensel lifting theorem + Corollary 1 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+- #99 はAがsource boundaryを独立確認してseedし、#71 merge直後にBがclaimした。有限逆極限の非空性とpolynomial reduction/evaluation compatibilityを用いる命題5を対象とし、hard gateはすでにopen。worker preflight/implementation中なのでInterpretationは🚧。
+- #100 はunclaimed PREFLIGHT。命題6を命題5と分離し、primitive/unit criterionは#72、`Q_p` scalingは#96、finite-level inverse-limit machineryは#99の実際の公開interfaceへ依存させる。worker preflight完了まではInterpretationを🚧とする。
+- #102 はunclaimed PREFLIGHT。§2.2のone-step improvement、multivariate Hensel theorem、simple-root Corollary 1を対象とし、source-shaped iterative/Cauchy proofを予定。proofは#72 valuation/congruenceと#89 completeness interface待ちが見込まれる。
 
 ## Continuous parallelization rules
 
@@ -98,4 +112,5 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 - work claimはcanonical branch作成をatomic lockとする。
 - PR作成、CI pending、1 item完了、item固有blockerはchat停止条件ではない。
 - upstream未mergeのdownstream実装はupstreamがstatement/interface/exact headを`STACK-READY`として固定した場合のみ許可する。
+- withdrawn STACK-READYではexisting workを保存し、replacement exact green SHAまたはupstream mergeまでdependent proofを増やさない。
 - 全列completeはInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIが揃いmainへ統合された後に記録する。

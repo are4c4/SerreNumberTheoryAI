@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #81 live queue/progress reconciliation | `design/sync-live-queue-81-v2` / PR #90 | land central sync after latest-head CI; continue ownership/dependency monitoring |
-| B | End-to-end Formalizer | 🚧 active | #71 `C2S1.1-ZpConstruction` | `work/c2-s1-1-zp-construction` / draft PR #86 | root hotspot is free; finish integration while keeping #72 frozen interface stable |
-| C | End-to-end Formalizer | 🚧 active | #74 Chevalley Cor2, #56 Legendre; #64 reciprocity preflight | PR #87; `work/s3-2-legendre-symbol`; `work/s3-3-quadratic-reciprocity` | resync #74/#56 to latest main; finish #74 and start #56 implementation; keep #64 proof gated |
-| D | End-to-end Formalizer | 🚧 active | #72 `C2S1.2-ZpProperties` | `work/c2-s1-2-zp-properties` | #71 interface is STACK-READY at `27a41437…`; stack algebraic §1.2 implementation or use main if #71 merges first |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #78 or #89 |
+| A | Scheduler / Design | 🚧 active | #95 live sync / dependency refill | `design/sync-post-94-live-95-v2` / PR #101 | land central sync; monitor #56 downstream freezes and #72/#99 progress |
+| B | End-to-end Formalizer | 🚧 active | #78 Gauss waiting; #96 `Q_p` preflight complete; #99 Prop.5 claimed | `work/c1-supp-gauss-lemma`; `work/c2-s1-3-qp-field`; `work/c2-s2-1-root-existence` | preflight/implement #99 now #71 is DONE; resume #78/#96 only when gates open |
+| C | End-to-end Formalizer | 🚧 active | #56 Legendre; #64 reciprocity now stackable | PR #98; `work/s3-3-quadratic-reciprocity` | finish #56; #64 may stack exactly on frozen `45bde2ef…`; publish separate #78 promise if intended |
+| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric preflight complete | PR #92; `work/c2-s1-2-zp-metric` | #71 is DONE: resync #72 to main and resume; #89 proof waits #72 interface |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #100 or #102 |
 
 Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 
@@ -20,6 +20,7 @@ Legend: 🚧 active / 🟡 ready / ⛔ blocked / ⚪ idle.
 - canonical branch作成がownership lock。後発duplicateは最初の有効lockへ統合し、別実装として進めない。
 - PR作成・CI待ち・1 item完了・item固有blockerはchat停止条件ではない。
 - stacked workはupstream interface/exact headが明示的にfreezeされた場合だけ許可し、upstream merge後はlatest mainへ戻す。
+- withdrawn STACK-READYのdownstream既存workは保存してよいが、replacement exact green SHAまたはupstream mergeまではdependent proofを増やさない。
 
 ## Current mathematical frontier
 
@@ -31,18 +32,26 @@ Mainで完了済み:
 - #52 / PR #68 — core Chevalley–Warning
 - #70 / PR #80 — Chevalley Corollary 1
 - #55 / PR #82 — §3.1 Theorem 4 / quadratic elements
+- #74 / PR #94 — Chevalley Corollary 2
+- #71 / PR #86 — Chapter 2 §1.1 project-local `Z_p` inverse limit, main `2f4366622121ce0d56e76d8e9a41c25c6917da8b`
 
 Live ownership/dependency:
 
-- C owns canonical Corollary 2 work #74 / PR #87. #70 is DONE, so proof gate is open; PR #87 needs latest-main resync after #82 root-import changes. Later #85/PR #88 was duplicate and is closed/released.
-- C owns #56. Its former stack base #55 is DONE on main, so branch should resync to latest main and continue implementation using the integrated half-power/square-kernel interface.
-- C owns #64 preflight; proof waits for the minimal #56 Legendre-sign/multiplicativity/Theorem5(ii) subset.
-- B owns #71 / PR #86. #71 has frozen an exact green downstream interface at `27a414372c72f5ac749ac7e59da06da3c4c5e86f`; because #82 merged, B's previous root-import hotspot is now free.
-- D owns #72. Its preflight is complete and the exact #71 interface it requested is now STACK-READY, so D may stack from `27a41437…` and implement Proposition 1–2 + valuation. If #71 merges first, use main instead.
-- #78 Gauss lemma and #89 p-adic metric/completeness/density are unclaimed PREFLIGHT candidates.
+- C owns #56 / draft PR #98. Frozen head `45bde2ef…` is green in CI #198 and explicitly STACK-READY **for #64**, including Theorem 5(ii). The live #56 branch has since moved; downstream #64 must use the exact frozen head unless a newer promise is published.
+- C owns #64 and may now begin stacked implementation from `45bde2ef…`; A routed this gate transition. Theorem 5(iii) remains outside the frozen dependency.
+- B owns #78; Gauss preflight is complete. Its smaller required interface is present on the frozen #56 head, but the upstream promise explicitly says “for #64 only”, so #78 still waits for an explicit #78 promise or #56 merge.
+- D owns #72 / draft PR #92. #71 is DONE; #92 has been retargeted to main, so D should resync and resume Proposition 1–2 + valuation after checking the merged interface.
+- D owns #89; Proposition 3 metric/topology/completeness/density preflight is complete and proof waits #72.
+- B owns #96; `Q_p` preflight is complete, algebraic proof waits #72 and Proposition 4 needs minimal #89 topology/density.
+- B claimed #99 after #71 merged. Proposition 5 preflight/implementation can now proceed without waiting for #72/#96 unless a new actual dependency is discovered.
+- #100 Proposition 6 and #102 Hensel core are unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
 
-A #81 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`.
+#86 is merged and its former root hotspot is free.
 
-C PR #76 is a stale docs-only handoff predating #55 DONE; C should refresh/supersede it. Worker implementation PRs #86/#87 are not edited by A.
+1. #98 / C is the next active root-integration candidate once Theorem 5 / Blueprint are complete; its live branch must remain integrated with latest main.
+2. #92 / D is ungated by #71, but should stabilize the algebraic proof interface before final Blueprint/root linkage.
+3. #99 / B should keep its Proposition 5 module isolated until its interface is stable, then coordinate root imports with the current queue.
+
+A #95 v2 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`; no worker mathematical artifact is edited.
