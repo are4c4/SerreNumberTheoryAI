@@ -46,15 +46,18 @@
 
 ## Current handoff
 
-- Focused Issue: none
-- Last completed integration work: #8 / PR #13, post-merge lane-state synchronization after #5
-- Branch / PR: none
-- Next: monitor B #7 and C #9; take a new focused E integration Issue only when their artifacts are ready for cross-layer verification
-- Blockers: none
-- Verified: the post-merge `main` CI for PR #5 merge commit `2e9cc12ee57b9e9f08ed7dbf63b8f4ce09566691` completed successfully
-- Progress synchronization: A #11 / PR #12 resolved the stale Phase 0 coordination row and marked Theorem 1(ii) Interpretation complete; E no longer owns or edits that shared hotspot
-- Cross-lane dependency: #6 is the completed canonical contract for `S1.1.Theorem1(ii)`; B #7 owns Lean, C #9 owns Blueprint / exposition, and D #10 owns API research. E does not take those mathematical deliverables and will run the integration gate after B/C artifacts are ready
+- Focused Issue: #34 — refresh E integration handoff after C/D completion
+- Branch: `integration/refresh-e-handoff-34`
+- PR: pending
+- Target id: `S1.1.Theorem1(ii)`
+- Completed checkpoints: canonical contract #6; C Blueprint / independent exposition #9 / PR #18 merged; D mathlib research #10 / PR #24 merged; central status/progress synchronization #27 / PR #29 merged
+- Active dependency: B #7 / draft PR #25 is the sole mathematical implementation owner. A semantic review found no statement drift from #6
+- Current B CI state: latest audited run #49 passes repository policy but fails `lake build` in B-owned Lean code. Remaining hard errors are a cast/power shape mismatch in the separability proof, derivative simplification not reaching `-1`, and a coerced-set membership rewrite mismatch in the root-set identification. These repairs remain B-owned
+- Blueprint integration state: the merged C nodes intentionally omit final Theorem 1(ii) `lean :=` links until B declaration names compile and stabilize. Current B candidate names include `primePowerFixedSubfield`, `primePowerFixedSubfield_natCard`, and `serre_theorem1_ii`, but E must re-read the merged B artifact before freezing linkage
+- Next integration action: after B #7 is green and merged, open a new focused E Issue to add/verify Blueprint `lean :=` linkage, run policy + `lake build` + `lake exe vbp build`, and synchronize the Theorem 1(ii) Blueprint / Lean statement / Lean proof / CI progress columns
+- Blockers: B #7 is not yet integration-ready; do not edit B's proof or advance to Theorem 1(iii)
+- Shared hotspots: none reserved by this handoff cleanup; #34 edits only this E-owned file
 
 ## Short resume prompt
 
-`Eレーンとして作業を続けて。最新main、open Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認し、統合・CI・policy・Lean/Blueprint対応・handoff driftを監査して。B/Cの数学実装は奪わないで。`
+`Eレーンとして作業を続けて。最新main、open Issue/PR/CI、AGENTS.md、AI_WORKFLOW.md、LANE_STATUS.md、E_INTEGRATION.md、FORMALIZATION_PROGRESS.mdを確認し、B #7 / PR #25の安定化を監視して。Bがgreen/merge済みならfocused E Issueを作ってLean↔Blueprint linkageとbuild/progress統合を進め、B/Cの数学実装自体は奪わないで。`
