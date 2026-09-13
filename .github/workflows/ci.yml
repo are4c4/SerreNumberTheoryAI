@@ -31,6 +31,23 @@ jobs:
           lean --version
           lake --version
 
+      - name: Restore Lake package cache
+        uses: actions/cache@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lake-packages-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-v1-
+
+      - name: Restore root Lean build cache
+        uses: actions/cache@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-${{ hashFiles('*.lean', 'SerreNumberTheoryAI/**/*.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-
+            ${{ runner.os }}-lean-build-v1-
+
       - name: Resolve dependencies
         run: lake update
 
