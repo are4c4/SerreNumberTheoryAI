@@ -29,7 +29,7 @@ theorem serrePadicRadius_natCast (n : ℕ) :
 theorem serrePadicRadius_nonneg (a : ℕ∞) : 0 ≤ serrePadicRadius a := by
   cases a using ENat.recTopCoe with
   | top => simp
-  | coe n => simp [Real.exp_pos]
+  | coe n => exact (Real.exp_pos (-(n : ℝ))).le
 
 /-- The valuation weight is zero exactly at the infinite valuation. -/
 theorem serrePadicRadius_eq_zero_iff (a : ℕ∞) :
@@ -66,7 +66,7 @@ theorem serrePadicRadius_le_natCast_iff (a : ℕ∞) (n : ℕ) :
     serrePadicRadius a ≤ Real.exp (-(n : ℝ)) ↔ (n : ℕ∞) ≤ a := by
   cases a using ENat.recTopCoe with
   | top =>
-      simp [Real.exp_pos.le]
+      simpa using (Real.exp_pos (-(n : ℝ))).le
   | coe m =>
       rw [serrePadicRadius_natCast, Real.exp_le_exp]
       constructor
@@ -100,9 +100,7 @@ theorem serrePadicIntDist_self (x : SerrePadicInt p) :
 theorem serrePadicIntDist_comm (x y : SerrePadicInt p) :
     serrePadicIntDist p x y = serrePadicIntDist p y x := by
   unfold serrePadicIntDist
-  have hsub : x - y = -(y - x) := by abel
-  rw [hsub]
-  simp
+  exact congrArg serrePadicRadius ((serrePadicIntAddValuation p).map_sub_swap x y)
 
 /-- The source distance separates points. -/
 theorem serrePadicIntDist_eq_zero_iff (x y : SerrePadicInt p) :
