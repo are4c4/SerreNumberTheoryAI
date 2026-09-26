@@ -1,5 +1,7 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
 import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
+import Mathlib.Topology.Algebra.Valued.ValuedField
+import Mathlib.Topology.Algebra.Field
 import Mathlib.Topology.Algebra.Group.Pointwise
 
 /-!
@@ -200,6 +202,67 @@ noncomputable instance serrePadicFieldLocallyCompactSpace :
   IsCompact.locallyCompactSpace_of_mem_nhds_of_addGroup
     (isCompact_serrePadicIntImage p)
     (serrePadicIntImage_mem_nhds_zero p)
+
+
+/-- The project integer embedding agrees with ordinary integer casts in the fraction field. -/
+@[simp] theorem serrePadicIntToField_intCast (z : ℤ) :
+    serrePadicIntToField p (serrePadicIntIntCast p z) =
+      (z : SerrePadicField p) := by
+  have hz :
+      serrePadicIntIntCast p z = (z : SerrePadicInt p) := by
+    apply serrePadicInt_ext p
+    intro n
+    rw [serrePadicIntIntCast_proj]
+    simp
+  rw [hz]
+  simp [serrePadicIntToField]
+
+/-- The prime subfield of the project p-adic field, i.e. the canonical image of `ℚ`. -/
+noncomputable def serrePadicRatSubfield : Subfield (SerrePadicField p) :=
+  (Rat.castHom (SerrePadicField p)).fieldRange
+
+/--
+Every embedded project p-adic integer lies in the closure of the rational prime subfield.
+This transports the already-proved density of ordinary integers in project `Z_p`.
+-/
+theorem serrePadicIntToField_mem_ratClosure (x : SerrePadicInt p) :
+    serrePadicIntToField p x ∈
+      (serrePadicRatSubfield p).topologicalClosure := by
+  change serrePadicIntToField p x ∈
+    closure (serrePadicRatSubfield p : Set (SerrePadicField p))
+  apply map_mem_closure (continuous_serrePadicIntToField p)
+      ((serrePadicIntIntCast_denseRange p) x)
+  rintro y ⟨z, rfl⟩
+  rw [serrePadicRatSubfield]
+  refine ⟨(z : ℚ), ?_⟩
+  simpa using (serrePadicIntToField_intCast p z).symm
+
+/--
+The closure of the rational prime subfield is all of the project p-adic field.
+The fraction-field presentation reduces an arbitrary field element to a quotient
+of two embedded project p-adic integers.
+-/
+theorem serrePadicRatSubfield_topologicalClosure_eq_top :
+    (serrePadicRatSubfield p).topologicalClosure = ⊤ := by
+  apply top_unique
+  intro x hx
+  obtain ⟨a, b, hb, hab⟩ :=
+    IsFractionRing.div_surjective (SerrePadicInt p) x
+  rw [← hab]
+  apply (serrePadicRatSubfield p).topologicalClosure.div_mem
+  · simpa [serrePadicIntToField] using
+      (serrePadicIntToField_mem_ratClosure p a)
+  · simpa [serrePadicIntToField] using
+      (serrePadicIntToField_mem_ratClosure p b)
+
+/-- The canonical image of `ℚ` is dense in the project p-adic field. -/
+theorem serrePadicField_ratCast_denseRange :
+    DenseRange (Rat.castHom (SerrePadicField p)) := by
+  intro x
+  change x ∈ closure (Set.range (Rat.castHom (SerrePadicField p)))
+  change x ∈ (serrePadicRatSubfield p).topologicalClosure
+  rw [serrePadicRatSubfield_topologicalClosure_eq_top]
+  exact Set.mem_univ x
 
 end PadicFieldTopology
 
