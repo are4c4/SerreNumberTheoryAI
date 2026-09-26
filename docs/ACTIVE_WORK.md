@@ -11,7 +11,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Previous parked PR: #123 — project `Q_p` fraction-field construction
 - Recovery branch: `work/c2-s1-3-qp-field-serial`
 - Source: Chapter 2 §1.3, Definition 2 and Proposition 4
-- State: ACTIVE
+- State: ACTIVE — implementation complete; final CI / self-review / merge pending
+- PR: #143
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
 ## Just completed
@@ -34,8 +35,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 2. consume the now-merged project `Z_p` algebraic and metric interfaces;
 3. complete the source decomposition / valuation / Proposition 4 boundary without importing ready-made mathlib `Padic` completion facts;
 4. integrate normal Formalization / Blueprint roots;
-5. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
-6. self-review and merge;
+5. run policy / `lake build` / `lake exe vbp build` / PR-head CI (current final-validation step);
+6. self-review and merge PR #143;
 7. only then select the next single item.
 
 ## Transition note
