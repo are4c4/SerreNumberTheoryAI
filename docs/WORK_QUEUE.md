@@ -84,15 +84,15 @@ Live dependency graph:
 | P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `CLAIMED` | stable `7a48b08d…` CI #289; moving PR #114 head `136bdf47…`, CI #305 in progress; current Formalization-root slot | `work/s3-3-quadratic-reciprocity` | #64 / C |
 | P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `DONE` | PR #115 merged as `56a5307b…` | `work/c1-supp-gauss-lemma` | #78 complete |
 | P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `DONE` | PR #86 merged | `work/c2-s1-1-zp-construction` | #71 complete |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `CLAIMED` | replacement PR #92 head `781d1b8f…` CI #297 green; scoped downstream interfaces unchanged | `work/c2-s1-2-zp-properties` | #72 / D |
-| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `STACKABLE` | replacement PR #116 head `55175ebc…` CI #298 green on #72 `781d1b8f…`; #96/#102 promises unchanged | `work/c2-s1-2-zp-metric` | #89 / D |
-| P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `CLAIMED` | draft PR #123 implements on valid old exact base `f42c68f0…`; head `3f61cac8…`, CI #306 in progress; future restack prefer `55175ebc…` | `work/c2-s1-3-qp-field` | #96 / B |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `BLOCKED` | downstream CI #306/#311 exposed compile errors in the upstream module; publish a compile-validated replacement before stacking resumes | `work/c2-s1-2-zp-properties` | #72 / D |
+| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `WAITING` | restack after repaired #72 and compile the metric modules before republishing downstream promises | `work/c2-s1-2-zp-metric` | #89 / D |
+| P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `BLOCKED` | PR #123 CI #306 fails in upstream #72 module; preserve commits and wait for replacement stack | `work/c2-s1-3-qp-field` | #96 / B |
 | P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `DONE` | PR #103 merged at `326c2aec…`, CI #260 green | `work/c2-s2-1-root-existence` | #99 complete |
 | P15 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 命題6 | `PREFLIGHT` | #99 + #72 primitive/unit sides stable; full proof waits #96 scaling DONE/STACK-READY | `work/c2-s2-1-primitive-homogeneous-zeros` | #100 / B |
-| P16 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Cor.1 | `STACKABLE` | new commits should prefer #89 replacement `55175ebc…` / CI #298 (contains #72 `781d1b8f…`); old `f42c68f0…` promise remains valid | `work/c2-s2-2-hensel-lifting` | #102 / B |
+| P16 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Cor.1 | `WAITING` | previous #72/#89 stack gate suspended pending compile-validated replacements | `work/c2-s2-2-hensel-lifting` | #102 / B |
 | P17 | `C2S2.2-HenselQuadraticOdd` | §2.2 系2: odd-`p` quadratic lifting | `WAITING` | #72 subset frozen; wait #102 DONE/STACK-READY simple-root interface | `work/c2-s2-2-hensel-quadratic-odd` | #104 / B |
 | P18 | `C2S2.2-HenselQuadraticTwo` | §2.2 系3: dyadic quadratic lifting | `WAITING` | #72 dyadic subset frozen; wait #102 DONE/STACK-READY main `n,k` theorem | `work/c2-s2-2-hensel-quadratic-two` | #105 / B |
-| P19 | `C2S3.1-UnitFiltration` | §3.1 `Z_p^×` filtration / Proposition 7 | `STACKABLE` | core proof may stack on #72 replacement `781d1b8f…` / CI #297; final `Q_p` corollary still waits #96 | `work/c2-s3-1-unit-filtration` | #108 / B |
+| P19 | `C2S3.1-UnitFiltration` | §3.1 `Z_p^×` filtration / Proposition 7 | `BLOCKED` | PR #125 CI #311 fails in upstream #72 module; preserve commits and wait for repaired exact stack | `work/c2-s3-1-unit-filtration` | #108 / B |
 | P20 | `C2S3.2-PrincipalUnits` | §3.2 principal units / Proposition 8 / multiplicative group theorem | `CLAIMED` | canonical branch exists at current main; owner metadata pending; proof remains gated on #108 and final theorem on #96 | `work/c2-s3-2-principal-units` | #112 / owner pending |
 | P21 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 / square classes | `PREFLIGHT` | B-owned preflight; proof waits #112/#96; odd case reuses merged #56 Legendre | `work/c2-s3-3-padic-squares` | #120 / B |
 | P22 | `C3S1.1-HilbertBasics` | 第3章 §1.1 Hilbert記号の定義・Norm criterion・基本公式 | `PREFLIGHT` | generic field/norm preflight safe; project `Q_p` specialization waits #96 | `work/c3-s1-1-hilbert-basics` | #121 / unclaimed |
@@ -110,6 +110,9 @@ Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is s
 A does not modify worker mathematical branches.
 
 ## 8. Queue health
+
+Validation note: PR #123 CI #306 and PR #125 CI #311 both fail while compiling the upstream `PadicIntegerProperties.lean`. Therefore the current #72/#89 STACK-READY promises are suspended for new dependent proof work until replacement heads actually compile the relevant modules. Existing downstream commits are preserved.
+
 
 #120 was claimed by B, so A independently checked the next source boundary and seeded #124 for Chapter 3 §2.1 Hilbert's product formula. #112 remains branch-locked with owner metadata pending.
 
