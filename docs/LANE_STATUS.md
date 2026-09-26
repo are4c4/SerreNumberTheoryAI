@@ -7,9 +7,9 @@
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
 | A | Scheduler / Design | 🚧 active | #118 post-merge handoff / queue refresh | `design/post-merge-handoff-118` / PR #119 | land latest four-file sync after rechecking main/claims/CI; monitor #114, #72/#89 freezes, and #112 owner metadata |
-| B | End-to-end Formalizer | 🚧 active | #96 stacked implementation / PR #123; #102 and #108 stackable; #120 preflight; #100/#104/#105 downstream waits | PR #123; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-1-unit-filtration`; `work/c2-s3-3-padic-squares`; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-quadratic-odd`; `work/c2-s2-2-hensel-quadratic-two` | continue #96 on its valid old freeze; for new #102/#108 commits prefer replacement heads `55175ebc…` / `781d1b8f…`; keep #120 proof-code-clean |
+| B | End-to-end Formalizer | 🚧 active | #96/#108 paused after upstream compile failure; #102 waiting; #120 preflight | PR #123; PR #125; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-3-padic-squares` | preserve current commits and wait for compile-validated p-adic stack heads |
 | C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | stable `7a48b08d…` CI #289; moving head `136bdf47…` CI #305 in progress; current normal `Formalization.lean` slot |
-| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric/topology/completion stacked implementation | PR #92; PR #116 | replacement #72 `781d1b8f…` CI #297 green and #89 `55175ebc…` CI #298 green; all scoped contracts preserved, including #108 core |
+| D | End-to-end Formalizer | 🚧 active | #72 compile validation; #89 restack pending | PR #92; PR #116 | compile the new p-adic modules in CI, then publish replacement exact heads |
 | E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #121, #122, or #124 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
@@ -54,6 +54,9 @@ Live ownership/dependency:
 - B owns #120 as proof-code-clean PREFLIGHT. #121, #122, and newly seeded #124 (Hilbert product formula) remain unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
+
+P-adic stack correction: CI #306/#311 exposed compile failures in `PadicIntegerProperties.lean`. The current #72/#89 downstream promises are paused until replacement heads compile the relevant modules.
+
 
 1. **#114 / C** owns the current normal `SerreNumberTheoryAI/Formalization.lean` slot; stable `7a48b08d…` is green and current moving head `136bdf47…` is under CI #305.
 2. **#92 / #116 / D** stay isolated from the normal shared aggregators; replacement heads `781d1b8f…` / CI #297 and `55175ebc…` / CI #298 are green.
