@@ -30,6 +30,7 @@ Lean側ではlevel `n` が `ℤ / p^(n+1)ℤ` を表すため、書籍の正の�
 
 :::definition "serre_padic_quotient_power_equiv"
   (lean := "SerreNumberTheoryAI.serrePadicIntQuotientPowEquiv")
+  (autoDeps := false)
   (uses := "serre_padic_projection_kernel_power, serre_padic_projection_surjective")
 したがって `SerrePadicInt p` を `p^(n+1)` の倍数で割った商環は、
 level `n` の有限剰余環と自然に環同型になる。
@@ -45,6 +46,7 @@ level `n` の有限剰余環と自然に環同型になる。
 
 :::theorem "serre_padic_unit_iff_not_p_divisible"
   (lean := "SerreNumberTheoryAI.serrePadicInt_isUnit_iff_not_p_dvd")
+  (autoDeps := false)
   (uses := "serre_padic_projection_kernel_power")
 `SerrePadicInt p` の元は、`p` で割り切れないことと単元であることが同値である。
 同値な判定として、最初の剰余成分が0でないことを用いることができる。
@@ -67,6 +69,7 @@ level `n` の有限剰余環と自然に環同型になる。
 
 :::theorem "serre_padic_pow_unit_decomposition"
   (lean := "SerreNumberTheoryAI.existsUnique_pow_unitPair_of_ne_zero")
+  (autoDeps := false)
   (uses := "serre_padic_order, serre_padic_unit_iff_not_p_divisible")
 非零の `x : SerrePadicInt p` は一意的に `x = p^n u` と書ける。
 ここで `n : ℕ`、`u` は単元であり、指数だけでなく単元因子も一意である。
@@ -118,6 +121,7 @@ Leanでは、project内で `p` が素元であることを先に証明し、一�
 
 :::theorem "serre_padic_integral_domain"
   (lean := "SerreNumberTheoryAI.serrePadicInt_isDomain")
+  (autoDeps := false)
   (uses := "serre_padic_pow_unit_decomposition")
 素数 `p` に対し、project-localなp進整数環 `SerrePadicInt p` は整域である。
 :::
