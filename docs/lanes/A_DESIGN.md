@@ -27,11 +27,11 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ## Current handoff
 
-- State: active scheduler coordination
-- Active A Issue: #118
-- Canonical A branch: `design/post-merge-handoff-118`
-- Current A PR: #119
-- Latest completed A central sync: #113 / PR #117, merge `c8b94633ed218392ba771ecab3cde3884b6bf457`
+- State: monitoring / scheduler-ready
+- Active A Issue: none
+- Canonical A branch: none
+- Current A PR: none
+- Latest completed A central sync: #118 / PR #119, merge `cd9654f81d05a870e6200b8849882bf2eff5aab3`, CI #319 green
 - Previous completed A central sync: #106 / PR #107, merge `f3d0f5b22b1e306720d6c313185f98692110f3a8`
 - Latest A housekeeping before that: #109 / PR #110, merge `272885ad850d12fa1ee06d60c75f101bae54413c`
 
