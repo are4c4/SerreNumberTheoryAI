@@ -10,6 +10,9 @@ import SerreNumberTheoryAI.Formalization.Chapter01.LegendreTwo
 import SerreNumberTheoryAI.Formalization.Chapter01.GaussLemma
 import SerreNumberTheoryAI.Formalization.Chapter01.QuadraticReciprocity
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegers
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerProperties
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerValuation
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerValuationAPI
 import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 
 /-!
