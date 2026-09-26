@@ -8,7 +8,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 - Work ID: C2S1.2-ZpProperties
 - Issue: #72
-- PR: #92 — Develop algebraic properties of project p-adic integers
+- PR: #140 — Recover algebraic properties of project p-adic integers
 - Branch: work/c2-s1-2-zp-properties
 - Source: Chapter 2 §1.2, algebraic part of Propositions 1–2 and valuation consequences
 - State: ACTIVE
@@ -32,7 +32,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 旧A/B/C/D/E owner名、STACK-READY、stack base SHAは履歴情報にすぎず、再開時の許可や正当性を保証しない。
 
-## Recovery rule for #92
+## Recovery rule for #140
 
 1. latest mainへ適合させる。
 2. 旧branchの有用なLean / Blueprint commitを保持する。
