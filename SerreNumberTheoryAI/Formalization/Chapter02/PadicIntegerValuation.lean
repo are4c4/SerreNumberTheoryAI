@@ -151,6 +151,36 @@ instance serrePadicInt_noZeroDivisors : NoZeroDivisors (SerrePadicInt p) where
 instance serrePadicInt_isDomain : IsDomain (SerrePadicInt p) :=
   NoZeroDivisors.to_isDomain _
 
+
+/--
+Natural-number casts into the project p-adic integers are injective.  At level
+`max m n`, both naturals are strictly smaller than the residue modulus
+`p^(max m n + 1)`, so equality of their compatible sequences forces equality
+of their ordinary representatives.
+-/
+theorem serrePadicInt_natCast_injective :
+    Function.Injective (fun n : ℕ => (n : SerrePadicInt p)) := by
+  intro m n hmn
+  let k := max m n
+  have hproj :=
+    congrArg (fun z : SerrePadicInt p => serrePadicIntProj p k z) hmn
+  have hklt : k < p ^ (k + 1) := by
+    calc
+      k < p ^ k := Nat.lt_pow_self (Fact.out : p.Prime).one_lt
+      _ ≤ p ^ (k + 1) :=
+        Nat.pow_le_pow_right (Fact.out : p.Prime).one_lt.le (Nat.le_succ k)
+  have hmlt : m < p ^ (k + 1) :=
+    (Nat.le_max_left m n).trans_lt hklt
+  have hnlt : n < p ^ (k + 1) :=
+    (Nat.le_max_right m n).trans_lt hklt
+  have hval := congrArg ZMod.val hproj
+  simpa [padicResidueRing, ZMod.val_natCast_of_lt hmlt,
+    ZMod.val_natCast_of_lt hnlt] using hval
+
+/-- The project p-adic integers have characteristic zero. -/
+instance serrePadicInt_charZero : CharZero (SerrePadicInt p) where
+  cast_injective := serrePadicInt_natCast_injective p
+
 end PadicIntegerValuation
 
 end SerreNumberTheoryAI
