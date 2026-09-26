@@ -30,7 +30,7 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - State: active scheduler coordination
 - Active A Issue: #132
 - Canonical A branch: `design/refill-after-hilbert-preflight-132`
-- Current A PR: pending
+- Current A PR: #133
 - Latest completed A central sync: #127 / PR #128, merge `6b486522fe873a1b9537b6aedfe94a7636eaa694`, CI #326 green
 - Previous completed A central sync: #118 / PR #119, merge `cd9654f81d05a870e6200b8849882bf2eff5aab3`, CI #319 green
 - Latest A housekeeping before that: #109 / PR #110, merge `272885ad850d12fa1ee06d60c75f101bae54413c`
