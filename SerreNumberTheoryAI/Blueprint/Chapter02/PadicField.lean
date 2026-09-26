@@ -140,22 +140,13 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 :::
 
 :::definition "serre_padic_field_metric"
+  (lean := "SerreNumberTheoryAI.serrePadicFieldMetricSpace")
   (uses := "serre_padic_field_valuation")
 離散付値を底 `p` で rank-one 実現し、対応する p進距離を
 `MetricSpace` として束ねる。構成に用いる `Valued.toNormedField` は
 この構成で得られる位相は、上で用いた付値位相と同じである。
 :::
 
-```lean "serre_padic_field_metric"
-namespace SerreNumberTheoryAI
-
-noncomputable def blueprint_serrePadicFieldMetricSpace
-    (p : ℕ) [Fact p.Prime] :
-    MetricSpace (SerrePadicField p) :=
-  serrePadicFieldMetricSpace p
-
-end SerreNumberTheoryAI
-```
 
 :::theorem "serre_padic_int_open"
   (lean := "SerreNumberTheoryAI.isOpen_serrePadicIntImage")
@@ -171,23 +162,15 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 :::
 
 :::theorem "serre_padic_field_locally_compact"
+  (lean := "SerreNumberTheoryAI.serrePadicFieldLocallyCompactSpace")
   (uses := "serre_padic_int_open, serre_padic_int_compact")
 `Q_p` は局所コンパクトである。開コンパクトな `Z_p` の像が
 0 のコンパクト近傍となり、加法平行移動で任意の点へ移せる。
 :::
 
-```lean "serre_padic_field_locally_compact"
-namespace SerreNumberTheoryAI
-
-noncomputable def blueprint_serrePadicFieldLocallyCompactSpace
-    (p : ℕ) [Fact p.Prime] :
-    LocallyCompactSpace (SerrePadicField p) :=
-  serrePadicFieldLocallyCompactSpace p
-
-end SerreNumberTheoryAI
-```
 
 :::theorem "serre_padic_rationals_dense"
+  (lean := "SerreNumberTheoryAI.serrePadicField_ratCast_denseRange")
   (uses := "serre_padic_int_compact, serre_padic_field_locally_compact")
 標準埋め込み `Q → Q_p` の像は稠密である。
 まず §1.2 で得た `Z → Z_p` の稠密性を連続な `Z_p → Q_p` で移し、
@@ -196,13 +179,3 @@ end SerreNumberTheoryAI
 有理数像の閉包は p進体全体になる。
 :::
 
-```lean "serre_padic_rationals_dense"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_serrePadicField_ratCast_denseRange
-    (p : ℕ) [Fact p.Prime] :
-    DenseRange (Rat.castHom (SerrePadicField p)) :=
-  serrePadicField_ratCast_denseRange p
-
-end SerreNumberTheoryAI
-```
