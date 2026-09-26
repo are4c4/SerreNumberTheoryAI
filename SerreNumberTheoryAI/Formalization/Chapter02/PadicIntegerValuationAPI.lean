@@ -86,9 +86,9 @@ theorem existsUnique_pow_mul_isUnit_of_ne_zero
   refine ⟨n, ⟨u, hu, hn⟩, ?_⟩
   intro m hm
   obtain ⟨v, hv, hmrepr⟩ := hm
-  exact serrePadicInt_pow_mul_isUnit_exponent_unique
+  exact (serrePadicInt_pow_mul_isUnit_exponent_unique
     (p := p) (x := x) (u := u) (v := v) (n := n) (m := m)
-    hu hv hn hmrepr
+    hu hv hn hmrepr).symm
 
 /-- The source pair `(n,u)` in `x = p^n u` is unique for every nonzero element. -/
 theorem existsUnique_pow_unitPair_of_ne_zero
@@ -109,15 +109,17 @@ theorem serrePadicInt_p_prime : Prime (p : SerrePadicInt p) := by
     have hnotdvd := (serrePadicInt_isUnit_iff_not_p_dvd p (p : SerrePadicInt p)).1 hpunit
     exact hnotdvd (dvd_refl _)
   · intro a b hab
-    letI : NoZeroDivisors (padicResidueRing p 0) := by
-      simpa [padicResidueRing] using
-        (inferInstance : NoZeroDivisors (ZMod p))
-    have hproj : serrePadicIntProj p 0 (a * b) = 0 :=
-      (p_dvd_serrePadicInt_iff_proj_zero p (a * b)).1 hab
-    rw [map_mul] at hproj
-    rcases eq_zero_or_eq_zero_of_mul_eq_zero hproj with ha | hb
+    by_cases ha : serrePadicIntProj p 0 a = 0
     · exact Or.inl ((p_dvd_serrePadicInt_iff_proj_zero p a).2 ha)
+    by_cases hb : serrePadicIntProj p 0 b = 0
     · exact Or.inr ((p_dvd_serrePadicInt_iff_proj_zero p b).2 hb)
+    exfalso
+    have hua : IsUnit a :=
+      (serrePadicInt_isUnit_iff_proj_zero_ne_zero p a).2 ha
+    have hub : IsUnit b :=
+      (serrePadicInt_isUnit_iff_proj_zero_ne_zero p b).2 hb
+    have huab : IsUnit (a * b) := hua.mul hub
+    exact ((serrePadicInt_isUnit_iff_not_p_dvd p (a * b)).1 huab) hab
 
 /--
 The additive `p`-adic valuation on the project-local p-adic integers.
