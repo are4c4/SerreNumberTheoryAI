@@ -64,15 +64,15 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - #64/C draft PR #114 has reconciled onto main after #78 merged. Latest checked head `7a48b08d47ff2c39dd8dd8ba333f6177c6619066` passed CI #289 and uses the normal `Formalization.lean` aggregator. C owns the current shared-root slot while the remaining source coefficient/Gauss-square/Frobenius proof, Blueprint, and final theorem are completed.
 - #78/B / PR #115 is DONE on main at `56a5307bee7049924c9090a677492ba01a4808e2`. Its source-shaped Gauss-lemma proof, Blueprint, and root linkage are integrated.
 - #72/D exact head `c43d7f09c57a01418663965fd070c69ee16a73b6` passed CI #261. It provides projection/kernel, unit and power-divisibility bridges, unique `p^n * unit` decomposition, `serrePadicIntAddValuation` with multiplication/ultrametric laws, the domain instance, and independent Blueprint exposition.
-- D explicitly published `STACK-READY` from `c43d7f09…` **for #89 only**. A must not silently reuse that promise for #96/#102/#100/#108/#105.
-- #89/D draft PR #116 stacks exactly on the frozen #72 head. Latest checked head `f42c68f095015a4e5d66d08f71d24257d6d52d9f` passed CI #291. The PR changes only Chapter 2 metric/topology/completion modules plus an independent Blueprint module, so it does not contend for the shared root. A must not infer #102/#96 readiness until D explicitly freezes the corresponding stable subset.
-- #96/B remains proof-gated until #72 publishes a #96-scoped stable domain/decomposition/valuation subset or merges. Proposition 4 additionally needs minimal #89 topology/density.
+- D has published consumer-scoped `STACK-READY` promises from #72 exact green `c43d7f09…` / CI #261 for #89, #96, #102, #100, #104, and #105. #108's smaller unit/projection/divisibility subset is the remaining requested #72 promise.
+- #89/D draft PR #116 stacks exactly on #72 `c43d7f09…`. Exact head `f42c68f095015a4e5d66d08f71d24257d6d52d9f` passed CI #291 and is explicitly frozen for two consumers: #96 may use topology/projection-ball/integer-density, and #102 may use compatible metric/completeness/divisibility-to-distance. The PR remains outside shared-root contention.
+- #96/B is now STACKABLE: both required #72 and #89 contracts are frozen, and because #89 head contains the exact #72 base, B may use `f42c68f0…` as the single exact stack base for dependent implementation.
 - #99/B is DONE on main. Its final head `1a86c84e…` passed CI #260 with normal Formalization/Blueprint integration; the earlier #100 downstream interface remains stable.
-- #100/B may consume #99 now without stacking. Full proof still needs #72 primitive/unit and #96 `Q_p` scaling.
-- #102/B completed source/API preflight. It needs more than the #89-scoped #72 freeze: the source congruence/decomposition interface plus a compatible completeness result from #89.
-- #104/B completed odd-prime quadratic-lifting preflight. It remains proof-code-clean until #102 is DONE/STACK-READY plus the minimal #72 primitive/unit/congruence subset.
-- #105/B completed dyadic quadratic-lifting preflight. It fixes the source `n=3,k=1` Hensel specialization, mod-8/mod-4 derivative condition, and determinant-unit reduction mod 2. Proof waits an explicit #102 main-theorem gate plus #72 domain/divisibility/valuation/primitive subset; no #96 dependency is needed.
-- #108/B is active dependency-safe preflight for Chapter 2 §3.1 unit filtration / Proposition 7. Core work waits an explicit stable #72 unit/divisibility subset; only the final roots-of-unity corollary inside project `Q_p` needs #96.
+- #100/B has both #99 and #72 primitive/unit inputs stable. Full proof now waits a #96 DONE/STACK-READY scaling interface.
+- #102/B is now STACKABLE from exact #89 head `f42c68f0…`; both the #72 source congruence/decomposition/valuation contract and #89 metric/completeness contract are explicitly frozen. It may begin the source Newton/Cauchy implementation.
+- #104/B completed odd-prime quadratic-lifting preflight; its #72 subset is frozen, so it now waits only for #102 DONE/STACK-READY with the simple-root theorem interface.
+- #105/B completed dyadic quadratic-lifting preflight; its #72 dyadic subset is frozen, so it now waits only for #102 DONE/STACK-READY with the main `n,k` Hensel theorem. No #96 dependency is needed.
+- #108/B has completed dependency-safe preflight for Chapter 2 §3.1 unit filtration / Proposition 7. Core proof remains proof-code-clean until D publishes the requested #108-scoped #72 unit/projection/divisibility freeze; only the final roots-of-unity corollary inside project `Q_p` needs #96.
 - #112 has a canonical branch lock on current main but no `OWNER: <lane>` comment yet. Treat it as claimed with owner metadata pending; proof remains gated on #108/#72 and the final `Q_p^×` theorem on #96.
 - #120 is the unclaimed Chapter 2 §3.3 p-adic-square-class preflight. Odd `p` uses valuation parity plus the merged project Legendre residue-square criterion; `p=2` uses valuation parity plus unit `≡1 mod 8`. Proof waits #112 + #96.
 - #121 is the unclaimed Chapter 3 §1.1 Hilbert-symbol basics/norm-criterion preflight. Generic field-level definition/norm work is safe now; project `Q_p` specialization waits #96.
@@ -92,15 +92,15 @@ Unclaimed safe capacity:
 - #121 `C3S1.1-HilbertBasics` — PREFLIGHT; generic field/norm work safe, project `Q_p` specialization waits #96.
 - #122 `C3S1.2-HilbertLocalFormula` — PREFLIGHT; explicit local formulas/nondegeneracy, proof waits #121 plus actual #96/#120/lifting interfaces.
 
-#112 is branch-locked and therefore not claimable even though its owner-lane comment is still missing. Owned executable/near-executable work includes #64/#72 and stackable #89. Owned preflight/waiting work includes #96/#100/#102/#104/#105/#108 plus #112's locked preflight. The pool therefore retains three clearly unclaimed safe paths without speculative work.
+#112 is branch-locked and therefore not claimable even though its owner-lane comment is still missing. Owned executable/near-executable work now includes #64/#72, stackable #89, and newly stackable #96/#102. Owned waiting/preflight work includes #100/#104/#105/#108 plus #112's locked preflight. The pool therefore retains three clearly unclaimed safe paths without speculative work.
 
 ### Next A actions
 
 1. finish #118 / PR #119 after latest-main recheck, exact four-file self-review, and latest-head CI;
 2. monitor #114 source proof/Blueprint/final root integration on main after #115 merge;
-3. monitor #72 for additional explicit downstream freeze(s) before releasing #96/#102/#100/#108/#105;
-4. monitor #116 from exact `c43d7f09…` and future separate topology/completeness freezes needed by #96/#102;
-5. resolve #112 owner metadata without disturbing its atomic branch lock; monitor #108 preflight;
+3. monitor #96/#102 branch movement to exact #89 `f42c68f0…` and later downstream STACK-READY contracts for #100/#104/#105;
+4. monitor #72 only for the remaining #108-scoped unit/projection/divisibility freeze; monitor #116 promise stability until upstream merge;
+5. resolve #112 owner metadata without disturbing its atomic branch lock; monitor #108's now-complete preflight;
 6. monitor claims of #120/#121/#122 and refill only when safe capacity thins again;
 7. do not create speculative implementation work merely to keep a lane busy.
 
