@@ -202,6 +202,73 @@ theorem primitiveCommonZero_iff_reductions
     rw [map_zero]
     exact hxn.1 i
 
+
+/--
+Every nonzero finite tuple over the project p-adic field can be scaled by one integral
+power of the distinguished prime so that all coordinates lie in project Z_p and at
+least one resulting coordinate is a unit.
+
+This is the source normalization step used in Proposition 6.
+-/
+theorem exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero
+    (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (x : σ → SerrePadicField p) (hx : x ≠ 0) :
+    ∃ (h : ℤ) (y : σ → SerrePadicInt p),
+      serrePadicTuplePrimitive y ∧
+        ∀ s, serrePadicIntToField p (y s) =
+          (serrePadicFieldPrime p) ^ (-h) * x s := by
+  classical
+  let T := {s : σ // x s ≠ 0}
+  letI : Fintype T := Fintype.ofFinite T
+  have hT : Nonempty T := by
+    by_contra hnone
+    apply hx
+    funext s
+    by_contra hs
+    exact hnone ⟨s, hs⟩
+  choose e u heu using fun t : T =>
+    serrePadicField_exists_unit_smul_zpow (p := p) t.property
+  let E : Finset ℤ := Finset.univ.image e
+  have hE : E.Nonempty := by
+    obtain ⟨t⟩ := hT
+    exact ⟨e t, Finset.mem_image.mpr ⟨t, Finset.mem_univ _, rfl⟩⟩
+  let h : ℤ := E.min' hE
+  have hh_le (t : T) : h ≤ e t := by
+    apply Finset.min'_le E (e t)
+    exact Finset.mem_image.mpr ⟨t, Finset.mem_univ _, rfl⟩
+  have hh_mem : h ∈ E := Finset.min'_mem E hE
+  obtain ⟨t0, -, ht0⟩ := Finset.mem_image.mp hh_mem
+  have he0 : e t0 = h := ht0.symm
+  let y : σ → SerrePadicInt p := fun s =>
+    if hs : x s = 0 then 0
+    else
+      (u ⟨s, hs⟩ : SerrePadicInt p) *
+        (p : SerrePadicInt p) ^ (e ⟨s, hs⟩ - h).toNat
+  refine ⟨h, y, ?_, ?_⟩
+  · refine ⟨t0.1, ?_⟩
+    simpa [y, t0.property, he0] using (u t0).isUnit
+  · intro s
+    by_cases hs : x s = 0
+    · simp [y, hs]
+    · let t : T := ⟨s, hs⟩
+      have hnonneg : 0 ≤ e t - h := sub_nonneg.mpr (hh_le t)
+      have hnat : ((e t - h).toNat : ℤ) = e t - h :=
+        Int.toNat_of_nonneg hnonneg
+      have hdecomp : x s = u t • (serrePadicFieldPrime p) ^ (e t) := by
+        simpa [t] using heu t
+      simp only [y, hs, ↓reduceDIte]
+      rw [map_mul, map_pow]
+      change
+        algebraMap (SerrePadicInt p) (SerrePadicField p) (u t : SerrePadicInt p) *
+            (serrePadicFieldPrime p) ^ (e t - h).toNat =
+          (serrePadicFieldPrime p) ^ (-h) * x s
+      rw [← zpow_natCast, hnat, hdecomp]
+      simp only [Units.smul_def, Algebra.smul_def]
+      have hp0 := serrePadicFieldPrime_ne_zero p
+      have hexp : e t - h = -h + e t := by omega
+      rw [hexp, zpow_add₀ hp0]
+      ring
+
 end PrimitiveHomogeneousZeros
 
 end
