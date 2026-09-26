@@ -68,10 +68,24 @@ p進整数tuple空間のコンパクト性から共通部分を得る。
 :::
 
 :::theorem "field_tuple_primitive_normalization"
-  (lean := "SerreNumberTheoryAI.exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero")
 非零な有限 Qₚ tupleには整数 `h` が存在し、全座標を `p^(-h)` 倍すると
 Zₚ tupleとして表され、しかも少なくとも一つの座標は単元になる。
 :::
+
+```lean "field_tuple_primitive_normalization"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero
+    {σ : Type*} (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (x : σ → SerrePadicField p) (hx : x ≠ 0) :
+    ∃ (h : ℤ) (y : σ → SerrePadicInt p),
+      serrePadicTuplePrimitive y ∧
+        ∀ s, serrePadicIntToField p (y s) =
+          (serrePadicFieldPrime p) ^ (-h) * x s :=
+  exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero p x hx
+
+end SerreNumberTheoryAI
+```
 
 :::proof "field_tuple_primitive_normalization"
 非零座標を `uₛ p^(eₛ)` と分解し、有限個の指数 `eₛ` の最小値を `h` とする。
@@ -81,12 +95,29 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 :::
 
 :::theorem "homogeneous_field_common_zero_iff_primitive"
-  (lean := "SerreNumberTheoryAI.homogeneousFieldCommonZero_iff_primitive")
   (uses := "homogeneous_eval_scale, field_tuple_primitive_normalization")
 各方程式が斉次であるとする。このとき、project-local Qₚ 上の
 非零共通零点の存在と、project-local Zₚ 上の原始的共通零点の存在は同値である。
 各多項式の斉次次数は互いに異なっていてよい。
 :::
+
+```lean "homogeneous_field_common_zero_iff_primitive"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_homogeneousFieldCommonZero_iff_primitive
+    {σ ι : Type*} (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (f : ι → MvPolynomial σ (SerrePadicInt p))
+    (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
+    (∃ x : σ → SerrePadicField p,
+        x ≠ 0 ∧
+          ∀ i, MvPolynomial.eval₂ (serrePadicIntToField p) x (f i) = 0) ↔
+      ∃ y : σ → SerrePadicInt p,
+        serrePadicTuplePrimitive y ∧
+          ∀ i, MvPolynomial.eval y (f i) = 0 :=
+  homogeneousFieldCommonZero_iff_primitive p f d hf
+
+end SerreNumberTheoryAI
+```
 
 :::theorem "serre_proposition6_homogeneous_common_zero_iff_reductions"
   (lean := "SerreNumberTheoryAI.serre_proposition6_homogeneous_commonZero_iff_reductions")
