@@ -140,10 +140,7 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 :::
 
 :::definition "serre_padic_field_metric"
-  (lean := "SerreNumberTheoryAI.serrePadicFieldMetricSpace")
-  (uses := "serre_padic_field_valuation")
-離散付値を底 p で rank-one 実現し、対応する p進距離を備えた
-距離空間構造を得る。この距離が誘導する位相は、上で用いた付値位相と一致する。
+p進体に、付値から得られる p進距離を入れる。
 :::
 
 
@@ -169,12 +166,6 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 
 
 :::theorem "serre_padic_rationals_dense"
-  (lean := "SerreNumberTheoryAI.serrePadicField_ratCast_denseRange")
-  (uses := "serre_padic_int_compact, serre_padic_field_locally_compact")
 有理数の標準像は p進体で稠密である。
-まず §1.2 で得た整数の p進整数環での稠密性を標準埋め込みで移し、
-p進整数環の像が有理数像の閉包に入ることを示す。
-任意の p進体の元は p進整数環の2元の商で表されるので、
-有理数像の閉包は p進体全体になる。
 :::
 
