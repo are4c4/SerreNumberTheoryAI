@@ -16,6 +16,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerValuationAPI
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetric
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetricTopology
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetricCompletion
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
 import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 
 /-!
