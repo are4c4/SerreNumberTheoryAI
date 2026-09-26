@@ -13,6 +13,9 @@ The topology is obtained from the discrete valuation attached to the project-loc
 
 namespace SerreNumberTheoryAI
 
+open Filter
+open scoped Topology
+
 section PadicFieldTopology
 
 variable (p : ℕ) [Fact p.Prime]
