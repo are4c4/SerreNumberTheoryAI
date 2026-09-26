@@ -122,6 +122,7 @@ theorem serrePadicInt_isOpen_iff_dist (s : Set (SerrePadicInt p)) :
     exact hle.trans_lt hnsucc
 
 /-- The source p-adic distance, bundled as a metric while preserving the inverse-limit topology. -/
+@[instance_reducible]
 noncomputable def serrePadicIntMetricSpace : MetricSpace (SerrePadicInt p) :=
   MetricSpace.ofDistTopology
     (serrePadicIntDist p)
