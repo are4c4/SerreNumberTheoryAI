@@ -7,10 +7,10 @@
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
 | A | Scheduler / Design | 🚧 active | #118 post-merge handoff / queue refresh | `design/post-merge-handoff-118` / PR #119 | land latest four-file sync after rechecking main/claims/CI; monitor #114, #72/#89 freezes, and #112 owner metadata |
-| B | End-to-end Formalizer | 🚧 active | #96 `Q_p` and #102 Hensel now stackable; #108 preflight complete but waiting its own #72 freeze; #100/#104/#105 downstream waits | `work/c2-s1-3-qp-field`; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-1-unit-filtration`; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-quadratic-odd`; `work/c2-s2-2-hensel-quadratic-two` | move #96/#102 to exact #89 head `f42c68f0…` before dependent commits; do not infer #108 gate until D publishes it |
-| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | latest checked `7a48b08d…` CI #289 green on main after #115 merge; current normal `Formalization.lean` slot |
-| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric/topology/completion stacked implementation | PR #92; PR #116 | #72 `c43d7f09…` CI #261 now has scoped freezes for #89/#96/#102/#100/#104/#105; #89 `f42c68f0…` CI #291 freezes #96 topology+density and #102 completeness; #108 request still pending |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #120, #121, or #122 |
+| B | End-to-end Formalizer | 🚧 active | #96 stacked implementation / PR #123; #102 and #108 stackable; #120 preflight; #100/#104/#105 downstream waits | PR #123; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-1-unit-filtration`; `work/c2-s3-3-padic-squares`; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-quadratic-odd`; `work/c2-s2-2-hensel-quadratic-two` | continue #96 on its valid old freeze; for new #102/#108 commits prefer replacement heads `55175ebc…` / `781d1b8f…`; keep #120 proof-code-clean |
+| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | stable `7a48b08d…` CI #289; moving head `136bdf47…` CI #305 in progress; current normal `Formalization.lean` slot |
+| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric/topology/completion stacked implementation | PR #92; PR #116 | replacement #72 `781d1b8f…` CI #297 green and #89 `55175ebc…` CI #298 green; all scoped contracts preserved, including #108 core |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #121, #122, or #124 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
 
@@ -41,23 +41,22 @@ Mainで完了済み:
 
 Live ownership/dependency:
 
-- C owns #64 / draft PR #114. The branch has reconciled after #78 merged, uses the normal `Formalization.lean` aggregator, and latest checked head `7a48b08d…` passed CI #289; C retains the current shared-root slot.
-- #78 / PR #115 is DONE on main at `56a5307b…`; its Gauss-lemma Formalization/Blueprint root changes are integrated and no longer occupy a slot.
-- D owns #72 / draft PR #92. Exact head `c43d7f09…` passed CI #261 and includes source decomposition/valuation/domain plus Blueprint. D has explicit consumer-scoped freezes for #89/#96/#102/#100/#104/#105; #108 remains the only requested consumer subset not yet frozen.
-- D owns #89 / draft PR #116. It stacks exactly on `c43d7f09…`; exact head `f42c68f0…` passed CI #291 and is explicitly frozen for #96 (topology/projection-ball/density) and #102 (metric/completeness/divisibility-to-distance). The PR remains outside shared-root contention.
-- B owns #96; preflight is complete and the full required #72 + #89 contracts are now frozen. #96 is STACKABLE from exact #89 head `f42c68f0…`; its canonical branch must move to that exact base before dependent proof commits.
-- B owns #100; #99 and the #72 primitive/unit subset are stable. Full Proposition 6 proof still waits a #96 scaling interface.
-- B owns #102; preflight is complete and both #72 + #89 contracts are now frozen. #102 is STACKABLE from exact #89 head `f42c68f0…` and may begin the source Newton/Cauchy proof.
-- B owns #104; odd-`p` quadratic-lifting preflight is complete. Its #72 subset is frozen; it now waits only for #102 DONE/STACK-READY with the simple-root interface.
-- B owns #105; dyadic quadratic-lifting preflight is complete. Its #72 subset is frozen; it now waits only for #102 DONE/STACK-READY with the main `n,k` theorem.
-- B owns #108 on `work/c2-s3-1-unit-filtration`; preflight is complete and proof-code-clean. Core proof still waits an explicit #108-scoped #72 unit/projection/divisibility freeze; the final `Q_p` corollary additionally waits #96.
-- #112 has a canonical branch lock on current main but no owner-lane comment yet. Treat it as claimed/metadata-pending and do not duplicate it; A has requested owner attribution.
-- #120 Chapter 2 §3.3 p-adic square classes, #121 Chapter 3 §1.1 Hilbert basics, and #122 Chapter 3 §1.2 local Hilbert formulas remain unclaimed PREFLIGHT candidates.
+- C owns #64 / draft PR #114 and the current normal `Formalization.lean` slot. Stable `7a48b08d…` passed CI #289; moving head `136bdf47…` has CI #305 in progress.
+- #78 / PR #115 is DONE on main at `56a5307b…`.
+- D owns #72 / draft PR #92. Replacement exact head `781d1b8f…` passed CI #297 after latest-main resync; all older scoped promises remain valid, and new dependent work should prefer this replacement. Consumers include #89/#96/#102/#100/#104/#105/#108.
+- D owns #89 / draft PR #116. Replacement exact head `55175ebc…`, stacked on `781d1b8f…`, passed CI #298. It preserves the #96 topology/density and #102 metric/completeness promises; older `f42c68f0…` stays valid for existing work.
+- B owns #96 and has begun implementation in draft PR #123 on the valid old exact `f42c68f0…` base. Head `3f61cac8…` has CI #306 in progress. Its temporary top-level direct-import hook is isolated from C's `Formalization.lean` file but final normal integration must be serialized.
+- B owns #100; #99 and #72 primitive/unit inputs are stable. Full proof waits a #96 scaling interface.
+- B owns #102; preflight is complete and it is STACKABLE. No dependent commit was observed yet; new work should prefer #89 replacement `55175ebc…`, which contains #72 `781d1b8f…`.
+- B owns #104/#105; their #72 subsets are frozen, and each waits only for the appropriate future #102 theorem interface.
+- B owns #108; preflight is complete and its core Proposition 7 slice is now STACKABLE from #72 replacement `781d1b8f…`. The branch was still on main at last check. Its final `Q_p` corollary additionally waits #96.
+- #112 remains branch-locked with owner metadata pending; do not duplicate it.
+- B owns #120 as proof-code-clean PREFLIGHT. #121, #122, and newly seeded #124 (Hilbert product formula) remain unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
 
-1. **#115 / B is DONE** on main at `56a5307b…`; its former root slot is clear.
-2. **#114 / C** is reconciled on that main and owns the current normal `SerreNumberTheoryAI/Formalization.lean` slot; latest checked head `7a48b08d…` is CI #289 green.
-3. **#116 / D** does not touch `Formalization.lean` or `Blueprint.lean`; its four changed files are Chapter 2 metric/topology/completion modules plus an independent Blueprint module, so stacked work may continue without entering the shared-root queue.
+1. **#114 / C** owns the current normal `SerreNumberTheoryAI/Formalization.lean` slot; stable `7a48b08d…` is green and current moving head `136bdf47…` is under CI #305.
+2. **#92 / #116 / D** stay isolated from the normal shared aggregators; replacement heads `781d1b8f…` / CI #297 and `55175ebc…` / CI #298 are green.
+3. **#123 / B** temporarily edits top-level `SerreNumberTheoryAI.lean` plus `PadicField.lean` on a private stack base. It does not edit `Formalization.lean`; final normal root integration waits upstream/shared-root serialization.
 
-Latest completed A central sync is #113 / PR #117, merged as `c8b94633ed218392ba771ecab3cde3884b6bf457`. A is now running focused coordination #118 / PR #119 only; no mathematical worker artifact is owned. Clearly unclaimed safe capacity is #120/#121/#122, while #112 is branch-locked with owner metadata pending.
+Latest completed A central sync is #113 / PR #117, merged as `c8b94633ed218392ba771ecab3cde3884b6bf457`. A is now running focused coordination #118 / PR #119 only; no mathematical worker artifact is owned. Clearly unclaimed safe capacity is #121/#122/#124. #112 is branch-locked with owner metadata pending, and #120 is B-owned PREFLIGHT.
