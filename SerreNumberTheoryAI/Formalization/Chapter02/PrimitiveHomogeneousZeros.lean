@@ -329,7 +329,7 @@ theorem homogeneousFieldCommonZero_iff_primitive
       exact hscale s
     rw [htuple, homogeneous_eval₂_scale p (f i) (d i) (hf i),
       hxzero i, mul_zero]
-    exact map_zero (serrePadicIntToField p)
+    exact (map_zero (serrePadicIntToField p)).symm
   · rintro ⟨y, hyprim, hyzero⟩
     refine ⟨fun s => serrePadicIntToField p (y s), ?_, ?_⟩
     · rcases hyprim with ⟨s, hs⟩
