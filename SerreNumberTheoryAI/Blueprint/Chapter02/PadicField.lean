@@ -150,7 +150,7 @@ p進体に、付値から得られる p進距離を入れる。
 `Z_p` の標準像は `Q_p` の付値部分環と一致し、したがって開部分環である。
 :::
 
-:::theorem "serre_padic_int_compact"
+:::theorem "serre_padic_int_image_compact"
   (lean := "SerreNumberTheoryAI.isCompact_serrePadicIntImage")
   (uses := "serre_padic_int_open, serre_padic_int_to_field")
 `Z_p` の標準像は `Q_p` でコンパクトである。
@@ -159,7 +159,7 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 
 :::theorem "serre_padic_field_locally_compact"
   (lean := "SerreNumberTheoryAI.serrePadicFieldLocallyCompactSpace")
-  (uses := "serre_padic_int_open, serre_padic_int_compact")
+  (uses := "serre_padic_int_open, serre_padic_int_image_compact")
 `Q_p` は局所コンパクトである。開コンパクトな `Z_p` の像が
 0 のコンパクト近傍となり、加法平行移動で任意の点へ移せる。
 :::
