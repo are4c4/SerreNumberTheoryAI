@@ -52,6 +52,8 @@ progress同期
 
 live GitHub stateが文書より新しい場合はlive stateを優先し、そのrun内で文書を同期します。
 
+手動チャットと定期実行は同じACTIVE itemを共有します。片方の実行履歴をもう片方が暗黙に引き継がず、毎回live GitHub stateから復元します。
+
 ## 3. Work states
 
 - ACTIVE — 現在唯一の実装対象。
@@ -106,6 +108,21 @@ downstreamがupstreamを必要とする場合:
 15. progress / queue / active workを更新。
 16. 次のworkを選ぶ。
 
+### 6.1 GitHub write path / safety-check resilience
+
+GitHubへ変更を永続化するときは、利用可能ならChatGPTのGitHub連携が提供する構造化操作（branch、file create/update、PR、merge等）を優先します。書き込みを通すためにtoken、SSH key、Secrets、repository settings、Actions permissions、branch protection、ruleset、security settingsへ触れません。
+
+特定のwriteがChatGPT/OpenAI側の安全性チェック、権限制約、UI制約等で拒否された場合:
+
+1. 迂回・権限弱体化・別の危険な書き込み経路を試さない。
+2. その拒否だけを理由に別work itemへ移らない。
+3. 同じACTIVE itemで可能なread-only CI解析、source/statement/dependency/mathlib確認、proof/Blueprint patch設計、self-reviewを続ける。
+4. 永続化されていない変更をcommit/push/merge済みと扱わない。
+5. run終了時に pending write のbranch/path/意図した変更/再開地点を明示する。
+6. 次回の手動チャットまたは定期実行でlive GitHubを再確認し、通常の構造化writeを再試行する。
+
+write不能のため同じACTIVE itemについてもそれ以上安全に進められない場合は、そのrunだけ終了します。これは自動的にwork itemの数学的BLOCKEDやPARKEDを意味しません。
+
 ## 7. Self-review gate
 
 CI greenだけではmergeしません。最低限次を再確認します。
@@ -145,3 +162,5 @@ CI greenだけではmergeしません。最低限次を再確認します。
 hard blockerは AGENTS.md に従います。
 
 blockerを発見したら、Issue/PRへ理由を記録し、unsafeな推測をしません。別workへ移る場合でも、現在のactive workを明示的にparkしてから移ります。
+
+単発のGitHub write拒否は、それだけではhard blockerとして扱いません。同じACTIVE itemで安全な作業が残っていれば継続し、残っていなければpending writeと再開地点を残してそのrunを終了します。
