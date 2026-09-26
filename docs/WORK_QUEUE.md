@@ -31,15 +31,15 @@ live branch / Issue / PR / CI がこの文書より新しい場合はlive state�
 
 Current ACTIVE:
 
-- C2S1.2-ZpProperties — Issue #72 / PR #140 / work/c2-s1-2-zp-properties
+- C2S1.2-ZpMetric — Issue #89 / work/c2-s1-2-zp-metric
 
 Just completed:
 
+- C2S1.2-ZpProperties — Issue #72 / PR #140, merged on main as 2edd751d…
 - S3.3-QuadraticReciprocity — Issue #64 / PR #114, merged on main as 1a67db4f…
 
 Legacy PRs to keep PARKED until their turn:
 
-- #116 — C2S1.2-ZpMetric
 - #123 — C2S1.3-QpField
 - #125 — C2S3.1-UnitFiltration
 
@@ -97,8 +97,8 @@ Live dependency graph:
 | P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `DONE` | stable `7a48b08d…` CI #289; moving PR #114 head `136bdf47…`, CI #305 in progress; current Formalization-root slot | `work/s3-3-quadratic-reciprocity` | #64 / C |
 | P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `DONE` | PR #115 merged as `56a5307b…` | `work/c1-supp-gauss-lemma` | #78 complete |
 | P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `DONE` | PR #86 merged | `work/c2-s1-1-zp-construction` | #71 complete |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `ACTIVE` | downstream CI #306/#311 exposed compile errors in the upstream module; publish a compile-validated replacement before stacking resumes | `work/c2-s1-2-zp-properties` | #72 / D |
-| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `WAITING` | restack after repaired #72 and compile the metric modules before republishing downstream promises | `work/c2-s1-2-zp-metric` | #89 / D |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `DONE` | downstream CI #306/#311 exposed compile errors in the upstream module; publish a compile-validated replacement before stacking resumes | `work/c2-s1-2-zp-properties` | #72 / D |
+| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `ACTIVE` | restack after repaired #72 and compile the metric modules before republishing downstream promises | `work/c2-s1-2-zp-metric` | #89 / D |
 | P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `BLOCKED` | PR #123 CI #306 fails in upstream #72 module; preserve commits and wait for replacement stack | `work/c2-s1-3-qp-field` | #96 / B |
 | P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `DONE` | PR #103 merged at `326c2aec…`, CI #260 green | `work/c2-s2-1-root-existence` | #99 complete |
 | P15 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 命題6 | `PREFLIGHT` | #99 + #72 primitive/unit sides stable; full proof waits #96 scaling DONE/STACK-READY | `work/c2-s2-1-primitive-homogeneous-zeros` | #100 / B |
@@ -119,8 +119,8 @@ Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is s
 
 ## 5. Single-lane resume order
 
-- 現在は #140 / C2S1.2-ZpProperties だけを実装ACTIVEとして進める。
-- #140 merge後、latest main上でこのqueueを再評価する。
+- 現在は C2S1.2-ZpMetric / Issue #89 だけを実装ACTIVEとして進める。
+- metric slice merge後、latest main上でこのqueueを再評価する。
 - #116 は #92 がmainで安定してから。
 - #123 は必要なp進整数/metric interfaceがmainで安定してから。
 - #125 は必要なunit/valuation interfaceがmainで安定してから。
