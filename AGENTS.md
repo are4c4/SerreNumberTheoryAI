@@ -28,6 +28,8 @@
 
 GitHub上の main・branch・Issue・PR・CI が共有状態であり、チャット履歴だけに存在する情報は source of truth ではない。文書とlive GitHub stateが矛盾する場合はlive stateを優先し、その後文書を同期する。
 
+手動チャットと定期実行は同じ単一レーンの共有状態を使う。どちらか一方で作業した後、もう一方は必ずlive GitHub stateを再読してから再開し、チャット履歴だけを根拠に継続しない。
+
 ## 2. 単一レーン運用 — hard rule
 
 2026-09-26以降、このリポジトリは **1レーンの直列運用** とする。
@@ -187,6 +189,25 @@ Lean proofと自然言語proofの数学的戦略が大きく異なる場合、Bl
 11. latest mainを再取得し、progress / queue / active workを同期する。
 12. その後にだけ次のwork itemを選ぶ。
 
+### 9.1 GitHub write path と安全性チェック
+
+GitHubへの永続化では、利用可能ならGitHub連携の構造化された操作（branch作成、file create/update、PR作成/更新、merge等）を優先する。GitHubへの書き込みを成立させる目的で、認証情報、token、SSH key、Secrets、repository settings、Actions permissions、branch protection、ruleset、security settingsを変更・探索してはならない。
+
+ChatGPT/OpenAI側の安全性チェック、権限制約、UI制約等によって特定のGitHub writeが拒否された場合、その制約を迂回・弱体化・無効化しようとしない。**単発のwrite拒否は、それだけでは数学的hard blockerではない。**
+
+writeが拒否されたrunでは、現在のACTIVE itemの範囲内で安全にできる作業を続ける。例:
+
+- live PR / CI / diff のread-only確認
+- failure原因の解析
+- source / statement / dependency / mathlib の再確認
+- Lean proofやBlueprint変更の具体的なpatch設計
+- 次に適用すべきfile/path/内容の明確化
+- self-review
+
+ただし、別の数学的work itemへ移ったり、別のactive implementation branch/PRを作ったりしない。永続化されていない変更をcommit/push/merge済みと報告してはならない。
+
+run終了時は、writeが未完了なら対象branch、path、意図した変更、確認済みCI、未解決事項、次回の再開地点を明示する。次回の手動チャットまたは定期実行ではlive GitHub stateを再取得し、通常の構造化GitHub writeを再試行する。
+
 ## 10. Blocker semantics
 
 以下では勝手に解釈を変えず停止する。
@@ -200,6 +221,8 @@ Lean proofと自然言語proofの数学的戦略が大きく異なる場合、Bl
 - BLOCKED: SOURCE-QUOTE-REVIEW
 - BLOCKED: INFRASTRUCTURE
 - BLOCKED: CROSS-LAYER-STATEMENT-DRIFT
+
+単発のGitHub write拒否は原則として `BLOCKED: INFRASTRUCTURE` に昇格させない。同じACTIVE itemについて安全なread-only解析・設計・reviewが残っている限り、そのrunで可能な範囲を継続する。永続化不能のためそれ以上安全に進められない場合のみ、pending writeを明記してそのrunを終了する。
 
 blockerで別itemへ移る必要がある場合は、現在のPRを明示的にpark/closeし、docs/ACTIVE_WORK.md と docs/WORK_QUEUE.md を同期してから移る。複数のactive implementationを残したままwork stealingしない。
 
@@ -232,5 +255,6 @@ blockerで別itemへ移る必要がある場合は、現在のPRを明示的にp
 ## 13. 現行運用
 
 - 旧A/B/C/D/Eレーン運用は終了。
-- 新しい自動スケジュールを前提にしない。
-- 1つのチャット/作業レーンが、active itemをmergeまで完了してから次へ進む。
+- 手動チャットと定期実行は同じ単一レーン規約、同じ docs/ACTIVE_WORK.md、同じlive GitHub stateを共有する。
+- 定期実行は別workerや別ownershipを作らない。手動チャットで進捗が入った場合も、次回runはlive stateを再読して同じACTIVE itemから再開する。
+- その時点で作業する1つのチャット/定期runが、active itemをmergeまで完了してから次へ進む。
