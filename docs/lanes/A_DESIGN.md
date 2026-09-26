@@ -51,12 +51,12 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ### Live ownership
 
-- B: #96 `C2S1.3-QpField` / PR #123; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting`; #104 `C2S2.2-HenselQuadraticOdd`; #105 `C2S2.2-HenselQuadraticTwo`; #108 `C2S3.1-UnitFiltration`; #120 `C2S3.3-PadicSquares`; #122 `C3S1.2-HilbertLocalFormula`; #124 `C3S2.1-HilbertProductFormula`; #129 `C3S2.2-WeakApproximation`.
+- B: #96 `C2S1.3-QpField` / PR #123; #100 `C2S2.1-PrimitiveHomogeneousZeros`; #102 `C2S2.2-HenselLifting`; #104 `C2S2.2-HenselQuadraticOdd`; #105 `C2S2.2-HenselQuadraticTwo`; #108 `C2S3.1-UnitFiltration`; #120 `C2S3.3-PadicSquares`; #122 `C3S1.2-HilbertLocalFormula`; #124 `C3S2.1-HilbertProductFormula`; #129 `C3S2.2-WeakApproximation`; #130 `C3S2.2-PrescribedHilbertSymbols`.
 - C: #64 `S3.3-QuadraticReciprocity` / PR #114.
 - D: #72 `C2S1.2-ZpProperties` / PR #92; #89 `C2S1.2-ZpMetric` / PR #116; #121 `C3S1.1-HilbertBasics` preflight complete/proof-code-clean.
 - #112 `C2S3.2-PrincipalUnits`: canonical branch exists on current main; owner-lane metadata is still pending on the Issue. The branch lock is authoritative, so do not duplicate it.
 - E: no mathematical ownership at latest check.
-- Unclaimed: #130 `C3S2.2-PrescribedHilbertSymbols`; #131 `C4S1.1-QuadraticFormBasics`; #134 `C4S1.2-Orthogonality`.
+- Unclaimed: #131 `C4S1.1-QuadraticFormBasics`; #134 `C4S1.2-Orthogonality`; #136 `C4S1.3-IsotropicHyperbolic`.
 
 ### Dependency / integration state
 
@@ -80,7 +80,8 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 - #122 is B-owned with PREFLIGHT complete and proof-code-clean; proof waits #121 plus the exact #96/#120/#100/#104/#105 interfaces actually used.
 - #124 is B-owned with PREFLIGHT complete and proof-code-clean; proof waits #122 and the exact #64 quadratic-reciprocity interface actually used.
 - #129 is B-owned with PREFLIGHT complete and proof-code-clean. Its CRT lemma is project-independent; the source weak-approximation specialization waits #96.
-- #130/#131/#134 are the clearly unclaimed safe PREFLIGHT capacity.
+- #130 is B-owned with PREFLIGHT complete and proof-code-clean. The source two-stage Theorem 4 plan is fixed; proof waits #122/#124/#120/#129 and local-field dependencies.
+- #131/#134/#136 are the clearly unclaimed safe PREFLIGHT capacity.
 
 ### Shared-hotspot coordination
 
@@ -92,9 +93,9 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 Unclaimed safe capacity:
 
-- #130 `C3S2.2-PrescribedHilbertSymbols` — PREFLIGHT; theorem-level proof gated on #124/#122/#120/#129 + source-faithful Dirichlet interface.
 - #131 `C4S1.1-QuadraticFormBasics` — PREFLIGHT; generic quadratic-form algebra independent of the current p-adic chain.
 - #134 `C4S1.2-Orthogonality` — PREFLIGHT; generic orthogonality/radical theory, proof waits #131.
+- #136 `C4S1.3-IsotropicHyperbolic` — PREFLIGHT; isotropic/hyperbolic-plane theory, proof waits #131/#134.
 
 #112 is branch-locked and not claimable. #120 is now B-owned PREFLIGHT. Owned executable/near-executable work includes #64/#72, stacked #89, active stacked #96/PR #123, stackable #102, and core-stackable #108. The pool retains three clearly unclaimed safe paths without speculative work.
 
