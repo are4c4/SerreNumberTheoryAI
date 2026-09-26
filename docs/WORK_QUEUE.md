@@ -51,7 +51,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | Order | Work ID | Target | State | Gate / next action | Preserved artifact |
 | --- | --- | --- | --- | --- | --- |
 | 1 | `C2S1.3-QpField` | §1.3 `Q_p`, decomposition/valuation, Proposition 4 | DONE | PR #143 merged as `5b021cb9…`, CI #428 green | PR #123 / old branch `work/c2-s1-3-qp-field` |
-| 2 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 Proposition 6 | ACTIVE | implement primitive residue compatibility, inverse-limit step, and homogeneous `Q_p` normalization end-to-end | Issue #100 |
+| 2 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 Proposition 6 | ACTIVE | Lean + Blueprint implementation complete on PR #145; finish PR-head CI, self-review, and merge | Issue #100 |
 | 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | READY | after current ACTIVE, recheck source-order/dependency against Proposition 6 | Issue #102 |
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | WAITING | needs Hensel simple-root interface | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | WAITING | needs main Hensel theorem | Issue #105 |
