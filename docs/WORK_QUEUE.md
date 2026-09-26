@@ -31,7 +31,7 @@ live branch / Issue / PR / CI がこの文書より新しい場合はlive state�
 
 Current ACTIVE:
 
-- C2S1.2-ZpProperties — Issue #72 / PR #92 / work/c2-s1-2-zp-properties
+- C2S1.2-ZpProperties — Issue #72 / PR #140 / work/c2-s1-2-zp-properties
 
 Just completed:
 
@@ -119,8 +119,8 @@ Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is s
 
 ## 5. Single-lane resume order
 
-- 現在は #92 / C2S1.2-ZpProperties だけを実装ACTIVEとして進める。
-- #92 merge後、latest main上でこのqueueを再評価する。
+- 現在は #140 / C2S1.2-ZpProperties だけを実装ACTIVEとして進める。
+- #140 merge後、latest main上でこのqueueを再評価する。
 - #116 は #92 がmainで安定してから。
 - #123 は必要なp進整数/metric interfaceがmainで安定してから。
 - #125 は必要なunit/valuation interfaceがmainで安定してから。

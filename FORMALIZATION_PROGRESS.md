@@ -80,18 +80,18 @@
 
 ## Phase 6 — 第2章 p進体 §1
 
-> Validation note: downstream CI #306/#311 exposed compile failures in `PadicIntegerProperties.lean`. Until D publishes replacement exact heads that actually compile the new modules, #72/#89-dependent proof work is paused; existing downstream commits remain preserved.
+> Validation note: the earlier latent compile failures in the §1.2 algebraic modules were repaired on the former #92 branch. This serial recovery rebases that validated slice onto latest main and re-runs normal root policy / Lean / Verso CI before merge.
 
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §1.2 Proposition 1–2 + valuation | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
+| §1.2 Proposition 1–2 + valuation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 3: metric / completeness / density | ✅ | 🚧 | ⬜ | 🚧 | 🚧 | 🚧 |
 | §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #71 / PR #86 はproject-local inverse-limit `SerrePadicInt`、residue projections、integer embedding、compactness/continuity、Blueprint linkageをmainへend-to-end統合済み。
-- #72 / PR #92 はD-owned。latest-main resync後のreplacement exact head `781d1b8f…` はCI #297 green。projection/kernel、power divisibility、unit criterion、unique `p^n * unit` decomposition、project additive valuation、multiplicative/ultrametric laws、domain instance、独立Blueprintの数学interfaceは旧 `c43d7f09…` と不変で、#89/#96/#102/#100/#104/#105/#108向けにscoped freeze済み。旧freezeもexisting workには有効。
+- #72 / PR #92 is the current single-lane recovery of the algebraic §1.2 slice. It provides projection-kernel/quotient results, unit criterion, unique `p^n * unit` decomposition, project-domain structure, and the project additive valuation with multiplicative and ultrametric laws; no completed mathlib `PadicInt` theorem closes the source target.
 - #89 / draft PR #116 はD-owned。replacement exact head `55175ebc…` は#72 `781d1b8f…` 上でCI #298 green。source metric、inverse-limit topologyとの一致、compact→complete、integer density、独立Blueprintまで実装し、#96向けtopology/projection-ball/densityと#102向けmetric/completeness/divisibility-to-distanceをfreeze。旧 `f42c68f0…` もexisting workには有効。shared rootは未編集。
 - #96 はB-ownedでPR #123まで進んだが、現在CIはupstream `PadicIntegerProperties.lean` で失敗している。field側commitは保存し、compile-validated replacement stack待ち。
 
