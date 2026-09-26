@@ -106,8 +106,9 @@ theorem serrePadicField_zpow_exponent_unique
       v • (serrePadicFieldPrime p) ^ n) :
     m = n := by
   have horder := congrArg (serrePadicFieldOrder p) h
-  simpa only [serrePadicFieldOrder_unit_smul_zpow] using
-    WithZero.exp_injective horder
+  have hmn : WithZero.exp m = WithZero.exp n := by
+    simpa only [serrePadicFieldOrder_unit_smul_zpow] using horder
+  exact WithZero.exp_injective hmn
 
 end PadicField
 
