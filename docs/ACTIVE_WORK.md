@@ -23,12 +23,12 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 ## Current Proposition 6 plan
 
-1. represent “primitive” as a unit-coordinate condition, with an equivalent first-residue nonvanishing formulation;
-2. prove compatibility of primitivity with finite residue projections;
-3. strengthen the Proposition 5 compact inverse-limit argument to primitive common zeros;
-4. use homogeneity plus the merged `Q_p` decomposition/valuation interface to normalize a nonzero `Q_p` common zero to a primitive `Z_p` common zero;
-5. integrate Formalization / Blueprint roots;
-6. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
+1. ✅ represent “primitive” as a unit-coordinate condition, with an equivalent first-residue nonvanishing formulation;
+2. ✅ prove compatibility of primitivity with finite residue projections;
+3. ✅ strengthen the Proposition 5 compact inverse-limit argument to primitive common zeros;
+4. ✅ use homogeneity plus the merged `Q_p` decomposition interface to normalize a nonzero `Q_p` common zero to a primitive `Z_p` common zero;
+5. ✅ integrate Formalization / Blueprint roots;
+6. 🚧 run policy / `lake build` / `lake exe vbp build` / PR-head CI;
 7. self-review and merge before selecting the next item.
 
 ## Parked legacy implementation
