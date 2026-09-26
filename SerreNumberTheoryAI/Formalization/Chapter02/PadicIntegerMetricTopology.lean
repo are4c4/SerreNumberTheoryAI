@@ -54,8 +54,7 @@ theorem exists_projFiber_subset_of_mem_open
     (Topology.IsInducing.subtypeVal.isOpen_iff).1 hs
   have hxu : x.1 ∈ u := by
     change x ∈ Subtype.val ⁻¹' u
-    rw [hus]
-    exact hx
+    simpa only [hus] using hx
   obtain ⟨v, hv, hxv, hvu⟩ :=
     (PiNat.isTopologicalBasis_cylinders
       (fun n : ℕ => padicResidueRing p n)).exists_subset_of_mem_open hxu hu
@@ -69,11 +68,12 @@ theorem exists_projFiber_subset_of_mem_open
     have hlow : serrePadicIntProj p i y = serrePadicIntProj p i x :=
       serrePadicIntProj_eq_of_le p (Nat.le_of_lt hi) hhigh
     have hxcyl := (PiNat.mem_cylinder_iff.mp hxv) i hi
-    exact (by simpa only [serrePadicIntProj_apply] using hlow).trans hxcyl
+    have hlow' : y.1 i = x.1 i := by
+      simpa only [serrePadicIntProj_apply] using hlow
+    exact hlow'.trans hxcyl
   have hyu : y.1 ∈ u := hvu hycyl
   change y ∈ Subtype.val ⁻¹' u at hyu
-  rw [hus] at hyu
-  exact hyu
+  simpa only [hus] using hyu
 
 /--
 The source metric open sets are exactly the pre-existing inverse-limit open sets.
@@ -89,7 +89,7 @@ theorem serrePadicInt_isOpen_iff_dist (s : Set (SerrePadicInt p)) :
     refine ⟨Real.exp (-((n + 1 : ℕ) : ℝ)), Real.exp_pos _, ?_⟩
     intro y hxy
     apply hn
-    exact (serrePadicIntDist_le_radius_succ_iff_proj_eq p x y n).1 hxy.le
+    exact ((serrePadicIntDist_le_radius_succ_iff_proj_eq p x y n).1 hxy.le).symm
   · intro h
     rw [isOpen_iff_mem_nhds]
     intro x hx
@@ -112,7 +112,7 @@ theorem serrePadicInt_isOpen_iff_dist (s : Set (SerrePadicInt p)) :
     intro y hy
     apply hball y
     have hle : serrePadicIntDist p x y ≤ Real.exp (-((n + 1 : ℕ) : ℝ)) :=
-      (serrePadicIntDist_le_radius_succ_iff_proj_eq p x y n).2 hy
+      (serrePadicIntDist_le_radius_succ_iff_proj_eq p x y n).2 hy.symm
     exact hle.trans_lt hnsucc
 
 /-- The source p-adic distance, bundled as a metric while preserving the inverse-limit topology. -/
