@@ -78,18 +78,6 @@ end SerreNumberTheoryAI
 非零の p進体の元は、p の整数冪と p進整数の単元の像の積に分解できる。
 :::
 
-```lean "serre_padic_field_decomposition"
-namespace SerreNumberTheoryAI
-
-example
-    (p : ℕ) [Fact p.Prime] {x : SerrePadicField p} (hx : x ≠ 0) :
-    ∃ (n : ℤ) (u : (SerrePadicInt p)ˣ),
-      x = u • (serrePadicFieldPrime p) ^ n :=
-  serrePadicField_exists_unit_smul_zpow (p := p) hx
-
-end SerreNumberTheoryAI
-```
-
 :::proof "serre_padic_field_decomposition"
 分子・分母をそれぞれ `p` の非負整数冪と単元へ分解すると、
 指数の差が整数指数 `n` になる。この議論は一般の離散付値環の
@@ -101,17 +89,6 @@ end SerreNumberTheoryAI
 分数体上の order-of-vanishing を用いて、p の整数指数を記録する
 project-local p進付値を定義する。
 :::
-
-```lean "serre_padic_field_order"
-namespace SerreNumberTheoryAI
-
-noncomputable example
-    (p : ℕ) [Fact p.Prime] :
-    SerrePadicField p →*₀ WithZero (Multiplicative ℤ) :=
-  serrePadicFieldOrder p
-
-end SerreNumberTheoryAI
-```
 
 :::lemma_ "serre_padic_field_order_prime"
   (lean := "SerreNumberTheoryAI.serrePadicFieldOrder_prime")
