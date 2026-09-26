@@ -74,9 +74,9 @@ end SerreNumberTheoryAI
 :::
 
 :::theorem "serre_padic_field_decomposition"
-:::
-
 非零の p進体の元は、p の整数冪と p進整数の単元の像の積に分解できる。
+この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
+:::
 
 :::proof "serre_padic_field_decomposition"
 分子・分母をそれぞれ `p` の非負整数冪と単元へ分解すると、
@@ -85,10 +85,10 @@ end SerreNumberTheoryAI
 :::
 
 :::definition "serre_padic_field_order"
-:::
-
 分数体上の order-of-vanishing を用いて、p の整数指数を記録する
 project-local p進付値を定義する。
+この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
+:::
 
 :::lemma_ "serre_padic_field_order_prime"
   (lean := "SerreNumberTheoryAI.serrePadicFieldOrder_prime")
