@@ -18,39 +18,22 @@ variable (p : ℕ) [Fact p.Prime]
 noncomputable def serrePadicIntSourceMetricCompleteSpace :
     @CompleteSpace (SerrePadicInt p) (serrePadicIntMetricSpace p).toUniformSpace := by
   letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+  letI : CompactSpace (SerrePadicInt p) := serrePadicInt_compactSpace p
   exact complete_of_compact
 
 /-- Ordinary integers are dense in the project p-adic integers for the source metric topology. -/
 theorem serrePadicIntIntCast_denseRange : DenseRange (serrePadicIntIntCast p) := by
-  letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
-  rw [Metric.denseRange_iff]
-  intro x ε hε
-  let r : ℝ := Real.exp (-1)
-  have hr : r < 1 := by
-    dsimp [r]
-    exact (Real.exp_lt_one_iff).2 (by norm_num)
-  obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hε hr
-  have hnexp : Real.exp (-(n : ℝ)) < ε := by
-    simpa [r, ← Real.exp_nat_mul, mul_comm] using hn
-  have hnsucc : Real.exp (-((n + 1 : ℕ) : ℝ)) < ε := by
-    have hlt : Real.exp (-((n + 1 : ℕ) : ℝ)) < Real.exp (-(n : ℝ)) := by
-      apply Real.exp_lt_exp.mpr
-      exact neg_lt_neg (by exact_mod_cast Nat.lt_succ_self n)
-    exact hlt.trans hnexp
+  rw [dense_iff_inter_open]
+  intro U hU hU_nonempty
+  obtain ⟨x, hx⟩ := hU_nonempty
+  obtain ⟨n, hn⟩ := exists_projFiber_subset_of_mem_open p hU hx
   obtain ⟨z, hz⟩ := ZMod.intCast_surjective (serrePadicIntProj p n x)
-  refine ⟨z, ?_⟩
-  change serrePadicIntDist p x (serrePadicIntIntCast p z) < ε
-  have hproj :
-      serrePadicIntProj p n x =
-        serrePadicIntProj p n (serrePadicIntIntCast p z) := by
-    rw [serrePadicIntIntCast_proj]
-    exact hz.symm
-  have hle :
-      serrePadicIntDist p x (serrePadicIntIntCast p z) ≤
-        Real.exp (-((n + 1 : ℕ) : ℝ)) :=
-    (serrePadicIntDist_le_radius_succ_iff_proj_eq
-      p x (serrePadicIntIntCast p z) n).2 hproj
-  exact hle.trans_lt hnsucc
+  refine ⟨serrePadicIntIntCast p z, ?_, ⟨z, rfl⟩⟩
+  apply hn
+  change serrePadicIntProj p n (serrePadicIntIntCast p z) =
+    serrePadicIntProj p n x
+  rw [serrePadicIntIntCast_proj]
+  exact hz
 
 end PadicIntegerMetricCompletion
 
