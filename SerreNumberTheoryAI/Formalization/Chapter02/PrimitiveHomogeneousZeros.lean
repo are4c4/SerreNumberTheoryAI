@@ -66,9 +66,9 @@ theorem serrePadicTuplePrimitive_of_reduced
       IsUnit (padicResidueToFirst p n (serrePadicIntProj p n (x s))) :=
     hs.map (padicResidueToFirst p n)
   have hfirst : IsUnit (serrePadicIntProj p 0 (x s)) := by
-    simpa [padicResidueToFirst_proj] using hfirstUnit
-  have hne : serrePadicIntProj p 0 (x s) ≠ 0 := hfirst.ne_zero
-  exact ⟨s, (serrePadicInt_isUnit_iff_proj_zero_ne_zero p (x s)).2 hne⟩
+    rw [padicResidueToFirst_proj p n (x s)] at hfirstUnit
+    exact hfirstUnit
+  exact ⟨s, serrePadicInt_isUnit_of_proj_zero_isUnit p (x s) hfirst⟩
 
 /-- Primitivity is equivalent to nonvanishing of the tuple in the first residue field. -/
 theorem serrePadicTuplePrimitive_iff_firstProj_ne_zero
@@ -83,14 +83,11 @@ theorem serrePadicTuplePrimitive_iff_firstProj_ne_zero
   · intro h
     classical
     by_contra hnot
-    push_neg at hnot
     apply h
     funext s
-    have hnonunit : ¬ IsUnit (x s) := hnot s
-    have : ¬ serrePadicIntProj p 0 (x s) ≠ 0 := by
-      intro hne
-      exact hnonunit ((serrePadicInt_isUnit_iff_proj_zero_ne_zero p (x s)).2 hne)
-    simpa using this
+    by_contra hne
+    apply hnot
+    exact ⟨s, (serrePadicInt_isUnit_iff_proj_zero_ne_zero p (x s)).2 hne⟩
 
 /-- The primitive locus in a finite product of project p-adic integers is closed. -/
 theorem serrePadicTuplePrimitive_isClosed
