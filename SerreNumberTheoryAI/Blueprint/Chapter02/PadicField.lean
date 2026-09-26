@@ -163,7 +163,7 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 
 :::theorem "serre_padic_field_locally_compact"
   (lean := "SerreNumberTheoryAI.serrePadicFieldLocallyCompactSpace")
-  (uses := "serre_padic_int_open, serre_padic_int_image_compact")
+  (uses := "serre_padic_int_open")
 `Q_p` は局所コンパクトである。開コンパクトな `Z_p` の像が
 0 のコンパクト近傍となり、加法平行移動で任意の点へ移せる。
 :::
