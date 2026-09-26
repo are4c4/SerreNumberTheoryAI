@@ -16,10 +16,7 @@ namespace SerreNumberTheoryAI
 section PadicIntegerProperties
 
 /-- The first-isomorphism-theorem quotient attached to the `n`-th residue projection. -/
-noncomputable def serrePadicIntQuotientKerEquiv
-    (p n : ℕ) :
-    Ideal.Quotient (RingHom.ker (serrePadicIntProj p n)) ≃+*
-      padicResidueRing p n :=
+noncomputable def serrePadicIntQuotientKerEquiv (p n : ℕ) :=
   (serrePadicIntProj p n).quotientKerEquivOfSurjective
     (serrePadicIntProj_surjective p n)
 
@@ -38,7 +35,7 @@ theorem serrePadicIntProj_cast_of_le
   | succ k ih =>
       have h₁ : p ^ (m + 1) ∣ p ^ (m + k + 1) := by
         exact pow_dvd_pow p (by omega)
-      have h₂ : p ^ (m + k + 1) ∣ p ^ (m + (k + 1) + 1) := by
+      have h₂ : p ^ (m + k + 1) ∣ p ^ (m + k + 1 + 1) := by
         exact pow_dvd_pow p (by omega)
       have hcomp :
           (ZMod.castHom h₁ (padicResidueRing p m)).comp
@@ -48,23 +45,23 @@ theorem serrePadicIntProj_cast_of_le
           (ZMod.castHom_comp h₁ h₂)
       have hcompat :
           padicReduction p (m + k)
-              (serrePadicIntProj p (m + (k + 1)) x) =
-            serrePadicIntProj p (m + k) x := by
-        convert serrePadicIntProj_compat p (m + k) x using 1 <;> omega
+              (serrePadicIntProj p (m + k + 1) x) =
+            serrePadicIntProj p (m + k) x :=
+        serrePadicIntProj_compat p (m + k) x
       have hstep :
           ZMod.castHom h₁ (padicResidueRing p m)
               (padicReduction p (m + k)
-                (serrePadicIntProj p (m + (k + 1)) x)) =
+                (serrePadicIntProj p (m + k + 1) x)) =
             ZMod.castHom h₁ (padicResidueRing p m)
               (serrePadicIntProj p (m + k) x) :=
         congrArg (ZMod.castHom h₁ (padicResidueRing p m)) hcompat
       calc
         _ = ZMod.castHom h₁ (padicResidueRing p m)
               (padicReduction p (m + k)
-                (serrePadicIntProj p (m + (k + 1)) x)) := by
+                (serrePadicIntProj p (m + k + 1) x)) := by
               have happ := congrArg
-                (fun f : padicResidueRing p (m + (k + 1)) →+* padicResidueRing p m =>
-                  f (serrePadicIntProj p (m + (k + 1)) x))
+                (fun f : padicResidueRing p (m + k + 1) →+* padicResidueRing p m =>
+                  f (serrePadicIntProj p (m + k + 1) x))
                 hcomp
               simpa [RingHom.comp_apply] using happ.symm
         _ = ZMod.castHom h₁ (padicResidueRing p m)
