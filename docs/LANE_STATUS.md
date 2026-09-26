@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #127 central validation-state alignment | `design/align-padic-validation-127` | align lane/queue/progress text, then return to monitoring |
-| B | End-to-end Formalizer | 🚧 active | #96/#108 paused after upstream compile failure; #102 waiting; #120 preflight | PR #123; PR #125; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-3-padic-squares` | preserve current commits and wait for compile-validated p-adic stack heads |
-| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | head `6193e6a3…` passed CI #315; keep source proof moving and resync latest main before final integration |
-| D | End-to-end Formalizer | 🚧 active | #72 rooted compile repair; #89 restack pending | PR #92; PR #116 | CI #321 reproduced the latent errors on the owner branch; repair #72 until rooted policy/Lean/Verso is green, then revalidate #89 and republish exact heads |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #121, #122, or #124 |
+| A | Scheduler / Design | 🚧 active | #132 queue refill after Hilbert preflight claims | `design/refill-after-hilbert-preflight-132` | sync #121/#122/#124 claims, add #129/#130/#131 capacity, monitor rooted #72 repair |
+| B | End-to-end Formalizer | 🚧 active | #96/#108 preserved but p-adic-gated; #102 waiting; #120/#122/#124 preflight complete | PR #123; PR #125; `work/c2-s3-3-padic-squares`; `work/c3-s1-2-hilbert-local-formula`; `work/c3-s2-1-hilbert-product-formula` | keep p-adic dependent proofs paused; retain proof-code-clean Hilbert preflights until gates open |
+| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | moving source proof; use live PR/CI, resync latest main before final integration |
+| D | End-to-end Formalizer | 🚧 active | #72 rooted compile repair; #89 restack pending; #121 preflight complete | PR #92; PR #116; `work/c3-s1-1-hilbert-basics` | continue #72 rooted repair; after green, revalidate #89 and republish exact heads; keep #121 proof-code-clean under concurrency limit |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #129, #130, or #131 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
 
