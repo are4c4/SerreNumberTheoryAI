@@ -70,12 +70,12 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 3.1 `F_q` の平方数 / 定理4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 3.2 Legendre記号 / 定理5 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 3.3 平方剰余の相互法則 / 定理6 | ✅ | ⬜ | ⬜ | 🚧 | 🚧 | 🚧 |
+| 3.3 平方剰余の相互法則 / 定理6 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 補遺 (i) Gaussの補題 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 - #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成済み。
 - #56 / PR #98 はmerge `7aa158673bf0df1c62e977b508297d2e6b88610a` でend-to-end完成。project Legendre value/sign、multiplicativity、square criterion、Theorem 5(i)–(iii)、primitive 8th-root route、独立Blueprint linkageを統合し、final headはCI #252 green。
-- #64 / draft PR #114 はC-ownedで現在のshared-root single-writer。stable checkpoint `7a48b08d…` はCI #289 green、moving headは `136bdf47…` まで進みCI #305実行中。primitive root・additive character・Gauss sum・Legendre characterからsource coefficient/Gauss-square/Frobenius proofへ継続中。
+- #64 / PR #114 は原典のGauss和ルートをend-to-endで実装。原始 l 乗根、係数計算 C₀=l−1 / Cᵤ=−1、第一Gauss和補題、Frobeniusによる第二補題、定理5(ii)からの最終相互法則までLean/Blueprintを同期し、ready-made quadratic reciprocity / gaussSum_sq を完了定理として使用していない。
 - #78 / PR #115 はmerge `56a5307bee7049924c9090a677492ba01a4808e2` でend-to-end完成。source-shaped signed half-system/permutation proof、独立Blueprint、normal Formalization/Blueprint root linkageをmainへ統合済み。
 
 ## Phase 6 — 第2章 p進体 §1
