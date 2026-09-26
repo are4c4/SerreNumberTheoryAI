@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetricCompletion
 import Mathlib.RingTheory.Localization.FractionRing
+import Mathlib.Algebra.CharP.Algebra
 import Mathlib.RingTheory.DiscreteValuationRing.Basic
 import Mathlib.RingTheory.OrderOfVanishing.Noetherian
 
@@ -30,6 +31,10 @@ def serrePadicIntToField : SerrePadicInt p →+* SerrePadicField p :=
 theorem serrePadicIntToField_injective :
     Function.Injective (serrePadicIntToField p) := by
   exact IsFractionRing.injective (SerrePadicInt p) (SerrePadicField p)
+
+/-- The project p-adic fraction field has characteristic zero. -/
+instance serrePadicField_charZero : CharZero (SerrePadicField p) :=
+  charZero_of_injective_ringHom (serrePadicIntToField_injective p)
 
 /-- The distinguished prime element viewed in the project p-adic field. -/
 def serrePadicFieldPrime : SerrePadicField p :=
