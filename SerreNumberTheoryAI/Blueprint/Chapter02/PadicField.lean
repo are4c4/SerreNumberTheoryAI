@@ -74,7 +74,6 @@ end SerreNumberTheoryAI
 :::
 
 :::theorem "serre_padic_field_decomposition"
-  (uses := "serre_padic_int_dvr, serre_padic_field")
 :::
 
 非零の p進体の元は、p の整数冪と p進整数の単元の像の積に分解できる。
@@ -86,7 +85,6 @@ end SerreNumberTheoryAI
 :::
 
 :::definition "serre_padic_field_order"
-  (uses := "serre_padic_int_dvr, serre_padic_field")
 :::
 
 分数体上の order-of-vanishing を用いて、p の整数指数を記録する
