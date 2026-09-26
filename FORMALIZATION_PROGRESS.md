@@ -71,26 +71,29 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | 3.1 `F_q` の平方数 / 定理4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 3.2 Legendre記号 / 定理5 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 3.3 平方剰余の相互法則 / 定理6 | ✅ | ⬜ | ⬜ | 🚧 | 🚧 | 🚧 |
-| 補遺 (i) Gaussの補題 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 補遺 (i) Gaussの補題 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 - #55 / PR #82 はcharacteristic-2 / odd-characteristic両ケースをsource-faithfulにend-to-end完成済み。
 - #56 / PR #98 はmerge `7aa158673bf0df1c62e977b508297d2e6b88610a` でend-to-end完成。project Legendre value/sign、multiplicativity、square criterion、Theorem 5(i)–(iii)、primitive 8th-root route、独立Blueprint linkageを統合し、final headはCI #252 green。
-- #64 / draft PR #114 はC-owned。#56 merge後にcanonical branchをmerged §3.2へ移し、primitive root・additive character・source-shaped Gauss sum等の実装を開始済み。#103がroot slotを解放したため、final integrationは通常のFormalization aggregatorへ戻せる。
-- #78 はB preflight complete。#56 mergeで旧freeze待ちは解消し、old branchをlatest mainへresync後に通常実装可能。
+- #64 / draft PR #114 はC-ownedで現在のshared-root single-writer。stable checkpoint `7a48b08d…` はCI #289 green、moving headは `136bdf47…` まで進みCI #305実行中。primitive root・additive character・Gauss sum・Legendre characterからsource coefficient/Gauss-square/Frobenius proofへ継続中。
+- #78 / PR #115 はmerge `56a5307bee7049924c9090a677492ba01a4808e2` でend-to-end完成。source-shaped signed half-system/permutation proof、独立Blueprint、normal Formalization/Blueprint root linkageをmainへ統合済み。
 
 ## Phase 6 — 第2章 p進体 §1
+
+> Validation note: downstream CI #306/#311 exposed compile failures in `PadicIntegerProperties.lean`. Until D publishes replacement exact heads that actually compile the new modules, #72/#89-dependent proof work is paused; existing downstream commits remain preserved.
+
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 1–2 + valuation | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
-| §1.2 Proposition 3: metric / completeness / density | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.2 Proposition 3: metric / completeness / density | ✅ | 🚧 | ⬜ | 🚧 | 🚧 | 🚧 |
 | §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #71 / PR #86 はproject-local inverse-limit `SerrePadicInt`、residue projections、integer embedding、compactness/continuity、Blueprint linkageをmainへend-to-end統合済み。
-- #72 / PR #92 はD-owned。exact head `c43d7f09…` はCI #261 greenで、projection/kernel、power divisibility、unit criterion、unique `p^n * unit` decomposition、project additive valuation、そのmultiplicative/ultrametric laws、domain instance、独立Blueprint expositionまで含む。Dはこのexact headを#89向けにのみSTACK-READYとしてfreezeした。他consumerへのgateは別promiseまたはmerge待ち。
-- #89 はD preflight completeで、#72 `c43d7f09…` にexact stack済み。Proposition 3のmetric/topology/completeness/density proofはこのfrozen interfaceから開始可能。
-- #96 はB preflight complete。project `Q_p` を `FractionRing (SerrePadicInt p)` として構成する方針を固定。algebraic proofは#72の#96向けstable subset/merge待ち、Proposition 4はさらにminimal #89 topology/density interface待ち。
+- #72 / PR #92 はD-owned。latest-main resync後のreplacement exact head `781d1b8f…` はCI #297 green。projection/kernel、power divisibility、unit criterion、unique `p^n * unit` decomposition、project additive valuation、multiplicative/ultrametric laws、domain instance、独立Blueprintの数学interfaceは旧 `c43d7f09…` と不変で、#89/#96/#102/#100/#104/#105/#108向けにscoped freeze済み。旧freezeもexisting workには有効。
+- #89 / draft PR #116 はD-owned。replacement exact head `55175ebc…` は#72 `781d1b8f…` 上でCI #298 green。source metric、inverse-limit topologyとの一致、compact→complete、integer density、独立Blueprintまで実装し、#96向けtopology/projection-ball/densityと#102向けmetric/completeness/divisibility-to-distanceをfreeze。旧 `f42c68f0…` もexisting workには有効。shared rootは未編集。
+- #96 はB-ownedでPR #123まで進んだが、現在CIはupstream `PadicIntegerProperties.lean` で失敗している。field側commitは保存し、compile-validated replacement stack待ち。
 
 ## Phase 7 — 第2章 §2 p進方程式
 
@@ -100,23 +103,43 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| §2.2 Corollary 3: dyadic quadratic lifting | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
-- #100 はB-owned preflight complete。#99はDONEなのでfinite-level側は安定したが、full proofは#72 primitive/unit criterionと#96 `Q_p` scaling interface待ち。
-- #102 はB-ownedでsource/API/dependency preflight complete。one-step Taylor remainder、multivariate specialization、iterative Cauchy proofのsource-shaped planを固定。proofは#72 congruence/decomposition/valuationと#89 compatible completeness interface待ち。
-- #104 はB-ownedでodd-`p` quadratic liftingのpreflight complete。source-shaped quadratic polynomial・gradient・residue-matrix argumentを固定し、proofは#102 simple-root liftingとminimal #72 primitive/unit/congruence interface待ち。
-- #105 はunclaimed PREFLIGHT。`p=2` でprimitive mod-8 solutionとpartial derivative nonzero mod 4から#102 theoremを用いてliftし、invertible determinantを十分条件とするsource Corollary 3を対象とする。
+- #100 はB-owned preflight complete。#99と#72 primitive/unit側は安定済みで、full proofは#96の`Q_p` scaling interfaceがDONE/STACK-READYになるのを待つ。
+- #102 はB-ownedでsource/API/dependency preflight complete。以前の#72/#89 stack gateはcompile-validation待ちで一時停止中。
+- #104 はB-ownedでodd-`p` quadratic liftingのpreflight complete。#72 primitive/unit/congruence subsetはfreeze済みで、proofは#102 simple-root liftingのDONE/STACK-READY待ち。
+- #105 はB-ownedでdyadic quadratic liftingのpreflight complete。#72 domain/dyadic-divisibility/valuation/primitive subsetはfreeze済みで、proofは#102 main `n,k` Hensel theoremのDONE/STACK-READY待ち。#96は不要。
 
-## Phase 8 — 第2章 §3 `Q_p` の乗法群
+## Phase 8 — 第2章 §3 `Q_p` の乗法群と平方類
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| §3.1 unit filtration / Proposition 7 / roots of unity corollary | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §3.2 principal units / Proposition 8 / multiplicative-group theorem | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #108 はunclaimed PREFLIGHT。project `U=(SerrePadicInt p)ˣ` と `U_n` のfiltration、successive quotients、finite coprime-order splitting、inverse-limit passageによる `U = V × U_1` と `V ≃ (Z/pZ)ˣ` をProposition 7のcoreとする。core proofは#71 + explicit stable #72 units/divisibility interface待ちで、project `Q_p` 内のroots-of-unity corollaryだけ#96待ち。
-- #112 はAが次のsource boundaryを独立確認してseedしたunclaimed PREFLIGHT。source `p`-power step、Proposition 8のprincipal-unit構造、compatible finite-quotient/inverse-limit proof、およびそこからのmultiplicative-group theoremを対象とする。core proofは#108/#72、最終 `Q_p^×` theoremは#96にも依存する。続く§3.3 p-adic square classesは別work itemとする。
+- #108 はB-ownedでPR #125まで進んだが、現在CIは同じupstream p進整数moduleで失敗。filtration commitは保存し、replacement stack待ち。
+- #112 はcanonical branchがcurrent mainに作成済みでatomic lock成立。ただしIssue上のowner lane metadataは未記録のため、Aはownerを推測せず `CLAIMED / owner pending` として扱う。source `p`-power step、Proposition 8、multiplicative-group theoremが対象で、core proofは#108、最終 `Q_p^×` theoremは#96にも依存する。
+- #120 はB-owned PREFLIGHT。odd `p` では `x=p^n u` の平方条件をvaluation parity + residue Legendreで、`p=2`ではvaluation parity + `u≡1 (mod 8)` で特徴付ける方針。branchはproof-code-cleanで、proofは#112のprincipal-unit/multiplicative decompositionと#96のproject `Q_p` interface待ち。
+
+## Phase 9 — 第3章 §1 Hilbert記号の局所的性質
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| §1.1 Hilbert記号の定義 / norm criterion / 基本公式 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.2 明示公式 / 双1次性 / 非退化性 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+- #121 はAが原典 printed pp.27–28 / uploaded PDF pp.37–38 を独立確認してseedしたunclaimed PREFLIGHT。conic solvabilityによるHilbert記号の定義、平方類不変性、quadratic extensionのnorm criterion（命題1）、初等公式（命題2）を対象とする。generic field-level preflightは安全で、project `Q_p` specializationは#96待ち。
+- #122 はAが原典 printed pp.28–30 / uploaded PDF pp.38–40 を独立確認してseedしたunclaimed PREFLIGHT。real/`Q_p` の明示Hilbert公式、`kˣ/kˣ²` 上の双1次非退化形式、norm subgroup index-two corollaryを対象とする。proofは#121に加え、#96/#120および原典で実際に使うprimitive/lifting interface（#100/#104/#105）のDONE/STACK-READY待ち。
+
+## Phase 10 — 第3章 §2 Hilbert記号の大局的性質
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| §2.1 Hilbert積公式 / 定理3 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+- #124 はAが原典 printed pp.33–34 / uploaded PDF pp.43–44 を独立確認してseedしたunclaimed PREFLIGHT。有限個を除いて local Hilbert symbol が1であり `∏_v (a,b)_v = 1` となる積公式を対象とする。sourceは双1次性で `-1` と素数generatorへreduceし、distinct odd primesのcaseで平方剰余相互法則を使う。proofは#122と#64の実際に使うinterface待ちで、§2.2のprescribed-local-data existence theoremは別slice。
 
 ## Continuous parallelization rules
 
@@ -126,5 +149,5 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 - work claimはcanonical branch作成をatomic lockとする。
 - PR作成、CI pending、1 item完了、item固有blockerはchat停止条件ではない。
 - upstream未mergeのdownstream実装はupstreamがstatement/interface/exact headを`STACK-READY`として固定した場合のみ許可する。
-- withdrawn STACK-READYではexisting workを保存し、replacement exact green SHAまたはupstream mergeまではdependent proofを増やさない。
+- withdrawn STACK-READYではexisting workを保存し、replacement exact green SHAまたはupstream mergeまでdependent proofを増やさない。
 - 全列completeはInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIが揃いmainへ統合された後に記録する。

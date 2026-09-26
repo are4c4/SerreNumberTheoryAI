@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #113 gate/queue sync after #56/#99 merges | `design/sync-post-legendre-113` | land four-file sync; monitor #114 root integration, #72 downstream freezes, and claims of #105/#108/#112 |
-| B | End-to-end Formalizer | 🚧 active | #78 Gauss now implementation-ready after resync; #100 Prop.6 preflight; #102 Hensel waiting; #104 odd-`p` Hensel corollary preflight complete; #96 waiting | `work/c1-supp-gauss-lemma`; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-lifting`; `work/c2-s2-2-hensel-quadratic-odd`; `work/c2-s1-3-qp-field` | #99/PR #103 is DONE; resync #78 to merged #56, continue safe preflight while p-adic proof gates wait explicit upstream interfaces |
-| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | #56 is DONE; #114 is on merged §3.2 and may now replace its temporary top-level hook with normal `Formalization.lean` integration because #103 is DONE |
-| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric now stackable | PR #92; `work/c2-s1-2-zp-metric` | #72 `c43d7f09…` CI #261 green; exact #89-only STACK-READY published, so #89 may implement while D decides/finalizes other downstream-safe subsets |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #105, #108, or #112 |
+| A | Scheduler / Design | 🚧 active | #118 post-merge handoff / queue refresh | `design/post-merge-handoff-118` / PR #119 | land latest four-file sync after rechecking main/claims/CI; monitor #114, #72/#89 freezes, and #112 owner metadata |
+| B | End-to-end Formalizer | 🚧 active | #96/#108 paused after upstream compile failure; #102 waiting; #120 preflight | PR #123; PR #125; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-3-padic-squares` | preserve current commits and wait for compile-validated p-adic stack heads |
+| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | stable `7a48b08d…` CI #289; moving head `136bdf47…` CI #305 in progress; current normal `Formalization.lean` slot |
+| D | End-to-end Formalizer | 🚧 active | #72 compile validation; #89 restack pending | PR #92; PR #116 | compile the new p-adic modules in CI, then publish replacement exact heads |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #121, #122, or #124 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
 
@@ -36,23 +36,30 @@ Mainで完了済み:
 - #71 / PR #86 — Chapter 2 §1.1 project-local `Z_p` inverse limit
 - #56 / PR #98 — §3.2 Legendre symbol / Theorem 5(i)–(iii), merge `7aa15867…`
 - #99 / PR #103 — Chapter 2 §2.1 Proposition 5, merge `326c2aec…`
+- #78 / PR #115 — Chapter 1 supplement (i) Gauss's lemma, merge `56a5307b…`
+- A scheduler sync #113 / PR #117 — merge `c8b94633…`
 
 Live ownership/dependency:
 
-- C owns #64 / draft PR #114. The old §3.2 stack gate is gone because #56 is merged. The branch is based on merged §3.2 and has begun source-shaped Gauss-sum infrastructure. #103 has now cleared the shared root, so C may use the normal Formalization aggregator after resyncing latest main.
-- B owns #78; Gauss preflight is complete and the former freeze-specific wait is gone. Its old branch must resync to latest main before proof commits.
-- D owns #72 / draft PR #92. Exact head `c43d7f09…` passed CI #261 and includes source decomposition/valuation/domain plus Blueprint. D has frozen that exact interface **for #89 only**.
-- D owns #89; its branch points exactly at `c43d7f09…` and is legally STACKABLE for Proposition 3 proof work.
-- B owns #96; `Q_p` preflight is complete, but it still needs a #96-scoped #72 freeze/merge; Proposition 4 also needs the minimal #89 topology/density subset.
-- B owns #100; #99 is now DONE and its finite-level downstream interface is stable, but full Proposition 6 proof still waits #72 primitive/unit and #96 scaling.
-- B owns #102; Hensel preflight is complete. Proof still waits the required #72 congruence/decomposition interface and #89 compatible completeness interface.
-- B owns #104; odd-`p` quadratic-lifting preflight is complete and proof-code-clean, waiting #102 and minimal #72 primitive/unit/congruence.
-- #105 dyadic quadratic lifting, #108 Chapter 2 §3.1 unit filtration / Proposition 7, and #112 §3.2 principal units / Proposition 8 + multiplicative-group theorem are unclaimed PREFLIGHT candidates.
+- C owns #64 / draft PR #114 and the current normal `Formalization.lean` slot. Stable `7a48b08d…` passed CI #289; moving head `136bdf47…` has CI #305 in progress.
+- #78 / PR #115 is DONE on main at `56a5307b…`.
+- D owns #72 / draft PR #92. Replacement exact head `781d1b8f…` passed CI #297 after latest-main resync; all older scoped promises remain valid, and new dependent work should prefer this replacement. Consumers include #89/#96/#102/#100/#104/#105/#108.
+- D owns #89 / draft PR #116. Replacement exact head `55175ebc…`, stacked on `781d1b8f…`, passed CI #298. It preserves the #96 topology/density and #102 metric/completeness promises; older `f42c68f0…` stays valid for existing work.
+- B owns #96 and has begun implementation in draft PR #123 on the valid old exact `f42c68f0…` base. Head `3f61cac8…` has CI #306 in progress. Its temporary top-level direct-import hook is isolated from C's `Formalization.lean` file but final normal integration must be serialized.
+- B owns #100; #99 and #72 primitive/unit inputs are stable. Full proof waits a #96 scaling interface.
+- B owns #102; preflight is complete and it is STACKABLE. No dependent commit was observed yet; new work should prefer #89 replacement `55175ebc…`, which contains #72 `781d1b8f…`.
+- B owns #104/#105; their #72 subsets are frozen, and each waits only for the appropriate future #102 theorem interface.
+- B owns #108; preflight is complete and its core Proposition 7 slice is now STACKABLE from #72 replacement `781d1b8f…`. The branch was still on main at last check. Its final `Q_p` corollary additionally waits #96.
+- #112 remains branch-locked with owner metadata pending; do not duplicate it.
+- B owns #120 as proof-code-clean PREFLIGHT. #121, #122, and newly seeded #124 (Hilbert product formula) remain unclaimed PREFLIGHT candidates.
 
 ## Shared-hotspot notes
 
-1. #103 / B is DONE and no longer owns `Formalization.lean`.
-2. #114 / C is the next active normal Formalization-root integration candidate; its temporary top-level compile hook should be removed before final merge.
-3. #92 / D remains isolated for algebraic work and downstream freezes; final shared-root linkage should not race #114.
+P-adic stack correction: CI #306/#311 exposed compile failures in `PadicIntegerProperties.lean`. The current #72/#89 downstream promises are paused until replacement heads compile the relevant modules.
 
-A #113 changes only `docs/WORK_QUEUE.md`, this file, `docs/lanes/A_DESIGN.md`, and `FORMALIZATION_PROGRESS.md`; no worker mathematical artifact is edited.
+
+1. **#114 / C** owns the current normal `SerreNumberTheoryAI/Formalization.lean` slot; stable `7a48b08d…` is green and current moving head `136bdf47…` is under CI #305.
+2. **#92 / #116 / D** stay isolated from the normal shared aggregators; replacement heads `781d1b8f…` / CI #297 and `55175ebc…` / CI #298 are green.
+3. **#123 / B** temporarily edits top-level `SerreNumberTheoryAI.lean` plus `PadicField.lean` on a private stack base. It does not edit `Formalization.lean`; final normal root integration waits upstream/shared-root serialization.
+
+Latest completed A central sync is #113 / PR #117, merged as `c8b94633ed218392ba771ecab3cde3884b6bf457`. A is now running focused coordination #118 / PR #119 only; no mathematical worker artifact is owned. Clearly unclaimed safe capacity is #121/#122/#124. #112 is branch-locked with owner metadata pending, and #120 is B-owned PREFLIGHT.
