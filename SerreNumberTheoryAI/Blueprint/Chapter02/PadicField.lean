@@ -82,7 +82,7 @@ x = u・p^n と書ける。
 ```lean "serre_padic_field_decomposition"
 namespace SerreNumberTheoryAI
 
-theorem blueprint_serrePadicField_exists_unit_smul_zpow
+example
     (p : ℕ) [Fact p.Prime] {x : SerrePadicField p} (hx : x ≠ 0) :
     ∃ (n : ℤ) (u : (SerrePadicInt p)ˣ),
       x = u • (serrePadicFieldPrime p) ^ n :=
@@ -107,7 +107,7 @@ project-local p進付値を定義する。Leanでは零点も含めて乗法的�
 ```lean "serre_padic_field_order"
 namespace SerreNumberTheoryAI
 
-noncomputable def blueprint_serrePadicFieldOrder
+noncomputable example
     (p : ℕ) [Fact p.Prime] :
     SerrePadicField p →*₀ WithZero (Multiplicative ℤ) :=
   serrePadicFieldOrder p
