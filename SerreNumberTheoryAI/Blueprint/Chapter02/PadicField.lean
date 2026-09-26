@@ -80,6 +80,19 @@ end SerreNumberTheoryAI
 この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
 :::
 
+```lean "serre_padic_field_decomposition"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicField_decomposition
+    (p : ℕ) [Fact p.Prime]
+    {x : SerrePadicField p} (hx : x ≠ 0) :
+    ∃ (n : ℤ) (u : (SerrePadicInt p)ˣ),
+      x = u • (serrePadicFieldPrime p) ^ n :=
+  serrePadicField_exists_unit_smul_zpow (p := p) hx
+
+end SerreNumberTheoryAI
+```
+
 :::proof "serre_padic_field_decomposition"
 分子・分母をそれぞれ `p` の非負整数冪と単元へ分解すると、
 指数の差が整数指数 `n` になる。この議論は一般の離散付値環の
@@ -91,6 +104,16 @@ end SerreNumberTheoryAI
 project-local p進付値を定義する。
 この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
 :::
+
+```lean "serre_padic_field_order"
+namespace SerreNumberTheoryAI
+
+noncomputable example (p : ℕ) [Fact p.Prime] :
+    SerrePadicField p →*₀ WithZero (Multiplicative ℤ) :=
+  serrePadicFieldOrder p
+
+end SerreNumberTheoryAI
+```
 
 :::lemma_ "serre_padic_field_order_prime"
   (lean := "SerreNumberTheoryAI.serrePadicFieldOrder_prime")
@@ -140,8 +163,19 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 :::
 
 :::definition "serre_padic_field_metric"
-p進体に、付値から得られる p進距離を入れる。
+原典の距離は付値から得られる指数型の p進距離である。
+Lean 側では同じ付値位相を誘導する rank-one の距離空間構造として束ねる。
 :::
+
+```lean "serre_padic_field_metric"
+namespace SerreNumberTheoryAI
+
+noncomputable example (p : ℕ) [Fact p.Prime] :
+    MetricSpace (SerrePadicField p) :=
+  serrePadicFieldMetricSpace p
+
+end SerreNumberTheoryAI
+```
 
 
 :::theorem "serre_padic_int_open"
@@ -167,5 +201,18 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 
 :::theorem "serre_padic_rationals_dense"
 有理数の標準像は p進体で稠密である。
+§1.2 の整数稠密性を p進整数環から分数体へ移し、任意の p進体の元を
+p進整数二元の商として表すことから、閉包が全体であることを示す。
 :::
+
+```lean "serre_padic_rationals_dense"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicField_rationals_dense
+    (p : ℕ) [Fact p.Prime] :
+    DenseRange (Rat.castHom (SerrePadicField p)) :=
+  serrePadicField_ratCast_denseRange p
+
+end SerreNumberTheoryAI
+```
 
