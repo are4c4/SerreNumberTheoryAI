@@ -187,7 +187,8 @@ theorem serrePadicIntImage_mem_nhds_zero :
     (serrePadicIntImage p : Set (SerrePadicField p)) ∈
       𝓝 (0 : SerrePadicField p) := by
   exact (isOpen_serrePadicIntImage p).mem_nhds (by
-    simp [serrePadicIntImage])
+    rw [serrePadicIntImage]
+    exact ⟨0, Set.mem_univ 0, by simp [serrePadicIntToField]⟩)
 
 /--
 The project p-adic field is locally compact: its open compact integer subring is a
