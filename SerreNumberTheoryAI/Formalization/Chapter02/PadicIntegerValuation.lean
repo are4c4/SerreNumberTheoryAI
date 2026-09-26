@@ -107,6 +107,8 @@ theorem serrePadicInt_p_pow_ne_zero (n : ℕ) :
 
 /-- The project p-adic integers are nontrivial for prime `p`. -/
 instance serrePadicInt_nontrivial : Nontrivial (SerrePadicInt p) := by
+  letI : Nontrivial (padicResidueRing p 0) := by
+    simpa [padicResidueRing] using (inferInstance : Nontrivial (ZMod p))
   refine ⟨⟨0, 1, ?_⟩⟩
   intro h
   have h01 : (0 : padicResidueRing p 0) = 1 := by
