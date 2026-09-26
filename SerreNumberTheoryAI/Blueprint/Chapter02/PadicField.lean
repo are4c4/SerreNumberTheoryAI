@@ -140,7 +140,6 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 :::
 
 :::definition "serre_padic_field_metric"
-  (lean := "SerreNumberTheoryAI.serrePadicFieldMetricSpace")
   (uses := "serre_padic_field_valuation")
 離散付値を底 `p` で rank-one 実現し、対応する p進距離を
 `MetricSpace` として束ねる。構成に用いる `Valued.toNormedField` は
@@ -187,7 +186,6 @@ end SerreNumberTheoryAI
 ```
 
 :::theorem "serre_padic_rationals_dense"
-  (lean := "SerreNumberTheoryAI.serrePadicField_ratCast_denseRange")
   (uses := "serre_padic_int_compact, serre_padic_field_locally_compact")
 標準埋め込み `Q → Q_p` の像は稠密である。
 まず §1.2 で得た `Z → Z_p` の稠密性を連続な `Z_p → Q_p` で移し、
