@@ -1,236 +1,147 @@
 # AI_WORKFLOW.md
 
-この文書は、複数のChatGPTチャットを同時に動かすための協調プロトコルです。会話履歴ではなくGitHubを共有状態とし、各chatは長時間連続で作業するAI workerとして振る舞います。
+この文書は SerreNumberTheoryAI の単一レーン直列ワークフローを定義します。
+
+2026-09-26より、複数ChatGPTチャットの並列worker pool、A/B/C/D/Eレーン、work stealing、stacked implementationを廃止しました。競合・古いbase・Lean/Blueprintの同期ずれを避けるため、1つのAI作業レーンが1 work itemをmergeまでend-to-endで完了してから次へ進みます。
 
 ## 1. Core model
 
-旧方式の「B=Lean、C=Blueprint、D=mathlib、E=integration」という職種別pipelineは廃止します。handoff待ちが増え、1つのchatが短時間でidleになりやすいためです。
+単一レーンは次の工程をすべて担当します。
 
-現在の構成:
+~~~text
+日本語版『数論講義』
+        ↓
+source boundary / 数学的解釈
+        ↓
+statement / dependency 設計
+        ↓
+mathlib audit
+        ↓
+Lean statement / proof
+        ↓
+独立した自然言語説明
+        ↓
+Blueprint / Lean linkage
+        ↓
+policy / build / CI
+        ↓
+self-review
+        ↓
+merge
+        ↓
+progress同期
+        ↓
+次のwork item
+~~~
 
-| Lane | Role |
-| --- | --- |
-| A | Scheduler / Design — dependency graph、queue health、曖昧なstatement、ownership conflictの調整 |
-| B | End-to-end Formalizer |
-| C | End-to-end Formalizer |
-| D | End-to-end Formalizer |
-| E | End-to-end Formalizer |
-
-B/C/D/Eは同等です。1つのwork itemをclaimしたworkerが、そのitemについて可能な限り次をend-to-endで担当します。
-
-1. source位置と数学的statementの解釈
-2. dependency確認
-3. mathlib API調査
-4. Lean statement / proof
-5. Blueprint / independent exposition
-6. Lean↔Blueprint linkage
-7. policy / `lake build` / `lake exe vbp build`
-8. PR、CI修正、自己レビュー、merge
-9. progress / handoff同期
-
-専門レーンへのhandoffは通常行いません。数学的に曖昧な判断や競合だけをAへrouteします。
+設計・形式化・Blueprint・mathlib調査・integrationは別workerへ分けず、同じwork itemの工程として直列に処理します。
 
 ## 2. Source of truth
 
-共有状態は次です。
+作業開始時の確認順:
 
-1. `AGENTS.md`
-2. `docs/AI_WORKFLOW.md`
-3. `docs/WORK_QUEUE.md`
-4. `docs/LANE_STATUS.md`
-5. 自分の `docs/lanes/*.md`
-6. `FORMALIZATION_PROGRESS.md`
-7. `docs/SOURCE_AND_COPYRIGHT_POLICY.md`
-8. live GitHub state — latest main、branch、Issue、PR、CI
+1. AGENTS.md
+2. docs/AI_WORKFLOW.md
+3. docs/ACTIVE_WORK.md
+4. docs/WORK_QUEUE.md
+5. FORMALIZATION_PROGRESS.md
+6. docs/SOURCE_AND_COPYRIGHT_POLICY.md
+7. latest main
+8. live branch / Issue / PR / CI
 9. 対象の既存Formalization / Blueprint
 
-**live GitHub stateが静的handoff文書より新しい場合はlive stateを優先**し、後で文書を同期します。
+live GitHub stateが文書より新しい場合はlive stateを優先し、そのrun内で文書を同期します。
 
-## 3. Queue first
+## 3. Work states
 
-実行可能性は `docs/WORK_QUEUE.md` で管理します。workerはlane固有のassigned Issueを待つのではなく、queueとlive stateを見てwork stealingします。
+- ACTIVE — 現在唯一の実装対象。
+- READY — active完了後に着手可能。
+- PREFLIGHT — source/dependency/API調査候補。並行proof実装はしない。
+- WAITING — upstream main統合待ち。
+- BLOCKED — hard blockerあり。
+- PARKED — 旧branch/PRまたは明示的に中断したwork。activeではない。
+- DONE — mainへ統合され、cross-layer artifactと検証が揃っている。
 
-主なstate:
+docs/ACTIVE_WORK.md に ACTIVE は常に0または1件だけ記録します。
 
-- `READY`: mainから本実装可能
-- `PREFLIGHT`: source / statement / dependency / mathlib調査を進められる
-- `STACKABLE`: upstream未mergeだがinterfaceが `STACK-READY`
-- `WAITING`: upstream不安定
-- `CLAIMED`: ownerあり
-- `CI-WAIT`: ownerのPRがCI待ち。ownerは別workをsteal可能
-- `BLOCKED`: item固有のblocker
-- `DONE`: mainへ統合済み
+## 4. One active implementation PR
 
-詳しいstate machineは `docs/WORK_QUEUE.md` を参照します。
+数学的実装PRは原則1本だけopen-activeにします。
 
-## 4. Ownership: canonical branch as lock
+- active PRがある間は別の実装PRを作らない。
+- CI pending中も別workへ移らない。
+- 同じactive itemのCI解析、review、文書同期、proof cleanup、Blueprint確認を行う。
+- hard blockerで別workへ移るなら、現在のPRをpark/closeし、ACTIVE_WORKとqueueを同期してから次へ進む。
+- future itemのread-only調査は可能だが、proof commitや別branch ownershipには進めない。
 
-同じwork itemを2 workerが同時に実装しないため、canonical branch作成をatomic ownership lockにします。
+## 5. Dependency rule
 
-### Claim procedure
+dependencyは実際に使う数学的結果で管理します。
 
-1. queue、open Issue / PR、既存branchを再確認する。
-2. 最高priorityの実行可能itemを選ぶ。
-3. item指定のcanonical branchを作る。
-   - `READY`: latest mainから作る。
-   - `STACKABLE`:許可されたupstream PRの特定head SHAから作る。
-4. branch作成に成功したworkerがowner。
-5. branchが既に存在するなら、そのitemを奪わず別itemへ移る。
-6. focused Issueが無ければbranch lock取得後にworker自身で作る。Aの許可待ちは不要。
+downstreamがupstreamを必要とする場合:
 
-したがって、Aが全Issueを事前生成しないことはworkerの停止理由になりません。
+1. upstreamを現在のactive itemとして完成させる。
+2. mainへmergeする。
+3. latest mainを取得する。
+4. downstreamを新しいactive itemとして開始する。
 
-## 5. Actual dependency graph, not chapter parallelism
+新しいstacked implementationは行いません。旧stacked branchを再開する場合も、最新mainへ適合させてから通常のmain-based PRとして再開します。
 
-並列化は章番号ではなく数学的依存関係に従います。
+## 6. Active work lifecycle
 
-- downstream proofがupstream theoremを使うならdependency edgeを記録する。
-- upstreamが不安定ならdownstream proofを推測して実装しない。
-- dependencyが不明なら `PREFLIGHT` でsourceと既存コードを確認する。
-- source順が後でも、論理的に独立と確認できればmainから並列化してよい。
-- 新しいdependencyが判明したらIssueとqueueへ記録する。
+1. ACTIVE_WORK.md とlive GitHubを確認。
+2. active branch/PRを復元。
+3. source boundaryとstatementを再確認。
+4. mathlib near-target theoremを監査。
+5. Lean statement/proofを実装。
+6. Blueprintと独立説明を同期。
+7. bash scripts/check_formalization_policy.sh。
+8. lake build。
+9. lake exe vbp build。
+10. PRを作成/更新。
+11. CI failureを修正。
+12. diff / statement / dependency / source policyを自己レビュー。
+13. greenならAIがmergeしてよい。
+14. main上で必要なら最終確認。
+15. progress / queue / active workを更新。
+16. 次のworkを選ぶ。
 
-この原則により、例えば後続のべき乗和が有限体の乗法群の結果を必要とするなら、乗法群のinterfaceが安定する前にべき乗和proofを完成させようとはしません。
+## 7. Self-review gate
 
-## 6. Continuous-run rule
+CI greenだけではmergeしません。最低限次を再確認します。
 
-workerの目的は「1 Issueを終えること」ではなく、**利用可能な実行時間を安全な形式化作業に使い続けること**です。
+- statementが原典の対象と一致する。
+- 仮定を強めていない。
+- 結論を弱めていない。
+- 対象そのものに近すぎるmathlib定理で閉じていない。
+- Lean proofとBlueprint説明が同じ数学を述べる。
+- source prose/imageを公開していない。
+- sorry / admit / proof-hole axiomがない。
+- dependencyはmain上で安定している。
 
-次は停止条件ではありません。
+## 8. Legacy multi-lane work
 
-- commitを作った
-- PRを作った
-- CIがpendingになった
-- 1 Issue / 1 work itemを完了した
-- 1 work itemがupstream待ちになった
-- 1 work itemが `BLOCKED:` になった
+2026-09-26以前のA/B/C/D/E owner表記、canonical branch lock、STACK-READY、work-stealing情報は履歴としてのみ扱います。
 
-上記のいずれかになったら、実行時間が残っている限りqueueを再走査してwork stealingします。
+旧branchに有用なcommitがある場合:
 
-### In-flight cap
+1. branch/PRをactiveとみなさない。
+2. そのworkが順番でactiveになった時点でlatest mainを確認。
+3. 必要なcommitをrebase/cherry-pick/再実装してmain-based branchへ整理。
+4. policy/build/CIを最初から再実行。
+5. 古いstack promiseやlane handoffは根拠にしない。
 
-1 workerあたり未mergeの実装PRは原則2本までです。
+## 9. Shared documents
 
-- 0〜1本: 次の `READY` / `STACKABLE` をclaimしてよい。
-- 2本: 3本目の実装PRは増やさず、既存PRのCI確認・修正、`PREFLIGHT`、dependency整理、self-review、handoff同期を行う。
+- docs/ACTIVE_WORK.md — 現在唯一のactive workとparked legacy PR。
+- docs/WORK_QUEUE.md — dependency-awareな直列backlog。
+- FORMALIZATION_PROGRESS.md — 数学的進捗。
+- docs/SOURCE_AND_COPYRIGHT_POLICY.md — 公開/出典ルール。
 
-これによりthroughputを上げつつ、未統合branchが増えすぎるのを防ぎます。
+旧 docs/LANE_STATUS.md と docs/lanes/* は使用しません。
 
-## 7. Stacked branches
+## 10. Stop conditions
 
-upstream merge待ちでdownstream workerをidleにしないため、限定的にstacked branchを許可します。
+hard blockerは AGENTS.md に従います。
 
-### Stack gate
-
-upstream ownerがIssueまたはPRに `STACK-READY` を明記し、次を固定した場合だけstack可能です。
-
-- mathematical statement / assumptions
-- downstreamが使う主要Lean interface
-- stack base PR と head SHA
-
-downstreamはその特定SHAからcanonical branchを作り、PR本文にstack情報を記録します。
-
-### After upstream merge
-
-1. latest mainを再確認する。
-2. downstream branchをmainへrebase/更新する。
-3. PR baseをmainへ戻す。
-4. policy / Lean / Blueprint checksを再実行する。
-5. upstream差分がstatement/interfaceを変えていないことを再確認してからmergeする。
-
-upstreamが `STACK-READY` 後にbreaking changeを入れる必要が生じた場合、upstream ownerはstacked downstream Issue/PRへ通知し、下流は再検証までmerge禁止です。
-
-## 8. PREFLIGHT as productive fallback
-
-実装可能itemが無い場合も、workerはすぐidleになりません。queueの `PREFLIGHT` itemについて、次のうち安全なものを進めます。
-
-- 書籍上の対象位置・statement boundaryの確認
-- 既存mainのどの定理が必要かというdependency audit
-- mathlib namespace / theorem / coercionの調査
-- near-target theoremの強さ判定
-- file split / declaration naming案
-- Blueprint dependency skeletonの設計
-
-ただし、不安定upstreamのstatementを仮定したLean proofをcommitしてはいけません。preflight結果からdependency gateを満たしたと確認できた場合は、その根拠をIssueへ残してend-to-end本実装へ進みます。
-
-## 9. A lane: scheduler, not approval gate
-
-Aの役割:
-
-- `docs/WORK_QUEUE.md` を3〜6個程度先まで見える状態に保つ
-- source/dependency graphを整理する
-- ambiguous statementを解決または `BLOCKED:` 化する
-- ownership / shared-hotspot conflictを調整する
-- stale handoff / queue driftを直す
-- 大きすぎるtargetをdependency-safeなwork itemへ分割する
-
-AはB/C/D/Eの開始許可ゲートではありません。workerがqueueから安全にclaimできるなら進めます。
-
-A自身にcoordination作業が少ない場合は、将来workのdependency preflightやqueue補充を行います。通常のproof実装をworker poolから奪いません。
-
-## 10. Worker end-to-end lifecycle
-
-B/C/D/Eは次のloopを実行します。
-
-1. startup docs + live GitHubを読む。
-2. 自分のactive canonical branch / PRがあれば最優先で復元する。
-3. active workが実行可能なら継続する。
-4. CI pending / blocked / waitingならqueueをscanする。
-5. canonical branch lockで次itemをclaimする。
-6. source / dependency / mathlibを確認する。
-7. statementが一意ならLean + Blueprintをend-to-endで実装する。
-8. local/repository checksを実行する。
-9. PRを作る。
-10. `STACK-READY` を出せるならinterfaceを明記する。
-11. CI待ちなら別itemをstealする。
-12. greenになったPRをself-reviewしmergeする。
-13. latest mainへ同期し、progress / queue / handoff driftを修正する。
-14. 実行時間が残る限りloopを続ける。
-
-## 11. Work-item blocker vs worker blocker
-
-`AGENTS.md` の `BLOCKED:` は原則として**work itemを止める**ものであり、worker chat全体を止めるものではありません。
-
-work itemでblockerを発見したら:
-
-1. Issue / PRへ `BLOCKED: ...` と根拠を記録する。
-2. unsafeな実装を進めない。
-3. Aへrouteが必要ならrouteする。
-4. queueへ戻り、別の実行可能itemをclaimする。
-
-worker全体が停止するのは次の場合です。
-
-- repository全体に影響するhard infrastructure failureで安全な別workもない
-- queueに `READY` / eligible `STACKABLE` / `PREFLIGHT` が1つもない
-- ownership/shared-hotspot conflictが広範囲で、別fileの安全なworkもない
-- 利用可能な実行時間の終了が近く、handoff同期を優先すべき段階
-
-## 12. Shared hotspots
-
-以下は競合しやすいため、編集前にopen PRを確認します。
-
-- `AGENTS.md`
-- `README.md`
-- `FORMALIZATION_PROGRESS.md`
-- `docs/WORK_QUEUE.md`
-- `docs/LANE_STATUS.md`
-- root import aggregators
-- `lakefile.lean`
-- `.github/workflows/**`
-
-数学workでは可能な限りtarget固有ファイルを作り、root aggregator更新を小さく保ちます。
-
-## 13. Handoff
-
-各lane文書は簡潔なworker状態だけを残します。
-
-- active work id / Issue
-- canonical branch / PR
-- base mode (`main` / stacked)
-- stack base SHA if any
-- CI state
-- `STACK-READY` state
-- blockers
-- next safe action
-
-古いhandoffよりlive GitHubを優先します。チャット内だけに重要な状態を残して終了しません。
+blockerを発見したら、Issue/PRへ理由を記録し、unsafeな推測をしません。別workへ移る場合でも、現在のactive workを明示的にparkしてから移ります。

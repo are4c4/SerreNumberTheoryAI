@@ -1,13 +1,10 @@
-## Worker / ownership
+## Active work
 
-- Worker lane: <!-- B / C / D / E / A-infra -->
-- Work ID: <!-- e.g. S1.1-T1iii or infra -->
+- Work ID: <!-- e.g. S3.3-QuadraticReciprocity or infra -->
 - Focused Issue: <!-- #... -->
-- Canonical branch: <!-- work/... or infra/... -->
-- Base mode: <!-- main / stacked -->
-- Stack base PR / SHA: <!-- N/A for main; otherwise exact upstream PR + head SHA -->
-- Dependencies: <!-- DONE / STACK-READY / none; identify mathematical prerequisites -->
-- Shared hotspots touched: <!-- none, or list and explain conflict check -->
+- Branch: <!-- work/... or workflow/... -->
+- Dependencies on main: <!-- identify mathematical prerequisites -->
+- Shared hotspots touched: <!-- none, or list -->
 
 ## Target
 
@@ -19,7 +16,7 @@
 
 ## Dependency audit
 
-<!-- このworkが実際に使う上流resultを記載する。source順だけをdependencyとみなさない。stackedならSTACK-READY interfaceとの対応を書く。 -->
+<!-- このworkが実際に使うmain上の上流resultを記載する。未merge branchをdependencyとしてproof実装しない。 -->
 
 ## Proof idea
 
@@ -45,36 +42,32 @@
 
 <!-- Lean固有の補題分割、別証明、追加した中間ステップ等。差異がなければその旨を記載する。 -->
 
-## Continuous-worker coordination
+## Single-lane coordination
 
-- [ ] canonical branch ownershipを取得し、重複active ownerがないことを確認した
-- [ ] dependency gateが `DONE` / eligible `STACK-READY` / dependencyなしのいずれかである
-- [ ] stackedの場合、upstreamの固定head SHAとinterfaceを記録した
-- [ ] 他worker所有branch / shared hotspotを不必要に変更していない
-- [ ] `docs/WORK_QUEUE.md` / `docs/LANE_STATUS.md` / handoffの更新要否を確認した
-- [ ] CI pendingだけを理由にworker chatを停止せず、in-flight上限内で次の安全なworkを検討した
-
-## STACK-READY gate
-
-<!-- downstreamをstack可能にする場合のみ記載。statement / assumptions / downstream-facing Lean interface / exact head SHA を明記する。stackを許可しない場合は `Not STACK-READY`。 -->
+- [ ] docs/ACTIVE_WORK.md の現在唯一のactive workと一致する
+- [ ] 他の数学的実装PRを並行activeにしていない
+- [ ] dependencyはmain上で安定している
+- [ ] 未merge upstreamへstackしたproof実装ではない
+- [ ] active workのLean / Blueprint / explanationを同じPRで同期した
+- [ ] merge後にprogress / queue / active workを更新する
 
 ## Source / copyright check
 
 - [ ] 書籍本文の長い転載・逐語的な言い換えを含まない
 - [ ] 書籍ページ画像・スキャン・スクリーンショットを含まない
 - [ ] 自然言語説明は数学的内容から独立に構成した
-- [ ] 人間版 `SerreNumberTheoryBlueprint` の証明・Blueprintを解答源として使用していない
+- [ ] 人間版 SerreNumberTheoryBlueprint の証明・Blueprintを解答源として使用していない
 
 ## Verification
 
-- [ ] `bash scripts/check_formalization_policy.sh`（該当する場合）
-- [ ] `lake build`（該当する場合）
-- [ ] `lake exe vbp build`（該当する場合）
+- [ ] bash scripts/check_formalization_policy.sh（該当する場合）
+- [ ] lake build（該当する場合）
+- [ ] lake exe vbp build（該当する場合）
 - [ ] PR-head CI
-- [ ] `FORMALIZATION_PROGRESS.md` の更新要否を確認した
-- [ ] queue / lane handoffの更新要否を確認した
-- [ ] stacked workの場合、upstream merge後にlatest main上で再検証した
+- [ ] diff / statement integrity / dependency / near-target theoremをself-reviewした
+- [ ] FORMALIZATION_PROGRESS.md の更新要否を確認した
+- [ ] docs/WORK_QUEUE.md / docs/ACTIVE_WORK.md の更新要否を確認した
 
 ## Blockers / merge gate
 
-<!-- `BLOCKED:` 条件、statement上の判断、merge前に必要なupstream PRがあれば記載する。なければ none。 -->
+<!-- BLOCKED: 条件、statement上の判断、merge前に必要なmain dependencyがあれば記載する。なければ none。 -->

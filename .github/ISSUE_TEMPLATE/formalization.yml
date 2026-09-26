@@ -1,19 +1,19 @@
 name: End-to-end formalization work item
-description: セール『数論講義』のdependency-safeなwork itemを解釈・Lean・Blueprint・CIまでend-to-endで形式化する
+description: セール『数論講義』の1つのwork itemを解釈・Lean・Blueprint・CIまで単一レーンでend-to-end形式化する
 title: "Formalize: "
 body:
   - type: markdown
     attributes:
       value: |
         書籍本文・ページ画像はIssueへ転載せず、章・節・定理番号などの参照情報と数学的目標を記載してください。
-        B/C/D/Eは同等のend-to-end formalizerです。claimは `docs/WORK_QUEUE.md` のcanonical branchをownership lockとして行います。
+        現行運用は単一レーンです。実装開始時は docs/ACTIVE_WORK.md に1件だけ ACTIVE を置き、mergeまたはparkするまで別の数学的実装PRを開始しません。
 
   - type: input
     id: work_id
     attributes:
       label: Work ID
       description: docs/WORK_QUEUE.md と一致する安定ID。
-      placeholder: "例: S1.1-T1iii"
+      placeholder: "例: S3.3-QuadraticReciprocity"
     validations:
       required: true
 
@@ -22,7 +22,7 @@ body:
     attributes:
       label: Source location
       description: 章・節・定理番号・ページなど。本文そのものは貼らない。
-      placeholder: "例: 第1章 §1 1.1 定理1(iii)"
+      placeholder: "例: 第1章 §3.3 定理6"
     validations:
       required: true
 
@@ -38,7 +38,7 @@ body:
     id: dependencies
     attributes:
       label: Mathematical dependencies
-      description: main上で必要な定理、upstream work/PR、またはpreflightで確認すべきdependencyを記載する。
+      description: main上で必要な定理、またはpreflightで確認すべきdependencyを記載する。
     validations:
       required: true
 
@@ -49,35 +49,19 @@ body:
       options:
         - READY
         - PREFLIGHT
-        - STACKABLE
         - WAITING
+        - BLOCKED
     validations:
       required: true
 
   - type: input
     id: branch
     attributes:
-      label: Canonical branch
-      description: ownership lockとして使うwork item固有branch。
-      placeholder: "例: work/s1-1-t1iii"
+      label: Work branch
+      description: activeになった時に使うwork item固有branch。未activeなら予定名でよい。
+      placeholder: "例: work/s3-3-quadratic-reciprocity"
     validations:
       required: true
-
-  - type: dropdown
-    id: base_mode
-    attributes:
-      label: Base mode
-      options:
-        - main
-        - stacked
-    validations:
-      required: true
-
-  - type: textarea
-    id: stack_base
-    attributes:
-      label: Stack base if applicable
-      description: stackedの場合のみ、upstream PR、固定head SHA、STACK-READY interfaceを記載する。mainなら N/A。
 
   - type: checkboxes
     id: outputs
@@ -96,7 +80,7 @@ body:
           required: true
         - label: Policy / lake build / vbp build / CI
           required: true
-        - label: Progress / queue / handoff synchronization as needed
+        - label: Progress / queue / active-work synchronization
           required: true
 
   - type: textarea
