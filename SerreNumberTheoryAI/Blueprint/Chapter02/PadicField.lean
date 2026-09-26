@@ -76,7 +76,7 @@ end SerreNumberTheoryAI
 :::theorem "serre_padic_field_decomposition"
   (uses := "serre_padic_int_dvr, serre_padic_field")
 非零の `x : Q_p` に対し、整数 `n : ℤ` と `u : Z_pˣ` が存在して
-`x = u · p^n` と書ける。
+x = u・p^n と書ける。
 :::
 
 ```lean "serre_padic_field_decomposition"
@@ -101,7 +101,7 @@ end SerreNumberTheoryAI
   (uses := "serre_padic_int_dvr, serre_padic_field")
 分数体上の order-of-vanishing を用い、`p` の指数を記録する
 project-local p進付値を定義する。Leanでは零点も含めて乗法的に扱うため
-値域を `WithZero (Multiplicative ℤ)` とする。
+値域を WithZero (Multiplicative ℤ) とする。
 :::
 
 ```lean "serre_padic_field_order"
