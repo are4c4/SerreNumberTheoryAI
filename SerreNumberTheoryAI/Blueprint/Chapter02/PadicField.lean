@@ -167,15 +167,6 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 Lean 側では同じ付値位相を誘導する rank-one の距離空間構造として束ねる。
 :::
 
-```lean "serre_padic_field_metric"
-namespace SerreNumberTheoryAI
-
-noncomputable example (p : ℕ) [Fact p.Prime] :
-    MetricSpace (SerrePadicField p) :=
-  serrePadicFieldMetricSpace p
-
-end SerreNumberTheoryAI
-```
 
 
 :::theorem "serre_padic_int_open"
@@ -205,14 +196,4 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 p進整数二元の商として表すことから、閉包が全体であることを示す。
 :::
 
-```lean "serre_padic_rationals_dense"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_serrePadicField_rationals_dense
-    (p : ℕ) [Fact p.Prime] :
-    DenseRange (Rat.castHom (SerrePadicField p)) :=
-  serrePadicField_ratCast_denseRange p
-
-end SerreNumberTheoryAI
-```
 
