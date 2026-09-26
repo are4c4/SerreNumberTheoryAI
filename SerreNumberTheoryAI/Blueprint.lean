@@ -16,6 +16,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter01.QuadraticReciprocity
 import SerreNumberTheoryAI.Blueprint.Chapter01.ChevalleyQuadraticForm
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerProperties
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerMetric
 import SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence
 
 open Verso.Genre
@@ -53,6 +54,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegers}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerProperties}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerMetric}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence}
 

@@ -9,7 +9,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Work ID: C2S1.2-ZpMetric
 - Issue: #89
 - Previous parked PR: #116 — p-adic metric / completeness / density
-- Branch: work/c2-s1-2-zp-metric
+- Recovery branch: work/c2-s1-2-zp-metric-serial
+- Branch: work/c2-s1-2-zp-metric-serial
 - Source: Chapter 2 §1.2, Proposition 3
 - State: ACTIVE
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
