@@ -141,3 +141,5 @@ Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is s
 ## 7. End-of-run synchronization
 
 各run終了時に、ACTIVE、PR/CI、blocker、next candidateを docs/ACTIVE_WORK.md とこのqueueへ同期する。複数worker用handoffは作らない。
+
+GitHubへの特定のwriteがChatGPT/OpenAI側の安全性チェック等で拒否された場合は、別itemへwork stealingせず、同じACTIVE itemで安全なread-only解析・review・patch設計を続ける。文書やコードが実際には永続化されていない場合、同期済み・commit済みとは記録しない。run結果に pending branch/path/変更内容/再開地点を明示し、次回はlive GitHub stateを再読して通常の構造化writeを再試行する。

@@ -66,6 +66,8 @@ merge
 - 旧並列運用のbranch/PRは必要なら保存するが、再開時はlatest main上で再検証する。
 - CI green後もstatement・dependency・mathlib依存・Blueprint同期を自己レビューしてからmergeする。
 - hard blockerがなければAI自身でmergeしてよく、人間レビューを通常は待たない。
+- 手動チャットと定期実行は同じACTIVE itemとlive GitHub stateを共有し、毎回live stateから再開する。
+- GitHubへの永続化は構造化されたGitHub連携操作を優先する。安全性チェック等で特定のwriteが拒否されても別workへ移らず、同じACTIVE itemのread-only解析・proof/Blueprint patch設計を続け、次回runで再試行する。
 
 運用文書:
 
@@ -110,7 +112,7 @@ BlueprintのHTML出力は通常 _out/site/html-multi に生成されます。
 
 ## AI作業規約
 
-AIエージェントは作業開始前に必ず AGENTS.md を読み、docs/AI_WORKFLOW.md、docs/ACTIVE_WORK.md、docs/WORK_QUEUE.md、live GitHub stateを確認します。
+AIエージェントは手動チャット・定期実行のどちらでも、作業開始前に必ず AGENTS.md を読み、docs/AI_WORKFLOW.md、docs/ACTIVE_WORK.md、docs/WORK_QUEUE.md、live GitHub stateを確認します。
 
 ## Reference
 
