@@ -60,18 +60,20 @@ Aは通常のLean/Blueprint implementationをworker poolから奪いません。
 
 ### Dependency / integration state
 
+- Validation correction: downstream CI #306/#311 exposed compile failures in `PadicIntegerProperties.lean`. Earlier green #72/#89 runs did not certify all new modules. Their downstream STACK-READY promises are paused for new dependent proof work until D publishes replacement exact heads with the relevant modules actually compiled by CI.
+
 - #56 is DONE on main. Its former #64-only frozen stack head is no longer the gate for new work.
 - #64/C draft PR #114 owns the normal `Formalization.lean` aggregator. Stable checkpoint `7a48b08d…` passed CI #289; the moving proof head has advanced to `136bdf47…` with CI #305 in progress. Central scheduling should track structural transitions rather than chase every proof commit.
 - #78/B / PR #115 is DONE on main at `56a5307bee7049924c9090a677492ba01a4808e2`. Its source-shaped Gauss-lemma proof, Blueprint, and root linkage are integrated.
 - #72/D replacement exact head `781d1b8fc4800c28934c39563ba8d8e3bd85ff7d` passed CI #297 after latest-main resync. The mathematical interface is unchanged from old `c43d7f09…`; old promises remain valid for existing work, while new dependent commits should prefer `781d1b8f…`. Scoped consumers now include #89/#96/#102/#100/#104/#105/#108.
 - #89/D replacement exact head `55175ebce34eda623e2b78cb486f75f7a3e7967a`, stacked on `781d1b8f…`, passed CI #298. The #96 topology/projection-ball/density and #102 metric/completeness promises are unchanged; old `f42c68f0…` remains valid for existing work.
-- #96/B has consumed the old valid exact `f42c68f0…` promise and begun stacked implementation in draft PR #123. Its head `3f61cac8…` is under CI #306. Existing work should not be rewritten merely because replacement upstream heads appeared; future restacks should prefer `55175ebc…`.
+- #96/B has draft PR #123. Its current CI fails in upstream p-adic integer code; keep the field commits, but wait for a compile-validated replacement stack before extending dependent proof work.
 - #99/B is DONE on main. Its final head `1a86c84e…` passed CI #260 with normal Formalization/Blueprint integration; the earlier #100 downstream interface remains stable.
 - #100/B has both #99 and #72 primitive/unit inputs stable. Full proof now waits a #96 DONE/STACK-READY scaling interface.
-- #102/B is STACKABLE; no dependent proof commit was observed yet. For new work use #89 replacement `55175ebc…`, which contains #72 replacement `781d1b8f…`; both promised interfaces are green and unchanged.
+- #102/B preflight remains complete, but its prior stack gate is paused until repaired #72/#89 heads are published.
 - #104/B completed odd-prime quadratic-lifting preflight; its #72 subset is frozen, so it waits only for #102 DONE/STACK-READY with the simple-root interface.
 - #105/B completed dyadic quadratic-lifting preflight; its #72 subset is frozen, so it waits only for #102 DONE/STACK-READY with the main `n,k` Hensel theorem. No #96 dependency is needed.
-- #108/B completed preflight and is now STACKABLE for the core Proposition 7 slice from #72 replacement `781d1b8f…` / CI #297. Its branch was still on main at the latest check; move it before dependent proof commits. The final roots-of-unity corollary still waits #96.
+- #108/B has draft PR #125. Its current CI fails in the same upstream p-adic integer code; preserve the filtration commits and wait for a replacement stack.
 - #112 has a canonical branch lock on current main but no `OWNER: <lane>` comment yet. Treat it as claimed with owner metadata pending; proof remains gated on #108/#72 and the final `Q_p^×` theorem on #96.
 - #120 is B-owned proof-code-clean PREFLIGHT for Chapter 2 §3.3 p-adic square classes; proof waits #112 + #96.
 - #121 is the unclaimed Chapter 3 §1.1 Hilbert-symbol basics/norm-criterion preflight. Generic field-level definition/norm work is safe now; project `Q_p` specialization waits #96.
@@ -95,6 +97,8 @@ Unclaimed safe capacity:
 #112 is branch-locked and not claimable. #120 is now B-owned PREFLIGHT. Owned executable/near-executable work includes #64/#72, stacked #89, active stacked #96/PR #123, stackable #102, and core-stackable #108. The pool retains three clearly unclaimed safe paths without speculative work.
 
 ### Next A actions
+
+0. require #72/#89 replacement promises to be backed by CI that actually compiles their new modules before reopening p-adic downstream gates;
 
 1. finish #118 / PR #119 after latest-main recheck, exact four-file self-review, and latest-head CI;
 2. monitor #114 source proof/Blueprint/final root integration on main after #115 merge;
