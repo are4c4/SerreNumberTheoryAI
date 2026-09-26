@@ -238,7 +238,7 @@ theorem exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero
     exact Finset.mem_image.mpr ⟨t, Finset.mem_univ _, rfl⟩
   have hh_mem : h ∈ E := Finset.min'_mem E hE
   obtain ⟨t0, -, ht0⟩ := Finset.mem_image.mp hh_mem
-  have he0 : e t0 = h := ht0.symm
+  have he0 : e t0 = h := ht0
   let y : σ → SerrePadicInt p := fun s =>
     if hs : x s = 0 then 0
     else
