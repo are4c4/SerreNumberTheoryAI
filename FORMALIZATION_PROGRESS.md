@@ -80,6 +80,9 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 
 ## Phase 6 — 第2章 p進体 §1
 
+> Validation note: downstream CI #306/#311 exposed compile failures in `PadicIntegerProperties.lean`. Until D publishes replacement exact heads that actually compile the new modules, #72/#89-dependent proof work is paused; existing downstream commits remain preserved.
+
+
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -90,7 +93,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 - #71 / PR #86 はproject-local inverse-limit `SerrePadicInt`、residue projections、integer embedding、compactness/continuity、Blueprint linkageをmainへend-to-end統合済み。
 - #72 / PR #92 はD-owned。latest-main resync後のreplacement exact head `781d1b8f…` はCI #297 green。projection/kernel、power divisibility、unit criterion、unique `p^n * unit` decomposition、project additive valuation、multiplicative/ultrametric laws、domain instance、独立Blueprintの数学interfaceは旧 `c43d7f09…` と不変で、#89/#96/#102/#100/#104/#105/#108向けにscoped freeze済み。旧freezeもexisting workには有効。
 - #89 / draft PR #116 はD-owned。replacement exact head `55175ebc…` は#72 `781d1b8f…` 上でCI #298 green。source metric、inverse-limit topologyとの一致、compact→complete、integer density、独立Blueprintまで実装し、#96向けtopology/projection-ball/densityと#102向けmetric/completeness/divisibility-to-distanceをfreeze。旧 `f42c68f0…` もexisting workには有効。shared rootは未編集。
-- #96 はBがstack gateを消費し、draft PR #123で実装開始。valid old exact base `f42c68f0…` 上に `SerrePadicField p := FractionRing (SerrePadicInt p)`、canonical embedding、prime element、nonzero field elementの `p^n * unit` 型分解の初期sliceを実装。head `3f61cac8…` はCI #306実行中。future restackはreplacement `55175ebc…` を優先する。
+- #96 はB-ownedでPR #123まで進んだが、現在CIはupstream `PadicIntegerProperties.lean` で失敗している。field側commitは保存し、compile-validated replacement stack待ち。
 
 ## Phase 7 — 第2章 §2 p進方程式
 
@@ -104,7 +107,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
 - #100 はB-owned preflight complete。#99と#72 primitive/unit側は安定済みで、full proofは#96の`Q_p` scaling interfaceがDONE/STACK-READYになるのを待つ。
-- #102 はB-ownedでsource/API/dependency preflight complete。#72/#89両consumer contractはfreeze済みで、new workはreplacement exact #89 head `55175ebc…`（#72 `781d1b8f…`を含む）からSTACKABLE。旧 `f42c68f0…` promiseもwithdrawされていない。canonical branchはlatest checkではまだold baseのため、dependent commit前にapproved exact headへ移す。
+- #102 はB-ownedでsource/API/dependency preflight complete。以前の#72/#89 stack gateはcompile-validation待ちで一時停止中。
 - #104 はB-ownedでodd-`p` quadratic liftingのpreflight complete。#72 primitive/unit/congruence subsetはfreeze済みで、proofは#102 simple-root liftingのDONE/STACK-READY待ち。
 - #105 はB-ownedでdyadic quadratic liftingのpreflight complete。#72 domain/dyadic-divisibility/valuation/primitive subsetはfreeze済みで、proofは#102 main `n,k` Hensel theoremのDONE/STACK-READY待ち。#96は不要。
 
@@ -116,7 +119,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | §3.2 principal units / Proposition 8 / multiplicative-group theorem | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #108 はB-ownedでsource/API preflight complete。project `U=(SerrePadicInt p)ˣ` と source-indexed `U_n`、successive quotients、finite coprime-order splitting、inverse-limit passageによる `U = V × U_1` と `V ≃ (Z/pZ)ˣ` の実装方針を固定。#108-scoped #72 subsetがfreezeされ、replacement `781d1b8f…` / CI #297からcore Proposition 7はSTACKABLE。canonical branchはlatest checkでmainのまま。final roots-of-unity corollaryだけ#96待ち。
+- #108 はB-ownedでPR #125まで進んだが、現在CIは同じupstream p進整数moduleで失敗。filtration commitは保存し、replacement stack待ち。
 - #112 はcanonical branchがcurrent mainに作成済みでatomic lock成立。ただしIssue上のowner lane metadataは未記録のため、Aはownerを推測せず `CLAIMED / owner pending` として扱う。source `p`-power step、Proposition 8、multiplicative-group theoremが対象で、core proofは#108、最終 `Q_p^×` theoremは#96にも依存する。
 - #120 はB-owned PREFLIGHT。odd `p` では `x=p^n u` の平方条件をvaluation parity + residue Legendreで、`p=2`ではvaluation parity + `u≡1 (mod 8)` で特徴付ける方針。branchはproof-code-cleanで、proofは#112のprincipal-unit/multiplicative decompositionと#96のproject `Q_p` interface待ち。
 
