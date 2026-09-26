@@ -86,7 +86,9 @@ theorem existsUnique_pow_mul_isUnit_of_ne_zero
   refine ⟨n, ⟨u, hu, hn⟩, ?_⟩
   intro m hm
   obtain ⟨v, hv, hmrepr⟩ := hm
-  exact serrePadicInt_pow_mul_isUnit_exponent_unique p hu hv hn hmrepr
+  exact serrePadicInt_pow_mul_isUnit_exponent_unique
+    (p := p) (x := x) (u := u) (v := v) (n := n) (m := m)
+    hu hv hn hmrepr
 
 /-- The source pair `(n,u)` in `x = p^n u` is unique for every nonzero element. -/
 theorem existsUnique_pow_unitPair_of_ne_zero
@@ -107,6 +109,9 @@ theorem serrePadicInt_p_prime : Prime (p : SerrePadicInt p) := by
     have hnotdvd := (serrePadicInt_isUnit_iff_not_p_dvd p (p : SerrePadicInt p)).1 hpunit
     exact hnotdvd (dvd_refl _)
   · intro a b hab
+    letI : NoZeroDivisors (padicResidueRing p 0) := by
+      simpa [padicResidueRing] using
+        (inferInstance : NoZeroDivisors (ZMod p))
     have hproj : serrePadicIntProj p 0 (a * b) = 0 :=
       (p_dvd_serrePadicInt_iff_proj_zero p (a * b)).1 hab
     rw [map_mul] at hproj
@@ -127,8 +132,7 @@ noncomputable def serrePadicIntAddValuation :
 @[simp]
 theorem serrePadicIntAddValuation_zero :
     serrePadicIntAddValuation p (0 : SerrePadicInt p) = ⊤ := by
-  change emultiplicity (p : SerrePadicInt p) 0 = ⊤
-  exact emultiplicity_zero_right _
+  exact (serrePadicIntAddValuation p).map_zero
 
 /-- On a nonzero element, the additive valuation is the first nonzero residue level. -/
 theorem serrePadicIntAddValuation_eq_order
