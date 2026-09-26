@@ -85,12 +85,12 @@
 | §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 1–2 + valuation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 3: metric / completeness / density | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | 🚧 | ⬜ | 🚧 | 🚧 | ⬜ |
+| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
 
 - #71 / PR #86: project-local inverse-limit `SerrePadicInt`, residue projections, integer embedding, compactness/continuityをend-to-end統合済み。
 - #72 / PR #140: projection-kernel/quotient、unit criterion、unique `p^n * unit` decomposition、domain structure、project additive valuationをlatest mainへ統合済み。
 - #89 / PR #142: p-adic distance、有限剰余levelとの対応、inverse-limit topologyとの一致、compact→complete、整数像の稠密性を統合。main `f4f0710b262ef294919983f40141e788fc8280f7`、CI #374 green。
-- #96 is the current single-lane ACTIVE item. Parked PR #123のfraction-field codeをlatest mainへ回収し、source decomposition / valuation / Proposition 4 / Blueprint / roots / CIをend-to-endで再検証する。
+- #96 / PR #143 is the current single-lane ACTIVE item. Definition 2, unique `p^n u` decomposition, the project valuation/metric interface, Proposition 4 local compactness/open integer subring/rational density, and Blueprint/root linkage are implemented on the recovery branch; final PR-head policy / Lean / Verso CI and merge remain.
 
 ## Phase 7 — 第2章 §2 p進方程式
 
