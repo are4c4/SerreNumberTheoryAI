@@ -55,6 +55,8 @@ open Informal
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerProperties}
 
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerMetric}
+
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence}
 
 # 定理の依存関係
