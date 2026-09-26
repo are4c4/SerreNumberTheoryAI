@@ -80,20 +80,17 @@
 
 ## Phase 6 — 第2章 p進体 §1
 
-> Validation note: the earlier latent compile failures in the §1.2 algebraic modules were repaired on the former #92 branch. This serial recovery rebases that validated slice onto latest main and re-runs normal root policy / Lean / Verso CI before merge.
-
-
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 1–2 + valuation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §1.2 Proposition 3: metric / completeness / density | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
-| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.2 Proposition 3: metric / completeness / density | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | 🚧 | ⬜ | 🚧 | 🚧 | ⬜ |
 
-- #71 / PR #86 はproject-local inverse-limit `SerrePadicInt`、residue projections、integer embedding、compactness/continuity、Blueprint linkageをmainへend-to-end統合済み。
-- #72 / PR #92 is the current single-lane recovery of the algebraic §1.2 slice. It provides projection-kernel/quotient results, unit criterion, unique `p^n * unit` decomposition, project-domain structure, and the project additive valuation with multiplicative and ultrametric laws; no completed mathlib `PadicInt` theorem closes the source target.
-- #89 は単一レーンで再開中。旧PR #116のsource-shaped metric/topology/completeness/density実装をlatest main上へ回収し、通常のFormalization/Blueprint rootへ統合して再検証する。
-- #96 はB-ownedでPR #123まで進んだが、現在CIはupstream `PadicIntegerProperties.lean` で失敗している。field側commitは保存し、compile-validated replacement stack待ち。
+- #71 / PR #86: project-local inverse-limit `SerrePadicInt`, residue projections, integer embedding, compactness/continuityをend-to-end統合済み。
+- #72 / PR #140: projection-kernel/quotient、unit criterion、unique `p^n * unit` decomposition、domain structure、project additive valuationをlatest mainへ統合済み。
+- #89 / PR #142: p-adic distance、有限剰余levelとの対応、inverse-limit topologyとの一致、compact→complete、整数像の稠密性を統合。main `f4f0710b262ef294919983f40141e788fc8280f7`、CI #374 green。
+- #96 is the current single-lane ACTIVE item. Parked PR #123のfraction-field codeをlatest mainへ回収し、source decomposition / valuation / Proposition 4 / Blueprint / roots / CIをend-to-endで再検証する。
 
 ## Phase 7 — 第2章 §2 p進方程式
 
@@ -106,7 +103,7 @@
 | §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
-- #100 はB-owned preflight complete。#99と#72 primitive/unit側は安定済みで、full proofは#96の`Q_p` scaling interfaceがDONE/STACK-READYになるのを待つ。
+- #100 はpreflight complete。#99と#72 primitive/unit側は安定済みで、full proofは#96の`Q_p` scaling interfaceがDONE/STACK-READYになるのを待つ。
 - #102 はB-ownedでsource/API/dependency preflight complete。以前の#72/#89 stack gateはcompile-validation待ちで一時停止中。
 - #104 はB-ownedでodd-`p` quadratic liftingのpreflight complete。#72 primitive/unit/congruence subsetはfreeze済みで、proofは#102 simple-root liftingのDONE/STACK-READY待ち。
 - #105 はB-ownedでdyadic quadratic liftingのpreflight complete。#72 domain/dyadic-divisibility/valuation/primitive subsetはfreeze済みで、proofは#102 main `n,k` Hensel theoremのDONE/STACK-READY待ち。#96は不要。
@@ -120,8 +117,8 @@
 | §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #108 はB-ownedでPR #125まで進んだが、現在CIは同じupstream p進整数moduleで失敗。filtration commitは保存し、replacement stack待ち。
-- #112 はcanonical branchがcurrent mainに作成済みでatomic lock成立。ただしIssue上のowner lane metadataは未記録のため、Aはownerを推測せず `CLAIMED / owner pending` として扱う。source `p`-power step、Proposition 8、multiplicative-group theoremが対象で、core proofは#108、最終 `Q_p^×` theoremは#96にも依存する。
-- #120 はB-owned PREFLIGHT。odd `p` では `x=p^n u` の平方条件をvaluation parity + residue Legendreで、`p=2`ではvaluation parity + `u≡1 (mod 8)` で特徴付ける方針。branchはproof-code-cleanで、proofは#112のprincipal-unit/multiplicative decompositionと#96のproject `Q_p` interface待ち。
+- #112 はcanonical branchがcurrent mainに作成済みでatomic lock成立。ただしIssue上のlegacy owner metadataは未記録のため、Aはownerを推測せず `CLAIMED / owner pending` として扱う。source `p`-power step、Proposition 8、multiplicative-group theoremが対象で、core proofは#108、最終 `Q_p^×` theoremは#96にも依存する。
+- #120 はPREFLIGHT。odd `p` では `x=p^n u` の平方条件をvaluation parity + residue Legendreで、`p=2`ではvaluation parity + `u≡1 (mod 8)` で特徴付ける方針。branchはproof-code-cleanで、proofは#112のprincipal-unit/multiplicative decompositionと#96のproject `Q_p` interface待ち。
 
 ## Phase 9 — 第3章 §1 Hilbert記号の局所的性質
 
@@ -142,8 +139,8 @@
 | §2.2 prescribed local Hilbert signs / 定理4 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #124 はB-ownedでPREFLIGHT complete。有限個を除いて local Hilbert symbol が1であり `∏_v (a,b)_v = 1` となる積公式、rational square-class generator reduction、exact #64 reciprocity edgeを固定し、branchはproof-code-clean。proofは#122と#64の実際に使うinterface待ち。
-- #129 はAが原典 printed pp.35–36 / uploaded PDF pp.45–46 を独立確認してseedしたunclaimed PREFLIGHT。source Lemma 1（CRT）と Lemma 2（有限個の実・p進場所に対するQのweak approximation）を対象とし、Hilbert proof chainからほぼ独立。
-- #130 はAが原典 printed pp.35–38 / uploaded PDF pp.45–48 を独立確認してseedしたunclaimed PREFLIGHT。source Theorem 4（prescribed local Hilbert signsのglobal realization）を対象とし、proofは#124/#122/#120/#129および書籍がChapter 6へ証明を送るDirichlet theorem interface待ち。
+- #129 は原典 printed pp.35–36 / uploaded PDF pp.45–46 を独立確認してseedしたunclaimed PREFLIGHT。source Lemma 1（CRT）と Lemma 2（有限個の実・p進場所に対するQのweak approximation）を対象とし、Hilbert proof chainからほぼ独立。
+- #130 は原典 printed pp.35–38 / uploaded PDF pp.45–48 を独立確認してseedしたunclaimed PREFLIGHT。source Theorem 4（prescribed local Hilbert signsのglobal realization）を対象とし、proofは#124/#122/#120/#129および書籍がChapter 6へ証明を送るDirichlet theorem interface待ち。
 
 ## Phase 11 — 第4章 §1 2次形式
 
@@ -151,7 +148,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | §1.1 quadratic-form definition / polarization / matrix / discriminant | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #131 はAが原典 printed pp.39–40 / uploaded PDF pp.49–50 を独立確認してseedしたunclaimed PREFLIGHT。char ≠ 2 の有限次元vector space上のquadratic form、associated symmetric bilinear form、isometry、basis matrix、change-of-basis `A' = XᵀAX`、discriminant mod squaresを対象とし、現在のp進/Hilbert dependency chainから独立した安全なparallel candidate。
+- #131 は原典 printed pp.39–40 / uploaded PDF pp.49–50 を独立確認してseedしたunclaimed PREFLIGHT。char ≠ 2 の有限次元vector space上のquadratic form、associated symmetric bilinear form、isometry、basis matrix、change-of-basis `A' = XᵀAX`、discriminant mod squaresを対象とし、現在のp進/Hilbert dependency chainから独立した安全なparallel candidate。
 
 ## Single-lane operation rules
 
