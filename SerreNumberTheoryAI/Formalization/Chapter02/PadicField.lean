@@ -71,7 +71,7 @@ The order of vanishing on the project fraction field.  This is the multiplicativ
 units have order `0`, and `0` maps to the distinguished zero element.
 -/
 noncomputable def serrePadicFieldOrder :
-    SerrePadicField p →*₀ ℤᵐ⁰ :=
+    SerrePadicField p →*₀ ℤₘ₀ :=
   Ring.ordFrac (SerrePadicInt p)
 
 /-- The distinguished prime has p-adic order one. -/
