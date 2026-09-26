@@ -6,40 +6,36 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 ## Current active work
 
-- Work ID: C2S1.2-ZpProperties
-- Issue: #72
-- PR: #140 — Recover algebraic properties of project p-adic integers
-- Branch: work/c2-s1-2-zp-properties
-- Source: Chapter 2 §1.2, algebraic part of Propositions 1–2 and valuation consequences
+- Work ID: C2S1.2-ZpMetric
+- Issue: #89
+- Previous parked PR: #116 — p-adic metric / completeness / density
+- Branch: work/c2-s1-2-zp-metric
+- Source: Chapter 2 §1.2, Proposition 3
 - State: ACTIVE
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
 ## Just completed
 
-- S3.3-QuadraticReciprocity / Issue #64 / PR #114
-- merged as `1a67db4fb59cb0b8c660d3e00ad849f2623fbe6d`
+- C2S1.2-ZpProperties / Issue #72
+- recovery PR #140 merged as `2edd751d24fb201abc1c363de633c7c1d1c3f7bd`
 - policy / Lean / Verso CI green before merge
+- algebraic `SerrePadicInt` interface is now on main
 
-## Legacy multi-lane work to park
-
-2026-09-26以前の並列運用で作られた次のPR/branchは、単一レーン移行後は同時実装しない。コードは失わないようbranchを保持し、順番が来た時にlatest mainから再検証して再開する。
+## Remaining legacy work to park
 
 | Legacy PR | Work | Branch | Transition state |
 | --- | --- | --- | --- |
-| #116 | Chapter 2 §1.2 p-adic metric | work/c2-s1-2-zp-metric | PARKED |
 | #123 | Chapter 2 §1.3 project Q_p | work/c2-s1-3-qp-field | PARKED |
 | #125 | Chapter 2 §3.1 unit filtration | work/c2-s3-1-unit-filtration | PARKED |
 
-旧A/B/C/D/E owner名、STACK-READY、stack base SHAは履歴情報にすぎず、再開時の許可や正当性を保証しない。
+## Recovery rule for the metric slice
 
-## Recovery rule for #140
-
-1. latest mainへ適合させる。
-2. 旧branchの有用なLean / Blueprint commitを保持する。
-3. source statementとdependencyを再確認する。
-4. policy / `lake build` / `lake exe vbp build` / PR-head CIを最初から再実行する。
-5. self-review後にmergeする。
-6. その後にのみ次の1 itemをACTIVEへ進める。
+1. rebuild the old #116 metric files on latest main, now consuming the merged §1.2 algebraic interface rather than an unmerged stack;
+2. integrate through normal Formalization / Blueprint roots;
+3. recheck source statement and theorem-strength boundaries;
+4. rerun policy / `lake build` / `lake exe vbp build` / PR-head CI;
+5. self-review and merge;
+6. only then select the next single item.
 
 ## Transition note
 
