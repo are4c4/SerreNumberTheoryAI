@@ -105,7 +105,7 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 namespace SerreNumberTheoryAI
 
 theorem blueprint_homogeneousFieldCommonZero_iff_primitive
-    {σ ι : Type*} (p : ℕ) [Fact p.Prime] [Fintype σ]
+    {σ ι : Type} (p : ℕ) [Fact p.Prime] [Fintype σ]
     (f : ι → MvPolynomial σ (SerrePadicInt p))
     (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
     (∃ x : σ → SerrePadicField p,
