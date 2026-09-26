@@ -59,11 +59,13 @@ theorem serrePadicIntProj_cast_of_le
         _ = ZMod.castHom h₁ (padicResidueRing p m)
               (padicReduction p (m + k)
                 (serrePadicIntProj p (m + k + 1) x)) := by
-              have happ := congrArg
-                (fun f : padicResidueRing p (m + k + 1) →+* padicResidueRing p m =>
-                  f (serrePadicIntProj p (m + k + 1) x))
-                hcomp
-              simpa [RingHom.comp_apply] using happ.symm
+              change
+                ZMod.castHom (dvd_trans h₁ h₂) (padicResidueRing p m)
+                    (serrePadicIntProj p (m + k + 1) x) =
+                  ((ZMod.castHom h₁ (padicResidueRing p m)).comp
+                    (padicReduction p (m + k)))
+                    (serrePadicIntProj p (m + k + 1) x)
+              rw [hcomp]
         _ = ZMod.castHom h₁ (padicResidueRing p m)
               (serrePadicIntProj p (m + k) x) := hstep
         _ = serrePadicIntProj p m x := ih (by omega)
