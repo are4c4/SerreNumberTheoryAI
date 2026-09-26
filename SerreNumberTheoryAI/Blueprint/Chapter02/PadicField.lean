@@ -36,10 +36,20 @@ project-local な p進体 `Q_p` を、project-local な p進整数環
 :::
 
 :::theorem "serre_padic_int_to_field_injective"
-  (lean := "SerreNumberTheoryAI.serrePadicIntToField_injective")
   (uses := "serre_padic_int_to_field")
 この標準埋め込みは単射である。
 :::
+
+```lean "serre_padic_int_to_field_injective"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicIntToField_injective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Injective (serrePadicIntToField p) :=
+  serrePadicIntToField_injective p
+
+end SerreNumberTheoryAI
+```
 
 :::theorem "serre_padic_int_dvr"
   (uses := "serre_padic_int_to_field")
@@ -64,11 +74,22 @@ end SerreNumberTheoryAI
 :::
 
 :::theorem "serre_padic_field_decomposition"
-  (lean := "SerreNumberTheoryAI.serrePadicField_exists_unit_smul_zpow")
   (uses := "serre_padic_int_dvr, serre_padic_field")
 非零の `x : Q_p` に対し、整数 `n : ℤ` と `u : Z_pˣ` が存在して
 `x = u · p^n` と書ける。
 :::
+
+```lean "serre_padic_field_decomposition"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicField_exists_unit_smul_zpow
+    (p : ℕ) [Fact p.Prime] {x : SerrePadicField p} (hx : x ≠ 0) :
+    ∃ (n : ℤ) (u : (SerrePadicInt p)ˣ),
+      x = u • (serrePadicFieldPrime p) ^ n :=
+  serrePadicField_exists_unit_smul_zpow (p := p) hx
+
+end SerreNumberTheoryAI
+```
 
 :::proof "serre_padic_field_decomposition"
 分子・分母をそれぞれ `p` の非負整数冪と単元へ分解すると、
@@ -77,12 +98,22 @@ end SerreNumberTheoryAI
 :::
 
 :::definition "serre_padic_field_order"
-  (lean := "SerreNumberTheoryAI.serrePadicFieldOrder")
   (uses := "serre_padic_int_dvr, serre_padic_field")
 分数体上の order-of-vanishing を用い、`p` の指数を記録する
 project-local p進付値を定義する。Leanでは零点も含めて乗法的に扱うため
-値域を `ℤᵐ⁰` とする。
+値域を `WithZero (Multiplicative ℤ)` とする。
 :::
+
+```lean "serre_padic_field_order"
+namespace SerreNumberTheoryAI
+
+noncomputable def blueprint_serrePadicFieldOrder
+    (p : ℕ) [Fact p.Prime] :
+    SerrePadicField p →*₀ WithZero (Multiplicative ℤ) :=
+  serrePadicFieldOrder p
+
+end SerreNumberTheoryAI
+```
 
 :::lemma_ "serre_padic_field_order_prime"
   (lean := "SerreNumberTheoryAI.serrePadicFieldOrder_prime")
@@ -97,11 +128,24 @@ project-local p進付値を定義する。Leanでは零点も含めて乗法的�
 :::
 
 :::theorem "serre_padic_field_exponent_unique"
-  (lean := "SerreNumberTheoryAI.serrePadicField_zpow_exponent_unique")
   (uses := "serre_padic_field_decomposition, serre_padic_field_order")
 `u p^m = v p^n`（`u,v : Z_pˣ`）ならば `m=n` である。
 したがって source の整数指数は一意である。
 :::
+
+```lean "serre_padic_field_exponent_unique"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicField_zpow_exponent_unique
+    (p : ℕ) [Fact p.Prime]
+    {u v : (SerrePadicInt p)ˣ} {m n : ℤ}
+    (h : u • (serrePadicFieldPrime p) ^ m =
+      v • (serrePadicFieldPrime p) ^ n) :
+    m = n :=
+  serrePadicField_zpow_exponent_unique (p := p) h
+
+end SerreNumberTheoryAI
+```
 
 :::proof "serre_padic_field_exponent_unique"
 両辺に order を適用する。単元因子は order 0 なので消え、
