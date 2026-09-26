@@ -69,13 +69,13 @@ p進整数tuple空間のコンパクト性から共通部分を得る。
 
 :::theorem "field_tuple_primitive_normalization"
   (lean := "SerreNumberTheoryAI.exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero")
-非零な有限 Qₚ tupleには整数 `h` が存在し、全座標を `p^{-h}` 倍すると
+非零な有限 Qₚ tupleには整数 `h` が存在し、全座標を `p^(-h)` 倍すると
 Zₚ tupleとして表され、しかも少なくとも一つの座標は単元になる。
 :::
 
 :::proof "field_tuple_primitive_normalization"
-非零座標を `u_s p^{e_s}` と分解し、有限個の指数 `eₛ` の最小値を `h` とする。
-`p^{-h}` を掛けると各非零座標の指数は `0 ≤ eₛ - h` となるので
+非零座標を `uₛ p^(eₛ)` と分解し、有限個の指数 `eₛ` の最小値を `h` とする。
+`p^(-h)` を掛けると各非零座標の指数は `0 ≤ eₛ - h` となるので
 p進整数の像に入る。最小値を達成する座標では指数が0になるため、
 対応する座標は単元である。
 :::
@@ -98,7 +98,7 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 
 :::proof "serre_proposition6_homogeneous_common_zero_iff_reductions"
 Qₚ から Zₚ への方向では、非零共通零点を最小指数で正規化し、
-斉次性によって零点条件を保つ。逆方向では原始的な `Z_p` 共通零点を
-標準埋め込みで `Q_p` に送れば、単元座標の存在によりtupleは非零である。
+斉次性によって零点条件を保つ。逆方向では原始的な Zₚ 共通零点を
+標準埋め込みで Qₚ に送れば、単元座標の存在によりtupleは非零である。
 最後に原始的 Zₚ 共通零点と全有限levelの原始的共通零点の同値を合成する。
 :::
