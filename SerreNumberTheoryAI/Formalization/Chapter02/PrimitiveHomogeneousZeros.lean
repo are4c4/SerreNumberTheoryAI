@@ -203,6 +203,23 @@ theorem primitiveCommonZero_iff_reductions
     exact hxn.1 i
 
 
+
+/-- Evaluation of a homogeneous polynomial scales by the expected degree. -/
+theorem homogeneous_eval₂_scale
+    (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (f : MvPolynomial σ (SerrePadicInt p)) (d : ℕ)
+    (hf : f.IsHomogeneous d)
+    (c : SerrePadicField p) (x : σ → SerrePadicField p) :
+    MvPolynomial.eval₂ (serrePadicIntToField p) (fun s => c * x s) f =
+      c ^ d * MvPolynomial.eval₂ (serrePadicIntToField p) x f := by
+  rw [MvPolynomial.eval₂_eq, MvPolynomial.eval₂_eq, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro m hm
+  simp only [mul_pow]
+  rw [Finset.prod_mul_distrib, Finset.prod_pow_eq_pow_sum,
+    ← hf.degree_eq_sum_deg_support hm]
+  ring
+
 /--
 Every nonzero finite tuple over the project p-adic field can be scaled by one integral
 power of the distinguished prime so that all coordinates lie in project Z_p and at
