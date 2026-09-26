@@ -52,12 +52,13 @@ p進整数はこの距離について完備である。既に得られている�
 距離位相との一致から一般の「コンパクト距離空間は完備」という事実を適用する。
 :::
 
-:::theorem "serre_padic_int_integers_dense" (lean := "SerreNumberTheoryAI.serrePadicIntIntCast_denseRange") (uses := "serre_padic_int_dist_projection")
+:::theorem "serre_padic_int_integers_dense" (lean := "SerreNumberTheoryAI.serrePadicIntIntCast_denseRange") (uses := "serre_padic_projection_fiber_basis")
 標準埋め込み `ℤ → Z_p` の像は稠密である。
 :::
 
 :::proof "serre_padic_int_integers_dense"
-点 `x` と正の誤差を固定する。誤差より小さい p進半径に対応する有限 level を選び、
-その level における `x` の剰余類を整数 `z` で代表する。すると `x` と `z` は
-その有限 level で同じ射影を持つため、距離は選んだ半径以下になり、したがって誤差より小さい。
+空でない開集合 `U` とその点 `x` を取る。射影極限位相の有限 level 基底により、
+`x` のある剰余射影 fiber が `U` に含まれる。その level で `x` と同じ剰余類を持つ
+整数 `z` を選べば、`z` の標準埋め込みはその fiber、したがって `U` に属する。
+よって整数像はすべての空でない開集合と交わり、稠密である。
 :::
