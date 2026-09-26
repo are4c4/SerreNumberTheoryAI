@@ -1,6 +1,8 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
 import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
 import Mathlib.Topology.Algebra.Valued.ValuedField
+import Mathlib.Topology.Algebra.Valued.NormedValued
+import Mathlib.RingTheory.Valuation.Discrete.RankOne
 import Mathlib.Topology.Algebra.Field
 import Mathlib.Topology.Algebra.Group.Pointwise
 
@@ -50,6 +52,41 @@ Use the valuation topology, rather than the generic final ring topology carried 
 noncomputable instance (priority := 1100) serrePadicFieldTopologicalSpace :
     TopologicalSpace (SerrePadicField p) :=
   (serrePadicFieldValued p).toTopologicalSpace
+
+/-- The project field valuation is discrete of rank one. -/
+noncomputable instance serrePadicFieldValuationIsRankOneDiscrete :
+    (serrePadicFieldValuation p).IsRankOneDiscrete := by
+  unfold serrePadicFieldValuation
+  infer_instance
+
+/--
+Normalize the rank-one realization of the project valuation using the prime `p`
+as the real base.  This is the generic bridge from the discrete valuation to the
+usual real-valued p-adic metric.
+-/
+noncomputable instance serrePadicFieldValuationRankOne :
+    (serrePadicFieldValuation p).RankOne :=
+  Valuation.IsRankOneDiscrete.rankOne
+    (v := serrePadicFieldValuation p)
+    (e := (p : ℝ≥0)) (by
+      exact_mod_cast (Fact.out : p.Prime).one_lt)
+
+/--
+The normed-field structure attached to the project p-adic valuation.  The generic
+`Valued.toNormedField` construction reuses the valuation uniformity, so this metric
+induces the same topology used below for Proposition 4.
+-/
+@[instance_reducible]
+noncomputable def serrePadicFieldNormedField :
+    NormedField (SerrePadicField p) :=
+  Valued.toNormedField
+    (SerrePadicField p) (WithZero (Multiplicative ℤ))
+
+/-- The p-adic metric bundled from the normalized project valuation. -/
+@[instance_reducible]
+noncomputable def serrePadicFieldMetricSpace :
+    MetricSpace (SerrePadicField p) :=
+  (serrePadicFieldNormedField p).toMetricSpace
 
 /-- The order-of-vanishing interface is the inverse of the field valuation. -/
 theorem serrePadicFieldOrder_eq_valuation_inv (x : SerrePadicField p) :
