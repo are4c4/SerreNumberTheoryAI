@@ -1,0 +1,104 @@
+import Verso
+import VersoManual
+import VersoBlueprint
+
+import SerreNumberTheoryAI.Formalization.Chapter02.PrimitiveHomogeneousZeros
+
+open Verso.Genre
+open Verso.Genre.Manual
+open Informal
+
+#doc (Manual) "第2章 2.1 原始的な斉次共通零点" =>
+
+*出典メタデータ:* J.-P. セール著・弥永健一訳『数論講義』日本語版、
+第2章・§2・2.1、印刷頁19（uploaded PDF page 29）。
+
+この節では命題5を斉次方程式系に強める。有限個の変数をもち、
+各多項式がそれぞれある次数で斉次であるとする。書籍の「原始的」は、
+座標の少なくとも一つが p進整数の単元であることを意味する。
+
+Leanでは、非零な project-local `Q_p` 共通零点を、各非零座標の
+`p` 指数の最小値で同時にスケールする。これにより全座標が
+project-local `Z_p` に入り、最小指数を達成する座標が単元になる。
+斉次性により共通零点条件はこのスケーリングで保たれる。
+
+:::definition "serre_padic_tuple_primitive"
+  (lean := "SerreNumberTheoryAI.serrePadicTuplePrimitive")
+p進整数の有限tupleが原始的であるとは、少なくとも一つの座標が単元であることとする。
+:::
+
+:::definition "padic_reduced_tuple_primitive"
+  (lean := "SerreNumberTheoryAI.padicReducedTuplePrimitive")
+有限剰余levelのtupleが原始的であるとは、最初の residue level へさらに還元したとき、
+少なくとも一つの座標が0でないこととする。
+:::
+
+:::lemma_ "primitive_projection"
+  (lean := "SerreNumberTheoryAI.padicReducedTuplePrimitive_of_serrePadic")
+  (uses := "serre_padic_tuple_primitive, padic_reduced_tuple_primitive")
+原始的な p進整数tupleを任意の有限levelへ射影すると原始性が保たれる。
+:::
+
+:::lemma_ "primitive_recovery"
+  (lean := "SerreNumberTheoryAI.serrePadicTuplePrimitive_of_reduced")
+  (uses := "serre_padic_tuple_primitive, padic_reduced_tuple_primitive")
+ある有限levelへの射影が原始的なら、元の p進整数tupleも原始的である。
+:::
+
+:::theorem "primitive_common_zero_iff_reductions"
+  (lean := "SerreNumberTheoryAI.primitiveCommonZero_iff_reductions")
+  (uses := "primitive_projection, primitive_recovery")
+p進整数上に原始的な共通零点が存在することと、すべての有限levelで
+還元された方程式族に原始的な共通零点が存在することは同値である。
+:::
+
+:::proof "primitive_common_zero_iff_reductions"
+一方向は原始的な p進共通零点を各有限levelへ射影する。
+逆方向では命題5と同様に、各levelで方程式を満たし、かつ最初の residue level で
+非零座標をもつ近似集合を考える。これらは非空な減少閉集合族をなし、
+p進整数tuple空間のコンパクト性から共通部分を得る。
+最初のlevelの条件から極限tupleは原始的で、全levelでの消滅から
+各多項式値そのものが0になる。
+:::
+
+:::lemma_ "homogeneous_eval_scale"
+  (lean := "SerreNumberTheoryAI.homogeneous_eval₂_scale")
+斉次多項式を全座標同じスカラー倍した点で評価すると、
+元の評価値にそのスカラーの斉次次数乗を掛けた値になる。
+:::
+
+:::theorem "field_tuple_primitive_normalization"
+  (lean := "SerreNumberTheoryAI.exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero")
+非零な有限 `Q_p` tupleには整数 `h` が存在し、全座標を `p^{-h}` 倍すると
+`Z_p` tupleとして表され、しかも少なくとも一つの座標は単元になる。
+:::
+
+:::proof "field_tuple_primitive_normalization"
+非零座標を `u_s p^{e_s}` と分解し、有限個の指数 `e_s` の最小値を `h` とする。
+`p^{-h}` を掛けると各非零座標の指数は `e_s-h >= 0` となるので
+p進整数の像に入る。最小値を達成する座標では指数が0になるため、
+対応する座標は単元である。
+:::
+
+:::theorem "homogeneous_field_common_zero_iff_primitive"
+  (lean := "SerreNumberTheoryAI.homogeneousFieldCommonZero_iff_primitive")
+  (uses := "homogeneous_eval_scale, field_tuple_primitive_normalization")
+各方程式が斉次であるとする。このとき、project-local `Q_p` 上の
+非零共通零点の存在と、project-local `Z_p` 上の原始的共通零点の存在は同値である。
+各多項式の斉次次数は互いに異なっていてよい。
+:::
+
+:::theorem "serre_proposition6_homogeneous_common_zero_iff_reductions"
+  (lean := "SerreNumberTheoryAI.serre_proposition6_homogeneous_commonZero_iff_reductions")
+  (uses := "homogeneous_field_common_zero_iff_primitive, primitive_common_zero_iff_reductions")
+斉次多項式族について、project-local `Q_p` 上に非零共通零点が存在することと、
+すべての有限 residue level で原始的な共通零点が存在することは同値である。
+これは命題6の (a)、(b)、(c) を、中央の原始的 `Z_p` 条件を介して結ぶ。
+:::
+
+:::proof "serre_proposition6_homogeneous_common_zero_iff_reductions"
+`Q_p` から `Z_p` への方向では、非零共通零点を最小指数で正規化し、
+斉次性によって零点条件を保つ。逆方向では原始的な `Z_p` 共通零点を
+標準埋め込みで `Q_p` に送れば、単元座標の存在によりtupleは非零である。
+最後に原始的 `Z_p` 共通零点と全有限levelの原始的共通零点の同値を合成する。
+:::
