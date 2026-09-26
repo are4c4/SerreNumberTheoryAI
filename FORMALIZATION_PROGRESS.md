@@ -130,16 +130,28 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | §1.1 Hilbert記号の定義 / norm criterion / 基本公式 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §1.2 明示公式 / 双1次性 / 非退化性 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #121 はAが原典 printed pp.27–28 / uploaded PDF pp.37–38 を独立確認してseedしたunclaimed PREFLIGHT。conic solvabilityによるHilbert記号の定義、平方類不変性、quadratic extensionのnorm criterion（命題1）、初等公式（命題2）を対象とする。generic field-level preflightは安全で、project `Q_p` specializationは#96待ち。
-- #122 はAが原典 printed pp.28–30 / uploaded PDF pp.38–40 を独立確認してseedしたunclaimed PREFLIGHT。real/`Q_p` の明示Hilbert公式、`kˣ/kˣ²` 上の双1次非退化形式、norm subgroup index-two corollaryを対象とする。proofは#121に加え、#96/#120および原典で実際に使うprimitive/lifting interface（#100/#104/#105）のDONE/STACK-READY待ち。
+- #121 はD-ownedでPREFLIGHT complete。generic field-level Hilbert symbol / norm criterion / Proposition 2 のAPI計画を固定し、branchはproof-code-clean。generic coreは#96なしでもimplementation-readyだが、project `Q_p` specializationは#96待ち。
+- #122 はB-ownedでPREFLIGHT complete。real/`Q_p` の明示Hilbert公式、`kˣ/kˣ²` 上の双1次非退化形式、norm subgroup index-two corollaryのsource/API planを固定し、branchはproof-code-clean。proofは#121に加え、#96/#120および実際に使う#100/#104/#105 interface待ち。
 
 ## Phase 10 — 第3章 §2 Hilbert記号の大局的性質
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §2.1 Hilbert積公式 / 定理3 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 CRT + weak approximation lemmas | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 prescribed local Hilbert signs / 定理4 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #124 はAが原典 printed pp.33–34 / uploaded PDF pp.43–44 を独立確認してseedしたunclaimed PREFLIGHT。有限個を除いて local Hilbert symbol が1であり `∏_v (a,b)_v = 1` となる積公式を対象とする。sourceは双1次性で `-1` と素数generatorへreduceし、distinct odd primesのcaseで平方剰余相互法則を使う。proofは#122と#64の実際に使うinterface待ちで、§2.2のprescribed-local-data existence theoremは別slice。
+- #124 はB-ownedでPREFLIGHT complete。有限個を除いて local Hilbert symbol が1であり `∏_v (a,b)_v = 1` となる積公式、rational square-class generator reduction、exact #64 reciprocity edgeを固定し、branchはproof-code-clean。proofは#122と#64の実際に使うinterface待ち。
+- #129 はAが原典 printed pp.35–36 / uploaded PDF pp.45–46 を独立確認してseedしたunclaimed PREFLIGHT。source Lemma 1（CRT）と Lemma 2（有限個の実・p進場所に対するQのweak approximation）を対象とし、Hilbert proof chainからほぼ独立。
+- #130 はAが原典 printed pp.35–38 / uploaded PDF pp.45–48 を独立確認してseedしたunclaimed PREFLIGHT。source Theorem 4（prescribed local Hilbert signsのglobal realization）を対象とし、proofは#124/#122/#120/#129および書籍がChapter 6へ証明を送るDirichlet theorem interface待ち。
+
+## Phase 11 — 第4章 §1 2次形式
+
+| Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
+| --- | --- | --- | --- | --- | --- | --- |
+| §1.1 quadratic-form definition / polarization / matrix / discriminant | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+- #131 はAが原典 printed pp.39–40 / uploaded PDF pp.49–50 を独立確認してseedしたunclaimed PREFLIGHT。char ≠ 2 の有限次元vector space上のquadratic form、associated symmetric bilinear form、isometry、basis matrix、change-of-basis `A' = XᵀAX`、discriminant mod squaresを対象とし、現在のp進/Hilbert dependency chainから独立した安全なparallel candidate。
 
 ## Continuous parallelization rules
 
