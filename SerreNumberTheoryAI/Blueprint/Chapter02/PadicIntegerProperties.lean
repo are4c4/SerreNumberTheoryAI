@@ -34,6 +34,23 @@ Lean側ではlevel `n` が `ℤ / p^(n+1)ℤ` を表すため、書籍の正の�
 level `n` の有限剰余環と自然に環同型になる。
 :::
 
+```lean "serre_padic_quotient_power_equiv"
+namespace SerreNumberTheoryAI
+
+noncomputable def blueprint_serrePadicIntQuotientPowEquiv
+    (p n : ℕ) [Fact p.Prime] :
+    (SerrePadicInt p ⧸ Ideal.span {((p : SerrePadicInt p) ^ (n + 1))}) ≃+*
+      padicResidueRing p n :=
+  serrePadicIntQuotientPowEquiv p n
+
+end SerreNumberTheoryAI
+```
+
+:::proof "serre_padic_quotient_power_equiv"
+  (uses := "serre_padic_projection_surjective")
+前の核同定と有限level射影の全射性に、環準同型に対する第一同型定理を適用する。
+:::
+
 :::proof "serre_padic_projection_kernel_power"
 射影で0になることと `p^(n+1)` で割り切れることを、整合列の座標を1段ずつ
 `p` で割る構成によって往復させる。射影の全射性と第一同型定理を組み合わせると
@@ -47,6 +64,17 @@ level `n` の有限剰余環と自然に環同型になる。
 `SerrePadicInt p` の元は、`p` で割り切れないことと単元であることが同値である。
 同値な判定として、最初の剰余成分が0でないことを用いることができる。
 :::
+
+```lean "serre_padic_unit_iff_not_p_divisible"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicInt_isUnit_iff_not_p_dvd
+    (p : ℕ) [Fact p.Prime] (x : SerrePadicInt p) :
+    IsUnit x ↔ ¬ (p : SerrePadicInt p) ∣ x :=
+  serrePadicInt_isUnit_iff_not_p_dvd p x
+
+end SerreNumberTheoryAI
+```
 
 :::proof "serre_padic_unit_iff_not_p_divisible"
 最初の剰余成分が単元なら、整合性を使って全ての高いlevelでも単元であることを示し、
@@ -68,6 +96,18 @@ level `n` の有限剰余環と自然に環同型になる。
 非零の `x : SerrePadicInt p` は一意的に `x = p^n u` と書ける。
 ここで `n : ℕ`、`u` は単元であり、指数だけでなく単元因子も一意である。
 :::
+
+```lean "serre_padic_pow_unit_decomposition"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_existsUnique_pow_unitPair_of_ne_zero
+    (p : ℕ) [Fact p.Prime] {x : SerrePadicInt p} (hx : x ≠ 0) :
+    ∃! nu : ℕ × SerrePadicInt p,
+      IsUnit nu.2 ∧ x = (p : SerrePadicInt p) ^ nu.1 * nu.2 :=
+  existsUnique_pow_unitPair_of_ne_zero (p := p) hx
+
+end SerreNumberTheoryAI
+```
 
 :::proof "serre_padic_pow_unit_decomposition"
 最初の非零levelを `n` とする。より低いlevelが全て0なので `p^n ∣ x` が得られ、
@@ -117,6 +157,16 @@ Leanでは、project内で `p` が素元であることを先に証明し、一�
   (uses := "serre_padic_pow_unit_decomposition")
 素数 `p` に対し、project-localなp進整数環 `SerrePadicInt p` は整域である。
 :::
+
+```lean "serre_padic_integral_domain"
+namespace SerreNumberTheoryAI
+
+theorem blueprint_serrePadicInt_isDomain
+    (p : ℕ) [Fact p.Prime] : IsDomain (SerrePadicInt p) := by
+  infer_instance
+
+end SerreNumberTheoryAI
+```
 
 :::proof "serre_padic_integral_domain"
 非零の2元をそれぞれ `p^m u`, `p^n v` と分解すると、その積は
