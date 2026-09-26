@@ -18,9 +18,10 @@ section PadicIntegerProperties
 /-- The first-isomorphism-theorem quotient attached to the `n`-th residue projection. -/
 noncomputable def serrePadicIntQuotientKerEquiv
     (p n : ℕ) :
-    (RingHom.ker (serrePadicIntProj p n)).Quotient ≃+* padicResidueRing p n :=
+    (SerrePadicInt p ⧸ RingHom.ker (serrePadicIntProj p n)) ≃+*
+      padicResidueRing p n :=
   RingHom.quotientKerEquivOfSurjective
-    (serrePadicIntProj p n) (serrePadicIntProj_surjective p n)
+    (serrePadicIntProj_surjective p n)
 
 /-- A higher residue coordinate reduces to every lower coordinate of the same compatible sequence. -/
 theorem serrePadicIntProj_cast_of_le
@@ -49,7 +50,7 @@ theorem serrePadicIntProj_cast_of_le
           padicReduction p (m + k)
               (serrePadicIntProj p (m + (k + 1)) x) =
             serrePadicIntProj p (m + k) x := by
-        simpa [Nat.add_assoc] using
+        simpa only [Nat.add_succ, Nat.add_zero] using
           (serrePadicIntProj_compat p (m + k) x)
       have hstep :
           ZMod.castHom h₁ (padicResidueRing p m)
