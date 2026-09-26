@@ -31,7 +31,7 @@ live branch / Issue / PR / CI がこの文書より新しい場合はlive state�
 
 Current ACTIVE:
 
-- C2S1.2-ZpMetric — Issue #89 / work/c2-s1-2-zp-metric
+- C2S1.2-ZpMetric — Issue #89 / work/c2-s1-2-zp-metric-serial
 
 Just completed:
 
@@ -98,7 +98,7 @@ Live dependency graph:
 | P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `DONE` | PR #115 merged as `56a5307b…` | `work/c1-supp-gauss-lemma` | #78 complete |
 | P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `DONE` | PR #86 merged | `work/c2-s1-1-zp-construction` | #71 complete |
 | P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `DONE` | downstream CI #306/#311 exposed compile errors in the upstream module; publish a compile-validated replacement before stacking resumes | `work/c2-s1-2-zp-properties` | #72 / D |
-| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `ACTIVE` | restack after repaired #72 and compile the metric modules before republishing downstream promises | `work/c2-s1-2-zp-metric` | #89 / D |
+| P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `ACTIVE` | recovered on latest main; rerun root policy / Lean / Blueprint CI | `work/c2-s1-2-zp-metric-serial` | #89 / legacy D |
 | P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `BLOCKED` | PR #123 CI #306 fails in upstream #72 module; preserve commits and wait for replacement stack | `work/c2-s1-3-qp-field` | #96 / B |
 | P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `DONE` | PR #103 merged at `326c2aec…`, CI #260 green | `work/c2-s2-1-root-existence` | #99 complete |
 | P15 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 命題6 | `PREFLIGHT` | #99 + #72 primitive/unit sides stable; full proof waits #96 scaling DONE/STACK-READY | `work/c2-s2-1-primitive-homogeneous-zeros` | #100 / B |
