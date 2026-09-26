@@ -35,6 +35,16 @@ theorem serrePadicIntToField_injective :
 def serrePadicFieldPrime : SerrePadicField p :=
   serrePadicIntToField p (p : SerrePadicInt p)
 
+/-- The distinguished prime is nonzero in the project fraction field. -/
+theorem serrePadicFieldPrime_ne_zero :
+    serrePadicFieldPrime p ≠ 0 := by
+  have hpZ : (p : SerrePadicInt p) ≠ 0 := by
+    simpa using serrePadicInt_p_pow_ne_zero p 1
+  intro h
+  apply hpZ
+  apply serrePadicIntToField_injective p
+  simpa [serrePadicFieldPrime, serrePadicIntToField] using h
+
 /--
 The project-local p-adic integer ring is a discrete valuation ring.
 
@@ -109,6 +119,44 @@ theorem serrePadicField_zpow_exponent_unique
   have hmn : WithZero.exp m = WithZero.exp n := by
     simpa only [serrePadicFieldOrder_unit_smul_zpow] using horder
   exact WithZero.exp_injective hmn
+
+/-- Once the exponent is fixed, the unit in the source decomposition is unique. -/
+theorem serrePadicField_unit_unique_of_smul_zpow_eq
+    {u v : (SerrePadicInt p)ˣ} {n : ℤ}
+    (h : u • (serrePadicFieldPrime p) ^ n =
+      v • (serrePadicFieldPrime p) ^ n) :
+    u = v := by
+  apply Units.ext
+  apply serrePadicIntToField_injective p
+  apply mul_right_cancel₀ (zpow_ne_zero n (serrePadicFieldPrime_ne_zero p))
+  simpa [serrePadicIntToField, Units.smul_def, Algebra.smul_def] using h
+
+/-- Both the exponent and the unit in a `u p^n` decomposition are unique. -/
+theorem serrePadicField_decomposition_unique
+    {u v : (SerrePadicInt p)ˣ} {m n : ℤ}
+    (h : u • (serrePadicFieldPrime p) ^ m =
+      v • (serrePadicFieldPrime p) ^ n) :
+    m = n ∧ u = v := by
+  have hmn := serrePadicField_zpow_exponent_unique (p := p) h
+  subst n
+  exact ⟨rfl, serrePadicField_unit_unique_of_smul_zpow_eq (p := p) h⟩
+
+/-- Every nonzero project p-adic field element has a unique `(exponent, unit)` decomposition. -/
+theorem serrePadicField_existsUnique_zpow_unitPair_of_ne_zero
+    {x : SerrePadicField p} (hx : x ≠ 0) :
+    ∃! nu : ℤ × (SerrePadicInt p)ˣ,
+      x = nu.2 • (serrePadicFieldPrime p) ^ nu.1 := by
+  obtain ⟨n, u, hxu⟩ := serrePadicField_exists_unit_smul_zpow (p := p) hx
+  refine ⟨(n, u), hxu, ?_⟩
+  rintro ⟨m, v⟩ hxv
+  have hdecomp :
+      u • (serrePadicFieldPrime p) ^ n =
+        v • (serrePadicFieldPrime p) ^ m :=
+    hxu.symm.trans hxv
+  obtain ⟨hnm, huv⟩ := serrePadicField_decomposition_unique (p := p) hdecomp
+  cases hnm
+  cases huv
+  rfl
 
 end PadicField
 
