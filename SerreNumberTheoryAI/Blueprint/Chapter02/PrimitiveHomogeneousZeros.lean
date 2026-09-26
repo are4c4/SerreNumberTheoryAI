@@ -119,6 +119,16 @@ theorem blueprint_homogeneousFieldCommonZero_iff_primitive
 end SerreNumberTheoryAI
 ```
 
+:::proof "homogeneous_field_common_zero_iff_primitive"
+Qₚ 上の非零共通零点からは、最小指数による正規化で原始的な Zₚ tuple を得る。
+各多項式は斉次なので、同じスカラーによる全座標の変換は多項式値を
+その斉次次数乗だけ変える。したがって零点条件は保たれる。
+
+逆方向では、原始的な Zₚ 共通零点を標準埋め込みで Qₚ に送る。
+単元である座標は0でないので、得られる Qₚ tuple は非零である。
+評価は標準埋め込みと可換だから、共通零点条件も保たれる。
+:::
+
 :::theorem "serre_proposition6_homogeneous_common_zero_iff_reductions"
   (lean := "SerreNumberTheoryAI.serre_proposition6_homogeneous_commonZero_iff_reductions")
   (uses := "homogeneous_field_common_zero_iff_primitive, primitive_common_zero_iff_reductions")
