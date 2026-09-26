@@ -37,6 +37,14 @@ noncomputable instance serrePadicFieldValued :
     Valued (SerrePadicField p) (WithZero (Multiplicative ℤ)) :=
   Valued.mk' (serrePadicFieldValuation p)
 
+/--
+Use the valuation topology, rather than the generic final ring topology carried by
+`Localization`, as the canonical topology on the project p-adic field.
+-/
+noncomputable instance (priority := 1100) serrePadicFieldTopologicalSpace :
+    TopologicalSpace (SerrePadicField p) :=
+  (serrePadicFieldValued p).toTopologicalSpace
+
 /-- The order-of-vanishing interface is the inverse of the field valuation. -/
 theorem serrePadicFieldOrder_eq_valuation_inv (x : SerrePadicField p) :
     serrePadicFieldOrder p x = (serrePadicFieldValuation p x)⁻¹ := by
