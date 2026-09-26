@@ -6,11 +6,11 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #132 queue refill after Hilbert preflight claims | `design/refill-after-hilbert-preflight-132` | sync #121/#122/#124 claims, add #129/#130/#131 capacity, monitor rooted #72 repair |
-| B | End-to-end Formalizer | 🚧 active | #96/#108 preserved but p-adic-gated; #102 waiting; #120/#122/#124 preflight complete | PR #123; PR #125; `work/c2-s3-3-padic-squares`; `work/c3-s1-2-hilbert-local-formula`; `work/c3-s2-1-hilbert-product-formula` | keep p-adic dependent proofs paused; retain proof-code-clean Hilbert preflights until gates open |
+| A | Scheduler / Design | 🚧 active | #135 weak-approximation claim + p-adic checkpoint sync | `design/sync-weak-approx-135` | record #129/B, #134 refill, and #72 diagnostic-green-but-unlinked state; then return to monitoring |
+| B | End-to-end Formalizer | 🚧 active | #96/#108 preserved but p-adic-gated; #102 waiting; #120/#122/#124/#129 preflight complete | PR #123; PR #125; `work/c3-s2-2-weak-approximation` | keep dependent proofs paused where gated; #129 CRT core is safe when an implementation slot opens |
 | C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | moving source proof; use live PR/CI, resync latest main before final integration |
-| D | End-to-end Formalizer | 🚧 active | #72 rooted compile repair; #89 restack pending; #121 preflight complete | PR #92; PR #116; `work/c3-s1-1-hilbert-basics` | continue #72 rooted repair; after green, revalidate #89 and republish exact heads; keep #121 proof-code-clean under concurrency limit |
-| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #129, #130, or #131 |
+| D | End-to-end Formalizer | 🚧 active | #72 rooted validation/linkage repair; #89 restack pending; #121 preflight complete | PR #92; PR #116; `work/c3-s1-1-hilbert-basics` | CI #351 is diagnostic-green, but restore the four source-facing Blueprint Lean links and rerun rooted CI before republishing any stack head |
+| E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #130, #131, or #134 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
 
