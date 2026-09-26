@@ -47,14 +47,12 @@ end SerreNumberTheoryAI
 ```
 
 :::proof "serre_padic_quotient_power_equiv"
-  (uses := "serre_padic_projection_surjective")
-前の核同定と有限level射影の全射性に、環準同型に対する第一同型定理を適用する。
+前の核同定と §1.1 で証明済みの有限level射影の全射性に、環準同型に対する第一同型定理を適用する。
 :::
 
 :::proof "serre_padic_projection_kernel_power"
 射影で0になることと `p^(n+1)` で割り切れることを、整合列の座標を1段ずつ
-`p` で割る構成によって往復させる。射影の全射性と第一同型定理を組み合わせると
-商環の記述が得られる。
+`p` で割る構成によって往復させ、射影核を主イデアルとして同定する。
 :::
 
 **単元と `p` の倍数.**
