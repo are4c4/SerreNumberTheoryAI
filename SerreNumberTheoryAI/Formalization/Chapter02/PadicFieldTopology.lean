@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
 import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
+import Mathlib.Topology.Algebra.Group.Pointwise
 
 /-!
 # Topology on the project p-adic field
@@ -171,6 +172,33 @@ theorem continuous_serrePadicIntToField :
           ((serrePadicFieldPrime p) ^ (N + 1)) := by
             rw [mul_one]
     _ < γ.1 := hpN
+
+
+/-- The embedded project p-adic integers form a compact subset of the project p-adic field. -/
+theorem isCompact_serrePadicIntImage :
+    IsCompact (serrePadicIntImage p : Set (SerrePadicField p)) := by
+  have hcompact :
+      IsCompact ((serrePadicIntToField p) '' (Set.univ : Set (SerrePadicInt p))) :=
+    isCompact_univ.image (continuous_serrePadicIntToField p)
+  simpa [serrePadicIntImage] using hcompact
+
+/-- The embedded project p-adic integers are a compact neighborhood of zero. -/
+theorem serrePadicIntImage_mem_nhds_zero :
+    (serrePadicIntImage p : Set (SerrePadicField p)) ∈
+      𝓝 (0 : SerrePadicField p) := by
+  exact (isOpen_serrePadicIntImage p).mem_nhds (by
+    simp [serrePadicIntImage])
+
+/--
+The project p-adic field is locally compact: its open compact integer subring is a
+compact neighborhood of zero, and additive translation gives compact neighborhoods
+at every point.
+-/
+noncomputable instance serrePadicFieldLocallyCompactSpace :
+    LocallyCompactSpace (SerrePadicField p) :=
+  IsCompact.locallyCompactSpace_of_mem_nhds_of_addGroup
+    (isCompact_serrePadicIntImage p)
+    (serrePadicIntImage_mem_nhds_zero p)
 
 end PadicFieldTopology
 
