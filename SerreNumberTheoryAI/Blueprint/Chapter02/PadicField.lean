@@ -80,7 +80,6 @@ end SerreNumberTheoryAI
 この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
 :::
 
-
 :::proof "serre_padic_field_decomposition"
 分子・分母をそれぞれ `p` の非負整数冪と単元へ分解すると、
 指数の差が整数指数 `n` になる。この議論は一般の離散付値環の
@@ -92,7 +91,6 @@ end SerreNumberTheoryAI
 project-local p進付値を定義する。
 この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
 :::
-
 
 :::lemma_ "serre_padic_field_order_prime"
   (lean := "SerreNumberTheoryAI.serrePadicFieldOrder_prime")
@@ -142,10 +140,8 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 :::
 
 :::definition "serre_padic_field_metric"
-原典の距離は付値から得られる指数型の p進距離である。
-Lean 側では同じ付値位相を誘導する rank-one の距離空間構造として束ねる。
+p進体に、付値から得られる p進距離を入れる。
 :::
-
 
 
 :::theorem "serre_padic_int_open"
@@ -154,7 +150,7 @@ Lean 側では同じ付値位相を誘導する rank-one の距離空間構造�
 `Z_p` の標準像は `Q_p` の付値部分環と一致し、したがって開部分環である。
 :::
 
-:::theorem "serre_padic_int_image_compact"
+:::theorem "serre_padic_int_compact"
   (lean := "SerreNumberTheoryAI.isCompact_serrePadicIntImage")
   (uses := "serre_padic_int_open, serre_padic_int_to_field")
 `Z_p` の標準像は `Q_p` でコンパクトである。
@@ -163,7 +159,7 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 
 :::theorem "serre_padic_field_locally_compact"
   (lean := "SerreNumberTheoryAI.serrePadicFieldLocallyCompactSpace")
-  (uses := "serre_padic_int_open")
+  (uses := "serre_padic_int_open, serre_padic_int_compact")
 `Q_p` は局所コンパクトである。開コンパクトな `Z_p` の像が
 0 のコンパクト近傍となり、加法平行移動で任意の点へ移せる。
 :::
@@ -171,8 +167,5 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 
 :::theorem "serre_padic_rationals_dense"
 有理数の標準像は p進体で稠密である。
-§1.2 の整数稠密性を p進整数環から分数体へ移し、任意の p進体の元を
-p進整数二元の商として表すことから、閉包が全体であることを示す。
 :::
-
 
