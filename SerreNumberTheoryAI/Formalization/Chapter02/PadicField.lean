@@ -70,8 +70,11 @@ theorem serrePadicField_exists_unit_smul_zpow
     apply hpZ
     apply serrePadicIntToField_injective p
     simpa [serrePadicFieldPrime, serrePadicIntToField] using h
+  have hp' :
+      algebraMap (SerrePadicInt p) (SerrePadicField p) (p : SerrePadicInt p) ≠ 0 := by
+    simpa [serrePadicFieldPrime, serrePadicIntToField] using hp
   refine ⟨(na : ℤ) - (nb : ℤ), u / v, ?_⟩
-  simp [serrePadicFieldPrime, serrePadicIntToField, hp, zpow_sub₀,
+  simp [serrePadicFieldPrime, serrePadicIntToField, hp', zpow_sub₀,
     div_smul_div_comm, Units.smul_def, Algebra.smul_def]
 
 end PadicField
