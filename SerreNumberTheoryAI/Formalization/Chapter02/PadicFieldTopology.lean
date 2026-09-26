@@ -19,7 +19,7 @@ The topology is obtained from the discrete valuation attached to the project-loc
 namespace SerreNumberTheoryAI
 
 open Filter
-open scoped Topology
+open scoped Topology NNReal
 
 section PadicFieldTopology
 
