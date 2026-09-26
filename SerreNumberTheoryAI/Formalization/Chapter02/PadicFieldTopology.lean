@@ -1,5 +1,5 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
-import Mathlib.Topology.Algebra.Valued.ValuationTopology
+import Mathlib.Topology.Algebra.Valued.WithZeroMulInt
 
 /-!
 # Topology on the project p-adic field
@@ -50,6 +50,27 @@ theorem serrePadicFieldOrder_eq_valuation_inv (x : SerrePadicField p) :
     serrePadicFieldOrder p x = (serrePadicFieldValuation p x)⁻¹ := by
   simpa [serrePadicFieldOrder, serrePadicFieldValuation] using
     (Ring.ordFrac_eq_valuation_inv (R := SerrePadicInt p) x)
+
+/-- The project prime element has valuation `exp (-1)`. -/
+@[simp] theorem serrePadicFieldValuation_prime :
+    serrePadicFieldValuation p (serrePadicFieldPrime p) =
+      WithZero.exp (-1 : ℤ) := by
+  have h :=
+    serrePadicFieldOrder_eq_valuation_inv p (serrePadicFieldPrime p)
+  rw [serrePadicFieldOrder_prime] at h
+  have hinv := congrArg Inv.inv h
+  simpa using hinv.symm
+
+/-- Powers of the project prime tend to zero in the p-adic valuation topology. -/
+theorem serrePadicFieldPrime_pow_tendsto_zero :
+    Filter.Tendsto
+      (fun n : ℕ => (serrePadicFieldPrime p) ^ n)
+      Filter.atTop (𝓝 0) := by
+  apply Valued.tendsto_zero_pow_of_le_exp_neg_one
+  change
+    serrePadicFieldValuation p (serrePadicFieldPrime p) ≤
+      WithZero.exp (-1 : ℤ)
+  rw [serrePadicFieldValuation_prime]
 
 /-- The image of project `Z_p` inside its fraction field. -/
 def serrePadicIntImage : Subring (SerrePadicField p) :=
