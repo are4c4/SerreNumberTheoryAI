@@ -149,7 +149,8 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
 ```lean "serre_padic_field_metric"
 namespace SerreNumberTheoryAI
 
-noncomputable example (p : ℕ) [Fact p.Prime] :
+noncomputable def blueprint_serrePadicFieldMetricSpace
+    (p : ℕ) [Fact p.Prime] :
     MetricSpace (SerrePadicField p) :=
   serrePadicFieldMetricSpace p
 
@@ -178,9 +179,10 @@ project-local `Z_p` の既証明のコンパクト性と、標準埋め込みの
 ```lean "serre_padic_field_locally_compact"
 namespace SerreNumberTheoryAI
 
-noncomputable example (p : ℕ) [Fact p.Prime] :
-    LocallyCompactSpace (SerrePadicField p) := by
-  infer_instance
+noncomputable def blueprint_serrePadicFieldLocallyCompactSpace
+    (p : ℕ) [Fact p.Prime] :
+    LocallyCompactSpace (SerrePadicField p) :=
+  serrePadicFieldLocallyCompactSpace p
 
 end SerreNumberTheoryAI
 ```
