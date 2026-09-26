@@ -77,7 +77,7 @@ level `n+1` の成分を下げると level `n` の成分になることである
 `p` が素数なら、整合列全体は剰余環の直積の閉部分集合である。
 :::
 
-:::theorem "serre_padic_int_compact" (lean := "SerreNumberTheoryAI.serrePadicInt_isCompact") (uses := "padic_compatible_closed, serre_padic_int")
+:::theorem "serre_padic_int_space_compact" (lean := "SerreNumberTheoryAI.serrePadicInt_isCompact") (uses := "padic_compatible_closed, serre_padic_int")
 `p` が素数なら、`SerrePadicInt p` は積位相から誘導される位相でコンパクトである。
 :::
 
