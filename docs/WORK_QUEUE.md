@@ -1,43 +1,50 @@
 # WORK_QUEUE.md
 
-このファイルは、B/C/D/E の end-to-end formalizer が次に何を実行できるかを判断するための依存関係付き作業キューです。
+このファイルは単一レーンが「現在のactive workを終えた後、次に何を選ぶか」を判断するためのdependency-aware backlogです。
 
-`main` 上のこの表は計画の source of truth ですが、**live branch / Issue / PR / CI が表より新しい場合はlive stateを優先**します。
+現行ownershipは docs/ACTIVE_WORK.md だけで管理します。2026-09-26以前のA/B/C/D/E owner表記、canonical branch lock、STACK-READY情報は履歴であり、現在の並行作業許可ではありません。
+
+live branch / Issue / PR / CI がこの文書より新しい場合はlive stateを優先し、その後この文書を同期します。
 
 ## 1. Queue states
 
-- `READY` — upstreamがmainで安定し、本実装をclaim可能。
-- `PREFLIGHT` — source / statement / dependency / mathlib調査を進めてよい。本proofはgate成立後。
-- `STACKABLE` — 未merge upstream がstatement/interface/exact headを明示的に `STACK-READY` として固定済み。
-- `WAITING` — upstream interface待ち。本実装は禁止。
-- `CLAIMED` — canonical branchが存在しworker所有中。
-- `CI-WAIT` — PRのCI待ち。ownerは別の安全なworkをstealしてよい。
-- `BLOCKED` — item固有の停止条件。
-- `DONE` — mainへ統合済みで必要なcross-layer artifact / verificationが揃っている。
+- ACTIVE — 現在唯一の数学的実装対象。0または1件。
+- READY — active完了後にmainから着手可能。
+- PREFLIGHT — 将来対象。read-onlyのsource/dependency/API確認は可能だが並行proof実装はしない。
+- WAITING — main上のupstream完了待ち。
+- BLOCKED — hard blockerあり。
+- PARKED — 旧並列運用のbranch/PRまたは明示的に中断したwork。activeではない。
+- DONE — mainへ統合済みでcross-layer artifact / verificationが揃っている。
 
-## 2. Atomic claim / ownership
+## 2. Serial selection rule
 
-canonical branch作成をownership lockとします。既存branchがあるitemを、Issue上の `RELEASED` / Aの `REASSIGNED` なしに別workerが奪ってはいけません。claim後はfocused Issueへowner lane / branch / baseを記録します。
+1. docs/ACTIVE_WORK.md のACTIVEをmergeまたはparkする。
+2. latest mainへ同期する。
+3. source orderと実際のdependencyを確認する。
+4. 次の1 itemだけをACTIVEへ昇格する。
+5. 新しい数学的実装PRを1本だけ作る。
+6. そのPRが終わるまで別実装へwork stealingしない。
 
-同一work itemに後発duplicate branchが生じた場合は**最初の有効なcanonical lockを優先**し、後発workをduplicate/releasedとして閉じます。
+新しいstacked implementationは行いません。downstreamがupstreamを必要とする場合、upstreamをmainへmergeしてからdownstreamへ進みます。
 
-## 3. Work stealing
+## 3. Transition state
 
-PR作成、CI pending、1 item merge、item固有blocker、upstream待ちはchat停止条件ではありません。実行時間が残っていれば `READY` / eligible `STACKABLE` / safe `PREFLIGHT` を再走査します。
+Current ACTIVE:
 
-1 workerの未merge実装PRは原則2本までです。追加の時間はpreflight、レビュー、dependency整理、CI確認、handoff同期へ使います。
+- S3.3-QuadraticReciprocity — Issue #64 / PR #114 / work/s3-3-quadratic-reciprocity
 
-## 4. Stacked branch gate
+Legacy PRs to keep PARKED until their turn:
 
-未merge upstreamへstackしてよいのは、upstream ownerが数学的statement/assumptions、downstream interface、exact head SHA、interface変更時の通知先を固定した場合だけです。upstream merge後はstack-only状態を解除し、downstream branchをlatest mainへresyncしてから統合します。
+- #92 — C2S1.2-ZpProperties
+- #116 — C2S1.2-ZpMetric
+- #123 — C2S1.3-QpField
+- #125 — C2S3.1-UnitFiltration
 
-STACK-READYを後からwithdrawした場合、既存downstream commitは保存してよいが、replacement exact green SHAまたはupstream mergeまでは新しいdependent proofを追加しません。
+これらのbranch上のcommitは保存するが、同時実装はしない。再開時はlatest mainへ適合させ、古いstack promiseを無効としてpolicy/build/CIを再実行する。
 
-## 5. Dependency rule
+以下のsnapshotに残るlane owner表記は2026-09-26以前の履歴であり、現行運用上のownerではない。
 
-依存は章番号ではなく実際に使う数学的結果で管理します。dependency不明なら`PREFLIGHT`で確認し、新hard edgeが見つかったitemだけを待機させます。
-
-## 6. Current queue
+## 4. Mathematical queue snapshot
 
 Mainでend-to-end完了:
 
@@ -74,7 +81,7 @@ Live dependency graph:
 - `C3S2.2-PrescribedHilbertSymbols` #130 is unclaimed PREFLIGHT for Theorem 4. Proof waits #124/#122/#120/#129 and a source-faithful Dirichlet-theorem interface (the book postpones that lemma's proof to Chapter 6).
 - `C4S1.1-QuadraticFormBasics` #131 is unclaimed PREFLIGHT for the generic quadratic-form definition, polarization, matrix/change-of-basis law, and discriminant. It is independent of the current p-adic/Hilbert implementation chain.
 
-| Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
+| Priority | Work ID | Target | State at transition | Gate / next action | Existing branch | Issue / legacy owner |
 | --- | --- | --- | --- | --- | --- | --- |
 | P0 | `S1.1-T1iii` | 定理1(iii) | `DONE` | PR #58 merged | `work/s1-1-t1iii` | #49 complete |
 | P1 | `S1.2-MultGroup` | 有限体乗法群 / 定理2 | `DONE` | PR #59 merged | `work/s1-2-mult-group` | #50 complete |
@@ -107,25 +114,28 @@ Live dependency graph:
 
 Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is superseded by merged #94; old Legendre draft #93 is superseded by merged #98.
 
-## 7. Shared-hotspot order
+## 5. Single-lane resume order
 
-1. **#114 / C** owns the current normal `Formalization.lean` single-writer slot. Stable checkpoint `7a48b08d…` passed CI #289; the moving head is `136bdf47…` with CI #305 in progress.
-2. **#92 / D** and **#116 / D** remain isolated from `Formalization.lean`/`Blueprint.lean`; replacement heads `781d1b8f…` (CI #297) and `55175ebc…` (CI #298) are green.
-3. **#123 / B** uses a temporary top-level `SerreNumberTheoryAI.lean` direct-import hook plus `PadicField.lean` on its private stack base. It does not edit `Formalization.lean`; final normal aggregator integration must still be serialized after upstream/root ownership clears.
+- 最初に #114 を完了する。
+- #114 merge後、latest main上でこのqueueを再評価する。
+- source/dependency上の次候補として、旧PR #92 のC2S1.2-ZpPropertiesを優先的に再評価する。ただしmainの進捗が変わっていればlive stateを優先する。
+- #116 は #92 がmainで安定してから。
+- #123 は必要なp進整数/metric interfaceがmainで安定してから。
+- #125 は必要なunit/valuation interfaceがmainで安定してから。
+- その他のPREFLIGHT候補は、上記active chainを壊さない範囲で次のACTIVE候補として評価する。
 
-A does not modify worker mathematical branches.
+## 6. Legacy branch recovery
 
-## 8. Queue health
+旧branchを再開するときは、branchが存在すること自体をownershipや正当性の根拠にしない。
 
-Validation note: PR #123 CI #306 and PR #125 CI #311 exposed the upstream `PadicIntegerProperties.lean` errors. D then forced the owner module through CI on #72; CI #321 reproduced the failures directly on the owner branch. The current #72/#89 STACK-READY promises remain suspended for new dependent proof work until replacement heads actually compile the relevant modules. Existing downstream commits are preserved.
+1. latest mainを確認する。
+2. branch差分をreviewする。
+3. 必要なcommitだけをrebase/cherry-pick/再実装する。
+4. source statementとdependencyを再確認する。
+5. Lean / Blueprint / explanationを同期する。
+6. policy / lake build / vbp build / CIを最初から通す。
+7. self-reviewしてmergeする。
 
+## 7. End-of-run synchronization
 
-#120 was claimed by B, so A independently checked the next source boundary and seeded #124 for Chapter 3 §2.1 Hilbert's product formula. #112 remains branch-locked with owner metadata pending.
-
-#121/#122/#124 have now all been atomically claimed and their preflights completed. A refilled the queue with #129, #130, and #131. Current clearly unclaimed safe capacity is therefore #129/#130/#131. #64 remains executable. The p-adic #72/#89/#96/#102/#108 dependency chain stays paused for new dependency-consuming proof work until rooted compile validation is green; existing #96/#108 commits are preserved.
-
-A should refill again only when #129/#130/#131 are claimed or cease to provide meaningful safe capacity.
-
-## 9. End-of-run handoff
-
-Record owned branches/PRs, current proof/Blueprint state, CI, STACK-READY interfaces, blockers, and next claimable items. New chats must recheck live GitHub rather than trusting this file alone.
+各run終了時に、ACTIVE、PR/CI、blocker、next candidateを docs/ACTIVE_WORK.md とこのqueueへ同期する。複数worker用handoffは作らない。
