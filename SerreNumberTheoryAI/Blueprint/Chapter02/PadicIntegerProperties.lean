@@ -29,7 +29,6 @@ Lean側ではlevel `n` が `ℤ / p^(n+1)ℤ` を表すため、書籍の正の�
 :::
 
 :::definition "serre_padic_quotient_power_equiv"
-  (uses := "serre_padic_projection_kernel_power, serre_padic_projection_surjective")
 したがって `SerrePadicInt p` を `p^(n+1)` の倍数で割った商環は、
 level `n` の有限剰余環と自然に環同型になる。
 :::
