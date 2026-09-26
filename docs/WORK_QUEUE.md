@@ -70,9 +70,10 @@ Live dependency graph:
 - `C3S1.1-HilbertBasics` #121 is D-owned with PREFLIGHT complete on canonical branch `work/c3-s1-1-hilbert-basics`. The generic field-level core is implementation-ready independently of #96, but D keeps the branch proof-code-clean under the two-unmerged-implementation-PR limit; project `Q_p` specialization waits #96.
 - `C3S1.2-HilbertLocalFormula` #122 is B-owned with PREFLIGHT complete on canonical branch `work/c3-s1-2-hilbert-local-formula`. Proof remains gated on #121 plus the exact project `Q_p`/square-class/lifting interfaces from #96/#120/#100/#104/#105 actually used.
 - `C3S2.1-HilbertProductFormula` #124 is B-owned with PREFLIGHT complete on canonical branch `work/c3-s2-1-hilbert-product-formula`. Proof waits #122 and the #64 reciprocity interface actually used; merged #56 supplies supplementary Legendre laws where needed.
-- `C3S2.2-WeakApproximation` #129 is unclaimed PREFLIGHT for the source CRT lemma and finite-place weak approximation lemma. It is mathematically independent of the Hilbert proof chain and safe for parallel work.
+- `C3S2.2-WeakApproximation` #129 is B-owned with PREFLIGHT complete on canonical branch `work/c3-s2-2-weak-approximation`. Lemma 1 (finite CRT) is project-independent and implementation-safe when B has a slot; the project weak-approximation theorem eventually needs #96 for the `Q_p` specialization.
 - `C3S2.2-PrescribedHilbertSymbols` #130 is unclaimed PREFLIGHT for Theorem 4. Proof waits #124/#122/#120/#129 and a source-faithful Dirichlet-theorem interface (the book postpones that lemma's proof to Chapter 6).
 - `C4S1.1-QuadraticFormBasics` #131 is unclaimed PREFLIGHT for the generic quadratic-form definition, polarization, matrix/change-of-basis law, and discriminant. It is independent of the current p-adic/Hilbert implementation chain.
+- `C4S1.2-Orthogonality` #134 is unclaimed PREFLIGHT for orthogonality, radicals/rank/nondegeneracy, orthogonal direct sums, and source Propositions 1–2. Preflight is safe now; proof consumes #131's source-facing quadratic-form interface once stable.
 
 | Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -87,7 +88,7 @@ Live dependency graph:
 | P8 | `S3.3-QuadraticReciprocity` | 3.3 平方剰余相互法則 / 定理6 | `CLAIMED` | stable `7a48b08d…` CI #289; moving PR #114 head `136bdf47…`, CI #305 in progress; current Formalization-root slot | `work/s3-3-quadratic-reciprocity` | #64 / C |
 | P9 | `C1-Supp-GaussLemma` | 第1章補遺 (i) Gaussの補題 | `DONE` | PR #115 merged as `56a5307b…` | `work/c1-supp-gauss-lemma` | #78 complete |
 | P10 | `C2S1.1-ZpConstruction` | 第2章 §1.1 `Z_p` inverse limit | `DONE` | PR #86 merged | `work/c2-s1-1-zp-construction` | #71 complete |
-| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `BLOCKED` | downstream CI #306/#311 exposed compile errors in the upstream module; publish a compile-validated replacement before stacking resumes | `work/c2-s1-2-zp-properties` | #72 / D |
+| P11 | `C2S1.2-ZpProperties` | §1.2 Prop.1–2 + valuation | `BLOCKED` | rooted CI #351 is green only on a diagnostic Blueprint state; final four source-facing Lean links must be restored and rooted-green before republishing STACK-READY | `work/c2-s1-2-zp-properties` | #72 / D |
 | P12 | `C2S1.2-ZpMetric` | §1.2 Prop.3 metric/completeness/density | `WAITING` | restack after repaired #72 and compile the metric modules before republishing downstream promises | `work/c2-s1-2-zp-metric` | #89 / D |
 | P13 | `C2S1.3-QpField` | §1.3 `Q_p` / Prop.4 | `BLOCKED` | PR #123 CI #306 fails in upstream #72 module; preserve commits and wait for replacement stack | `work/c2-s1-3-qp-field` | #96 / B |
 | P14 | `C2S2.1-RootLiftingExistence` | §2.1 命題5 | `DONE` | PR #103 merged at `326c2aec…`, CI #260 green | `work/c2-s2-1-root-existence` | #99 complete |
@@ -101,9 +102,10 @@ Live dependency graph:
 | P22 | `C3S1.1-HilbertBasics` | 第3章 §1.1 Hilbert記号の定義・Norm criterion・基本公式 | `PREFLIGHT` | D preflight complete; generic core ready, project `Q_p` specialization waits #96 | `work/c3-s1-1-hilbert-basics` | #121 / D |
 | P23 | `C3S1.2-HilbertLocalFormula` | 第3章 §1.2 local formula / bilinearity / nondegeneracy | `PREFLIGHT` | B preflight complete; proof waits #121/#96/#120 and actual primitive/lifting interfaces | `work/c3-s1-2-hilbert-local-formula` | #122 / B |
 | P24 | `C3S2.1-HilbertProductFormula` | 第3章 §2.1 Hilbert積公式 / 定理3 | `PREFLIGHT` | B preflight complete; proof waits #122 + #64 reciprocity interface | `work/c3-s2-1-hilbert-product-formula` | #124 / B |
-| P25 | `C3S2.2-WeakApproximation` | 第3章 §2.2 CRT + weak approximation lemmas | `PREFLIGHT` | safe independent preflight; final `Q_p` specialization may consume #96 | `work/c3-s2-2-weak-approximation` | #129 / unclaimed |
+| P25 | `C3S2.2-WeakApproximation` | 第3章 §2.2 CRT + weak approximation lemmas | `PREFLIGHT` | B preflight complete; CRT independent, project weak approximation later consumes #96 | `work/c3-s2-2-weak-approximation` | #129 / B |
 | P26 | `C3S2.2-PrescribedHilbertSymbols` | 第3章 §2.2 prescribed local Hilbert signs / Theorem 4 | `PREFLIGHT` | proof waits #124/#122/#120/#129 + source-faithful Dirichlet interface | `work/c3-s2-2-prescribed-hilbert-symbols` | #130 / unclaimed |
 | P27 | `C4S1.1-QuadraticFormBasics` | 第4章 §1.1 quadratic-form basics | `PREFLIGHT` | generic linear-algebra preflight safe and independent | `work/c4-s1-1-quadratic-form-basics` | #131 / unclaimed |
+| P28 | `C4S1.2-Orthogonality` | 第4章 §1.2 orthogonality / radicals / nondegeneracy | `PREFLIGHT` | preflight safe; proof waits #131 source-facing quadratic-form interface | `work/c4-s1-2-orthogonality` | #134 / unclaimed |
 
 Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is superseded by merged #94; old Legendre draft #93 is superseded by merged #98.
 
@@ -122,9 +124,9 @@ Validation note: PR #123 CI #306 and PR #125 CI #311 exposed the upstream `Padic
 
 #120 was claimed by B, so A independently checked the next source boundary and seeded #124 for Chapter 3 §2.1 Hilbert's product formula. #112 remains branch-locked with owner metadata pending.
 
-#121/#122/#124 have now all been atomically claimed and their preflights completed. A refilled the queue with #129, #130, and #131. Current clearly unclaimed safe capacity is therefore #129/#130/#131. #64 remains executable. The p-adic #72/#89/#96/#102/#108 dependency chain stays paused for new dependency-consuming proof work until rooted compile validation is green; existing #96/#108 commits are preserved.
+#129 has now also been atomically claimed by B and its preflight completed. A seeded #134 from the next independent Chapter 4 source boundary. Current clearly unclaimed safe capacity is #130/#131/#134. #64 remains executable. The p-adic #72/#89/#96/#102/#108 dependency chain stays paused for new dependency-consuming proof work until rooted compile validation is green; existing #96/#108 commits are preserved.
 
-A should refill again only when #129/#130/#131 are claimed or cease to provide meaningful safe capacity.
+A should refill again only when #130/#131/#134 are claimed or cease to provide meaningful safe capacity.
 
 ## 9. End-of-run handoff
 
