@@ -7,9 +7,9 @@
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
 | A | Scheduler / Design | 🚧 active | #118 post-merge handoff / queue refresh | `design/post-merge-handoff-118` / PR #119 | land latest four-file sync after rechecking main/claims/CI; monitor #114, #72/#89 freezes, and #112 owner metadata |
-| B | End-to-end Formalizer | 🚧 active | #108 unit-filtration preflight; #100 Prop.6 preflight; #102 Hensel waiting; #104 odd-`p` and #105 dyadic quadratic Hensel preflights complete; #96 waiting | `work/c2-s3-1-unit-filtration`; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-lifting`; `work/c2-s2-2-hensel-quadratic-odd`; `work/c2-s2-2-hensel-quadratic-two`; `work/c2-s1-3-qp-field` | #78/PR #115 is DONE; continue #108 preflight while proof gates for p-adic downstream items remain explicit-only |
+| B | End-to-end Formalizer | 🚧 active | #96 `Q_p` and #102 Hensel now stackable; #108 preflight complete but waiting its own #72 freeze; #100/#104/#105 downstream waits | `work/c2-s1-3-qp-field`; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-1-unit-filtration`; `work/c2-s2-1-primitive-homogeneous-zeros`; `work/c2-s2-2-hensel-quadratic-odd`; `work/c2-s2-2-hensel-quadratic-two` | move #96/#102 to exact #89 head `f42c68f0…` before dependent commits; do not infer #108 gate until D publishes it |
 | C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | latest checked `7a48b08d…` CI #289 green on main after #115 merge; current normal `Formalization.lean` slot |
-| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric/topology/completion stacked implementation | PR #92; PR #116 | #72 exact freeze `c43d7f09…` CI #261 remains #89-only; #116 `f42c68f0…` CI #291 green; publish consumer-specific #102/#96 freezes only if stable |
+| D | End-to-end Formalizer | 🚧 active | #72 `Z_p` algebraic properties; #89 metric/topology/completion stacked implementation | PR #92; PR #116 | #72 `c43d7f09…` CI #261 now has scoped freezes for #89/#96/#102/#100/#104/#105; #89 `f42c68f0…` CI #291 freezes #96 topology+density and #102 completeness; #108 request still pending |
 | E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #120, #121, or #122 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.
@@ -43,14 +43,14 @@ Live ownership/dependency:
 
 - C owns #64 / draft PR #114. The branch has reconciled after #78 merged, uses the normal `Formalization.lean` aggregator, and latest checked head `7a48b08d…` passed CI #289; C retains the current shared-root slot.
 - #78 / PR #115 is DONE on main at `56a5307b…`; its Gauss-lemma Formalization/Blueprint root changes are integrated and no longer occupy a slot.
-- D owns #72 / draft PR #92. Exact head `c43d7f09…` passed CI #261 and includes source decomposition/valuation/domain plus Blueprint. D has frozen that exact interface **for #89 only**.
-- D owns #89 / draft PR #116. It stacks exactly on `c43d7f09…`; latest checked head `f42c68f0…` passed CI #291. The PR changes only Chapter 2 metric/topology/completion modules plus its independent Blueprint module, so it still avoids shared-root contention. No #102/#96 gate opens without an explicit D freeze.
-- B owns #96; `Q_p` preflight is complete, but it still needs a #96-scoped #72 freeze/merge; Proposition 4 also needs the minimal #89 topology/density subset.
-- B owns #100; #99 is DONE and its finite-level downstream interface is stable, but full Proposition 6 proof still waits #72 primitive/unit and #96 scaling.
-- B owns #102; Hensel preflight is complete. Proof still waits the required #72 congruence/decomposition interface and #89 compatible completeness interface.
-- B owns #104; odd-`p` quadratic-lifting preflight is complete and proof-code-clean, waiting #102 and minimal #72 primitive/unit/congruence.
-- B owns #105; dyadic quadratic-lifting preflight is complete and proof-code-clean. It fixes the source `n=3,k=1` Hensel specialization and waits explicit #102 main-theorem + #72 domain/divisibility/valuation/primitive gates; #96 is not required.
-- B owns #108 on `work/c2-s3-1-unit-filtration`; dependency-safe preflight is active, with core proof still waiting explicit #72 unit/divisibility interface and the final `Q_p` corollary waiting #96.
+- D owns #72 / draft PR #92. Exact head `c43d7f09…` passed CI #261 and includes source decomposition/valuation/domain plus Blueprint. D has explicit consumer-scoped freezes for #89/#96/#102/#100/#104/#105; #108 remains the only requested consumer subset not yet frozen.
+- D owns #89 / draft PR #116. It stacks exactly on `c43d7f09…`; exact head `f42c68f0…` passed CI #291 and is explicitly frozen for #96 (topology/projection-ball/density) and #102 (metric/completeness/divisibility-to-distance). The PR remains outside shared-root contention.
+- B owns #96; preflight is complete and the full required #72 + #89 contracts are now frozen. #96 is STACKABLE from exact #89 head `f42c68f0…`; its canonical branch must move to that exact base before dependent proof commits.
+- B owns #100; #99 and the #72 primitive/unit subset are stable. Full Proposition 6 proof still waits a #96 scaling interface.
+- B owns #102; preflight is complete and both #72 + #89 contracts are now frozen. #102 is STACKABLE from exact #89 head `f42c68f0…` and may begin the source Newton/Cauchy proof.
+- B owns #104; odd-`p` quadratic-lifting preflight is complete. Its #72 subset is frozen; it now waits only for #102 DONE/STACK-READY with the simple-root interface.
+- B owns #105; dyadic quadratic-lifting preflight is complete. Its #72 subset is frozen; it now waits only for #102 DONE/STACK-READY with the main `n,k` theorem.
+- B owns #108 on `work/c2-s3-1-unit-filtration`; preflight is complete and proof-code-clean. Core proof still waits an explicit #108-scoped #72 unit/projection/divisibility freeze; the final `Q_p` corollary additionally waits #96.
 - #112 has a canonical branch lock on current main but no owner-lane comment yet. Treat it as claimed/metadata-pending and do not duplicate it; A has requested owner attribution.
 - #120 Chapter 2 §3.3 p-adic square classes, #121 Chapter 3 §1.1 Hilbert basics, and #122 Chapter 3 §1.2 local Hilbert formulas remain unclaimed PREFLIGHT candidates.
 
