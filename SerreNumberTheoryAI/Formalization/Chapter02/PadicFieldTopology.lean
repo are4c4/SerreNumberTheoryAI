@@ -98,6 +98,80 @@ theorem isOpen_serrePadicIntImage :
   rw [serrePadicIntImage_eq_valuationSubring]
   exact Valued.isOpen_valuationSubring (SerrePadicField p)
 
+/--
+The canonical embedding of the project p-adic integers into the project p-adic field is
+continuous for the inverse-limit topology on `SerrePadicInt p` and the valuation topology
+on `SerrePadicField p`.
+-/
+theorem continuous_serrePadicIntToField :
+    Continuous (serrePadicIntToField p) := by
+  apply continuous_of_continuousAt_zero (serrePadicIntToField p)
+  rw [ContinuousAt, map_zero]
+  intro s hs
+  obtain ⟨γ, hγ⟩ := Valued.mem_nhds_zero.mp hs
+  let ball : Set (SerrePadicField p) :=
+    {x | (serrePadicFieldValuation p).restrict x < γ.1}
+  have hball : ball ∈ 𝓝 (0 : SerrePadicField p) := by
+    apply Valued.mem_nhds_zero.mpr
+    exact ⟨γ, by
+      intro x hx
+      exact hx⟩
+  have hevent : ∀ᶠ n : ℕ in atTop,
+      (serrePadicFieldPrime p) ^ n ∈ ball :=
+    (serrePadicFieldPrime_pow_tendsto_zero p).eventually hball
+  rw [Filter.eventually_atTop] at hevent
+  obtain ⟨N, hN⟩ := hevent
+  have hpN : (serrePadicFieldPrime p) ^ (N + 1) ∈ ball :=
+    hN (N + 1) (Nat.le_succ N)
+  have hfiber :
+      serrePadicIntProjFiber p (0 : SerrePadicInt p) N ∈
+        𝓝 (0 : SerrePadicInt p) :=
+    (isOpen_serrePadicIntProjFiber p (0 : SerrePadicInt p) N).mem_nhds
+      (self_mem_serrePadicIntProjFiber p (0 : SerrePadicInt p) N)
+  apply Filter.mem_of_superset hfiber
+  intro y hy
+  apply hγ
+  have hyproj : serrePadicIntProj p N y = 0 := by
+    simpa [serrePadicIntProjFiber] using hy
+  obtain ⟨z, hz⟩ :=
+    (pow_dvd_serrePadicInt_iff_proj_zero p N y).2 hyproj
+  have hzmem : serrePadicIntToField p z ∈ serrePadicIntImage p := by
+    rw [serrePadicIntImage]
+    exact ⟨z, by simp, rfl⟩
+  rw [serrePadicIntImage_eq_valuationSubring] at hzmem
+  have hzle :
+      (serrePadicFieldValuation p).restrict
+          (serrePadicIntToField p z) ≤ 1 := by
+    rw [Valuation.restrict_le_one_iff]
+    exact hzmem
+  change
+    (serrePadicFieldValuation p).restrict
+        (serrePadicIntToField p y) < γ.1
+  rw [hz, map_mul, map_pow]
+  change
+    (serrePadicFieldValuation p).restrict
+        ((serrePadicFieldPrime p) ^ (N + 1) *
+          serrePadicIntToField p z) < γ.1
+  calc
+    (serrePadicFieldValuation p).restrict
+          ((serrePadicFieldPrime p) ^ (N + 1) *
+            serrePadicIntToField p z)
+        =
+      (serrePadicFieldValuation p).restrict
+          ((serrePadicFieldPrime p) ^ (N + 1)) *
+        (serrePadicFieldValuation p).restrict
+          (serrePadicIntToField p z) := by
+            rw [map_mul]
+    _ ≤
+      (serrePadicFieldValuation p).restrict
+          ((serrePadicFieldPrime p) ^ (N + 1)) * 1 := by
+            gcongr
+    _ =
+      (serrePadicFieldValuation p).restrict
+          ((serrePadicFieldPrime p) ^ (N + 1)) := by
+            rw [mul_one]
+    _ < γ.1 := hpN
+
 end PadicFieldTopology
 
 end SerreNumberTheoryAI
