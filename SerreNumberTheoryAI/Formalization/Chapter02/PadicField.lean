@@ -63,9 +63,13 @@ theorem serrePadicField_exists_unit_smul_zpow
     rw [hb_repr, ← hv]
     ac_rfl
   rw [ha_repr', hb_repr']
+  have hpZ : (p : SerrePadicInt p) ≠ 0 := by
+    simpa using serrePadicInt_p_pow_ne_zero p 1
   have hp : serrePadicFieldPrime p ≠ 0 := by
+    intro h
+    apply hpZ
     apply serrePadicIntToField_injective p
-    exact serrePadicInt_p_pow_ne_zero p 1 ∘ (by simpa : (p : SerrePadicInt p) = (p : SerrePadicInt p))
+    simpa [serrePadicFieldPrime, serrePadicIntToField] using h
   refine ⟨(na : ℤ) - (nb : ℤ), u / v, ?_⟩
   simp [serrePadicFieldPrime, serrePadicIntToField, hp, zpow_sub₀,
     div_smul_div_comm, Units.smul_def, Algebra.smul_def]
