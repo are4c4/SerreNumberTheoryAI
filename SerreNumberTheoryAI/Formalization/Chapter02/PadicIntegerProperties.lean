@@ -296,10 +296,9 @@ theorem serrePadicIntProj_zero_ne_zero_of_isUnit
     (p : ℕ) [Fact p.Prime] {x : SerrePadicInt p} (hx : IsUnit x) :
     serrePadicIntProj p 0 x ≠ 0 := by
   have hunit : IsUnit (serrePadicIntProj p 0 x) := hx.map (serrePadicIntProj p 0)
-  have hunit' : IsUnit (show ZMod p from serrePadicIntProj p 0 x) := by
-    simpa [padicResidueRing] using hunit
-  have hne : (show ZMod p from serrePadicIntProj p 0 x) ≠ 0 := hunit'.ne_zero
-  simpa [padicResidueRing] using hne
+  letI : Nontrivial (padicResidueRing p 0) := by
+    simpa [padicResidueRing] using (inferInstance : Nontrivial (ZMod p))
+  exact hunit.ne_zero
 
 /-- If one residue coordinate of a compatible sequence is a unit, every higher coordinate is a unit. -/
 theorem serrePadicIntProj_isUnit_of_zero_isUnit
