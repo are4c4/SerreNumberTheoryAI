@@ -105,9 +105,16 @@ noncomputable def serrePadicFieldOrder :
     (u : (SerrePadicInt p)ˣ) (n : ℤ) :
     serrePadicFieldOrder p (u • (serrePadicFieldPrime p) ^ n) =
       WithZero.exp n := by
-  simp [serrePadicFieldOrder, serrePadicFieldPrime, serrePadicIntToField,
-    Units.smul_def, Algebra.smul_def,
-    Ring.ordFrac_of_isUnit, Ring.ordFrac_irreducible, map_zpow₀]
+  change
+    Ring.ordFrac (SerrePadicInt p)
+      ((algebraMap (SerrePadicInt p) (SerrePadicField p)) (u : SerrePadicInt p) *
+        ((algebraMap (SerrePadicInt p) (SerrePadicField p)) (p : SerrePadicInt p)) ^ n) =
+      WithZero.exp n
+  rw [map_mul, Ring.ordFrac_of_isUnit (R := SerrePadicInt p) (K := SerrePadicField p) u.isUnit,
+    one_mul, map_zpow₀,
+    Ring.ordFrac_irreducible (R := SerrePadicInt p) (K := SerrePadicField p)
+      (serrePadicInt_p_prime p).irreducible]
+  simpa using (WithZero.exp_zsmul n (1 : ℤ)).symm
 
 /-- The exponent in the source decomposition `x = u p^n` is unique. -/
 theorem serrePadicField_zpow_exponent_unique
