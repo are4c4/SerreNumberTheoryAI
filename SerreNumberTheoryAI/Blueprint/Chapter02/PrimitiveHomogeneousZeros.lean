@@ -17,9 +17,9 @@ open Informal
 各多項式がそれぞれある次数で斉次であるとする。書籍の「原始的」は、
 座標の少なくとも一つが p進整数の単元であることを意味する。
 
-Leanでは、非零な project-local `Q_p` 共通零点を、各非零座標の
+Leanでは、非零な project-local Qₚ 共通零点を、各非零座標の
 `p` 指数の最小値で同時にスケールする。これにより全座標が
-project-local `Z_p` に入り、最小指数を達成する座標が単元になる。
+project-local Zₚ に入り、最小指数を達成する座標が単元になる。
 斉次性により共通零点条件はこのスケーリングで保たれる。
 
 :::definition "serre_padic_tuple_primitive"
@@ -29,8 +29,8 @@ p進整数の有限tupleが原始的であるとは、少なくとも一つの�
 
 :::definition "padic_reduced_tuple_primitive"
   (lean := "SerreNumberTheoryAI.padicReducedTuplePrimitive")
-有限剰余levelのtupleが原始的であるとは、最初の residue level へさらに還元したとき、
-少なくとも一つの座標が0でないこととする。
+有限剰余levelのtupleが原始的であるとは、少なくとも一つの座標が単元であることとする。
+この条件は、その座標を最初の residue level へさらに還元した値が0でないことと同値である。
 :::
 
 :::lemma_ "primitive_projection"
@@ -69,13 +69,13 @@ p進整数tuple空間のコンパクト性から共通部分を得る。
 
 :::theorem "field_tuple_primitive_normalization"
   (lean := "SerreNumberTheoryAI.exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero")
-非零な有限 `Q_p` tupleには整数 `h` が存在し、全座標を `p^{-h}` 倍すると
-`Z_p` tupleとして表され、しかも少なくとも一つの座標は単元になる。
+非零な有限 Qₚ tupleには整数 `h` が存在し、全座標を `p^{-h}` 倍すると
+Zₚ tupleとして表され、しかも少なくとも一つの座標は単元になる。
 :::
 
 :::proof "field_tuple_primitive_normalization"
-非零座標を `u_s p^{e_s}` と分解し、有限個の指数 `e_s` の最小値を `h` とする。
-`p^{-h}` を掛けると各非零座標の指数は `e_s-h >= 0` となるので
+非零座標を `u_s p^{e_s}` と分解し、有限個の指数 `eₛ` の最小値を `h` とする。
+`p^{-h}` を掛けると各非零座標の指数は `0 ≤ eₛ - h` となるので
 p進整数の像に入る。最小値を達成する座標では指数が0になるため、
 対応する座標は単元である。
 :::
@@ -83,22 +83,22 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 :::theorem "homogeneous_field_common_zero_iff_primitive"
   (lean := "SerreNumberTheoryAI.homogeneousFieldCommonZero_iff_primitive")
   (uses := "homogeneous_eval_scale, field_tuple_primitive_normalization")
-各方程式が斉次であるとする。このとき、project-local `Q_p` 上の
-非零共通零点の存在と、project-local `Z_p` 上の原始的共通零点の存在は同値である。
+各方程式が斉次であるとする。このとき、project-local Qₚ 上の
+非零共通零点の存在と、project-local Zₚ 上の原始的共通零点の存在は同値である。
 各多項式の斉次次数は互いに異なっていてよい。
 :::
 
 :::theorem "serre_proposition6_homogeneous_common_zero_iff_reductions"
   (lean := "SerreNumberTheoryAI.serre_proposition6_homogeneous_commonZero_iff_reductions")
   (uses := "homogeneous_field_common_zero_iff_primitive, primitive_common_zero_iff_reductions")
-斉次多項式族について、project-local `Q_p` 上に非零共通零点が存在することと、
+斉次多項式族について、project-local Qₚ 上に非零共通零点が存在することと、
 すべての有限 residue level で原始的な共通零点が存在することは同値である。
-これは命題6の (a)、(b)、(c) を、中央の原始的 `Z_p` 条件を介して結ぶ。
+これは命題6の (a)、(b)、(c) を、中央の原始的 Zₚ 条件を介して結ぶ。
 :::
 
 :::proof "serre_proposition6_homogeneous_common_zero_iff_reductions"
-`Q_p` から `Z_p` への方向では、非零共通零点を最小指数で正規化し、
+Qₚ から Zₚ への方向では、非零共通零点を最小指数で正規化し、
 斉次性によって零点条件を保つ。逆方向では原始的な `Z_p` 共通零点を
 標準埋め込みで `Q_p` に送れば、単元座標の存在によりtupleは非零である。
-最後に原始的 `Z_p` 共通零点と全有限levelの原始的共通零点の同値を合成する。
+最後に原始的 Zₚ 共通零点と全有限levelの原始的共通零点の同値を合成する。
 :::
