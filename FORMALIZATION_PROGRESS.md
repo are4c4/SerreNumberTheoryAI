@@ -142,7 +142,7 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | §2.2 prescribed local Hilbert signs / 定理4 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #124 はB-ownedでPREFLIGHT complete。有限個を除いて local Hilbert symbol が1であり `∏_v (a,b)_v = 1` となる積公式、rational square-class generator reduction、exact #64 reciprocity edgeを固定し、branchはproof-code-clean。proofは#122と#64の実際に使うinterface待ち。
-- #129 はAが原典 printed pp.35–36 / uploaded PDF pp.45–46 を独立確認してseedしたunclaimed PREFLIGHT。source Lemma 1（CRT）と Lemma 2（有限個の実・p進場所に対するQのweak approximation）を対象とし、Hilbert proof chainからほぼ独立。
+- #129 はB-ownedでPREFLIGHT complete。source Lemma 1（有限CRT）と Lemma 2（有限個の実・p進場所に対するQのweak approximation）のstatement/API planを固定し、branchはproof-code-clean。CRT coreはproject-independent、project weak approximationは#96待ち。
 - #130 はAが原典 printed pp.35–38 / uploaded PDF pp.45–48 を独立確認してseedしたunclaimed PREFLIGHT。source Theorem 4（prescribed local Hilbert signsのglobal realization）を対象とし、proofは#124/#122/#120/#129および書籍がChapter 6へ証明を送るDirichlet theorem interface待ち。
 
 ## Phase 11 — 第4章 §1 2次形式
@@ -150,8 +150,10 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §1.1 quadratic-form definition / polarization / matrix / discriminant | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.2 orthogonality / radical / rank / nondegeneracy | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #131 はAが原典 printed pp.39–40 / uploaded PDF pp.49–50 を独立確認してseedしたunclaimed PREFLIGHT。char ≠ 2 の有限次元vector space上のquadratic form、associated symmetric bilinear form、isometry、basis matrix、change-of-basis `A' = XᵀAX`、discriminant mod squaresを対象とし、現在のp進/Hilbert dependency chainから独立した安全なparallel candidate。
+- #134 はAが原典 printed pp.40–41 / uploaded PDF pp.50–51 を独立確認してseedしたunclaimed PREFLIGHT。orthogonality、orthogonal complement、radical/rank/nondegenerate、orthogonal direct sum、source Propositions 1–2 を対象とし、proofは#131のsource-facing interface待ち。
 
 ## Continuous parallelization rules
 
