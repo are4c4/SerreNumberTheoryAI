@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetricCompletion
 import Mathlib.RingTheory.Localization.FractionRing
+import Mathlib.RingTheory.DiscreteValuationRing.Basic
 
 /-!
 # The project p-adic field
@@ -34,6 +35,23 @@ def serrePadicFieldPrime : SerrePadicField p :=
   serrePadicIntToField p (p : SerrePadicInt p)
 
 /--
+The project-local p-adic integer ring is a discrete valuation ring.
+
+This is derived from the already formalized source factorization of every nonzero
+project p-adic integer as a power of `p` times a unit.  No completed p-adic
+number implementation from mathlib is used here.
+-/
+noncomputable instance serrePadicInt_isDiscreteValuationRing :
+    IsDiscreteValuationRing (SerrePadicInt p) :=
+  IsDiscreteValuationRing.ofHasUnitMulPowIrreducibleFactorization (by
+    refine ⟨(p : SerrePadicInt p), (serrePadicInt_p_prime p).irreducible, ?_⟩
+    intro x hx
+    obtain ⟨n, u, hu, hxu⟩ := exists_pow_mul_isUnit_of_ne_zero p hx
+    refine ⟨n, ?_⟩
+    rw [hxu]
+    exact (associated_mul_unit_left _ _ hu).symm)
+
+/--
 Every nonzero project p-adic field element is an integral power of `p` times the image
 of a project p-adic unit.
 -/
@@ -41,41 +59,10 @@ theorem serrePadicField_exists_unit_smul_zpow
     {x : SerrePadicField p} (hx : x ≠ 0) :
     ∃ (n : ℤ) (u : (SerrePadicInt p)ˣ),
       x = u • (serrePadicFieldPrime p) ^ n := by
-  obtain ⟨a, b, hb, rfl⟩ :=
-    IsFractionRing.div_surjective (A := SerrePadicInt p) x
-  have ha : a ≠ 0 := by
-    intro ha
-    subst a
-    simp at hx
-  have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb
-  obtain ⟨na, ua, hua, ha_repr⟩ :=
-    exists_pow_mul_isUnit_of_ne_zero p ha
-  obtain ⟨nb, ub, hub, hb_repr⟩ :=
-    exists_pow_mul_isUnit_of_ne_zero p hb0
-  let u : (SerrePadicInt p)ˣ := hua.unit
-  let v : (SerrePadicInt p)ˣ := hub.unit
-  have hu : (u : SerrePadicInt p) = ua := IsUnit.unit_spec hua
-  have hv : (v : SerrePadicInt p) = ub := IsUnit.unit_spec hub
-  have ha_repr' : a = (u : SerrePadicInt p) * (p : SerrePadicInt p) ^ na := by
-    rw [ha_repr, ← hu]
-    ac_rfl
-  have hb_repr' : b = (v : SerrePadicInt p) * (p : SerrePadicInt p) ^ nb := by
-    rw [hb_repr, ← hv]
-    ac_rfl
-  rw [ha_repr', hb_repr']
-  have hpZ : (p : SerrePadicInt p) ≠ 0 := by
-    simpa using serrePadicInt_p_pow_ne_zero p 1
-  have hp : serrePadicFieldPrime p ≠ 0 := by
-    intro h
-    apply hpZ
-    apply serrePadicIntToField_injective p
-    simpa [serrePadicFieldPrime, serrePadicIntToField] using h
-  have hp' :
-      algebraMap (SerrePadicInt p) (SerrePadicField p) (p : SerrePadicInt p) ≠ 0 := by
-    simpa [serrePadicFieldPrime, serrePadicIntToField] using hp
-  refine ⟨(na : ℤ) - (nb : ℤ), u / v, ?_⟩
-  simp [serrePadicFieldPrime, serrePadicIntToField, hp', zpow_sub₀,
-    div_smul_div_comm, Units.smul_def, Algebra.smul_def]
+  simpa [serrePadicFieldPrime, serrePadicIntToField] using
+    (IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible
+      (R := SerrePadicInt p) (K := SerrePadicField p)
+      (serrePadicInt_p_prime p).irreducible hx)
 
 end PadicField
 
