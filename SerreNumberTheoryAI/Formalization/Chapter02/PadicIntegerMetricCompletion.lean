@@ -15,6 +15,7 @@ section PadicIntegerMetricCompletion
 variable (p : ℕ) [Fact p.Prime]
 
 /-- The source metric on the project p-adic integers is complete. -/
+@[instance_reducible]
 noncomputable def serrePadicIntSourceMetricCompleteSpace :
     @CompleteSpace (SerrePadicInt p) (serrePadicIntMetricSpace p).toUniformSpace := by
   letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
@@ -23,6 +24,7 @@ noncomputable def serrePadicIntSourceMetricCompleteSpace :
 
 /-- Ordinary integers are dense in the project p-adic integers for the source metric topology. -/
 theorem serrePadicIntIntCast_denseRange : DenseRange (serrePadicIntIntCast p) := by
+  change Dense (Set.range (serrePadicIntIntCast p))
   rw [dense_iff_inter_open]
   intro U hU hU_nonempty
   obtain ⟨x, hx⟩ := hU_nonempty
