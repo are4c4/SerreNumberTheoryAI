@@ -65,8 +65,10 @@ as the real base.  This is the generic bridge from the discrete valuation to the
 usual real-valued p-adic metric.
 -/
 noncomputable instance serrePadicFieldValuationRankOne :
-    (serrePadicFieldValuation p).RankOne :=
-  Valuation.IsRankOneDiscrete.rankOne
+    ((Valued.v :
+      Valuation (SerrePadicField p) (WithZero (Multiplicative ℤ)))).RankOne := by
+  change (serrePadicFieldValuation p).RankOne
+  exact Valuation.IsRankOneDiscrete.rankOne
     (v := serrePadicFieldValuation p)
     (e := (p : ℝ≥0)) (by
       exact_mod_cast (Fact.out : p.Prime).one_lt)
