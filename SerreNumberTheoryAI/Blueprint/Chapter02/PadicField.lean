@@ -80,18 +80,6 @@ end SerreNumberTheoryAI
 この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
 :::
 
-```lean "serre_padic_field_decomposition"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_serrePadicField_decomposition
-    (p : ℕ) [Fact p.Prime]
-    {x : SerrePadicField p} (hx : x ≠ 0) :
-    ∃ (n : ℤ) (u : (SerrePadicInt p)ˣ),
-      x = u • (serrePadicFieldPrime p) ^ n :=
-  serrePadicField_exists_unit_smul_zpow (p := p) hx
-
-end SerreNumberTheoryAI
-```
 
 :::proof "serre_padic_field_decomposition"
 分子・分母をそれぞれ `p` の非負整数冪と単元へ分解すると、
@@ -105,15 +93,6 @@ project-local p進付値を定義する。
 この構成では {uses "serre_padic_int_dvr"}[] と {uses "serre_padic_field"}[] を用いる。
 :::
 
-```lean "serre_padic_field_order"
-namespace SerreNumberTheoryAI
-
-noncomputable example (p : ℕ) [Fact p.Prime] :
-    SerrePadicField p →*₀ WithZero (Multiplicative ℤ) :=
-  serrePadicFieldOrder p
-
-end SerreNumberTheoryAI
-```
 
 :::lemma_ "serre_padic_field_order_prime"
   (lean := "SerreNumberTheoryAI.serrePadicFieldOrder_prime")
