@@ -286,6 +286,79 @@ theorem exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero
       rw [hexp, zpow_add₀ hp0]
       ring
 
+
+/-- Evaluation over project Z_p commutes with the canonical embedding into project Q_p. -/
+theorem serrePadicIntToField_eval
+    (p : ℕ) [Fact p.Prime]
+    (f : MvPolynomial σ (SerrePadicInt p))
+    (x : σ → SerrePadicInt p) :
+    serrePadicIntToField p (MvPolynomial.eval x f) =
+      MvPolynomial.eval₂ (serrePadicIntToField p)
+        (fun s => serrePadicIntToField p (x s)) f := by
+  rw [MvPolynomial.eval₂_eq_eval_map]
+  simpa [Function.comp_def] using
+    (MvPolynomial.map_eval (serrePadicIntToField p) x f)
+
+/--
+For a family of homogeneous polynomials, a nonzero common zero over project Q_p is
+equivalent to a primitive common zero over project Z_p.  The degrees may vary with
+the member of the family.
+-/
+theorem homogeneousFieldCommonZero_iff_primitive
+    (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (f : ι → MvPolynomial σ (SerrePadicInt p))
+    (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
+    (∃ x : σ → SerrePadicField p,
+        x ≠ 0 ∧
+          ∀ i, MvPolynomial.eval₂ (serrePadicIntToField p) x (f i) = 0) ↔
+      ∃ y : σ → SerrePadicInt p,
+        serrePadicTuplePrimitive y ∧
+          ∀ i, MvPolynomial.eval y (f i) = 0 := by
+  constructor
+  · rintro ⟨x, hxne, hxzero⟩
+    obtain ⟨h, y, hyprim, hscale⟩ :=
+      exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero p x hxne
+    refine ⟨y, hyprim, ?_⟩
+    intro i
+    apply serrePadicIntToField_injective p
+    rw [serrePadicIntToField_eval p (f i) y]
+    have htuple :
+        (fun s => serrePadicIntToField p (y s)) =
+          fun s => (serrePadicFieldPrime p) ^ (-h) * x s := by
+      funext s
+      exact hscale s
+    rw [htuple, homogeneous_eval₂_scale p (f i) (d i) (hf i),
+      hxzero i, mul_zero]
+    exact map_zero (serrePadicIntToField p)
+  · rintro ⟨y, hyprim, hyzero⟩
+    refine ⟨fun s => serrePadicIntToField p (y s), ?_, ?_⟩
+    · rcases hyprim with ⟨s, hs⟩
+      have hys : y s ≠ 0 := hs.ne_zero
+      intro hzero
+      apply hys
+      apply serrePadicIntToField_injective p
+      simpa using congrFun hzero s
+    · intro i
+      rw [← serrePadicIntToField_eval p (f i) y, hyzero i, map_zero]
+
+/--
+Serre, Chapter 2, section 2.1, Proposition 6 in project-local form:
+a homogeneous family has a nonzero common zero over project Q_p iff every finite
+residue level has a primitive common zero.
+-/
+theorem serre_proposition6_homogeneous_commonZero_iff_reductions
+    (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (f : ι → MvPolynomial σ (SerrePadicInt p))
+    (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
+    (∃ x : σ → SerrePadicField p,
+        x ≠ 0 ∧
+          ∀ i, MvPolynomial.eval₂ (serrePadicIntToField p) x (f i) = 0) ↔
+      ∀ n : ℕ, ∃ a : σ → padicResidueRing p n,
+        padicReducedTuplePrimitive a ∧
+          ∀ i, MvPolynomial.eval a (padicPolynomialReduction p n (f i)) = 0 := by
+  exact (homogeneousFieldCommonZero_iff_primitive p f d hf).trans
+    (primitiveCommonZero_iff_reductions p f)
+
 end PrimitiveHomogeneousZeros
 
 end
