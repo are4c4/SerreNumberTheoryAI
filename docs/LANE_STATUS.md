@@ -6,10 +6,10 @@
 
 | Lane | Role | State | Active work | Branch / PR | Next |
 | --- | --- | --- | --- | --- | --- |
-| A | Scheduler / Design | 🚧 active | #118 post-merge handoff / queue refresh | `design/post-merge-handoff-118` / PR #119 | land latest four-file sync after rechecking main/claims/CI; monitor #114, #72/#89 freezes, and #112 owner metadata |
+| A | Scheduler / Design | 🚧 active | #127 central validation-state alignment | `design/align-padic-validation-127` | align lane/queue/progress text, then return to monitoring |
 | B | End-to-end Formalizer | 🚧 active | #96/#108 paused after upstream compile failure; #102 waiting; #120 preflight | PR #123; PR #125; `work/c2-s2-2-hensel-lifting`; `work/c2-s3-3-padic-squares` | preserve current commits and wait for compile-validated p-adic stack heads |
-| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | stable `7a48b08d…` CI #289; moving head `136bdf47…` CI #305 in progress; current normal `Formalization.lean` slot |
-| D | End-to-end Formalizer | 🚧 active | #72 compile validation; #89 restack pending | PR #92; PR #116 | compile the new p-adic modules in CI, then publish replacement exact heads |
+| C | End-to-end Formalizer | 🚧 active | #64 quadratic reciprocity implementation | `work/s3-3-quadratic-reciprocity` / PR #114 | head `6193e6a3…` passed CI #315; keep source proof moving and resync latest main before final integration |
+| D | End-to-end Formalizer | 🚧 active | #72 rooted compile repair; #89 restack pending | PR #92; PR #116 | CI #321 reproduced the latent errors on the owner branch; repair #72 until rooted policy/Lean/Verso is green, then revalidate #89 and republish exact heads |
 | E | End-to-end Formalizer | 🟡 ready | none | none | atomic-claim an unowned PREFLIGHT: #121, #122, or #124 |
 
 Legend: 🚧 active / 🟡 ready or monitoring / ⛔ blocked / ⚪ idle.

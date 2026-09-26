@@ -111,12 +111,12 @@ A does not modify worker mathematical branches.
 
 ## 8. Queue health
 
-Validation note: PR #123 CI #306 and PR #125 CI #311 both fail while compiling the upstream `PadicIntegerProperties.lean`. Therefore the current #72/#89 STACK-READY promises are suspended for new dependent proof work until replacement heads actually compile the relevant modules. Existing downstream commits are preserved.
+Validation note: PR #123 CI #306 and PR #125 CI #311 exposed the upstream `PadicIntegerProperties.lean` errors. D then forced the owner module through CI on #72; CI #321 reproduced the failures directly on the owner branch. The current #72/#89 STACK-READY promises remain suspended for new dependent proof work until replacement heads actually compile the relevant modules. Existing downstream commits are preserved.
 
 
 #120 was claimed by B, so A independently checked the next source boundary and seeded #124 for Chapter 3 §2.1 Hilbert's product formula. #112 remains branch-locked with owner metadata pending.
 
-Current clearly unclaimed safe capacity is #121, #122, and #124. Owned executable/near-executable work includes #64/#72, stacked #89, active stacked #96/PR #123, stackable #102, and core-stackable #108. Owned waiting/preflight work includes #100/#104/#105/#120 plus #112's locked preflight. This preserves three independent safe PREFLIGHT paths while multiple p-adic proof lanes can execute in parallel.
+Current clearly unclaimed safe capacity is #121, #122, and #124. #64 remains executable. The p-adic #72/#89/#96/#102/#108 dependency chain is temporarily non-executable for new dependency-consuming proof work while D repairs rooted compilation; existing #96/#108 commits are preserved. Owned waiting/preflight work includes #100/#104/#105/#120 plus #112's locked preflight. This preserves three independent safe PREFLIGHT paths while the p-adic compile defect is repaired.
 
 A should refill again only when #121/#122/#124 are claimed or cease to provide meaningful safe capacity.
 
