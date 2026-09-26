@@ -1,6 +1,6 @@
 # FORMALIZATION_PROGRESS.md
 
-このファイルはAI自律形式化の**数学的進捗**に関する source of truth です。実行可能workとdependencyは `docs/WORK_QUEUE.md`、worker稼働状況は `docs/LANE_STATUS.md` とlive GitHub stateで管理します。
+このファイルはAI自律形式化の**数学的進捗**に関する source of truth です。実行可能workとdependencyは docs/WORK_QUEUE.md、現在唯一のactive workは docs/ACTIVE_WORK.md とlive GitHub stateで管理します。2026-09-26以前のA/B/C/D/E owner表記は履歴情報であり、現行ownershipではありません。
 
 ## Status legend
 
@@ -22,9 +22,9 @@
 | Verso Blueprint scaffold | ✅ |
 | CI build + policy checks | ✅ |
 | Issue / PR templates | ✅ |
-| Continuous worker queue / work stealing / stacked-branch protocol | ✅ |
+| Single-lane serial workflow / one-active-PR policy | ✅ |
 
-Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運用する。
+2026-09-26以降は単一レーンがsource解釈からLean・Blueprint・CI・mergeまでend-to-endで直列に担当する。
 
 ## Phase 1 — 有限体
 
@@ -153,13 +153,12 @@ Aをscheduler、B/C/D/Eを同等のend-to-end formalizer worker poolとして運
 
 - #131 はAが原典 printed pp.39–40 / uploaded PDF pp.49–50 を独立確認してseedしたunclaimed PREFLIGHT。char ≠ 2 の有限次元vector space上のquadratic form、associated symmetric bilinear form、isometry、basis matrix、change-of-basis `A' = XᵀAX`、discriminant mod squaresを対象とし、現在のp進/Hilbert dependency chainから独立した安全なparallel candidate。
 
-## Continuous parallelization rules
+## Single-lane operation rules
 
-- globalにactive sliceを1つへ制限しない。ただし **1 work item = 1 active owner**。
-- B/C/D/Eは固定専門レーンではなくend-to-end worker pool。
-- dependencyは `docs/WORK_QUEUE.md` のactual graphで管理する。
-- work claimはcanonical branch作成をatomic lockとする。
-- PR作成、CI pending、1 item完了、item固有blockerはchat停止条件ではない。
-- upstream未mergeのdownstream実装はupstreamがstatement/interface/exact headを`STACK-READY`として固定した場合のみ許可する。
-- withdrawn STACK-READYではexisting workを保存し、replacement exact green SHAまたはupstream mergeまでdependent proofを増やさない。
+- active mathematical implementationは原則1 item / 1 PRだけ。
+- source解釈、mathlib調査、Lean、Blueprint、explanation、CI、self-review、mergeを同じレーンで完結する。
+- CI pendingを理由に別の実装workへ移らない。
+- 新しいstacked downstream proof実装は行わない。必要なupstreamをmainへmergeしてから進む。
+- 旧並列運用のbranch/PRはPARKEDとして保存できるが、再開時はlatest mainへ適合させて全checkを再実行する。
+- hard blockerで別itemへ移る場合は、現在のactive PRをpark/closeし、docs/ACTIVE_WORK.mdとdocs/WORK_QUEUE.mdを同期してから移る。
 - 全列completeはInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIが揃いmainへ統合された後に記録する。
