@@ -67,9 +67,12 @@ Live dependency graph:
 - `C2S3.1-UnitFiltration` #108 is B-owned with PREFLIGHT complete and is now **STACKABLE for the core Proposition 7 slice**. D explicitly froze the requested #108 unit/projection/divisibility subset; for new dependent work prefer #72 replacement exact head `781d1b8f…` / CI #297. The canonical branch was still on main at the latest check, so move it before proof commits. The final roots-of-unity corollary inside project `Q_p` still waits #96.
 - `C2S3.2-PrincipalUnits` #112 has an atomic canonical-branch lock at `work/c2-s3-2-principal-units` on current main, but the branch creator has not yet posted `OWNER: <lane>` on the Issue. Treat it as `CLAIMED (owner metadata pending)` and do not duplicate the branch. Proof remains gated on #108/#72; the final project `Q_p^×` formulation also needs #96.
 - `C2S3.3-PadicSquares` #120 is B-owned PREFLIGHT on canonical branch `work/c2-s3-3-padic-squares`, based on current main. The branch remains proof-code-clean while #112/#96 interfaces are unsettled; merged #56 supplies the odd-prime Legendre criterion.
-- `C3S1.1-HilbertBasics` #121 is unclaimed PREFLIGHT. It covers the Hilbert-symbol conic definition over the source local fields, square-class invariance, Proposition 1 norm criterion, and Proposition 2 elementary identities. Generic field/norm preflight is safe now; project `Q_p` specialization waits #96.
-- `C3S1.2-HilbertLocalFormula` #122 is unclaimed PREFLIGHT. It covers the real and `Q_p` explicit Hilbert-symbol formulas, bilinearity/nondegeneracy on `kˣ/kˣ²`, and the norm-subgroup index-two corollary. Proof waits #121 plus the exact project `Q_p`/square-class/lifting interfaces from #96/#120/#100/#104/#105 actually used.
-- `C3S2.1-HilbertProductFormula` #124 is unclaimed PREFLIGHT. It covers Hilbert's global product formula `∏_v (a,b)_v = 1`, reduction to `-1` and prime generators, and the source quadratic-reciprocity step. Proof waits #122 and the #64 reciprocity interface actually used; merged #56 may supply supplementary Legendre laws.
+- `C3S1.1-HilbertBasics` #121 is D-owned with PREFLIGHT complete on canonical branch `work/c3-s1-1-hilbert-basics`. The generic field-level core is implementation-ready independently of #96, but D keeps the branch proof-code-clean under the two-unmerged-implementation-PR limit; project `Q_p` specialization waits #96.
+- `C3S1.2-HilbertLocalFormula` #122 is B-owned with PREFLIGHT complete on canonical branch `work/c3-s1-2-hilbert-local-formula`. Proof remains gated on #121 plus the exact project `Q_p`/square-class/lifting interfaces from #96/#120/#100/#104/#105 actually used.
+- `C3S2.1-HilbertProductFormula` #124 is B-owned with PREFLIGHT complete on canonical branch `work/c3-s2-1-hilbert-product-formula`. Proof waits #122 and the #64 reciprocity interface actually used; merged #56 supplies supplementary Legendre laws where needed.
+- `C3S2.2-WeakApproximation` #129 is unclaimed PREFLIGHT for the source CRT lemma and finite-place weak approximation lemma. It is mathematically independent of the Hilbert proof chain and safe for parallel work.
+- `C3S2.2-PrescribedHilbertSymbols` #130 is unclaimed PREFLIGHT for Theorem 4. Proof waits #124/#122/#120/#129 and a source-faithful Dirichlet-theorem interface (the book postpones that lemma's proof to Chapter 6).
+- `C4S1.1-QuadraticFormBasics` #131 is unclaimed PREFLIGHT for the generic quadratic-form definition, polarization, matrix/change-of-basis law, and discriminant. It is independent of the current p-adic/Hilbert implementation chain.
 
 | Priority | Work ID | Target | State | Gate / next action | Canonical branch | Issue / owner |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -95,9 +98,12 @@ Live dependency graph:
 | P19 | `C2S3.1-UnitFiltration` | §3.1 `Z_p^×` filtration / Proposition 7 | `BLOCKED` | PR #125 CI #311 fails in upstream #72 module; preserve commits and wait for repaired exact stack | `work/c2-s3-1-unit-filtration` | #108 / B |
 | P20 | `C2S3.2-PrincipalUnits` | §3.2 principal units / Proposition 8 / multiplicative group theorem | `CLAIMED` | canonical branch exists at current main; owner metadata pending; proof remains gated on #108 and final theorem on #96 | `work/c2-s3-2-principal-units` | #112 / owner pending |
 | P21 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 / square classes | `PREFLIGHT` | B-owned preflight; proof waits #112/#96; odd case reuses merged #56 Legendre | `work/c2-s3-3-padic-squares` | #120 / B |
-| P22 | `C3S1.1-HilbertBasics` | 第3章 §1.1 Hilbert記号の定義・Norm criterion・基本公式 | `PREFLIGHT` | generic field/norm preflight safe; project `Q_p` specialization waits #96 | `work/c3-s1-1-hilbert-basics` | #121 / unclaimed |
-| P23 | `C3S1.2-HilbertLocalFormula` | 第3章 §1.2 local formula / bilinearity / nondegeneracy | `PREFLIGHT` | preflight safe; proof waits #121/#96/#120 and actual primitive/lifting interfaces | `work/c3-s1-2-hilbert-local-formula` | #122 / unclaimed |
-| P24 | `C3S2.1-HilbertProductFormula` | 第3章 §2.1 Hilbert積公式 / 定理3 | `PREFLIGHT` | preflight safe; proof waits #122 + #64 reciprocity interface; merged #56 available if needed | `work/c3-s2-1-hilbert-product-formula` | #124 / unclaimed |
+| P22 | `C3S1.1-HilbertBasics` | 第3章 §1.1 Hilbert記号の定義・Norm criterion・基本公式 | `PREFLIGHT` | D preflight complete; generic core ready, project `Q_p` specialization waits #96 | `work/c3-s1-1-hilbert-basics` | #121 / D |
+| P23 | `C3S1.2-HilbertLocalFormula` | 第3章 §1.2 local formula / bilinearity / nondegeneracy | `PREFLIGHT` | B preflight complete; proof waits #121/#96/#120 and actual primitive/lifting interfaces | `work/c3-s1-2-hilbert-local-formula` | #122 / B |
+| P24 | `C3S2.1-HilbertProductFormula` | 第3章 §2.1 Hilbert積公式 / 定理3 | `PREFLIGHT` | B preflight complete; proof waits #122 + #64 reciprocity interface | `work/c3-s2-1-hilbert-product-formula` | #124 / B |
+| P25 | `C3S2.2-WeakApproximation` | 第3章 §2.2 CRT + weak approximation lemmas | `PREFLIGHT` | safe independent preflight; final `Q_p` specialization may consume #96 | `work/c3-s2-2-weak-approximation` | #129 / unclaimed |
+| P26 | `C3S2.2-PrescribedHilbertSymbols` | 第3章 §2.2 prescribed local Hilbert signs / Theorem 4 | `PREFLIGHT` | proof waits #124/#122/#120/#129 + source-faithful Dirichlet interface | `work/c3-s2-2-prescribed-hilbert-symbols` | #130 / unclaimed |
+| P27 | `C4S1.1-QuadraticFormBasics` | 第4章 §1.1 quadratic-form basics | `PREFLIGHT` | generic linear-algebra preflight safe and independent | `work/c4-s1-1-quadratic-form-basics` | #131 / unclaimed |
 
 Duplicate records #79/#84/#85 and PR #88 are closed. Old Corollary-2 PR #87 is superseded by merged #94; old Legendre draft #93 is superseded by merged #98.
 
@@ -116,9 +122,9 @@ Validation note: PR #123 CI #306 and PR #125 CI #311 exposed the upstream `Padic
 
 #120 was claimed by B, so A independently checked the next source boundary and seeded #124 for Chapter 3 §2.1 Hilbert's product formula. #112 remains branch-locked with owner metadata pending.
 
-Current clearly unclaimed safe capacity is #121, #122, and #124. #64 remains executable. The p-adic #72/#89/#96/#102/#108 dependency chain is temporarily non-executable for new dependency-consuming proof work while D repairs rooted compilation; existing #96/#108 commits are preserved. Owned waiting/preflight work includes #100/#104/#105/#120 plus #112's locked preflight. This preserves three independent safe PREFLIGHT paths while the p-adic compile defect is repaired.
+#121/#122/#124 have now all been atomically claimed and their preflights completed. A refilled the queue with #129, #130, and #131. Current clearly unclaimed safe capacity is therefore #129/#130/#131. #64 remains executable. The p-adic #72/#89/#96/#102/#108 dependency chain stays paused for new dependency-consuming proof work until rooted compile validation is green; existing #96/#108 commits are preserved.
 
-A should refill again only when #121/#122/#124 are claimed or cease to provide meaningful safe capacity.
+A should refill again only when #129/#130/#131 are claimed or cease to provide meaningful safe capacity.
 
 ## 9. End-of-run handoff
 
