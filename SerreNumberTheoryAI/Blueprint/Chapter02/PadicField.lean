@@ -144,7 +144,7 @@ order-of-vanishing とは逆数の関係にあり、`p` の付値は
   (uses := "serre_padic_field_valuation")
 離散付値を底 `p` で rank-one 実現し、対応する p進距離を
 `MetricSpace` として束ねる。構成に用いる `Valued.toNormedField` は
-付値の uniformity をそのまま用いるため、以下の位相はこの p進距離の位相である。
+この構成で得られる位相は、上で用いた付値位相と同じである。
 :::
 
 ```lean "serre_padic_field_metric"
@@ -193,7 +193,7 @@ end SerreNumberTheoryAI
 まず §1.2 で得た `Z → Z_p` の稠密性を連続な `Z_p → Q_p` で移し、
 `Z_p` の像が有理数像の閉包に入ることを示す。
 任意の `Q_p` の元は `Z_p` の2元の商なので、その閉包が部分体であることから
-有理数像の閉包は `Q_p` 全体になる。
+有理数像の閉包は p進体全体になる。
 :::
 
 ```lean "serre_padic_rationals_dense"
