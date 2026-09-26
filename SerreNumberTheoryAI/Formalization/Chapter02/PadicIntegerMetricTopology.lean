@@ -54,7 +54,10 @@ theorem exists_projFiber_subset_of_mem_open
     (Topology.IsInducing.subtypeVal.isOpen_iff).1 hs
   have hxu : x.1 ∈ u := by
     change x ∈ Subtype.val ⁻¹' u
-    simpa only [hus] using hx
+    have hmem :
+        (x ∈ Subtype.val ⁻¹' u) = (x ∈ s) :=
+      congrArg (fun t : Set (SerrePadicInt p) => x ∈ t) hus
+    exact Eq.mpr hmem hx
   obtain ⟨v, hv, hxv, hvu⟩ :=
     (PiNat.isTopologicalBasis_cylinders
       (fun n : ℕ => padicResidueRing p n)).exists_subset_of_mem_open hxu hu
@@ -73,7 +76,10 @@ theorem exists_projFiber_subset_of_mem_open
     exact hlow'.trans hxcyl
   have hyu : y.1 ∈ u := hvu hycyl
   change y ∈ Subtype.val ⁻¹' u at hyu
-  simpa only [hus] using hyu
+  have hmem :
+      (y ∈ Subtype.val ⁻¹' u) = (y ∈ s) :=
+    congrArg (fun t : Set (SerrePadicInt p) => y ∈ t) hus
+  exact Eq.mp hmem hyu
 
 /--
 The source metric open sets are exactly the pre-existing inverse-limit open sets.
