@@ -157,6 +157,63 @@ theorem serreHenselTaylor_linear_add_defect
   unfold serreHenselTaylorDefect
   ring
 
+/-- The quadratic Taylor-factor predicate is closed under polynomial multiplication. -/
+theorem serreHenselTaylorQuadraticFactor_mul
+    {p : ℕ} [Fact p.Prime]
+    {f g : Polynomial (SerrePadicInt p)} {x h : SerrePadicInt p}
+    (hf : serreHenselTaylorQuadraticFactor p f x h)
+    (hg : serreHenselTaylorQuadraticFactor p g x h) :
+    serreHenselTaylorQuadraticFactor p (f * g) x h := by
+  rcases hf with ⟨a, ha⟩
+  rcases hg with ⟨b, hb⟩
+  have hf_shift :
+      f.eval (x + h) =
+        f.eval x + h * f.derivative.eval x + h ^ 2 * a := by
+    calc
+      f.eval (x + h) =
+          f.eval x + h * f.derivative.eval x + serreHenselTaylorDefect p f x h := by
+        symm
+        exact serreHenselTaylor_linear_add_defect (p := p) f x h
+      _ = f.eval x + h * f.derivative.eval x + h ^ 2 * a := by rw [ha]
+  have hg_shift :
+      g.eval (x + h) =
+        g.eval x + h * g.derivative.eval x + h ^ 2 * b := by
+    calc
+      g.eval (x + h) =
+          g.eval x + h * g.derivative.eval x + serreHenselTaylorDefect p g x h := by
+        symm
+        exact serreHenselTaylor_linear_add_defect (p := p) g x h
+      _ = g.eval x + h * g.derivative.eval x + h ^ 2 * b := by rw [hb]
+  refine
+    ⟨f.eval x * b + g.eval x * a +
+        (f.derivative.eval x + h * a) * (g.derivative.eval x + h * b), ?_⟩
+  unfold serreHenselTaylorDefect
+  simp [Polynomial.derivative_mul, hf_shift, hg_shift] <;> ring
+
+/-- Every power of `X` has a quadratic Taylor defect. -/
+theorem serreHenselTaylorQuadraticFactor_X_pow
+    (p : ℕ) [Fact p.Prime] (m : ℕ) (x h : SerrePadicInt p) :
+    serreHenselTaylorQuadraticFactor p
+      ((Polynomial.X : Polynomial (SerrePadicInt p)) ^ m) x h := by
+  induction m with
+  | zero =>
+      simpa using
+        serreHenselTaylorQuadraticFactor_C p (1 : SerrePadicInt p) x h
+  | succ m ih =>
+      rw [pow_succ]
+      exact serreHenselTaylorQuadraticFactor_mul
+        (p := p) (x := x) (h := h) ih
+        (serreHenselTaylorQuadraticFactor_X p x h)
+
+/-- Every coefficient-scaled monomial has a quadratic Taylor defect. -/
+theorem serreHenselTaylorQuadraticFactor_C_mul_X_pow
+    (p : ℕ) [Fact p.Prime] (c : SerrePadicInt p) (m : ℕ)
+    (x h : SerrePadicInt p) :
+    serreHenselTaylorQuadraticFactor p
+      (Polynomial.C c * (Polynomial.X : Polynomial (SerrePadicInt p)) ^ m) x h := by
+  exact serreHenselTaylorQuadraticFactor_C_mul c
+    (serreHenselTaylorQuadraticFactor_X_pow p m x h)
+
 /-- Zero is divisible to every p-power depth. -/
 theorem padicDivisibilityDepth_zero
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
