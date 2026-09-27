@@ -417,6 +417,88 @@ theorem serreHensel_derivative_valuation_add_correction
       simpa [h] using hpres
     _ = (k : ℕ∞) := hhyp.derivative_valuation
 
+/-- Exact derivative valuation `k` gives a factorization by `p^k` with unit quotient. -/
+theorem serreHensel_derivative_eq_pow_mul_isUnit
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    ∃ c : SerrePadicInt p,
+      IsUnit c ∧
+        f.derivative.eval x = (p : SerrePadicInt p) ^ k * c := by
+  have hdiv :
+      (p : SerrePadicInt p) ^ k ∣ f.derivative.eval x := by
+    apply (serrePadicInt_pow_dvd_iff_le_addValuation
+      p k (f.derivative.eval x)).2
+    rw [hhyp.derivative_valuation]
+  rcases hdiv with ⟨c, hc⟩
+  refine ⟨c, ?_, hc⟩
+  apply (serrePadicInt_isUnit_iff_not_p_dvd p c).2
+  intro hpc
+  rcases hpc with ⟨t, ht⟩
+  have hsucc :
+      (p : SerrePadicInt p) ^ (k + 1) ∣ f.derivative.eval x := by
+    refine ⟨t, ?_⟩
+    calc
+      f.derivative.eval x = (p : SerrePadicInt p) ^ k * c := hc
+      _ = (p : SerrePadicInt p) ^ k * ((p : SerrePadicInt p) * t) := by
+        rw [ht]
+      _ = (p : SerrePadicInt p) ^ (k + 1) * t := by
+        rw [pow_succ]
+        ring
+  have hv :
+      ((k + 1 : ℕ) : ℕ∞) ≤
+        serrePadicIntAddValuation p (f.derivative.eval x) :=
+    (serrePadicInt_pow_dvd_iff_le_addValuation
+      p (k + 1) (f.derivative.eval x)).1 hsucc
+  rw [hhyp.derivative_valuation] at hv
+  have hbad : k + 1 ≤ k := by
+    exact_mod_cast hv
+  omega
+
+/-- Choose a source correction whose linear Taylor part vanishes exactly. -/
+theorem serreHensel_exists_linear_cancel
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    ∃ z : SerrePadicInt p,
+      padicDivisibilityDepth p (n + 1)
+        (f.eval x +
+          ((p : SerrePadicInt p) ^ (n - k) * z) * f.derivative.eval x) := by
+  rcases hhyp.eval_dvd with ⟨b, hb⟩
+  rcases serreHensel_derivative_eq_pow_mul_isUnit hhyp with
+    ⟨c, hcUnit, hc⟩
+  let u : (SerrePadicInt p)ˣ := hcUnit.unit
+  have hu : (u : SerrePadicInt p) = c := IsUnit.unit_spec hcUnit
+  let z : SerrePadicInt p := -b * (↑(u⁻¹) : SerrePadicInt p)
+  have hzc : z * c = -b := by
+    rw [← hu]
+    simp [z, mul_assoc]
+  have hpow :
+      (p : SerrePadicInt p) ^ (n - k) * (p : SerrePadicInt p) ^ k =
+        (p : SerrePadicInt p) ^ n := by
+    rw [← pow_add]
+    congr 1
+    have hk := hhyp.k_lt_n
+    omega
+  have hzero :
+      f.eval x +
+          ((p : SerrePadicInt p) ^ (n - k) * z) * f.derivative.eval x = 0 := by
+    rw [hb, hc]
+    calc
+      (p : SerrePadicInt p) ^ n * b +
+          ((p : SerrePadicInt p) ^ (n - k) * z) *
+            ((p : SerrePadicInt p) ^ k * c) =
+          (p : SerrePadicInt p) ^ n * b +
+            ((p : SerrePadicInt p) ^ (n - k) *
+              (p : SerrePadicInt p) ^ k) * (z * c) := by ring
+      _ = (p : SerrePadicInt p) ^ n * b +
+            (p : SerrePadicInt p) ^ n * (z * c) := by rw [hpow]
+      _ = (p : SerrePadicInt p) ^ n * (b + z * c) := by ring
+      _ = 0 := by rw [hzc]; ring
+  refine ⟨z, ?_⟩
+  rw [hzero]
+  exact padicDivisibilityDepth_zero p (n + 1)
+
 /-- A Taylor defect for a source correction `p^r*z` is divisible to depth `r+r`. -/
 theorem serreHenselTaylorDefect_dvd_of_source_correction
     {p : ℕ} [Fact p.Prime] {r : ℕ}
