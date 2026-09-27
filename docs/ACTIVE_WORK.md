@@ -6,30 +6,33 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 ## Current active work
 
-- Work ID: C2S2.1-PrimitiveHomogeneousZeros
-- Issue: #100
-- Branch: `work/c2-s2-1-primitive-homogeneous-zeros-serial`
-- Source: Chapter 2 §2.1, Proposition 6, printed p.19 / uploaded PDF p.29
+- Work ID: C2S2.2-HenselLifting
+- Issue: #102
+- Branch: `work/c2-s2-2-hensel-lifting-serial`
+- Source: Chapter 2 §2.2, Theorem 1 + Corollary 1, printed pp.20–21 / uploaded PDF pp.30–31
 - State: ACTIVE
-- Dependencies now on main: Proposition 5 (#99), project `Z_p` unit/decomposition API (#72/#140), project `Q_p` fraction-field/scaling interface (#96/#143)
+- Dependencies now on main: project `Z_p` valuation/divisibility/unit interface (#72/#140), project p-adic metric/completeness interface (#89/#142)
+- No project `Q_p` dependency is required for this slice.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
 ## Just completed
 
-- C2S1.3-QpField / Issue #96
-- recovery PR #143 merged as `5b021cb96378c51709ba8dac52d0ff6784fbbb76`
-- final CI #428: policy / Lean / Verso all green
-- project-local `Q_p`, unique `p^n u` decomposition, valuation/metric topology, Proposition 4 local compactness/open `Z_p`/dense `Q` are now on main
+- C2S2.1-PrimitiveHomogeneousZeros / Issue #100
+- PR #145 merged as `32c68109beac3f3b27504501c166022864c34c1c`
+- final CI #462: policy / Lean / Verso all green
+- Proposition 6: nonzero `Q_p` common zero ↔ primitive `Z_p` common zero ↔ primitive common zeros at every finite residue level
 
-## Current Proposition 6 plan
+## Current Hensel plan
 
-1. ✅ represent “primitive” as a unit-coordinate condition, with an equivalent first-residue nonvanishing formulation;
-2. ✅ prove compatibility of primitivity with finite residue projections;
-3. ✅ strengthen the Proposition 5 compact inverse-limit argument to primitive common zeros;
-4. ✅ use homogeneity plus the merged `Q_p` decomposition interface to normalize a nonzero `Q_p` common zero to a primitive `Z_p` common zero;
-5. ✅ integrate Formalization / Blueprint roots;
-6. 🚧 run policy / `lake build` / `lake exe vbp build` / PR-head CI;
-7. self-review and merge before selecting the next item.
+1. independently recheck the source boundary on printed pp.20–21 / PDF pp.30–31;
+2. audit the latest-main valuation/divisibility/congruence and metric/completeness APIs rather than relying on legacy stacked heads;
+3. formalize the univariate one-step Taylor improvement under `2*k < n`;
+4. iterate the improvement to a Cauchy sequence and obtain an exact univariate root;
+5. reduce the multivariate theorem to the univariate theorem by varying one coordinate and identify the specialized derivative with `pderiv`;
+6. derive Corollary 1 (simple zero modulo `p`);
+7. add independent Blueprint explanation / Lean linkage and root integration;
+8. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
+9. self-review and merge before selecting the next item.
 
 ## Parked legacy implementation
 
