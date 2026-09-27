@@ -100,23 +100,7 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 Zₚ 上の原始的共通零点の存在は同値である。
 :::
 
-```lean "homogeneous.field.common.zero.primitive"
-namespace SerreNumberTheoryAI
 
-example
-    {σ ι : Type} (p : ℕ) [Fact p.Prime] [Fintype σ]
-    (f : ι → MvPolynomial σ (SerrePadicInt p))
-    (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
-    (∃ x : σ → SerrePadicField p,
-        x ≠ 0 ∧
-          ∀ i, MvPolynomial.eval₂ (serrePadicIntToField p) x (f i) = 0) ↔
-      ∃ y : σ → SerrePadicInt p,
-        serrePadicTuplePrimitive y ∧
-          ∀ i, MvPolynomial.eval y (f i) = 0 :=
-  homogeneousFieldCommonZero_iff_primitive p f d hf
-
-end SerreNumberTheoryAI
-```
 
 :::proof "homogeneous.field.common.zero.primitive"
 Qₚ 上の非零共通零点からは、最小指数による正規化で原始的な Zₚ tuple を得る。
