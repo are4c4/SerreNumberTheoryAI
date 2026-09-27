@@ -26,7 +26,8 @@ theorem serrePadicIntProj_polynomial_eval
   · intro a
     simp
   · intro f g hf hg
-    simp [Polynomial.eval_add, hf, hg]
+    simp only [Polynomial.eval_add, Polynomial.map_add]
+    rw [hf, hg]
   · intro n a _
     simp
 
