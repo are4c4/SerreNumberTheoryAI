@@ -38,6 +38,7 @@ case `n = 1`, `k = 0`.
 - transfer lemmas from a one-variable Hensel conclusion back to the multivariate conclusion once the evaluation and derivative-specialization identities are supplied;
 - Taylor-defect interface `f(x+h) - f(x) - h*f'(x)`;
 - base cases for the quadratic Taylor-defect predicate: zero polynomial, constant polynomials, and `X`;
+- constant-scaling algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under multiplication by a constant polynomial;
 - add/sub/neg algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under addition, subtraction, and negation;
 - divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
 - specialization of that bookkeeping to the Hensel correction depth `n-k`;
@@ -46,9 +47,9 @@ case `n = 1`, `k = 0`.
 
 ## Next proof target
 
-Extend the additive Taylor algebra to multiplication or powers.  A likely next slice is either:
+Extend the Taylor algebra to monomials.  A likely next slice is either:
 
-- prove `serreHenselTaylorQuadraticFactor` for `X ^ m` by induction on `m`; or
+- prove `serreHenselTaylorQuadraticFactor` for `Polynomial.C c * Polynomial.X ^ m` using the new constant-scaling lemma; or
 - prove closure of `serreHenselTaylorQuadraticFactor` under polynomial multiplication.
 
 After that, assemble arbitrary polynomials from finite sums of monomials and combine the concrete Taylor identity with the existing p-power bookkeeping to obtain the source `p^((n-k)+(n-k))` remainder estimate used in the Newton step.
