@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, and the one-variable source conclusion from the source hypothesis are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, the one-variable source conclusion from the source hypothesis, and the multivariate packaging theorem from a supplied coordinate specialization are now in place.
 
 ## 25-minute continuation mode
 
@@ -37,7 +37,7 @@ Stop rather than continuing if:
 
 ## Immediate proof target
 
-The chosen iterate sequence now has the key algebraic, metric, and exact-root lemmas:
+The chosen iterate sequence now has the key algebraic, metric, exact-root, and theorem-boundary lemmas:
 
 - `serreHenselIterateSeq_eval_dvd`;
 - `serreHenselIterateSeq_derivative_valuation`;
@@ -45,27 +45,23 @@ The chosen iterate sequence now has the key algebraic, metric, and exact-root le
 - `serreHenselIterateSeq_congruent_of_le`;
 - `serreHenselIterateSeq_initial_congruent`;
 - `serreHenselIterateSeq_tail_congruent_of_le_depth`;
-- `serrePadicCongruent_dist_le_radius`;
-- `serrePadicCongruenceCauchy`;
-- `serreHenselIterateSeq_congruence_cauchy`;
-- `serrePadicMetricRadiusCauchy`;
-- `serrePadicMetricRadiusCauchy_of_congruenceCauchy`;
-- `serreHenselIterateSeq_metric_radius_cauchy`;
-- `serrePadicMetricRadiusCauchy_to_cauchySeq`;
 - `serreHenselIterateSeq_cauchySeq`;
 - `serreHenselIterateSeq_exists_tendsto`;
 - `serreHenselIterateSeq_exists_limit_with_invariants`;
 - `serreHenselIterateLimit_initial_congruent`;
-- `serrePadicInt_eq_zero_of_dist_le_all_radius`;
 - `serrePadicIntProj_polynomial_eval`;
 - `serrePadicIntProj_polynomial_eval_eq_of_proj_eq`;
 - `serreHenselIterateLimit_eval_dvd`;
 - `serreHenselIterateLimit_is_root`;
-- `serreHenselUnivariateConclusion_of_hypothesis`.
+- `serreHenselUnivariateConclusion_of_hypothesis`;
+- `serreHenselMultivariateConclusion_of_specialization`.
 
-Next assemble the multivariate theorem boundary from the completed one-variable conclusion.  In particular:
+Next assemble the multivariate theorem boundary from an actual coordinate specialization.  In particular:
 
-- inspect the existing multivariate-to-univariate transfer lemmas in `HenselLifting.lean`;
-- package a clean theorem that applies `serreHenselUnivariateConclusion_of_hypothesis` to the one-variable specialization supplied by the multivariate hypotheses;
+- define or identify the univariate polynomial obtained by freezing all coordinates except `X_j`;
+- prove its evaluation identity at every `t` and its derivative identity at `x j`;
+- apply `serreHenselMultivariateConclusion_of_specialization`;
 - keep the final multivariate conclusion source-shaped: exact root plus coordinatewise congruence only;
-- avoid introducing a second p-adic metric/completeness interface or using any packaged Hensel theorem.
+- then add Corollary 1 as the special case `n = 1`, `k = 0`.
+
+Avoid packaged Hensel theorems and avoid adding non-source assumptions to the final statements.
