@@ -31,53 +31,36 @@ case `n = 1`, `k = 0`.
 - one-step improvement predicates, where derivative valuation is preserved as the iteration invariant;
 - source congruence API: reflexivity, symmetry, transitivity, modulus monotonicity;
 - one-coordinate update operation used in the multivariate-to-univariate reduction;
-- proof that a one-coordinate update is congruent in every coordinate when the moved coordinate is congruent;
-- helper lemmas extracting each source hypothesis/conclusion component, including `k < n` and positivity of `n-k`;
-- helper lemma that a correction of the form `x + p^(n-k) z` gives the required congruence;
-- transfer lemmas from the multivariate source hypotheses to a one-variable specialization;
-- transfer lemmas from a one-variable Hensel conclusion back to the multivariate conclusion once the evaluation and derivative-specialization identities are supplied;
+- helper lemmas extracting source-hypothesis inequalities, divisibility, and valuation components;
+- transfer lemmas from multivariate hypotheses to a chosen one-variable specialization;
+- transfer lemmas from a one-variable Hensel conclusion back to the multivariate conclusion;
 - Taylor-defect interface `f(x+h) - f(x) - h*f'(x)`;
-- base cases for the quadratic Taylor-defect predicate: zero polynomial, constant polynomials, and `X`;
-- constant-scaling algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under multiplication by a constant polynomial;
-- add/sub/neg algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under addition, subtraction, and negation;
-- multiplication closure for the quadratic Taylor-defect predicate;
-- powers of `X` and coefficient-scaled monomials have quadratic Taylor defects;
-- every polynomial has a quadratic Taylor defect, via `serreHenselTaylorQuadraticFactor_all`;
-- every polynomial Taylor defect gains twice the p-power depth of the correction, via `serreHenselTaylorDefect_dvd_all`;
-- moving the input by a depth-`r` correction changes polynomial values only at depth `r`;
-- a Hensel correction preserves the exact derivative valuation `k` under `2*k < n`;
-- exact derivative valuation gives a `p^k * unit` factorization of the derivative;
+- concrete Taylor-defect algebra for zero, constants, `X`, constant scaling, addition, negation, subtraction, multiplication, powers of `X`, coefficient-scaled monomials, and all polynomials;
+- Taylor-defect divisibility bookkeeping for Hensel corrections;
+- derivative-valuation preservation under Hensel corrections;
+- exact derivative valuation factorization by `p^k` with a unit quotient;
 - existence of a correction `z` whose linear Taylor part cancels modulo `p^(n+1)`;
-- divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
-- specialization of that bookkeeping to the Hensel correction depth `n-k`;
-- packaging lemma turning linear cancellation plus Taylor-quadratic divisibility plus derivative-valuation preservation into `serreHenselUnivariateStepConclusion`;
 - concrete one-step theorem `serreHenselUnivariateStepConclusion_of_hypothesis`, requiring only the source-shaped Hensel hypothesis;
 - recursive iterate-state sequence for the one-variable Hensel approximation process;
 - iterate invariants extracting `p^(n+r) ∣ f(y_r)` and `v_p(f'(y_r)) = k` at every stage;
-- finite-tail congruence lemmas showing `y_r ≡ y_s` at the earlier available depth when `r ≤ s`;
-- tail congruence API showing any two sufficiently late iterates are congruent at any prescribed lower depth;
-- source congruence-to-metric radius bound `serrePadicCongruent_dist_le_radius`;
-- congruence-depth Cauchy predicate `serrePadicCongruenceCauchy` and proof that the Hensel iterate sequence satisfies it;
-- metric-radius Cauchy predicate `serrePadicMetricRadiusCauchy`, bridge from congruence-Cauchy to metric-radius Cauchy, and proof for the Hensel iterate sequence;
-- bridge from metric-radius Cauchy to mathlib/project-local `CauchySeq`;
-- proof that the chosen Hensel iterate sequence is a `CauchySeq` for the project-local metric;
-- proof that project-local completeness supplies a limit of the chosen Hensel iterate sequence;
-- limit-candidate package `serreHenselIterateSeq_exists_limit_with_invariants`, bundling the completeness limit with the pointwise evaluation-depth, derivative-valuation, and initial-congruence invariants;
-- metric package for the selected limit, including radius bounds for `f(y_r)` and for the initial congruence radius;
+- finite-tail congruence lemmas and tail congruence at any prescribed lower depth;
+- congruence-to-metric radius bridge, metric-radius Cauchy bridge, `CauchySeq` bridge, and completeness-based limit existence;
+- selected limit `serreHenselIterateLimit` and convergence theorem for the iterate sequence;
 - proof that the selected limit remains congruent to the initial approximation modulo `p^(n-k)`;
-- bridge `serrePadicInt_eq_zero_of_dist_le_all_radius`, turning radius bounds at every finite depth into exact zero;
-- source-shaped bridge `serreHenselUnivariateConclusion_of_iterateLimit_eval_dist`, reducing the final one-variable conclusion to radius estimates for `f` at the selected limit;
-- source-shaped finishing bridge `serreHenselUnivariateConclusion_of_exact_limit_congruent`, reducing the final one-variable conclusion to exact-root and retained-congruence proofs for the limit;
-- final packaging lemma reducing the one-variable source conclusion to the single remaining proof that the selected limit is an exact root;
-- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, limit-candidate boundary, and multivariate reduction boundary.
+- finite-residue compatibility for one-variable polynomial evaluation, via `serrePadicIntProj_polynomial_eval`;
+- proof that the selected limit inherits every finite divisibility depth of `f(y_r)`, via `serreHenselIterateLimit_eval_dvd`;
+- exact-root theorem `serreHenselIterateLimit_is_root`;
+- one-variable source theorem boundary `serreHenselUnivariateConclusion_of_hypothesis`;
+- multivariate packaging theorem `serreHenselMultivariateConclusion_of_specialization`, reducing the multivariate conclusion to a supplied one-variable specialization and derivative identity;
+- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, exact-root bridge, one-variable theorem boundary, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement, metric Cauchy statement, existence of a limit, retained initial congruence for the limit, and one-variable conclusion packaging are now in place.  The remaining one-variable core is to prove the exact-root statement for the selected limit:
+The one-variable Hensel theorem boundary is now proved from the source-shaped one-variable hypothesis.  The next major block is the multivariate theorem boundary:
 
-1. show `serrePadicIntDist p (f.eval y) 0 ≤ exp(-d)` for every finite depth `d`, where `y` is the selected limit;
-2. obtain those radius estimates by combining the growing divisibility statements `p^(n+r) ∣ f(y_r)` with polynomial evaluation continuity;
-3. apply `serreHenselUnivariateConclusion_of_iterateLimit_eval_dist` to get `serreHenselUnivariateConclusion`;
-4. then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
+1. build or package the one-variable specialization `g` obtained by freezing all coordinates except `X_j`;
+2. prove the evaluation identity `g(t) = f(x with X_j := t)` and the derivative identity at `x_j`;
+3. apply `serreHenselMultivariateConclusion_of_specialization`;
+4. then add Corollary 1 as the case `n = 1`, `k = 0`.
 
-Before proving the root statement, audit the existing polynomial-continuity, projection-fiber, and closed-ball APIs rather than introducing a parallel topology interface.
+Keep the final source conclusions exact-root plus congruence only, and avoid packaged Hensel theorems or non-source assumptions.
