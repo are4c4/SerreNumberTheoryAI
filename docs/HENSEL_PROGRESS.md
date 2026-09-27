@@ -37,10 +37,18 @@ case `n = 1`, `k = 0`.
 - transfer lemmas from the multivariate source hypotheses to a one-variable specialization;
 - transfer lemmas from a one-variable Hensel conclusion back to the multivariate conclusion once the evaluation and derivative-specialization identities are supplied;
 - Taylor-defect interface `f(x+h) - f(x) - h*f'(x)`;
+- base cases for the quadratic Taylor-defect predicate: zero polynomial, constant polynomials, and `X`;
+- add/sub/neg algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under addition, subtraction, and negation;
 - divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
 - specialization of that bookkeeping to the Hensel correction depth `n-k`;
-- Blueprint nodes now mirror the congruence API, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
+- packaging lemma turning linear cancellation plus Taylor-quadratic divisibility plus derivative-valuation preservation into `serreHenselUnivariateStepConclusion`;
+- Blueprint nodes now mirror the congruence API, additive Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
 
 ## Next proof target
 
-Prove the polynomial identity that the Taylor defect has a quadratic factor `h^2` for every polynomial over the project-local `Z_p`; then combine it with the newly added p-power bookkeeping to obtain the source `p^((n-k)+(n-k))` remainder estimate used in the Newton step.
+Extend the additive Taylor algebra to multiplication or powers.  A likely next slice is either:
+
+- prove `serreHenselTaylorQuadraticFactor` for `X ^ m` by induction on `m`; or
+- prove closure of `serreHenselTaylorQuadraticFactor` under polynomial multiplication.
+
+After that, assemble arbitrary polynomials from finite sums of monomials and combine the concrete Taylor identity with the existing p-power bookkeeping to obtain the source `p^((n-k)+(n-k))` remainder estimate used in the Newton step.
