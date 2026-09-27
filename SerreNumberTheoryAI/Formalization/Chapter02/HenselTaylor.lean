@@ -35,7 +35,7 @@ theorem serreHenselTaylor_linear_add_defect
     (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) :
     f.eval x + h * f.derivative.eval x + serreHenselTaylorDefect p f x h =
       f.eval (x + h) := by
-  simp [serreHenselTaylorDefect]
+  unfold serreHenselTaylorDefect
   ring
 
 /-- Zero is divisible to every p-power depth. -/
