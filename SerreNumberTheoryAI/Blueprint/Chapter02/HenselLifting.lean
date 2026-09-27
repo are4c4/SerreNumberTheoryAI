@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLifting
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -87,6 +88,20 @@ by the project-local element `p^n` in `SerrePadicInt`.
 この小さな算術 API により、後続の `p^(n-k)` 補正を正の深さとして扱える。
 :::
 
+:::definition "henseltaylordefect"
+  (uses := "henselunivariatestep")
+一変数 Taylor 展開の余りを
+`f(x+h) - f(x) - h*f'(x)` として切り出す。次に証明すべき核心は、
+この余りが `h^2` の倍数であるという多項式的事実である。
+:::
+
+:::lemma_ "henseldivisibilitybookkeeping"
+  (uses := "henselcongruence, henseltaylordefect")
+`h` が `p^r` で割り切れ、Taylor 余りが `h^2` の倍数なら、余りは
+`p^(r+r)` で割り切れる。特に `h = p^(n-k) z` なら、余りは
+`p^((n-k)+(n-k))` の深さをもつ。
+:::
+
 :::lemma_ "henselmultivariatefromunivariate"
   (uses := "henselcoordinateupdate, henselcoordinatecongruence, henselunivariateconclusion, henselmultivariateconclusion")
 一座標だけを動かした多変数多項式の評価と偏微分評価が、一変数特殊化の
@@ -95,7 +110,7 @@ by the project-local element `p^n` in `SerrePadicInt`.
 :::
 
 :::theorem "henselunivariatetheorem"
-  (uses := "henselunivariatestep")
+  (uses := "henselunivariatestep, henseldivisibilitybookkeeping")
 一変数の Hensel 定理本体は、Newton 改良を反復して Cauchy 列を作り、
 完全性によって極限を取り、評価の連続性から真の零点を得る部分である。
 現在の PR では、この定理を証明するための入出力と補助 API を整備している。
