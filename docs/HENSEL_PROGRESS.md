@@ -62,16 +62,18 @@ case `n = 1`, `k = 0`.
 - bridge from metric-radius Cauchy to mathlib/project-local `CauchySeq`;
 - proof that the chosen Hensel iterate sequence is a `CauchySeq` for the project-local metric;
 - proof that project-local completeness supplies a limit of the chosen Hensel iterate sequence;
-- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, and multivariate reduction boundary.
+- limit-candidate package `serreHenselIterateSeq_exists_limit_with_invariants`, bundling the completeness limit with the pointwise evaluation-depth, derivative-valuation, and initial-congruence invariants;
+- source-shaped finishing bridge `serreHenselUnivariateConclusion_of_exact_limit_congruent`, reducing the final one-variable conclusion to exact-root and retained-congruence proofs for the limit;
+- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, limit-candidate boundary, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement, metric Cauchy statement, and existence of a limit are now packaged.  The next major block is to turn that limit into Serre's exact root:
+The concrete one-step Newton improvement, metric Cauchy statement, existence of a limit, and limit-candidate invariant package are now in place.  The next major block is to pass the packaged pointwise invariants to the limit:
 
 1. prove that the limit remains congruent to the original approximation modulo `p^(n-k)`;
 2. pass the growing divisibility statements `p^(n+r) ∣ f(y_r)` through the limit;
 3. use polynomial evaluation continuity to show `f(y) = 0`;
-4. package the one-variable final conclusion `serreHenselUnivariateConclusion`;
+4. combine those two limit facts with `serreHenselUnivariateConclusion_of_exact_limit_congruent`;
 5. then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
 
-Before proving the root statement, audit the existing polynomial-continuity and closed-ball APIs rather than introducing a parallel topology interface.
+Before proving the root statement, audit the existing polynomial-continuity, projection-fiber, and closed-ball APIs rather than introducing a parallel topology interface.
