@@ -196,6 +196,34 @@ theorem serreHenselIterateSeq_initial_congruent
   have htail := serreHenselIterateSeq_congruent_add hhyp 0 r
   simpa using htail
 
+/-- Any two sufficiently late Hensel iterates are congruent at any requested lower depth. -/
+theorem serreHenselIterateSeq_tail_congruent_of_le_depth
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    {R d r s : ℕ} (hr : R ≤ r) (hs : R ≤ s)
+    (hd : d ≤ (n + R) - k) :
+    serrePadicCongruent p d
+      (serreHenselIterateSeq hhyp r)
+      (serreHenselIterateSeq hhyp s) := by
+  by_cases hrs : r ≤ s
+  · have htail := serreHenselIterateSeq_congruent_of_le hhyp hrs
+    have hmono : d ≤ (n + r) - k := by
+      have hRr : (n + R) - k ≤ (n + r) - k := by
+        omega
+      exact hd.trans hRr
+    exact serrePadicCongruent_mono
+      (p := p) (m := d) (n := (n + r) - k) hmono htail
+  · have hsr : s ≤ r := by omega
+    have htail := serreHenselIterateSeq_congruent_of_le hhyp hsr
+    have hmono : d ≤ (n + s) - k := by
+      have hRs : (n + R) - k ≤ (n + s) - k := by
+        omega
+      exact hd.trans hRs
+    exact serrePadicCongruent_symm
+      (serrePadicCongruent_mono
+        (p := p) (m := d) (n := (n + s) - k) hmono htail)
+
 end HenselIteration
 
 end
