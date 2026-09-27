@@ -25,6 +25,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselIteration
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimit
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 
 /-!
 # Formalization root
