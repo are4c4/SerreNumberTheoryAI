@@ -38,15 +38,18 @@ by the project-local element `p^n` in `SerrePadicInt`.
 :::
 
 :::definition "henselunivariateconclusion"
-一変数版の結論は、`f(y)=0`、`y ≡ x (mod p^(n-k))`、および
-`v_p(f'(y)) = k` を満たす `y ∈ Z_p` の存在である。
+一変数版の最終結論は、`f(y)=0` かつ
+`y ≡ x (mod p^(n-k))` を満たす `y ∈ Z_p` の存在である。
+導関数の付値 `v_p(f'(y)) = k` は反復中の一段改良で保存する不変量であり、
+Serre の最終定理の結論には含めない。
 :::
 
 :::definition "henselunivariatestep"
   (uses := "henselunivariatehypothesis, henselcongruence")
 一回の Newton 改良では、真の零点までは要求せず、
-`y ≡ x (mod p^(n-k))` かつ `f(y) ≡ 0 (mod p^(n+1))` を要求する。
-これは反復構成の一段分である。
+`y ≡ x (mod p^(n-k))`、`f(y) ≡ 0 (mod p^(n+1))`、
+および `v_p(f'(y)) = k` を要求する。
+最後の条件を各段階で保存することで、同じ `k` を使って改良を反復できる。
 :::
 
 :::definition "henselmultivariatehypothesis"
@@ -62,7 +65,7 @@ by the project-local element `p^n` in `SerrePadicInt`.
 :::definition "henselmultivariatestep"
   (uses := "henselmultivariatehypothesis, henselcongruence")
 多変数版の一段改良も、全座標で初期点に合同なまま、
-評価値の消滅を一段高い冪まで改良する形で表す。
+評価値の消滅を一段高い冪まで改良し、選んだ偏微分の付値 `k` を保存する形で表す。
 :::
 
 :::lemma_ "henselcoordinateupdate"
@@ -111,9 +114,10 @@ Taylor 余りの `h^2` 因子性について、零多項式・定数多項式・
 
 :::lemma_ "henselmultivariatefromunivariate"
   (uses := "henselcoordinateupdate, henselcoordinatecongruence, henselunivariateconclusion, henselmultivariateconclusion")
-一座標だけを動かした多変数多項式の評価と偏微分評価が、一変数特殊化の
-評価と導関数評価に一致することが確認できれば、一変数 Hensel の結論から
-多変数 Hensel の結論が従う。
+一座標だけを動かした多変数多項式について、評価の一致から一変数の根を
+多変数の根へ戻せる。偏微分評価と一変数導関数の一致は、最初の
+多変数仮定を一変数仮定へ移すために使い、最終結論そのものには
+導関数の付値を追加しない。
 :::
 
 :::theorem "henselunivariatetheorem"
