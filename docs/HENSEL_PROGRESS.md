@@ -56,16 +56,18 @@ case `n = 1`, `k = 0`.
 - iterate invariants extracting `p^(n+r) ∣ f(y_r)` and `v_p(f'(y_r)) = k` at every stage;
 - finite-tail congruence lemmas showing `y_r ≡ y_s` at the earlier available depth when `r ≤ s`;
 - tail congruence API showing any two sufficiently late iterates are congruent at any prescribed lower depth;
+- source congruence-to-metric radius bound `serrePadicCongruent_dist_le_radius`;
+- congruence-depth Cauchy predicate `serrePadicCongruenceCauchy` and proof that the Hensel iterate sequence satisfies it;
 - Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement and the finite-tail congruence API are now packaged.  The next major block is to connect these congruence-depth statements to the project-local p-adic metric/completeness interface:
+The concrete one-step Newton improvement and the congruence-depth Cauchy API are now packaged.  The next major block is to connect this source-shaped Cauchy statement to the project-local p-adic metric/completeness interface:
 
-1. inspect the existing metric Cauchy predicates and completeness theorem for `SerrePadicInt`;
-2. turn `serreHenselIterateSeq_tail_congruent_of_le_depth` into the required Cauchy statement;
+1. inspect the exact `CauchySeq`/filter form expected by the existing `CompleteSpace` instance for `SerrePadicInt`;
+2. turn `serreHenselIterateSeq_congruence_cauchy` plus `serrePadicCongruent_dist_le_radius` into the required metric Cauchy statement;
 3. use completeness to obtain a limit of the chosen approximations;
 4. pass polynomial evaluation to the limit and obtain an exact root;
 5. retain congruence to the original approximation modulo `p^(n-k)`.
 
-Before proving the Cauchy statement, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
+Before proving the metric Cauchy statement, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
