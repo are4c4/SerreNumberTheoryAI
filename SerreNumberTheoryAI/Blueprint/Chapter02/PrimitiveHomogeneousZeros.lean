@@ -95,7 +95,6 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 :::
 
 :::theorem "homogeneous.field.common.zero.primitive"
-  (uses := "homogeneous_eval_scale, field_tuple_primitive_normalization")
 斉次多項式族の非零共通零点と原始的共通零点は同値である。
 :::
 
