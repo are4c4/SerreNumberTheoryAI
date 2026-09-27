@@ -129,12 +129,31 @@ Qₚ 上の非零共通零点からは、最小指数による正規化で原始
 :::
 
 :::theorem "serre_proposition6_homogeneous_common_zero_iff_reductions"
-  (lean := "SerreNumberTheoryAI.serre_proposition6_homogeneous_commonZero_iff_reductions")
   (uses := "homogeneous.field.common.zero.primitive, primitive_common_zero_iff_reductions")
 斉次多項式族について、project-local Qₚ 上に非零共通零点が存在することと、
 すべての有限 residue level で原始的な共通零点が存在することは同値である。
 これは命題6の (a)、(b)、(c) を、中央の原始的 Zₚ 条件を介して結ぶ。
 :::
+
+```lean "serre_proposition6_homogeneous_common_zero_iff_reductions"
+namespace SerreNumberTheoryAI
+
+universe u v
+
+example
+    {σ : Type u} {ι : Type v} (p : ℕ) [Fact p.Prime] [Fintype σ]
+    (f : ι → MvPolynomial σ (SerrePadicInt p))
+    (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
+    (∃ x : σ → SerrePadicField p,
+        x ≠ 0 ∧
+          ∀ i, MvPolynomial.eval₂ (serrePadicIntToField p) x (f i) = 0) ↔
+      ∀ n : ℕ, ∃ a : σ → padicResidueRing p n,
+        padicReducedTuplePrimitive a ∧
+          ∀ i, MvPolynomial.eval a (padicPolynomialReduction p n (f i)) = 0 :=
+  serre_proposition6_homogeneous_commonZero_iff_reductions p f d hf
+
+end SerreNumberTheoryAI
+```
 
 :::proof "serre_proposition6_homogeneous_common_zero_iff_reductions"
 Qₚ から Zₚ への方向では、非零共通零点を最小指数で正規化し、
