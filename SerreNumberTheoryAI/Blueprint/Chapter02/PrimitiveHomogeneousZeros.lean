@@ -75,7 +75,7 @@ Zₚ tupleとして表され、しかも少なくとも一つの座標は単元�
 ```lean "field_tuple_primitive_normalization"
 namespace SerreNumberTheoryAI
 
-theorem blueprint_exists_primitive_serrePadicInt_scale_of_fieldTuple_ne_zero
+example
     {σ : Type*} (p : ℕ) [Fact p.Prime] [Fintype σ]
     (x : σ → SerrePadicField p) (hx : x ≠ 0) :
     ∃ (h : ℤ) (y : σ → SerrePadicInt p),
@@ -103,7 +103,7 @@ Zₚ 上の原始的共通零点の存在は同値である。
 ```lean "homogeneous.field.common.zero.primitive"
 namespace SerreNumberTheoryAI
 
-theorem blueprint_homogeneousFieldCommonZero_iff_primitive
+example
     {σ ι : Type} (p : ℕ) [Fact p.Prime] [Fintype σ]
     (f : ι → MvPolynomial σ (SerrePadicInt p))
     (d : ι → ℕ) (hf : ∀ i, (f i).IsHomogeneous (d i)) :
