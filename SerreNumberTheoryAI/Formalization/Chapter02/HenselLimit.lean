@@ -153,6 +153,19 @@ theorem serreHenselUnivariateConclusion_of_exact_limit_congruent
     serreHenselUnivariateConclusion p f x n k := by
   exact ⟨y, hyroot, hycong⟩
 
+/--
+After the limit has been shown to be an exact root, the one-variable Hensel
+conclusion follows from the retained initial congruence already proved above.
+-/
+theorem serreHenselUnivariateConclusion_of_iterateLimit_root
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    (hroot : f.eval (serreHenselIterateLimit hhyp) = 0) :
+    serreHenselUnivariateConclusion p f x n k := by
+  exact serreHenselUnivariateConclusion_of_exact_limit_congruent hroot
+    (serreHenselIterateLimit_initial_congruent hhyp)
+
 end HenselLimit
 
 end
