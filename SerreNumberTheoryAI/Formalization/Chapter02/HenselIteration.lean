@@ -125,6 +125,42 @@ theorem serreHenselIterateSeq_succ_congruent
   exact serreHenselAdvance_congruent hhyp r
     (serreHenselIterateStateSeq hhyp r)
 
+/-- Later iterates remain congruent to an earlier iterate at the earlier correction depth. -/
+theorem serreHenselIterateSeq_congruent_of_le
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    {m r : ℕ} (hmr : m ≤ r) :
+    serrePadicCongruent p ((n + m) - k)
+      (serreHenselIterateSeq hhyp m)
+      (serreHenselIterateSeq hhyp r) := by
+  induction r generalizing m with
+  | zero =>
+      have hm : m = 0 := by omega
+      subst m
+      exact serrePadicCongruent_refl p (n - k) (serreHenselIterateSeq hhyp 0)
+  | succ r ih =>
+      by_cases hm : m = r + 1
+      · subst m
+        exact serrePadicCongruent_refl p ((n + (r + 1)) - k)
+          (serreHenselIterateSeq hhyp (r + 1))
+      · have hmr' : m ≤ r := by omega
+        have htail :=
+          serreHenselIterateSeq_succ_congruent hhyp r
+        have hdepth : (n + m) - k ≤ (n + r) - k := by omega
+        exact serrePadicCongruent_trans
+          (ih hmr')
+          (serrePadicCongruent_mono hdepth htail)
+
+/-- Every iterate remains congruent to the original approximation modulo `p^(n-k)`. -/
+theorem serreHenselIterateSeq_congruent_initial
+    {p : ℕ} [Fact p.Prime] {n k r : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serrePadicCongruent p (n - k) x (serreHenselIterateSeq hhyp r) := by
+  simpa using
+    (serreHenselIterateSeq_congruent_of_le hhyp (m := 0) (r := r) (Nat.zero_le r))
+
 end HenselIteration
 
 end
