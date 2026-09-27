@@ -214,6 +214,20 @@ theorem serreHenselTaylorQuadraticFactor_C_mul_X_pow
   exact serreHenselTaylorQuadraticFactor_C_mul c
     (serreHenselTaylorQuadraticFactor_X_pow p m x h)
 
+/-- Every polynomial has a Taylor defect divisible by `h^2`. -/
+theorem serreHenselTaylorQuadraticFactor_all
+    (p : ℕ) [Fact p.Prime]
+    (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) :
+    serreHenselTaylorQuadraticFactor p f x h := by
+  refine Polynomial.induction_on f ?_ ?_ ?_
+  · intro a
+    exact serreHenselTaylorQuadraticFactor_C p a x h
+  · intro f g hf hg
+    exact serreHenselTaylorQuadraticFactor_add
+      (p := p) (x := x) (h := h) hf hg
+  · intro n a _
+    exact serreHenselTaylorQuadraticFactor_C_mul_X_pow p a (n + 1) x h
+
 /-- Zero is divisible to every p-power depth. -/
 theorem padicDivisibilityDepth_zero
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
