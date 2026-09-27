@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, congruence API, one-step conclusion predicates, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, and existence of a linear-cancelling correction are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, and existence of a linear-cancelling correction are now in place.
 
 ## 25-minute continuation mode
 
@@ -37,30 +37,19 @@ Stop rather than continuing if:
 
 ## Immediate proof target
 
-Current local one-step ingredients now include:
+The one-step Newton improvement is now proved from the source hypothesis alone:
 
-- `serreHenselTaylorQuadraticFactor_all` for arbitrary polynomials;
-- `serreHenselTaylorDefect_dvd_all` for turning correction depth into quadratic-remainder depth;
-- `serreHensel_eval_sub_dvd_of_correction_depth` for controlling value changes under deep corrections;
-- `serreHensel_derivative_valuation_add_correction` for preserving the derivative valuation under the Hensel correction;
-- `serreHensel_derivative_eq_pow_mul_isUnit` for factoring the derivative as `p^k` times a unit;
-- `serreHensel_exists_linear_cancel` for choosing a correction whose linear Taylor part cancels modulo `p^(n+1)`;
-- `serreHenselUnivariateStepConclusion_of_linear_cancel` for packaging congruence, improved evaluation, and derivative valuation into the one-step conclusion.
+- `serreHenselUnivariateStepConclusion_of_hypothesis` chooses the correction;
+- Taylor remainder divisibility is supplied for every polynomial;
+- the derivative valuation `k` is preserved at the corrected point;
+- the output is again suitable for the next exponent `n+1`.
 
-Next likely local lemma shape:
+Next audit and implement the iteration/Cauchy block.  In particular:
 
-```lean
--- Concrete one-step Newton improvement, with no external Taylor or cancellation hypotheses.
-theorem serreHenselUnivariateStepConclusion_of_hypothesis
-    {p : ℕ} [Fact p.Prime] {n k : ℕ}
-    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
-    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
-    serreHenselUnivariateStepConclusion p f x n k := by
-  ...
-```
+- inspect the project-local metric and completeness lemmas already used in Chapter 2;
+- define or reuse a sequence of successive Hensel approximations;
+- prove correction depths tend to infinity and hence the sequence is Cauchy;
+- obtain its limit by completeness;
+- prove the limit is a root and remains congruent to the original approximation.
 
-The proof should choose `z` from `serreHensel_exists_linear_cancel`, use `serreHenselTaylorQuadraticFactor_all` for the Taylor remainder, and use `serreHensel_derivative_valuation_add_correction` for the derivative valuation.
-
-After that, the next major block is the Cauchy-sequence iteration from one-step improvement to an exact root.
-
-Avoid using a packaged Hensel theorem or mathlib's completed `PadicInt` result.
+Do not introduce a second p-adic metric/completeness interface if the existing project API already supplies the needed statements.  Avoid packaged Hensel theorems.
