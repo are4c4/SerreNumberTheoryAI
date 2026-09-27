@@ -59,16 +59,19 @@ case `n = 1`, `k = 0`.
 - source congruence-to-metric radius bound `serrePadicCongruent_dist_le_radius`;
 - congruence-depth Cauchy predicate `serrePadicCongruenceCauchy` and proof that the Hensel iterate sequence satisfies it;
 - metric-radius Cauchy predicate `serrePadicMetricRadiusCauchy`, bridge from congruence-Cauchy to metric-radius Cauchy, and proof for the Hensel iterate sequence;
-- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy API, and multivariate reduction boundary.
+- bridge from metric-radius Cauchy to mathlib/project-local `CauchySeq`;
+- proof that the chosen Hensel iterate sequence is a `CauchySeq` for the project-local metric;
+- proof that project-local completeness supplies a limit of the chosen Hensel iterate sequence;
+- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement and the metric-radius Cauchy API are now packaged.  The next major block is to connect this source-shaped radius statement to the exact project-local metric/completeness interface:
+The concrete one-step Newton improvement, metric Cauchy statement, and existence of a limit are now packaged.  The next major block is to turn that limit into Serre's exact root:
 
-1. inspect the exact `CauchySeq`/filter form expected by the existing `CompleteSpace` instance for `SerrePadicInt`;
-2. turn `serreHenselIterateSeq_metric_radius_cauchy` into the required metric Cauchy statement;
-3. use completeness to obtain a limit of the chosen approximations;
-4. pass polynomial evaluation to the limit and obtain an exact root;
-5. retain congruence to the original approximation modulo `p^(n-k)`.
+1. prove that the limit remains congruent to the original approximation modulo `p^(n-k)`;
+2. pass the growing divisibility statements `p^(n+r) ∣ f(y_r)` through the limit;
+3. use polynomial evaluation continuity to show `f(y) = 0`;
+4. package the one-variable final conclusion `serreHenselUnivariateConclusion`;
+5. then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
 
-Before proving the full metric Cauchy statement, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
+Before proving the root statement, audit the existing polynomial-continuity and closed-ball APIs rather than introducing a parallel topology interface.
