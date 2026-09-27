@@ -282,7 +282,8 @@ theorem serreHenselIterateSeq_metric_radius_cauchy
 theorem serrePadicMetricRadiusCauchy_to_cauchySeq
     {p : ℕ} [Fact p.Prime] {u : ℕ → SerrePadicInt p}
     (hu : serrePadicMetricRadiusCauchy p u) :
-    @CauchySeq ℕ (SerrePadicInt p) _ (serrePadicIntMetricSpace p).toUniformSpace u := by
+    letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+    CauchySeq u := by
   letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
   rw [Metric.cauchySeq_iff]
   intro ε hε
@@ -303,9 +304,10 @@ theorem serreHenselIterateSeq_cauchySeq
     {p : ℕ} [Fact p.Prime] {n k : ℕ}
     {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
     (hhyp : serreHenselUnivariateHypothesis p f x n k) :
-    @CauchySeq ℕ (SerrePadicInt p) _ (serrePadicIntMetricSpace p).toUniformSpace
-      (serreHenselIterateSeq hhyp) :=
-  serrePadicMetricRadiusCauchy_to_cauchySeq
+    letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+    CauchySeq (serreHenselIterateSeq hhyp) := by
+  letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+  exact serrePadicMetricRadiusCauchy_to_cauchySeq
     (serreHenselIterateSeq_metric_radius_cauchy hhyp)
 
 end HenselIteration
