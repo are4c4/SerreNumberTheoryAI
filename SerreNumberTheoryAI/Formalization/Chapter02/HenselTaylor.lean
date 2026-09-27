@@ -49,7 +49,6 @@ theorem serreHenselTaylorQuadraticFactor_X
     serreHenselTaylorQuadraticFactor p (Polynomial.X : Polynomial (SerrePadicInt p)) x h := by
   refine ⟨0, ?_⟩
   simp [serreHenselTaylorDefect]
-  ring
 
 /-- Taylor defects are additive in the polynomial variable. -/
 theorem serreHenselTaylorDefect_add
