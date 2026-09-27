@@ -94,14 +94,14 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 対応する座標は単元である。
 :::
 
-:::theorem "homogeneous_field_common_zero_iff_primitive"
+:::theorem "homogeneous.field.common.zero.primitive"
   (uses := "homogeneous_eval_scale, field_tuple_primitive_normalization")
 各方程式が斉次であるとする。このとき、project-local Qₚ 上の
 非零共通零点の存在と、project-local Zₚ 上の原始的共通零点の存在は同値である。
 各多項式の斉次次数は互いに異なっていてよい。
 :::
 
-```lean "homogeneous_field_common_zero_iff_primitive"
+```lean "homogeneous.field.common.zero.primitive"
 namespace SerreNumberTheoryAI
 
 theorem blueprint_homogeneousFieldCommonZero_iff_primitive
@@ -119,7 +119,7 @@ theorem blueprint_homogeneousFieldCommonZero_iff_primitive
 end SerreNumberTheoryAI
 ```
 
-:::proof "homogeneous_field_common_zero_iff_primitive"
+:::proof "homogeneous.field.common.zero.primitive"
 Qₚ 上の非零共通零点からは、最小指数による正規化で原始的な Zₚ tuple を得る。
 各多項式は斉次なので、同じスカラーによる全座標の変換は多項式値を
 その斉次次数乗だけ変える。したがって零点条件は保たれる。
@@ -131,7 +131,7 @@ Qₚ 上の非零共通零点からは、最小指数による正規化で原始
 
 :::theorem "serre_proposition6_homogeneous_common_zero_iff_reductions"
   (lean := "SerreNumberTheoryAI.serre_proposition6_homogeneous_commonZero_iff_reductions")
-  (uses := "homogeneous_field_common_zero_iff_primitive, primitive_common_zero_iff_reductions")
+  (uses := "homogeneous.field.common.zero.primitive, primitive_common_zero_iff_reductions")
 斉次多項式族について、project-local Qₚ 上に非零共通零点が存在することと、
 すべての有限 residue level で原始的な共通零点が存在することは同値である。
 これは命題6の (a)、(b)、(c) を、中央の原始的 Zₚ 条件を介して結ぶ。
