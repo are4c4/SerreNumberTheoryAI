@@ -29,11 +29,27 @@ def serreHenselTaylorQuadraticFactor
     (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) : Prop :=
   ∃ a : SerrePadicInt p, serreHenselTaylorDefect p f x h = h ^ 2 * a
 
+/-- Reassemble the linear Taylor part and the defect into the shifted evaluation. -/
+theorem serreHenselTaylor_linear_add_defect
+    (p : ℕ) [Fact p.Prime]
+    (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) :
+    f.eval x + h * f.derivative.eval x + serreHenselTaylorDefect p f x h =
+      f.eval (x + h) := by
+  simp [serreHenselTaylorDefect]
+  ring
+
 /-- Zero is divisible to every p-power depth. -/
 theorem padicDivisibilityDepth_zero
     (p : ℕ) [Fact p.Prime] (n : ℕ) :
     padicDivisibilityDepth p n (0 : SerrePadicInt p) := by
   exact dvd_zero _
+
+/-- A stronger p-power depth implies any weaker p-power depth. -/
+theorem padicDivisibilityDepth_mono
+    {p : ℕ} [Fact p.Prime] {m n : ℕ} (hmn : m ≤ n)
+    {x : SerrePadicInt p} (hx : padicDivisibilityDepth p n x) :
+    padicDivisibilityDepth p m x := by
+  exact (pow_dvd_pow (p : SerrePadicInt p) hmn).trans hx
 
 /-- Divisibility to a p-power depth is preserved by multiplying on the right. -/
 theorem padicDivisibilityDepth_mul_right
@@ -151,6 +167,57 @@ theorem serreHenselTaylorDefect_dvd_of_hensel_correction
         ((p : SerrePadicInt p) ^ (n - k) * z)) := by
   exact serreHenselTaylorDefect_dvd_of_source_correction
     (p := p) (r := n - k) hquad
+
+/-- Serre's inequality implies that the quadratic Taylor defect reaches depth `n+1`. -/
+theorem serreHenselTaylorDefect_dvd_target_of_hensel_correction
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x z : SerrePadicInt p}
+    (hineq : 2 * k < n)
+    (hquad :
+      serreHenselTaylorQuadraticFactor p f x
+        ((p : SerrePadicInt p) ^ (n - k) * z)) :
+    padicDivisibilityDepth p (n + 1)
+      (serreHenselTaylorDefect p f x
+        ((p : SerrePadicInt p) ^ (n - k) * z)) := by
+  have hdepth :=
+    serreHenselTaylorDefect_dvd_of_hensel_correction
+      (p := p) (n := n) (k := k) (f := f) (x := x) (z := z) hquad
+  have hle : n + 1 ≤ (n - k) + (n - k) := by
+    omega
+  exact padicDivisibilityDepth_mono (p := p) (m := n + 1)
+    (n := (n - k) + (n - k)) hle hdepth
+
+/--
+If the linear Taylor part is already cancelled modulo `p^(n+1)` and the quadratic
+Taylor defect is available, then the shifted value is also zero modulo `p^(n+1)`.
+-/
+theorem serreHensel_eval_add_correction_dvd_of_linear_cancel
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x z : SerrePadicInt p}
+    (hineq : 2 * k < n)
+    (hquad :
+      serreHenselTaylorQuadraticFactor p f x
+        ((p : SerrePadicInt p) ^ (n - k) * z))
+    (hlinear :
+      padicDivisibilityDepth p (n + 1)
+        (f.eval x + ((p : SerrePadicInt p) ^ (n - k) * z) * f.derivative.eval x)) :
+    padicDivisibilityDepth p (n + 1)
+      (f.eval (x + (p : SerrePadicInt p) ^ (n - k) * z)) := by
+  let h : SerrePadicInt p := (p : SerrePadicInt p) ^ (n - k) * z
+  have hlinear' :
+      padicDivisibilityDepth p (n + 1) (f.eval x + h * f.derivative.eval x) := by
+    simpa [h] using hlinear
+  have hdef : padicDivisibilityDepth p (n + 1) (serreHenselTaylorDefect p f x h) := by
+    simpa [h] using
+      (serreHenselTaylorDefect_dvd_target_of_hensel_correction
+        (p := p) (n := n) (k := k) (f := f) (x := x) (z := z) hineq hquad)
+  have hsum :
+      padicDivisibilityDepth p (n + 1)
+        (f.eval x + h * f.derivative.eval x + serreHenselTaylorDefect p f x h) :=
+    padicDivisibilityDepth_add (p := p) (n := n + 1) hlinear' hdef
+  change padicDivisibilityDepth p (n + 1) (f.eval (x + h))
+  rw [← serreHenselTaylor_linear_add_defect (p := p) f x h]
+  exact hsum
 
 end HenselTaylor
 
