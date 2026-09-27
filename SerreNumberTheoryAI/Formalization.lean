@@ -21,6 +21,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicFieldTopology
 import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 import SerreNumberTheoryAI.Formalization.Chapter02.PrimitiveHomogeneousZeros
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLifting
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
 
 /-!
 # Formalization root
