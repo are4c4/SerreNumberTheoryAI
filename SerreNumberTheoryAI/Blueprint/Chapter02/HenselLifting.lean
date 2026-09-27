@@ -4,6 +4,7 @@ import VersoBlueprint
 
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLifting
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselIteration
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -112,6 +113,14 @@ Taylor 余りの `h^2` 因子性について、零多項式・定数多項式・
 `p^((n-k)+(n-k))` の深さをもつ。
 :::
 
+:::lemma_ "henseliterationcauchy"
+  (uses := "henselunivariatestep, henselcongruencerelation")
+一段改良を指数 `n, n+1, n+2, ...` で反復して近似列 `y_r` を選ぶ。
+各段階で `p^(n+r) ∣ f(y_r)` と導関数付値 `k` を保存し、
+後ろの二項 `y_r, y_s` が任意に高い `p` 冪で合同になることを示す。
+この合同深さの主張を、project-local metric の半径評価へ変換する。
+:::
+
 :::lemma_ "henselmultivariatefromunivariate"
   (uses := "henselcoordinateupdate, henselcoordinatecongruence, henselunivariateconclusion, henselmultivariateconclusion")
 一座標だけを動かした多変数多項式について、評価の一致から一変数の根を
@@ -121,7 +130,7 @@ Taylor 余りの `h^2` 因子性について、零多項式・定数多項式・
 :::
 
 :::theorem "henselunivariatetheorem"
-  (uses := "henselunivariatestep, henseldivisibilitybookkeeping, henseltaylordefectalgebra")
+  (uses := "henselunivariatestep, henseldivisibilitybookkeeping, henseltaylordefectalgebra, henseliterationcauchy")
 一変数の Hensel 定理本体は、Newton 改良を反復して Cauchy 列を作り、
 完全性によって極限を取り、評価の連続性から真の零点を得る部分である。
 現在の PR では、この定理を証明するための入出力と補助 API を整備している。
