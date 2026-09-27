@@ -27,6 +27,21 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 downstreamがupstreamを必要とする場合は、upstreamをmainへmergeしてからdownstreamを開始します。新しいstacked proof implementationは行いません。
 
+## Long single-run operation
+
+ユーザーが単に「続けて」と言った場合、このqueueは「次のwork itemへ移れ」という意味ではなく、現在のACTIVE itemをできるだけ長めに進める指示として解釈する。
+
+1 run内では、次の順で可能な限り前進する:
+
+1. ACTIVE PR / branch / CI を復元する。
+2. CI failure があれば、そのログ解析と修正を最優先する。
+3. CIがgreenまたはpendingなら、同じACTIVE item内で次の小さなLean補題、Blueprint同期、docs同期、PR本文更新、self-reviewを進める。
+4. CI待ちだけで終了しない。待ち時間にはread-only review、次proof sliceのstatement設計、source-boundary確認、docs更新を行う。
+5. 新しいcommitを作った場合は、latest headのCI起動状況を確認してから報告する。
+6. ただし、数学的statementが不明確、CI failure未解析、write拒否、conflict、権限エラー、source policy risk、時間/context上限がある場合は停止する。
+
+この長めのrun運用はwork stealingや並列化を復活させるものではない。常に現在のACTIVE itemだけを対象にする。
+
 ## Current serial state
 
 - ACTIVE: `C2S2.2-HenselLifting` — Issue #102 / branch `work/c2-s2-2-hensel-lifting-serial`
@@ -53,7 +68,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | --- | --- | --- | --- | --- | --- |
 | 1 | `C2S1.3-QpField` | §1.3 `Q_p`, decomposition/valuation, Proposition 4 | DONE | PR #143 merged as `5b021cb9…`, CI #428 green | PR #123 / old branch `work/c2-s1-3-qp-field` |
 | 2 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 Proposition 6 | DONE | PR #145 merged as `32c68109…`, CI #462 green | Issue #100 |
-| 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | ACTIVE | recheck source and latest-main APIs, then implement the Taylor-step / Cauchy-limit / one-coordinate specialization proof end-to-end | Issue #102 |
+| 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | ACTIVE | continue the current PR in longer single-run slices: Taylor remainder, one-step Newton improvement, Cauchy limit, one-coordinate specialization, then final self-review/merge | Issue #102 |
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | WAITING | needs Hensel simple-root interface | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | WAITING | needs main Hensel theorem | Issue #105 |
 | 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | PARKED | recover old #125 only when this item becomes ACTIVE | PR #125 |
