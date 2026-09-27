@@ -601,6 +601,21 @@ theorem serreHenselUnivariateStepConclusion_of_linear_cancel
       (p := p) (n := n) (k := k) (f := f) (x := x) (z := z)
       hhyp.two_mul_lt hquad hlinear
 
+/-- Serre's one-step Newton improvement follows from the source hypotheses. -/
+theorem serreHenselUnivariateStepConclusion_of_hypothesis
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serreHenselUnivariateStepConclusion p f x n k := by
+  rcases serreHensel_exists_linear_cancel hhyp with ⟨z, hlinear⟩
+  exact serreHenselUnivariateStepConclusion_of_linear_cancel
+    (p := p) (n := n) (k := k) (f := f) (x := x) (z := z)
+    hhyp
+    (serreHenselTaylorQuadraticFactor_all p f x
+      ((p : SerrePadicInt p) ^ (n - k) * z))
+    hlinear
+    (serreHensel_derivative_valuation_add_correction hhyp z)
+
 end HenselTaylor
 
 end
