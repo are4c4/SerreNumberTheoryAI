@@ -95,6 +95,13 @@ by the project-local element `p^n` in `SerrePadicInt`.
 この余りが `h^2` の倍数であるという多項式的事実である。
 :::
 
+:::lemma_ "henseltaylordefectalgebra"
+  (uses := "henseltaylordefect")
+Taylor 余りの `h^2` 因子性について、零多項式・定数多項式・`X` の基礎例と、
+加法・反数・減法に対する閉性を準備する。これは後で一般多項式を
+多項式代数の生成元から組み立てるための境界である。
+:::
+
 :::lemma_ "henseldivisibilitybookkeeping"
   (uses := "henselcongruence, henseltaylordefect")
 `h` が `p^r` で割り切れ、Taylor 余りが `h^2` の倍数なら、余りは
@@ -110,7 +117,7 @@ by the project-local element `p^n` in `SerrePadicInt`.
 :::
 
 :::theorem "henselunivariatetheorem"
-  (uses := "henselunivariatestep, henseldivisibilitybookkeeping")
+  (uses := "henselunivariatestep, henseldivisibilitybookkeeping, henseltaylordefectalgebra")
 一変数の Hensel 定理本体は、Newton 改良を反復して Cauchy 列を作り、
 完全性によって極限を取り、評価の連続性から真の零点を得る部分である。
 現在の PR では、この定理を証明するための入出力と補助 API を整備している。
