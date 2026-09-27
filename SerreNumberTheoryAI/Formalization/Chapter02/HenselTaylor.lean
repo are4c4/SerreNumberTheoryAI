@@ -219,6 +219,32 @@ theorem serreHensel_eval_add_correction_dvd_of_linear_cancel
   rw [← serreHenselTaylor_linear_add_defect (p := p) f x h]
   exact hsum
 
+/--
+A source correction that cancels the linear Taylor part and preserves the derivative
+valuation gives the packaged one-step Hensel conclusion.
+-/
+theorem serreHenselUnivariateStepConclusion_of_linear_cancel
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x z : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    (hquad :
+      serreHenselTaylorQuadraticFactor p f x
+        ((p : SerrePadicInt p) ^ (n - k) * z))
+    (hlinear :
+      padicDivisibilityDepth p (n + 1)
+        (f.eval x + ((p : SerrePadicInt p) ^ (n - k) * z) * f.derivative.eval x))
+    (hderiv :
+      serrePadicIntAddValuation p
+          (f.derivative.eval (x + (p : SerrePadicInt p) ^ (n - k) * z)) =
+        (k : ℕ∞)) :
+    serreHenselUnivariateStepConclusion p f x n k := by
+  refine ⟨x + (p : SerrePadicInt p) ^ (n - k) * z, ?_, ?_, hderiv⟩
+  · exact serrePadicCongruent_of_eq_add_pow_mul p n k x
+      (x + (p : SerrePadicInt p) ^ (n - k) * z) z rfl
+  · exact serreHensel_eval_add_correction_dvd_of_linear_cancel
+      (p := p) (n := n) (k := k) (f := f) (x := x) (z := z)
+      hhyp.two_mul_lt hquad hlinear
+
 end HenselTaylor
 
 end
