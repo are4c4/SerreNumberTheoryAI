@@ -40,16 +40,20 @@ case `n = 1`, `k = 0`.
 - base cases for the quadratic Taylor-defect predicate: zero polynomial, constant polynomials, and `X`;
 - constant-scaling algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under multiplication by a constant polynomial;
 - add/sub/neg algebra for Taylor defects and closure of the quadratic Taylor-defect predicate under addition, subtraction, and negation;
+- multiplication closure for the quadratic Taylor-defect predicate;
+- powers of `X` and coefficient-scaled monomials have quadratic Taylor defects;
+- every polynomial has a quadratic Taylor defect, via `serreHenselTaylorQuadraticFactor_all`;
 - divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
 - specialization of that bookkeeping to the Hensel correction depth `n-k`;
 - packaging lemma turning linear cancellation plus Taylor-quadratic divisibility plus derivative-valuation preservation into `serreHenselUnivariateStepConclusion`;
-- Blueprint nodes now mirror the congruence API, additive Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
+- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
 
 ## Next proof target
 
-Extend the Taylor algebra to monomials.  A likely next slice is either:
+Use `serreHenselTaylorQuadraticFactor_all` to remove the explicit Taylor-factor hypothesis from the Newton-step bookkeeping wrappers.  In particular, add source-shaped wrapper lemmas around:
 
-- prove `serreHenselTaylorQuadraticFactor` for `Polynomial.C c * Polynomial.X ^ m` using the new constant-scaling lemma; or
-- prove closure of `serreHenselTaylorQuadraticFactor` under polynomial multiplication.
+- `serreHenselTaylorDefect_dvd_target_of_hensel_correction`;
+- `serreHensel_eval_add_correction_dvd_of_linear_cancel`;
+- `serreHenselUnivariateStepConclusion_of_linear_cancel`.
 
-After that, assemble arbitrary polynomials from finite sums of monomials and combine the concrete Taylor identity with the existing p-power bookkeeping to obtain the source `p^((n-k)+(n-k))` remainder estimate used in the Newton step.
+After that, combine the concrete Taylor identity with the derivative valuation hypothesis to build the residue-level correction `z` that cancels the normalized first-order term modulo `p`.
