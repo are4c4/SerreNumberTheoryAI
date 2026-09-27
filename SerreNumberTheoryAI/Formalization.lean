@@ -22,7 +22,6 @@ import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 import SerreNumberTheoryAI.Formalization.Chapter02.PrimitiveHomogeneousZeros
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLifting
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
-import SerreNumberTheoryAI.Formalization.Chapter02.HenselOneStep
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselIteration
 
 /-!
