@@ -310,6 +310,17 @@ theorem serreHenselIterateSeq_cauchySeq
   exact serrePadicMetricRadiusCauchy_to_cauchySeq
     (serreHenselIterateSeq_metric_radius_cauchy hhyp)
 
+/-- The chosen Hensel iterate sequence has a limit by project-local completeness. -/
+theorem serreHenselIterateSeq_exists_tendsto
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+    ∃ y : SerrePadicInt p, Tendsto (serreHenselIterateSeq hhyp) atTop (𝓝 y) := by
+  letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+  letI : CompleteSpace (SerrePadicInt p) := serrePadicIntSourceMetricCompleteSpace p
+  exact cauchySeq_tendsto_of_complete (serreHenselIterateSeq_cauchySeq hhyp)
+
 end HenselIteration
 
 end
