@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, and a congruence-depth Cauchy proof for the iterate sequence are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, and metric-radius Cauchy proof for the iterate sequence are now in place.
 
 ## 25-minute continuation mode
 
@@ -37,7 +37,7 @@ Stop rather than continuing if:
 
 ## Immediate proof target
 
-The one-step Newton improvement is now proved from the source hypothesis alone, and the chosen iterate sequence has the key algebraic tail congruence and congruence-Cauchy lemmas:
+The one-step Newton improvement is now proved from the source hypothesis alone, and the chosen iterate sequence has the key algebraic tail congruence and Cauchy-radius lemmas:
 
 - `serreHenselIterateSeq_eval_dvd`;
 - `serreHenselIterateSeq_derivative_valuation`;
@@ -47,12 +47,15 @@ The one-step Newton improvement is now proved from the source hypothesis alone, 
 - `serreHenselIterateSeq_tail_congruent_of_le_depth`;
 - `serrePadicCongruent_dist_le_radius`;
 - `serrePadicCongruenceCauchy`;
-- `serreHenselIterateSeq_congruence_cauchy`.
+- `serreHenselIterateSeq_congruence_cauchy`;
+- `serrePadicMetricRadiusCauchy`;
+- `serrePadicMetricRadiusCauchy_of_congruenceCauchy`;
+- `serreHenselIterateSeq_metric_radius_cauchy`.
 
-Next audit and implement the metric/completeness bridge.  In particular:
+Next audit and implement the actual metric/completeness bridge.  In particular:
 
 - inspect the exact `CauchySeq` or filter form required by the available `CompleteSpace` instance;
-- translate `serreHenselIterateSeq_congruence_cauchy` and the distance-radius lemma into that metric Cauchy predicate;
+- translate `serreHenselIterateSeq_metric_radius_cauchy` into that metric Cauchy predicate;
 - obtain the limit by completeness;
 - prove the limit is a root by using the increasing divisibility depths of `f(y_r)` and continuity/polynomial evaluation API;
 - keep the final conclusion source-shaped: exact root plus congruence to the original approximation.
