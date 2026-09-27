@@ -316,7 +316,7 @@ theorem serreHenselIterateSeq_exists_tendsto
     {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
     (hhyp : serreHenselUnivariateHypothesis p f x n k) :
     letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
-    ∃ y : SerrePadicInt p, Tendsto (serreHenselIterateSeq hhyp) atTop (𝓝 y) := by
+    ∃ y : SerrePadicInt p, Filter.Tendsto (serreHenselIterateSeq hhyp) atTop (𝓝 y) := by
   letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
   letI : CompleteSpace (SerrePadicInt p) := serrePadicIntSourceMetricCompleteSpace p
   exact cauchySeq_tendsto_of_complete (serreHenselIterateSeq_cauchySeq hhyp)
