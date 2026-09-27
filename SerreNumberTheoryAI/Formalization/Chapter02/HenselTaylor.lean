@@ -333,6 +333,90 @@ theorem serreHenselTaylorDefect_dvd_of_quadratic_factor
     (p := p) (n := r + r) (x := h ^ 2)
     (padicDivisibilityDepth_sq (p := p) (n := r) hh) a
 
+/-- Every polynomial Taylor defect gains twice the p-power depth of its correction. -/
+theorem serreHenselTaylorDefect_dvd_all
+    {p : ℕ} [Fact p.Prime] {r : ℕ}
+    (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p)
+    (hh : padicDivisibilityDepth p r h) :
+    padicDivisibilityDepth p (r + r) (serreHenselTaylorDefect p f x h) := by
+  exact serreHenselTaylorDefect_dvd_of_quadratic_factor
+    (p := p) (r := r)
+    (serreHenselTaylorQuadraticFactor_all p f x h) hh
+
+/-- Moving the input by a term of depth `r` changes every polynomial value only at depth `r`. -/
+theorem serreHensel_eval_sub_dvd_of_correction_depth
+    {p : ℕ} [Fact p.Prime] {r : ℕ}
+    (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p)
+    (hh : padicDivisibilityDepth p r h) :
+    padicDivisibilityDepth p r (f.eval (x + h) - f.eval x) := by
+  have hlinear :
+      padicDivisibilityDepth p r (h * f.derivative.eval x) :=
+    padicDivisibilityDepth_mul_right (p := p) (n := r) hh (f.derivative.eval x)
+  have hdefStrong :
+      padicDivisibilityDepth p (r + r) (serreHenselTaylorDefect p f x h) :=
+    serreHenselTaylorDefect_dvd_all (p := p) (r := r) f x h hh
+  have hle : r ≤ r + r := by omega
+  have hdef :
+      padicDivisibilityDepth p r (serreHenselTaylorDefect p f x h) :=
+    padicDivisibilityDepth_mono
+      (p := p) (m := r) (n := r + r) hle hdefStrong
+  have hsum :
+      padicDivisibilityDepth p r
+        (h * f.derivative.eval x + serreHenselTaylorDefect p f x h) :=
+    padicDivisibilityDepth_add (p := p) (n := r) hlinear hdef
+  have heq :
+      f.eval (x + h) - f.eval x =
+        h * f.derivative.eval x + serreHenselTaylorDefect p f x h := by
+    rw [← serreHenselTaylor_linear_add_defect (p := p) f x h]
+    ring
+  rw [heq]
+  exact hsum
+
+/-- A Hensel correction preserves the exact derivative valuation `k`. -/
+theorem serreHensel_derivative_valuation_add_correction
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    (z : SerrePadicInt p) :
+    serrePadicIntAddValuation p
+        (f.derivative.eval
+          (x + (p : SerrePadicInt p) ^ (n - k) * z)) =
+      (k : ℕ∞) := by
+  let h : SerrePadicInt p := (p : SerrePadicInt p) ^ (n - k) * z
+  have hh : padicDivisibilityDepth p (n - k) h := by
+    simpa [h] using serreHenselCorrection_depth p (n - k) z
+  have hdiff :
+      padicDivisibilityDepth p (n - k)
+        (f.derivative.eval (x + h) - f.derivative.eval x) :=
+    serreHensel_eval_sub_dvd_of_correction_depth
+      (p := p) (r := n - k) f.derivative x h hh
+  have hvdiff :
+      ((n - k : ℕ) : ℕ∞) ≤
+        serrePadicIntAddValuation p
+          (f.derivative.eval (x + h) - f.derivative.eval x) :=
+    (serrePadicInt_pow_dvd_iff_le_addValuation p (n - k)
+      (f.derivative.eval (x + h) - f.derivative.eval x)).1 hdiff
+  have hknkNat : k < n - k := by
+    have hineq := hhyp.two_mul_lt
+    omega
+  have hknk : (k : ℕ∞) < ((n - k : ℕ) : ℕ∞) := by
+    exact_mod_cast hknkNat
+  have hold_lt_diff :
+      serrePadicIntAddValuation p (f.derivative.eval x) <
+        serrePadicIntAddValuation p
+          (f.derivative.eval (x + h) - f.derivative.eval x) := by
+    rw [hhyp.derivative_valuation]
+    exact hknk.trans_le hvdiff
+  have hpres :=
+    (serrePadicIntAddValuation p).map_eq_of_lt_sub hold_lt_diff
+  calc
+    serrePadicIntAddValuation p
+        (f.derivative.eval
+          (x + (p : SerrePadicInt p) ^ (n - k) * z)) =
+        serrePadicIntAddValuation p (f.derivative.eval x) := by
+      simpa [h] using hpres
+    _ = (k : ℕ∞) := hhyp.derivative_valuation
+
 /-- A Taylor defect for a source correction `p^r*z` is divisible to depth `r+r`. -/
 theorem serreHenselTaylorDefect_dvd_of_source_correction
     {p : ℕ} [Fact p.Prime] {r : ℕ}
