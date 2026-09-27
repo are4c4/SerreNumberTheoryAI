@@ -7,6 +7,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselIteration
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimit
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -131,8 +132,16 @@ project-local completeness から極限を得る。
 さらに閉球を用いて、極限でも初期点との合同が保たれることを示す。
 :::
 
+:::lemma_ "henselexactroot"
+  (uses := "hensellimitcandidate")
+有限剰余レベルへの射影と一変数多項式評価の可換性を使い、
+`p^(n+r) ∣ f(y_r)` という増大する可除性を極限へ渡す。
+全ての有限深さで `f(y)` が割り切れることから、反復極限 `y` は
+実際に `f(y)=0` を満たす。
+:::
+
 :::lemma_ "henselconclusionfromlimitroot"
-  (uses := "hensellimitcandidate, henselunivariateconclusion")
+  (uses := "hensellimitcandidate, henselexactroot, henselunivariateconclusion")
 選ばれた反復極限で `f(y)=0` が示せれば、すでに得た初期合同性と合わせて、
 Serre の一変数最終結論 `f(y)=0` かつ `y ≡ x (mod p^(n-k))` が従う。
 :::
@@ -146,10 +155,10 @@ Serre の一変数最終結論 `f(y)=0` かつ `y ≡ x (mod p^(n-k))` が従う
 :::
 
 :::theorem "henselunivariatetheorem"
-  (uses := "henselunivariatestep, henseldivisibilitybookkeeping, henseltaylordefectalgebra, henseliterationcauchy, hensellimitcandidate, henselconclusionfromlimitroot")
+  (uses := "henselunivariatestep, henseldivisibilitybookkeeping, henseltaylordefectalgebra, henseliterationcauchy, hensellimitcandidate, henselexactroot, henselconclusionfromlimitroot")
 一変数の Hensel 定理本体は、Newton 改良を反復して Cauchy 列を作り、
-完全性によって極限を取り、評価の連続性から真の零点を得る部分である。
-現在の PR では、この定理を証明するための入出力と補助 API を整備している。
+完全性によって極限を取り、有限剰余レベルへの射影で真の零点を得る部分である。
+現在の PR では、この一変数境界までを project-local な補題として実装している。
 :::
 
 :::theorem "henseltheorem"
