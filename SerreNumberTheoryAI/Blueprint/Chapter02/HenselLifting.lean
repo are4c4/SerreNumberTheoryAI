@@ -97,9 +97,9 @@ by the project-local element `p^n` in `SerrePadicInt`.
 
 :::lemma_ "henseltaylordefectalgebra"
   (uses := "henseltaylordefect")
-Taylor 余りの `h^2` 因子性について、零多項式・定数多項式・`X` の基礎例と、
-加法・反数・減法に対する閉性を準備する。これは後で一般多項式を
-多項式代数の生成元から組み立てるための境界である。
+Taylor 余りの `h^2` 因子性について、零多項式・定数多項式・`X` の基礎例、
+定数倍、加法・反数・減法、積、`X` の冪、係数付き単項式、そして一般多項式に対する閉性を準備する。
+これにより、Serre の Taylor 展開で使う「余りは補正の二乗の倍数」という部分が、抽象仮定ではなく多項式代数の補題として使える。
 :::
 
 :::lemma_ "henseldivisibilitybookkeeping"
