@@ -30,7 +30,7 @@ case `n = 1`, `k = 0`.
 - one-variable and multivariate source hypothesis/conclusion predicates, with final exact-root conclusions aligned to Serre (root + congruence only);
 - one-step improvement predicates, where derivative valuation is preserved as the iteration invariant;
 - source congruence API: reflexivity, symmetry, transitivity, modulus monotonicity;
-- one-coordinate update operation used in the multivariate-to-univariate reduction;
+- one-coordinate update operation and a proof that updating by the existing coordinate value gives the original tuple;
 - helper lemmas extracting source-hypothesis inequalities, divisibility, and valuation components;
 - transfer lemmas from multivariate hypotheses to a chosen one-variable specialization;
 - transfer lemmas from a one-variable Hensel conclusion back to the multivariate conclusion;
@@ -51,16 +51,17 @@ case `n = 1`, `k = 0`.
 - proof that the selected limit inherits every finite divisibility depth of `f(y_r)`, via `serreHenselIterateLimit_eval_dvd`;
 - exact-root theorem `serreHenselIterateLimit_is_root`;
 - one-variable source theorem boundary `serreHenselUnivariateConclusion_of_hypothesis`;
-- multivariate packaging theorem `serreHenselMultivariateConclusion_of_specialization`, reducing the multivariate conclusion to a supplied one-variable specialization and derivative identity;
+- coordinate specialization `serreHenselCoordinateSpecialization`, its evaluation identity, and its derivative identity with the selected partial derivative;
+- multivariate source theorem boundary `serreHenselMultivariateConclusion_of_hypothesis`;
+- one-variable and multivariate simple-root corollary packages for `n = 1`, `k = 0`;
 - Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, exact-root bridge, one-variable theorem boundary, and multivariate reduction boundary.
 
 ## Next proof target
 
-The one-variable Hensel theorem boundary is now proved from the source-shaped one-variable hypothesis.  The next major block is the multivariate theorem boundary:
+The source-shaped one-variable theorem, multivariate theorem boundary, and simple-root corollary packages are now implemented.  The next safe work is synchronization and self-review rather than inventing a stronger theorem:
 
-1. build or package the one-variable specialization `g` obtained by freezing all coordinates except `X_j`;
-2. prove the evaluation identity `g(t) = f(x with X_j := t)` and the derivative identity at `x_j`;
-3. apply `serreHenselMultivariateConclusion_of_specialization`;
-4. then add Corollary 1 as the case `n = 1`, `k = 0`.
+1. update Blueprint/PR body to reflect the concrete coordinate specialization and corollary module;
+2. verify that final conclusions remain exact-root plus congruence only, with derivative valuation kept as an iteration invariant;
+3. after CI is green on the latest head, either mark the PR ready/merge according to the project workflow or check the next source boundary before starting another section.
 
-Keep the final source conclusions exact-root plus congruence only, and avoid packaged Hensel theorems or non-source assumptions.
+Keep the proof project-local and avoid packaged Hensel theorems or non-source assumptions.
