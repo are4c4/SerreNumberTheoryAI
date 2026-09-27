@@ -251,6 +251,32 @@ theorem serreHenselIterateSeq_congruence_cauchy
   exact serreHenselIterateSeq_tail_congruent_of_le_depth
     hhyp hr hs (by omega)
 
+/-- Radius-based metric Cauchy criterion for project-local p-adic sequences. -/
+def serrePadicMetricRadiusCauchy
+    (p : ℕ) [Fact p.Prime] (u : ℕ → SerrePadicInt p) : Prop :=
+  ∀ d : ℕ, ∃ R : ℕ, ∀ r s : ℕ, R ≤ r → R ≤ s →
+    serrePadicIntDist p (u r) (u s) ≤ Real.exp (-(d : ℝ))
+
+/-- Congruence-depth Cauchy implies the corresponding metric-radius Cauchy statement. -/
+theorem serrePadicMetricRadiusCauchy_of_congruenceCauchy
+    {p : ℕ} [Fact p.Prime] {u : ℕ → SerrePadicInt p}
+    (hu : serrePadicCongruenceCauchy p u) :
+    serrePadicMetricRadiusCauchy p u := by
+  intro d
+  rcases hu d with ⟨R, hR⟩
+  refine ⟨R, ?_⟩
+  intro r s hr hs
+  exact serrePadicCongruent_dist_le_radius (p := p) (d := d) (hR r s hr hs)
+
+/-- The chosen Hensel iterate sequence is Cauchy in the metric-radius sense. -/
+theorem serreHenselIterateSeq_metric_radius_cauchy
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serrePadicMetricRadiusCauchy p (serreHenselIterateSeq hhyp) :=
+  serrePadicMetricRadiusCauchy_of_congruenceCauchy
+    (serreHenselIterateSeq_congruence_cauchy hhyp)
+
 end HenselIteration
 
 end
