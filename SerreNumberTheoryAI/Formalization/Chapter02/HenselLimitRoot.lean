@@ -128,6 +128,31 @@ theorem serreHenselUnivariateConclusion_of_hypothesis
   serreHenselUnivariateConclusion_of_iterateLimit_root hhyp
     (serreHenselIterateLimit_is_root hhyp)
 
+/--
+Multivariate Hensel follows once a chosen coordinate specialization and its
+derivative identity have been supplied.
+-/
+theorem serreHenselMultivariateConclusion_of_specialization
+    {σ : Type*} [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {x : σ → SerrePadicInt p} {j : σ}
+    {g : Polynomial (SerrePadicInt p)}
+    (heval₀ : g.eval (x j) = MvPolynomial.eval x f)
+    (hderiv₀ : g.derivative.eval (x j) =
+        MvPolynomial.eval x (MvPolynomial.pderiv j f))
+    (heval : ∀ t : SerrePadicInt p,
+      MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f = g.eval t)
+    (hhyp : serreHenselMultivariateHypothesis p f x j n k) :
+    serreHenselMultivariateConclusion p f x j n k := by
+  have huni : serreHenselUnivariateHypothesis p g (x j) n k :=
+    serreHenselUnivariateHypothesis_of_multivariateHypothesis
+      (p := p) (f := f) (x := x) (j := j) (n := n) (k := k) (g := g)
+      heval₀ hderiv₀ hhyp
+  exact serreHenselMultivariateConclusion_of_univariateConclusion
+    (p := p) (f := f) (x := x) (j := j) (n := n) (k := k) (g := g)
+    heval (serreHenselUnivariateConclusion_of_hypothesis huni)
+
 end HenselLimitRoot
 
 end
