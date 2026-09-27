@@ -52,17 +52,20 @@ case `n = 1`, `k = 0`.
 - specialization of that bookkeeping to the Hensel correction depth `n-k`;
 - packaging lemma turning linear cancellation plus Taylor-quadratic divisibility plus derivative-valuation preservation into `serreHenselUnivariateStepConclusion`;
 - concrete one-step theorem `serreHenselUnivariateStepConclusion_of_hypothesis`, requiring only the source-shaped Hensel hypothesis;
+- recursive iterate-state sequence for the one-variable Hensel approximation process;
+- iterate invariants extracting `p^(n+r) ∣ f(y_r)` and `v_p(f'(y_r)) = k` at every stage;
+- finite-tail congruence lemmas showing `y_r ≡ y_s` at the earlier available depth when `r ≤ s`;
+- tail congruence API showing any two sufficiently late iterates are congruent at any prescribed lower depth;
 - Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement is now packaged.  The next major block is the source iteration:
+The concrete one-step Newton improvement and the finite-tail congruence API are now packaged.  The next major block is to connect these congruence-depth statements to the project-local p-adic metric/completeness interface:
 
-1. iterate `serreHenselUnivariateStepConclusion_of_hypothesis` with exponents `n, n+1, n+2, ...`;
-2. record that each correction has depth at least `n-k+r`;
-3. prove the resulting sequence is Cauchy in the project-local p-adic metric;
-4. use completeness to obtain a limit;
-5. pass polynomial evaluation to the limit and obtain an exact root;
-6. retain congruence to the original approximation modulo `p^(n-k)`.
+1. inspect the existing metric Cauchy predicates and completeness theorem for `SerrePadicInt`;
+2. turn `serreHenselIterateSeq_tail_congruent_of_le_depth` into the required Cauchy statement;
+3. use completeness to obtain a limit of the chosen approximations;
+4. pass polynomial evaluation to the limit and obtain an exact root;
+5. retain congruence to the original approximation modulo `p^(n-k)`.
 
-Before implementing the sequence, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
+Before proving the Cauchy statement, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
