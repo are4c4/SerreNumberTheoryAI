@@ -43,6 +43,11 @@ case `n = 1`, `k = 0`.
 - multiplication closure for the quadratic Taylor-defect predicate;
 - powers of `X` and coefficient-scaled monomials have quadratic Taylor defects;
 - every polynomial has a quadratic Taylor defect, via `serreHenselTaylorQuadraticFactor_all`;
+- every polynomial Taylor defect gains twice the p-power depth of the correction, via `serreHenselTaylorDefect_dvd_all`;
+- moving the input by a depth-`r` correction changes polynomial values only at depth `r`;
+- a Hensel correction preserves the exact derivative valuation `k` under `2*k < n`;
+- exact derivative valuation gives a `p^k * unit` factorization of the derivative;
+- existence of a correction `z` whose linear Taylor part cancels modulo `p^(n+1)`;
 - divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
 - specialization of that bookkeeping to the Hensel correction depth `n-k`;
 - packaging lemma turning linear cancellation plus Taylor-quadratic divisibility plus derivative-valuation preservation into `serreHenselUnivariateStepConclusion`;
@@ -50,10 +55,11 @@ case `n = 1`, `k = 0`.
 
 ## Next proof target
 
-Use `serreHenselTaylorQuadraticFactor_all` to remove the explicit Taylor-factor hypothesis from the Newton-step bookkeeping wrappers.  In particular, add source-shaped wrapper lemmas around:
+Use the existing ingredients to package the concrete one-step Newton improvement without requiring external Taylor or derivative-preservation hypotheses.  In particular, combine:
 
-- `serreHenselTaylorDefect_dvd_target_of_hensel_correction`;
-- `serreHensel_eval_add_correction_dvd_of_linear_cancel`;
+- `serreHensel_exists_linear_cancel`;
+- `serreHenselTaylorQuadraticFactor_all` / `serreHenselTaylorDefect_dvd_all`;
+- `serreHensel_derivative_valuation_add_correction`;
 - `serreHenselUnivariateStepConclusion_of_linear_cancel`.
 
-After that, combine the concrete Taylor identity with the derivative valuation hypothesis to build the residue-level correction `z` that cancels the normalized first-order term modulo `p`.
+The next Lean target should be a source-shaped theorem stating that every `serreHenselUnivariateHypothesis p f x n k` gives `serreHenselUnivariateStepConclusion p f x n k`.
