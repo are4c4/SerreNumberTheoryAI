@@ -48,7 +48,7 @@ theorem serreHenselIterateSeq_eval_dist_zero_le_radius
     serreHenselIterateSeq_eval_dvd hhyp r
   exact (serrePadicIntDist_le_radius_iff_pow_dvd p
     (f.eval (serreHenselIterateSeq hhyp r)) 0 (n + r)).2 (by
-      simpa using hdvd)
+      simpa [padicDivisibilityDepth] using hdvd)
 
 /-- Every Hensel iterate remains within the final source congruence radius of the start. -/
 theorem serreHenselIterateSeq_initial_dist_le_radius
