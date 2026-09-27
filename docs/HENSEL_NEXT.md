@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, and the limit-candidate invariant package are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, and one-variable conclusion packaging from an exact root at the selected limit are now in place.
 
 ## 25-minute continuation mode
 
@@ -37,7 +37,7 @@ Stop rather than continuing if:
 
 ## Immediate proof target
 
-The one-step Newton improvement is now proved from the source hypothesis alone, and the chosen iterate sequence has the key algebraic, metric, and limit-candidate lemmas:
+The chosen iterate sequence now has the key algebraic, metric, and limit-facing lemmas:
 
 - `serreHenselIterateSeq_eval_dvd`;
 - `serreHenselIterateSeq_derivative_valuation`;
@@ -55,13 +55,16 @@ The one-step Newton improvement is now proved from the source hypothesis alone, 
 - `serreHenselIterateSeq_cauchySeq`;
 - `serreHenselIterateSeq_exists_tendsto`;
 - `serreHenselIterateSeq_exists_limit_with_invariants`;
-- `serreHenselUnivariateConclusion_of_exact_limit_congruent`.
+- `serreHenselIterateLimit_initial_congruent`;
+- `serreHenselUnivariateConclusion_of_iterateLimit_root`;
+- `serreHenselUnivariateConclusion_of_limit_root`.
 
-Next pass the packaged pointwise invariants to the limit.  In particular:
+Next prove the selected limit is an exact root.  In particular:
 
-- prove retained congruence for the limit, probably via closed projection fibers or closed metric balls;
-- prove the limit is an exact root by combining growing divisibility of `f(y_r)` with polynomial evaluation continuity;
-- package the one-variable final conclusion with `serreHenselUnivariateConclusion_of_exact_limit_congruent`;
-- keep the final conclusion source-shaped: exact root plus congruence to the original approximation.
+- audit the existing polynomial evaluation continuity API over `SerrePadicInt`;
+- turn the estimates `serreHenselIterateSeq_eval_dist_zero_le_radius` into convergence of `f(y_r)` to `0`;
+- combine this with convergence of `y_r` to the selected limit and continuity of `Polynomial.eval` to get `f(y)=0`;
+- apply the existing one-variable conclusion packaging;
+- then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
 
 Do not introduce a second p-adic metric/completeness interface if the existing project API already supplies the needed statements.  Avoid packaged Hensel theorems.
