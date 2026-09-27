@@ -4,15 +4,18 @@ Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
 The source predicates, congruence API, one-step conclusion predicates, abstract multivariate-to-univariate transfer, and Taylor-defect divisibility bookkeeping are in place.  The next proof step should target the one-step Newton improvement before the Cauchy-limit construction.
 
-## Longer continuation mode
+## 25-minute continuation mode
 
-For this Hensel branch, a single user instruction such as `続けて` should normally advance more than one administrative step.  Use the following mini-loop until a stop condition is hit:
+For this Hensel branch, a single user instruction such as `続けて` or `形式化を続けて` should normally be treated as a 25-minute continuous work budget for the current ACTIVE item.  Do not stop after a short status check unless a stop condition below is hit.
+
+Use the following mini-loop until the 25-minute budget is used or a stop condition is hit:
 
 1. Check latest PR head and CI.
 2. If CI failed, read the failure and fix it before adding unrelated work.
 3. If CI is green or pending, continue within this branch by doing the next safe Hensel subtask.
-4. After each meaningful Lean/Blueprint/docs commit, update the next-step notes or PR body if the continuation point changed.
-5. Before responding, report latest head, CI state, and the next concrete proof slice.
+4. Do not stop merely because CI is pending; while waiting, do safe same-PR work.
+5. After each meaningful Lean/Blueprint/docs commit, update the next-step notes or PR body if the continuation point changed.
+6. Before responding, report latest head, CI state, and the next concrete proof slice.
 
 Safe tasks while CI is pending:
 
@@ -20,7 +23,8 @@ Safe tasks while CI is pending:
 - update Blueprint nodes to match Lean boundaries;
 - update progress/next docs;
 - prepare the next lemma statement, provided it does not assert an unproved mathematical fact as proved;
-- inspect existing project APIs needed for valuation/divisibility/cancellation.
+- inspect existing project APIs needed for valuation/divisibility/cancellation;
+- update the PR body when the continuation point or run policy changed.
 
 Stop rather than continuing if:
 
@@ -28,7 +32,8 @@ Stop rather than continuing if:
 - a CI failure needs log-based repair;
 - a GitHub write is rejected or branch state is inconsistent;
 - the next proof would require guessing source content not already checked;
-- context/time limits risk leaving unverified changes.
+- context/time limits risk leaving unverified changes;
+- the user explicitly requests a shorter run or stop.
 
 ## Immediate proof target
 
