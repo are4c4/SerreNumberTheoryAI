@@ -17,21 +17,23 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 ## Run-length preference for this ACTIVE item
 
-このHensel itemでは、ユーザーの「続けて」1回につき、短い状態確認だけで止めず、同じPR内で安全に進められる小タスクを連続して処理する。
+このHensel itemでは、ユーザーの「続けて」「形式化を続けて」1回につき、原則として最大25分間の連続作業予算を使う。短い状態確認だけで止めず、同じPR内で安全に進められる小タスクを連続して処理する。
 
 標準の継続順:
 
 1. live PR head / CI を確認する。
 2. CI失敗があれば、最初にログを読み、原因を直す。
 3. CI pendingまたはgreenなら、同じACTIVE item内で次の小補題、Blueprint同期、docs同期、PR本文更新、self-reviewを進める。
-4. 新しいLean/Blueprint/docs commitを積んだら、latest headのCI起動状況を確認する。
-5. run終了時には、最新head、CI状態、次の具体的補題を記録する。
+4. CI pendingだけでは止まらない。待ち時間にはread-only review、次補題のstatement設計、既存API調査、docs/Blueprint同期を進める。
+5. 新しいLean/Blueprint/docs commitを積んだら、latest headのCI起動状況を確認する。
+6. run終了時には、最新head、CI状態、次の具体的補題を記録する。
 
-ただし、次の場合は長く進めず止める:
+ただし、次の場合は25分を待たず止める:
 
 - Taylor補題やNewton stepの数学的statementが不確かで、仮定を勝手に強めそうな場合。
 - CI failureのログ確認が必要な場合。
-- GitHub write拒否、merge conflict、branch不整合が出た場合。
+- GitHub write拒否、merge conflict、branch不整合、権限エラーが出た場合。
+- source boundaryやcopyright policyに不安がある場合。
 - context/time上限が近く、未検証の主張を残しそうな場合。
 - ユーザーが短時間作業や停止を明示した場合。
 
