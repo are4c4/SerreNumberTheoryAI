@@ -63,17 +63,19 @@ case `n = 1`, `k = 0`.
 - proof that the chosen Hensel iterate sequence is a `CauchySeq` for the project-local metric;
 - proof that project-local completeness supplies a limit of the chosen Hensel iterate sequence;
 - limit-candidate package `serreHenselIterateSeq_exists_limit_with_invariants`, bundling the completeness limit with the pointwise evaluation-depth, derivative-valuation, and initial-congruence invariants;
+- metric package for the selected limit, including radius bounds for `f(y_r)` and for the initial congruence radius;
+- proof that the selected limit remains congruent to the initial approximation modulo `p^(n-k)`;
 - source-shaped finishing bridge `serreHenselUnivariateConclusion_of_exact_limit_congruent`, reducing the final one-variable conclusion to exact-root and retained-congruence proofs for the limit;
+- final packaging lemma reducing the one-variable source conclusion to the single remaining proof that the selected limit is an exact root;
 - Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, limit-candidate boundary, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement, metric Cauchy statement, existence of a limit, and limit-candidate invariant package are now in place.  The next major block is to pass the packaged pointwise invariants to the limit:
+The concrete one-step Newton improvement, metric Cauchy statement, existence of a limit, retained initial congruence for the limit, and one-variable conclusion packaging are now in place.  The remaining one-variable core is to prove the exact-root statement for the selected limit:
 
-1. prove that the limit remains congruent to the original approximation modulo `p^(n-k)`;
-2. pass the growing divisibility statements `p^(n+r) ∣ f(y_r)` through the limit;
-3. use polynomial evaluation continuity to show `f(y) = 0`;
-4. combine those two limit facts with `serreHenselUnivariateConclusion_of_exact_limit_congruent`;
-5. then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
+1. pass the growing divisibility statements `p^(n+r) ∣ f(y_r)` through the limit;
+2. use polynomial evaluation continuity to show `f(y) = 0` for the selected limit;
+3. apply the existing final packaging lemma to obtain `serreHenselUnivariateConclusion`;
+4. then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
 
 Before proving the root statement, audit the existing polynomial-continuity, projection-fiber, and closed-ball APIs rather than introducing a parallel topology interface.
