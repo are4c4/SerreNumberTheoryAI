@@ -26,8 +26,21 @@ theorem serrePadicIntProj_polynomial_eval
   · intro a
     simp
   · intro f g hf hg
-    simp only [Polynomial.eval_add, Polynomial.map_add]
-    rw [hf, hg]
+    calc
+      serrePadicIntProj p d ((f + g).eval x) =
+          serrePadicIntProj p d (f.eval x + g.eval x) := by
+        simp [Polynomial.eval_add]
+      _ = serrePadicIntProj p d (f.eval x) +
+            serrePadicIntProj p d (g.eval x) := by
+        exact map_add (serrePadicIntProj p d) (f.eval x) (g.eval x)
+      _ = (Polynomial.map (serrePadicIntProj p d) f).eval
+            (serrePadicIntProj p d x) +
+          (Polynomial.map (serrePadicIntProj p d) g).eval
+            (serrePadicIntProj p d x) := by
+        rw [hf, hg]
+      _ = (Polynomial.map (serrePadicIntProj p d) (f + g)).eval
+            (serrePadicIntProj p d x) := by
+        simp [Polynomial.eval_add]
   · intro n a _
     simp
 
