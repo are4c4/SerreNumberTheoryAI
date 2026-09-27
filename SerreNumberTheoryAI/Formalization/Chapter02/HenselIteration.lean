@@ -145,6 +145,57 @@ theorem serreHenselIterateSeq_succ_congruent
   exact serreHenselAdvance_congruent hhyp r
     (serreHenselIterateStateSeq hhyp r)
 
+/-- A finite tail of the Hensel sequence remains congruent to its first term. -/
+theorem serreHenselIterateSeq_congruent_add
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    (r m : ℕ) :
+    serrePadicCongruent p ((n + r) - k)
+      (serreHenselIterateSeq hhyp r)
+      (serreHenselIterateSeq hhyp (r + m)) := by
+  induction m with
+  | zero =>
+      simpa using
+        serrePadicCongruent_refl p ((n + r) - k)
+          (serreHenselIterateSeq hhyp r)
+  | succ m ih =>
+      have hstepDeep := serreHenselIterateSeq_succ_congruent hhyp (r + m)
+      have hle : (n + r) - k ≤ (n + (r + m)) - k := by
+        omega
+      have hstep :
+          serrePadicCongruent p ((n + r) - k)
+            (serreHenselIterateSeq hhyp (r + m))
+            (serreHenselIterateSeq hhyp ((r + m) + 1)) :=
+        serrePadicCongruent_mono
+          (p := p) (m := (n + r) - k) (n := (n + (r + m)) - k)
+          hle hstepDeep
+      have htrans := serrePadicCongruent_trans ih hstep
+      simpa [Nat.add_assoc] using htrans
+
+/-- Later Hensel iterates are congruent to earlier ones at the earlier depth. -/
+theorem serreHenselIterateSeq_congruent_of_le
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    {r s : ℕ} (hrs : r ≤ s) :
+    serrePadicCongruent p ((n + r) - k)
+      (serreHenselIterateSeq hhyp r)
+      (serreHenselIterateSeq hhyp s) := by
+  rcases Nat.exists_eq_add_of_le hrs with ⟨m, hm⟩
+  rw [hm]
+  exact serreHenselIterateSeq_congruent_add hhyp r m
+
+/-- Every Hensel iterate stays congruent to the initial approximation at depth `n-k`. -/
+theorem serreHenselIterateSeq_initial_congruent
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    (r : ℕ) :
+    serrePadicCongruent p (n - k) x (serreHenselIterateSeq hhyp r) := by
+  have htail := serreHenselIterateSeq_congruent_add hhyp 0 r
+  simpa using htail
+
 end HenselIteration
 
 end
