@@ -27,8 +27,8 @@ case `n = 1`, `k = 0`.
 ## Implemented in Lean so far
 
 - project-local divisibility-depth predicate for congruences modulo `p^n`;
-- one-variable and multivariate source hypothesis/conclusion predicates;
-- one-step improvement predicates, separated from exact-root conclusions;
+- one-variable and multivariate source hypothesis/conclusion predicates, with final exact-root conclusions aligned to Serre (root + congruence only);
+- one-step improvement predicates, where derivative valuation is preserved as the iteration invariant;
 - source congruence API: reflexivity, symmetry, transitivity, modulus monotonicity;
 - one-coordinate update operation used in the multivariate-to-univariate reduction;
 - proof that a one-coordinate update is congruent in every coordinate when the moved coordinate is congruent;
@@ -51,15 +51,18 @@ case `n = 1`, `k = 0`.
 - divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
 - specialization of that bookkeeping to the Hensel correction depth `n-k`;
 - packaging lemma turning linear cancellation plus Taylor-quadratic divisibility plus derivative-valuation preservation into `serreHenselUnivariateStepConclusion`;
+- concrete one-step theorem `serreHenselUnivariateStepConclusion_of_hypothesis`, requiring only the source-shaped Hensel hypothesis;
 - Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
 
 ## Next proof target
 
-Use the existing ingredients to package the concrete one-step Newton improvement without requiring external Taylor or derivative-preservation hypotheses.  In particular, combine:
+The concrete one-step Newton improvement is now packaged.  The next major block is the source iteration:
 
-- `serreHensel_exists_linear_cancel`;
-- `serreHenselTaylorQuadraticFactor_all` / `serreHenselTaylorDefect_dvd_all`;
-- `serreHensel_derivative_valuation_add_correction`;
-- `serreHenselUnivariateStepConclusion_of_linear_cancel`.
+1. iterate `serreHenselUnivariateStepConclusion_of_hypothesis` with exponents `n, n+1, n+2, ...`;
+2. record that each correction has depth at least `n-k+r`;
+3. prove the resulting sequence is Cauchy in the project-local p-adic metric;
+4. use completeness to obtain a limit;
+5. pass polynomial evaluation to the limit and obtain an exact root;
+6. retain congruence to the original approximation modulo `p^(n-k)`.
 
-The next Lean target should be a source-shaped theorem stating that every `serreHenselUnivariateHypothesis p f x n k` gives `serreHenselUnivariateStepConclusion p f x n k`.
+Before implementing the sequence, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
