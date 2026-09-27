@@ -141,6 +141,33 @@ theorem serreHenselIterateLimit_initial_congruent
       (serreHenselIterateLimit hhyp) (n - k)).1 hdist
   exact serrePadicCongruent_symm hyx
 
+/-- A project-local p-adic integer lying in every radius around zero is zero. -/
+theorem serrePadicInt_eq_zero_of_dist_le_all_radius
+    {p : ℕ} [Fact p.Prime] {a : SerrePadicInt p}
+    (ha : ∀ d : ℕ, serrePadicIntDist p a 0 ≤ Real.exp (-(d : ℝ))) :
+    a = 0 := by
+  apply serrePadicInt_ext p
+  intro n
+  change serrePadicIntProj p n a = serrePadicIntProj p n 0
+  exact (serrePadicIntDist_le_radius_succ_iff_proj_eq p a 0 n).1 (by
+    simpa using ha (n + 1))
+
+/--
+A radius estimate at every finite level for the limit value implies the
+source-shaped one-variable Hensel conclusion.
+-/
+theorem serreHenselUnivariateConclusion_of_iterateLimit_eval_dist
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k)
+    (hdist : ∀ d : ℕ,
+      serrePadicIntDist p (f.eval (serreHenselIterateLimit hhyp)) 0 ≤
+        Real.exp (-(d : ℝ))) :
+    serreHenselUnivariateConclusion p f x n k := by
+  exact ⟨serreHenselIterateLimit hhyp,
+    serrePadicInt_eq_zero_of_dist_le_all_radius (p := p) hdist,
+    serreHenselIterateLimit_initial_congruent hhyp⟩
+
 /--
 Once the Hensel-iteration limit is known to be an exact root and to retain the
 initial congruence, it gives Serre's source-shaped one-variable conclusion.
