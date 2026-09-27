@@ -8,6 +8,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselIteration
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimit
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -154,6 +155,14 @@ Serre の一変数最終結論 `f(y)=0` かつ `y ≡ x (mod p^(n-k))` が従う
 導関数の付値を追加しない。
 :::
 
+:::lemma_ "henselcoordinatespecialization"
+  (uses := "henselcoordinateupdate, henselmultivariatefromunivariate")
+`X_j` 以外の座標を `x_i` に固定して、一変数多項式
+`serreHenselCoordinateSpecialization x j f` を作る。この多項式の評価は
+一座標更新後の `f` の評価と一致し、その導関数の `x_j` での値は
+選んだ偏微分 `∂f/∂X_j` の `x` での値と一致する。
+:::
+
 :::theorem "henselunivariatetheorem"
   (uses := "henselunivariatestep, henseldivisibilitybookkeeping, henseltaylordefectalgebra, henseliterationcauchy, hensellimitcandidate, henselexactroot, henselconclusionfromlimitroot")
 一変数の Hensel 定理本体は、Newton 改良を反復して Cauchy 列を作り、
@@ -162,7 +171,16 @@ Serre の一変数最終結論 `f(y)=0` かつ `y ≡ x (mod p^(n-k))` が従う
 :::
 
 :::theorem "henseltheorem"
-  (uses := "henselunivariatetheorem, henselmultivariatefromunivariate")
+  (uses := "henselunivariatetheorem, henselmultivariatefromunivariate, henselcoordinatespecialization")
 Serre の多変数定理は、一つの座標以外を固定した一変数特殊化に
 一変数定理を適用し、その結果を座標更新として戻すことで得る。
+現在の形式化では、座標特殊化を具体的に構成し、
+source-shaped な多変数仮定から多変数結論を直接得る境界まで実装している。
+:::
+
+:::theorem "henselsimplerootcorollary"
+  (uses := "henselunivariatetheorem, henseltheorem")
+`n = 1`, `k = 0` の特殊化として、単純零点 modulo `p` が
+`Z_p` 上の真の零点へ持ち上がる Corollary 1 を得る。一変数版と多変数版の
+両方を source-shaped な仮定・結論として包装している。
 :::
