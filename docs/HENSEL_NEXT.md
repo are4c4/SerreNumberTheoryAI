@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, congruence API, one-step conclusion predicates, abstract multivariate-to-univariate transfer, and Taylor-defect divisibility bookkeeping are in place.  The next proof step should target the one-step Newton improvement before the Cauchy-limit construction.
+The source predicates, congruence API, one-step conclusion predicates, abstract multivariate-to-univariate transfer, Taylor-defect divisibility bookkeeping, and additive Taylor-defect algebra lemmas are in place.  The next proof step should target the polynomial Taylor-remainder identity strongly enough to feed the one-step Newton improvement before the Cauchy-limit construction.
 
 ## 25-minute continuation mode
 
@@ -37,14 +37,21 @@ Stop rather than continuing if:
 
 ## Immediate proof target
 
-Likely local lemma shape:
+Current local Taylor algebra now includes:
+
+- zero, constant, and `X` base cases for the quadratic Taylor-defect predicate;
+- additivity/subtractivity of `serreHenselTaylorDefect`;
+- closure of `serreHenselTaylorQuadraticFactor` under addition, negation, and subtraction.
+
+Next likely local lemma shape:
 
 ```lean
--- If y = x + h, expand f.eval y around x and show
--- f.eval y - f.eval x - h * f.derivative.eval x is divisible by h^2.
+-- Multiplication or powers should preserve the quadratic Taylor-defect predicate.
+-- In particular, prove the statement for `X^m` or for products of polynomials,
+-- then assemble arbitrary polynomials from finite sums of monomials.
 ```
 
-Then specialize `h = (p : SerrePadicInt p)^(n-k) * z` and combine:
+After the polynomial Taylor interface is concrete, specialize `h = (p : SerrePadicInt p)^(n-k) * z` and combine:
 
 - `p^n ∣ f.eval x` from the source hypothesis;
 - `v_p(f.derivative.eval x) = k`, so the derivative is `p^k * unit`;
@@ -58,6 +65,7 @@ Useful existing APIs:
 - `serrePadicCongruent_refl`, `serrePadicCongruent_symm`, `serrePadicCongruent_trans`, and `serrePadicCongruent_mono` for managing congruence chains;
 - `serreHenselUnivariateStepConclusion` for the target of a single Newton step;
 - `serreHenselTaylorDefect` and `serreHenselTaylorQuadraticFactor` for the Taylor remainder interface;
+- `serreHenselTaylorQuadraticFactor_add`, `serreHenselTaylorQuadraticFactor_neg`, and `serreHenselTaylorQuadraticFactor_sub` for additive polynomial algebra;
 - `serreHenselTaylorDefect_dvd_of_hensel_correction` for turning a quadratic Taylor remainder into the p-power depth needed by the Newton step;
 - `serrePadicIntAddValuation p a = (k : ℕ∞)` for exact source valuation;
 - `serrePadicInt_pow_dvd_iff_le_addValuation` for converting valuation inequalities into divisibility;
