@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, and one-variable conclusion packaging from an exact root at the selected limit are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, radius-to-zero bridge, and one-variable conclusion packaging from radius estimates or an exact root at the selected limit are now in place.
 
 ## 25-minute continuation mode
 
@@ -56,15 +56,17 @@ The chosen iterate sequence now has the key algebraic, metric, and limit-facing 
 - `serreHenselIterateSeq_exists_tendsto`;
 - `serreHenselIterateSeq_exists_limit_with_invariants`;
 - `serreHenselIterateLimit_initial_congruent`;
+- `serrePadicInt_eq_zero_of_dist_le_all_radius`;
+- `serreHenselUnivariateConclusion_of_iterateLimit_eval_dist`;
 - `serreHenselUnivariateConclusion_of_iterateLimit_root`;
 - `serreHenselUnivariateConclusion_of_limit_root`.
 
-Next prove the selected limit is an exact root.  In particular:
+Next prove radius estimates for `f` at the selected limit, which now suffices for the one-variable conclusion.  In particular:
 
 - audit the existing polynomial evaluation continuity API over `SerrePadicInt`;
 - turn the estimates `serreHenselIterateSeq_eval_dist_zero_le_radius` into convergence of `f(y_r)` to `0`;
-- combine this with convergence of `y_r` to the selected limit and continuity of `Polynomial.eval` to get `f(y)=0`;
-- apply the existing one-variable conclusion packaging;
+- combine this with convergence of `y_r` to the selected limit and continuity of `Polynomial.eval` to get radius estimates for `f(y)` at every finite depth;
+- apply `serreHenselUnivariateConclusion_of_iterateLimit_eval_dist`;
 - then use the existing multivariate transfer API to assemble the source Theorem 1 boundary.
 
 Do not introduce a second p-adic metric/completeness interface if the existing project API already supplies the needed statements.  Avoid packaged Hensel theorems.
