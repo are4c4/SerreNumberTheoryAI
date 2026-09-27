@@ -108,6 +108,39 @@ theorem serreHenselIterateLimit_metric_package
   · exact serreHenselIterateSeq_eval_dist_zero_le_radius hhyp
   · exact serreHenselIterateSeq_initial_dist_le_radius hhyp
 
+/-- The selected Hensel limit retains the source congruence to the initial approximation. -/
+theorem serreHenselIterateLimit_initial_congruent
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serrePadicCongruent p (n - k) x (serreHenselIterateLimit hhyp) := by
+  letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+  let R : ℝ := Real.exp (-((n - k : ℕ) : ℝ))
+  have hclosed : IsClosed (Metric.closedBall x R) := Metric.isClosed_closedBall
+  have heventually :
+      ∀ᶠ r in Filter.atTop,
+        serreHenselIterateSeq hhyp r ∈ Metric.closedBall x R :=
+    Filter.Eventually.of_forall (fun r => by
+      rw [Metric.mem_closedBall]
+      have hdist := serreHenselIterateSeq_initial_dist_le_radius hhyp r
+      have hdist' : dist x (serreHenselIterateSeq hhyp r) ≤ R := by
+        change serrePadicIntDist p x (serreHenselIterateSeq hhyp r) ≤ R
+        exact hdist
+      simpa [dist_comm] using hdist')
+  have hlimit_mem : serreHenselIterateLimit hhyp ∈ Metric.closedBall x R :=
+    hclosed.mem_of_tendsto (serreHenselIterateSeq_tendsto_limit hhyp) heventually
+  have hdist_ball : dist (serreHenselIterateLimit hhyp) x ≤ R := by
+    simpa [R, Metric.mem_closedBall] using hlimit_mem
+  have hdist_metric : dist x (serreHenselIterateLimit hhyp) ≤ R := by
+    simpa [dist_comm] using hdist_ball
+  have hdist : serrePadicIntDist p x (serreHenselIterateLimit hhyp) ≤ R := by
+    change serrePadicIntDist p x (serreHenselIterateLimit hhyp) ≤ R at hdist_metric
+    exact hdist_metric
+  have hyx : serrePadicCongruent p (n - k) (serreHenselIterateLimit hhyp) x :=
+    (serrePadicIntDist_le_radius_iff_pow_dvd p x
+      (serreHenselIterateLimit hhyp) (n - k)).1 hdist
+  exact serrePadicCongruent_symm hyx
+
 /--
 Once the Hensel-iteration limit is known to be an exact root and to retain the
 initial congruence, it gives Serre's source-shaped one-variable conclusion.
