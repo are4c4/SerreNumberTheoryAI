@@ -58,16 +58,17 @@ case `n = 1`, `k = 0`.
 - tail congruence API showing any two sufficiently late iterates are congruent at any prescribed lower depth;
 - source congruence-to-metric radius bound `serrePadicCongruent_dist_le_radius`;
 - congruence-depth Cauchy predicate `serrePadicCongruenceCauchy` and proof that the Hensel iterate sequence satisfies it;
-- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
+- metric-radius Cauchy predicate `serrePadicMetricRadiusCauchy`, bridge from congruence-Cauchy to metric-radius Cauchy, and proof for the Hensel iterate sequence;
+- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy API, and multivariate reduction boundary.
 
 ## Next proof target
 
-The concrete one-step Newton improvement and the congruence-depth Cauchy API are now packaged.  The next major block is to connect this source-shaped Cauchy statement to the project-local p-adic metric/completeness interface:
+The concrete one-step Newton improvement and the metric-radius Cauchy API are now packaged.  The next major block is to connect this source-shaped radius statement to the exact project-local metric/completeness interface:
 
 1. inspect the exact `CauchySeq`/filter form expected by the existing `CompleteSpace` instance for `SerrePadicInt`;
-2. turn `serreHenselIterateSeq_congruence_cauchy` plus `serrePadicCongruent_dist_le_radius` into the required metric Cauchy statement;
+2. turn `serreHenselIterateSeq_metric_radius_cauchy` into the required metric Cauchy statement;
 3. use completeness to obtain a limit of the chosen approximations;
 4. pass polynomial evaluation to the limit and obtain an exact root;
 5. retain congruence to the original approximation modulo `p^(n-k)`.
 
-Before proving the metric Cauchy statement, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
+Before proving the full metric Cauchy statement, audit the existing project metric/completeness and polynomial-continuity APIs rather than introducing a parallel topology interface.
