@@ -224,6 +224,33 @@ theorem serreHenselIterateSeq_tail_congruent_of_le_depth
       (serrePadicCongruent_mono
         (p := p) (m := d) (n := (n + s) - k) hmono htail)
 
+/-- A source congruence gives the corresponding project-local metric bound. -/
+theorem serrePadicCongruent_dist_le_radius
+    {p : ℕ} [Fact p.Prime] {d : ℕ} {x y : SerrePadicInt p}
+    (h : serrePadicCongruent p d x y) :
+    serrePadicIntDist p x y ≤ Real.exp (-(d : ℝ)) := by
+  have hsym : (p : SerrePadicInt p) ^ d ∣ x - y :=
+    serrePadicCongruent_symm h
+  exact (serrePadicIntDist_le_radius_iff_pow_dvd p x y d).2 hsym
+
+/-- Congruence-based Cauchy criterion for sequences in the project-local `Z_p`. -/
+def serrePadicCongruenceCauchy
+    (p : ℕ) [Fact p.Prime] (u : ℕ → SerrePadicInt p) : Prop :=
+  ∀ d : ℕ, ∃ R : ℕ, ∀ r s : ℕ, R ≤ r → R ≤ s →
+    serrePadicCongruent p d (u r) (u s)
+
+/-- The chosen Hensel iterate sequence is Cauchy in the congruence-depth sense. -/
+theorem serreHenselIterateSeq_congruence_cauchy
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serrePadicCongruenceCauchy p (serreHenselIterateSeq hhyp) := by
+  intro d
+  refine ⟨d + k, ?_⟩
+  intro r s hr hs
+  exact serreHenselIterateSeq_tail_congruent_of_le_depth
+    hhyp hr hs (by omega)
+
 end HenselIteration
 
 end
