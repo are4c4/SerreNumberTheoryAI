@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, the one-variable source conclusion from the source hypothesis, and the multivariate packaging theorem from a supplied coordinate specialization are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, the one-variable source conclusion from the source hypothesis, the coordinate specialization for the multivariate reduction, the multivariate source conclusion from its source hypothesis, and the `n = 1`, `k = 0` simple-root corollary packages are now in place.
 
 ## 25-minute continuation mode
 
@@ -35,33 +35,27 @@ Stop rather than continuing if:
 - context/time limits risk leaving unverified changes;
 - the user explicitly requests a shorter run or stop.
 
-## Immediate proof target
+## Immediate proof/status target
 
-The chosen iterate sequence now has the key algebraic, metric, exact-root, and theorem-boundary lemmas:
+The current source-shaped Hensel stack now includes the core boundary lemmas:
 
-- `serreHenselIterateSeq_eval_dvd`;
-- `serreHenselIterateSeq_derivative_valuation`;
-- `serreHenselIterateSeq_congruent_add`;
-- `serreHenselIterateSeq_congruent_of_le`;
-- `serreHenselIterateSeq_initial_congruent`;
-- `serreHenselIterateSeq_tail_congruent_of_le_depth`;
+- `serreHenselUnivariateStepConclusion_of_hypothesis`;
 - `serreHenselIterateSeq_cauchySeq`;
 - `serreHenselIterateSeq_exists_tendsto`;
-- `serreHenselIterateSeq_exists_limit_with_invariants`;
 - `serreHenselIterateLimit_initial_congruent`;
-- `serrePadicIntProj_polynomial_eval`;
-- `serrePadicIntProj_polynomial_eval_eq_of_proj_eq`;
-- `serreHenselIterateLimit_eval_dvd`;
 - `serreHenselIterateLimit_is_root`;
 - `serreHenselUnivariateConclusion_of_hypothesis`;
-- `serreHenselMultivariateConclusion_of_specialization`.
+- `serreHenselCoordinateSpecialization`;
+- `serreHenselCoordinateSpecialization_eval`;
+- `serreHenselCoordinateSpecialization_derivative_eval`;
+- `serreHenselMultivariateConclusion_of_hypothesis`;
+- `serreHenselUnivariateSimpleRootConclusion_of_hypothesis`;
+- `serreHenselMultivariateSimpleRootConclusion_of_hypothesis`.
 
-Next assemble the multivariate theorem boundary from an actual coordinate specialization.  In particular:
+Next safe work is not to invent a new Hensel statement, but to finish synchronization around the now-proved boundary:
 
-- define or identify the univariate polynomial obtained by freezing all coordinates except `X_j`;
-- prove its evaluation identity at every `t` and its derivative identity at `x j`;
-- apply `serreHenselMultivariateConclusion_of_specialization`;
-- keep the final multivariate conclusion source-shaped: exact root plus coordinatewise congruence only;
-- then add Corollary 1 as the special case `n = 1`, `k = 0`.
+- update Blueprint/progress/PR body to mention the concrete coordinate specialization and simple-root corollary modules;
+- self-review the final statements against Serre §2.2 so derivative valuations remain iteration invariants rather than final-conclusion fields;
+- after CI is green on the latest head, decide whether to mark the PR ready/merge or continue only after checking the next source boundary.
 
 Avoid packaged Hensel theorems and avoid adding non-source assumptions to the final statements.
