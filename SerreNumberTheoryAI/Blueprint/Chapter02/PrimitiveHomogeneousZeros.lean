@@ -96,9 +96,8 @@ p進整数の像に入る。最小値を達成する座標では指数が0にな
 
 :::theorem "homogeneous.field.common.zero.primitive"
   (uses := "homogeneous_eval_scale, field_tuple_primitive_normalization")
-各方程式が斉次であるとする。このとき、project-local Qₚ 上の
-非零共通零点の存在と、project-local Zₚ 上の原始的共通零点の存在は同値である。
-各多項式の斉次次数は互いに異なっていてよい。
+斉次多項式族について、Qₚ 上の非零共通零点の存在と
+Zₚ 上の原始的共通零点の存在は同値である。
 :::
 
 ```lean "homogeneous.field.common.zero.primitive"
