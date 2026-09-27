@@ -28,16 +28,19 @@ case `n = 1`, `k = 0`.
 
 - project-local divisibility-depth predicate for congruences modulo `p^n`;
 - one-variable and multivariate source hypothesis/conclusion predicates;
-- one-step conclusion predicates separating a single Newton improvement from the final exact-root theorem;
-- congruence relation API: reflexive, symmetric, transitive, and monotone in the modulus;
+- one-step improvement predicates, separated from exact-root conclusions;
+- source congruence API: reflexivity, symmetry, transitivity, modulus monotonicity;
 - one-coordinate update operation used in the multivariate-to-univariate reduction;
 - proof that a one-coordinate update is congruent in every coordinate when the moved coordinate is congruent;
 - helper lemmas extracting each source hypothesis/conclusion component, including `k < n` and positivity of `n-k`;
 - helper lemma that a correction of the form `x + p^(n-k) z` gives the required congruence;
 - transfer lemmas from the multivariate source hypotheses to a one-variable specialization;
 - transfer lemmas from a one-variable Hensel conclusion back to the multivariate conclusion once the evaluation and derivative-specialization identities are supplied;
-- Blueprint nodes now mirror the congruence API, one-step conclusion, and multivariate reduction boundary.
+- Taylor-defect interface `f(x+h) - f(x) - h*f'(x)`;
+- divisibility bookkeeping showing that a quadratic Taylor defect and a correction of depth `r` imply remainder depth `r+r`;
+- specialization of that bookkeeping to the Hensel correction depth `n-k`;
+- Blueprint nodes now mirror the congruence API, Taylor defect bookkeeping, one-step conclusion, and multivariate reduction boundary.
 
 ## Next proof target
 
-Formalize the Taylor-expansion congruence behind the one-step Newton improvement.  A useful next slice is to prove a polynomial remainder divisibility statement of the form: after substituting `y = x + h`, the difference `f(y) - f(x) - h * f'(x)` is divisible by `h^2`; then specialize `h = p^(n-k) * z` and combine it with `2*k < n`.
+Prove the polynomial identity that the Taylor defect has a quadratic factor `h^2` for every polynomial over the project-local `Z_p`; then combine it with the newly added p-power bookkeeping to obtain the source `p^((n-k)+(n-k))` remainder estimate used in the Newton step.
