@@ -43,15 +43,15 @@ def serreHenselUnivariateHypothesis
     padicDivisibilityDepth p n (f.eval x) ∧
       serrePadicIntAddValuation p (f.derivative.eval x) = (k : ℕ∞)
 
-/-- The one-variable conclusion of the source Hensel theorem. -/
+/-- The one-variable exact-root conclusion in Serre's Theorem 1.
+The derivative valuation belongs to the one-step invariant, not the final source conclusion. -/
 def serreHenselUnivariateConclusion
     (p : ℕ) [Fact p.Prime]
     (f : Polynomial (SerrePadicInt p)) (x : SerrePadicInt p)
     (n k : ℕ) : Prop :=
   ∃ y : SerrePadicInt p,
     f.eval y = 0 ∧
-      serrePadicCongruent p (n - k) x y ∧
-        serrePadicIntAddValuation p (f.derivative.eval y) = (k : ℕ∞)
+      serrePadicCongruent p (n - k) x y
 
 /-- A single Newton-improvement conclusion: improve the zero congruence by one power. -/
 def serreHenselUnivariateStepConclusion
@@ -73,16 +73,14 @@ def serreHenselMultivariateHypothesis
       serrePadicIntAddValuation p
           (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (k : ℕ∞)
 
-/-- The multivariate conclusion in Serre's Theorem 1. -/
+/-- The multivariate exact-root conclusion in Serre's Theorem 1. -/
 def serreHenselMultivariateConclusion
     (p : ℕ) [Fact p.Prime]
     (f : MvPolynomial σ (SerrePadicInt p))
     (x : σ → SerrePadicInt p) (j : σ) (n k : ℕ) : Prop :=
   ∃ y : σ → SerrePadicInt p,
     MvPolynomial.eval y f = 0 ∧
-      (∀ i, serrePadicCongruent p (n - k) (x i) (y i)) ∧
-        serrePadicIntAddValuation p
-          (MvPolynomial.eval y (MvPolynomial.pderiv j f)) = (k : ℕ∞)
+      ∀ i, serrePadicCongruent p (n - k) (x i) (y i)
 
 /-- A single multivariate Newton-improvement conclusion. -/
 def serreHenselMultivariateStepConclusion
@@ -230,20 +228,8 @@ theorem serreHenselUnivariateConclusion.exists_root
     {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p} {n k : ℕ}
     (h : serreHenselUnivariateConclusion p f x n k) :
     ∃ y : SerrePadicInt p, f.eval y = 0 := by
-  rcases h with ⟨y, hy, _, _⟩
+  rcases h with ⟨y, hy, _⟩
   exact ⟨y, hy⟩
-
-/-- An exact Hensel conclusion also provides every one-step improvement conclusion. -/
-theorem serreHenselUnivariateConclusion.to_step
-    {p : ℕ} [Fact p.Prime]
-    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p} {n k : ℕ}
-    (h : serreHenselUnivariateConclusion p f x n k) :
-    serreHenselUnivariateStepConclusion p f x n k := by
-  rcases h with ⟨y, hyroot, hycong, hyv⟩
-  refine ⟨y, hycong, ?_, hyv⟩
-  show (p : SerrePadicInt p) ^ (n + 1) ∣ f.eval y
-  rw [hyroot]
-  exact dvd_zero _
 
 /-- Extract the inequality `2*k < n` from the multivariate source hypotheses. -/
 theorem serreHenselMultivariateHypothesis.two_mul_lt
@@ -300,21 +286,8 @@ theorem serreHenselMultivariateConclusion.exists_root
     {j : σ} {n k : ℕ}
     (h : serreHenselMultivariateConclusion p f x j n k) :
     ∃ y : σ → SerrePadicInt p, MvPolynomial.eval y f = 0 := by
-  rcases h with ⟨y, hy, _, _⟩
+  rcases h with ⟨y, hy, _⟩
   exact ⟨y, hy⟩
-
-/-- An exact multivariate conclusion also provides every one-step improvement conclusion. -/
-theorem serreHenselMultivariateConclusion.to_step
-    {p : ℕ} [Fact p.Prime]
-    {f : MvPolynomial σ (SerrePadicInt p)} {x : σ → SerrePadicInt p}
-    {j : σ} {n k : ℕ}
-    (h : serreHenselMultivariateConclusion p f x j n k) :
-    serreHenselMultivariateStepConclusion p f x j n k := by
-  rcases h with ⟨y, hyroot, hycong, hyv⟩
-  refine ⟨y, hycong, ?_, hyv⟩
-  show (p : SerrePadicInt p) ^ (n + 1) ∣ MvPolynomial.eval y f
-  rw [hyroot]
-  exact dvd_zero _
 
 /-- Transfer the multivariate source hypotheses to a chosen one-variable specialization. -/
 theorem serreHenselUnivariateHypothesis_of_multivariateHypothesis
@@ -342,18 +315,13 @@ theorem serreHenselMultivariateConclusion_of_univariateConclusion [DecidableEq �
     {j : σ} {n k : ℕ} {g : Polynomial (SerrePadicInt p)}
     (heval : ∀ t : SerrePadicInt p,
       MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f = g.eval t)
-    (hderiv : ∀ t : SerrePadicInt p,
-      MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t)
-        (MvPolynomial.pderiv j f) = g.derivative.eval t)
     (h : serreHenselUnivariateConclusion p g (x j) n k) :
     serreHenselMultivariateConclusion p f x j n k := by
-  rcases h with ⟨yj, hyroot, hycong, hyv⟩
-  refine ⟨serreHenselUpdateCoord (p := p) x j yj, ?_, ?_, ?_⟩
+  rcases h with ⟨yj, hyroot, hycong⟩
+  refine ⟨serreHenselUpdateCoord (p := p) x j yj, ?_, ?_⟩
   · rw [heval yj]
     exact hyroot
   · exact serreHenselUpdateCoord_all_congruent (p := p) (n := n - k) x j hycong
-  · rw [hderiv yj]
-    exact hyv
 
 /--
 If the one-variable Hensel theorem is available for every specialization, then the
@@ -372,9 +340,6 @@ theorem serreHenselMultivariateConclusion_of_univariateTheorem [DecidableEq σ]
         MvPolynomial.eval x (MvPolynomial.pderiv j f))
     (heval : ∀ t : SerrePadicInt p,
       MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f = g.eval t)
-    (hderiv : ∀ t : SerrePadicInt p,
-      MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t)
-        (MvPolynomial.pderiv j f) = g.derivative.eval t)
     (h : serreHenselMultivariateHypothesis p f x j n k) :
     serreHenselMultivariateConclusion p f x j n k := by
   have huni : serreHenselUnivariateHypothesis p g (x j) n k :=
@@ -383,7 +348,7 @@ theorem serreHenselMultivariateConclusion_of_univariateTheorem [DecidableEq σ]
       heval₀ hderiv₀ h
   exact serreHenselMultivariateConclusion_of_univariateConclusion
     (p := p) (f := f) (x := x) (j := j) (n := n) (k := k) (g := g)
-    heval hderiv (Huniv g (x j) n k huni)
+    heval (Huniv g (x j) n k huni)
 
 end HenselLifting
 
