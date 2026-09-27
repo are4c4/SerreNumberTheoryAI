@@ -19,6 +19,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerProperties
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicIntegerMetric
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicField
 import SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence
+import SerreNumberTheoryAI.Blueprint.Chapter02.PrimitiveHomogeneousZeros
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -61,6 +62,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicField}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PrimitiveHomogeneousZeros}
 
 # 定理の依存関係
 

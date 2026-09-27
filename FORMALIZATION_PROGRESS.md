@@ -85,25 +85,25 @@
 | §1.1 `Z_p` の射影極限構成 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 1–2 + valuation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.2 Proposition 3: metric / completeness / density | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
+| §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 - #71 / PR #86: project-local inverse-limit `SerrePadicInt`, residue projections, integer embedding, compactness/continuityをend-to-end統合済み。
 - #72 / PR #140: projection-kernel/quotient、unit criterion、unique `p^n * unit` decomposition、domain structure、project additive valuationをlatest mainへ統合済み。
 - #89 / PR #142: p-adic distance、有限剰余levelとの対応、inverse-limit topologyとの一致、compact→complete、整数像の稠密性を統合。main `f4f0710b262ef294919983f40141e788fc8280f7`、CI #374 green。
-- #96 / PR #143 is the current single-lane ACTIVE item. Definition 2, unique `p^n u` decomposition, the project valuation/metric interface, Proposition 4 local compactness/open integer subring/rational density, and Blueprint/root linkage are implemented on the recovery branch; final PR-head policy / Lean / Verso CI and merge remain.
+- #96 / PR #143 は main `5b021cb96378c51709ba8dac52d0ff6784fbbb76` へ統合済み。Definition 2、unique `p^n u` decomposition、project valuation/metric、Proposition 4 local compactness/open integer subring/rational density、Blueprint/root linkageを完了し、final CI #428 green。
 
 ## Phase 7 — 第2章 §2 p進方程式
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
 | §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
-- #100 はpreflight complete。#99と#72 primitive/unit側は安定済みで、full proofは#96の`Q_p` scaling interfaceがDONE/STACK-READYになるのを待つ。
+- #100 / PR #145 is the current single-lane ACTIVE item. Primitive finite-level compatibility、primitive inverse-limit recovery、homogeneous evaluation scaling、nonzero `Q_p` tuple normalization、Proposition 6 の three-condition equivalence、および独立Blueprint/root linkageを実装済み。現在はPR-head CIとself-review待ち。
 - #102 はB-ownedでsource/API/dependency preflight complete。以前の#72/#89 stack gateはcompile-validation待ちで一時停止中。
 - #104 はB-ownedでodd-`p` quadratic liftingのpreflight complete。#72 primitive/unit/congruence subsetはfreeze済みで、proofは#102 simple-root liftingのDONE/STACK-READY待ち。
 - #105 はB-ownedでdyadic quadratic liftingのpreflight complete。#72 domain/dyadic-divisibility/valuation/primitive subsetはfreeze済みで、proofは#102 main `n,k` Hensel theoremのDONE/STACK-READY待ち。#96は不要。
