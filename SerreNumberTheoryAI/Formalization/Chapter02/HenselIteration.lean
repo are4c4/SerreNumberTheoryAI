@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetricCompletion
+import Mathlib.Topology.MetricSpace.Cauchy
 
 /-!
 # Iterating the one-step Hensel improvement
@@ -276,6 +277,36 @@ theorem serreHenselIterateSeq_metric_radius_cauchy
     serrePadicMetricRadiusCauchy p (serreHenselIterateSeq hhyp) :=
   serrePadicMetricRadiusCauchy_of_congruenceCauchy
     (serreHenselIterateSeq_congruence_cauchy hhyp)
+
+/-- Metric-radius Cauchy sequences are Cauchy sequences for the project-local metric. -/
+theorem serrePadicMetricRadiusCauchy_to_cauchySeq
+    {p : ℕ} [Fact p.Prime] {u : ℕ → SerrePadicInt p}
+    (hu : serrePadicMetricRadiusCauchy p u) :
+    @CauchySeq ℕ (SerrePadicInt p) _ (serrePadicIntMetricSpace p).toUniformSpace u := by
+  letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+  rw [Metric.cauchySeq_iff]
+  intro ε hε
+  let r : ℝ := Real.exp (-1)
+  have hr : r < 1 := by
+    dsimp [r]
+    exact (Real.exp_lt_one_iff).2 (by norm_num)
+  obtain ⟨d, hd⟩ := exists_pow_lt_of_lt_one hε hr
+  have hdexp : Real.exp (-(d : ℝ)) < ε := by
+    simpa [r, ← Real.exp_nat_mul, mul_comm] using hd
+  rcases hu d with ⟨R, hR⟩
+  refine ⟨R, ?_⟩
+  intro m hm n hn
+  exact lt_of_le_of_lt (hR m n hm hn) hdexp
+
+/-- The chosen Hensel iterate sequence is a Cauchy sequence for the project-local metric. -/
+theorem serreHenselIterateSeq_cauchySeq
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    @CauchySeq ℕ (SerrePadicInt p) _ (serrePadicIntMetricSpace p).toUniformSpace
+      (serreHenselIterateSeq hhyp) :=
+  serrePadicMetricRadiusCauchy_to_cauchySeq
+    (serreHenselIterateSeq_metric_radius_cauchy hhyp)
 
 end HenselIteration
 
