@@ -43,6 +43,33 @@ theorem serreHenselTaylorQuadraticFactor_C
   refine ⟨0, ?_⟩
   simp [serreHenselTaylorDefect]
 
+/-- Multiplication by a constant polynomial scales the Taylor defect. -/
+theorem serreHenselTaylorDefect_C_mul
+    (p : ℕ) [Fact p.Prime]
+    (c : SerrePadicInt p) (f : Polynomial (SerrePadicInt p))
+    (x h : SerrePadicInt p) :
+    serreHenselTaylorDefect p (Polynomial.C c * f) x h =
+      c * serreHenselTaylorDefect p f x h := by
+  unfold serreHenselTaylorDefect
+  simp [Polynomial.derivative_mul]
+  ring
+
+/-- The quadratic Taylor-factor predicate is closed under multiplication by constants. -/
+theorem serreHenselTaylorQuadraticFactor_C_mul
+    {p : ℕ} [Fact p.Prime]
+    (c : SerrePadicInt p) {f : Polynomial (SerrePadicInt p)}
+    {x h : SerrePadicInt p}
+    (hf : serreHenselTaylorQuadraticFactor p f x h) :
+    serreHenselTaylorQuadraticFactor p (Polynomial.C c * f) x h := by
+  rcases hf with ⟨a, ha⟩
+  refine ⟨c * a, ?_⟩
+  calc
+    serreHenselTaylorDefect p (Polynomial.C c * f) x h =
+        c * serreHenselTaylorDefect p f x h := by
+      exact serreHenselTaylorDefect_C_mul p c f x h
+    _ = c * (h ^ 2 * a) := by rw [ha]
+    _ = h ^ 2 * (c * a) := by ring
+
 /-- The polynomial `X` has no Taylor defect. -/
 theorem serreHenselTaylorQuadraticFactor_X
     (p : ℕ) [Fact p.Prime] (x h : SerrePadicInt p) :
