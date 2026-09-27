@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, congruence API, one-step conclusion predicates, abstract multivariate-to-univariate transfer, Taylor-defect divisibility bookkeeping, and concrete polynomial Taylor-defect algebra are now in place.  In particular, the branch has proved that every polynomial over the project-local `Z_p` has Taylor defect divisible by `h^2`.
+The source predicates, congruence API, one-step conclusion predicates, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, and existence of a linear-cancelling correction are now in place.
 
 ## 25-minute continuation mode
 
@@ -37,47 +37,30 @@ Stop rather than continuing if:
 
 ## Immediate proof target
 
-Current local Taylor algebra now includes:
+Current local one-step ingredients now include:
 
-- zero, constant, and `X` base cases for the quadratic Taylor-defect predicate;
-- constant-scaling of Taylor defects;
-- additivity/subtractivity of `serreHenselTaylorDefect`;
-- closure of `serreHenselTaylorQuadraticFactor` under addition, negation, subtraction, constant multiplication, and multiplication;
-- `serreHenselTaylorQuadraticFactor_X_pow`;
-- `serreHenselTaylorQuadraticFactor_C_mul_X_pow`;
-- `serreHenselTaylorQuadraticFactor_all` for arbitrary polynomials.
+- `serreHenselTaylorQuadraticFactor_all` for arbitrary polynomials;
+- `serreHenselTaylorDefect_dvd_all` for turning correction depth into quadratic-remainder depth;
+- `serreHensel_eval_sub_dvd_of_correction_depth` for controlling value changes under deep corrections;
+- `serreHensel_derivative_valuation_add_correction` for preserving the derivative valuation under the Hensel correction;
+- `serreHensel_derivative_eq_pow_mul_isUnit` for factoring the derivative as `p^k` times a unit;
+- `serreHensel_exists_linear_cancel` for choosing a correction whose linear Taylor part cancels modulo `p^(n+1)`;
+- `serreHenselUnivariateStepConclusion_of_linear_cancel` for packaging congruence, improved evaluation, and derivative valuation into the one-step conclusion.
 
 Next likely local lemma shape:
 
 ```lean
--- Remove the explicit hquad hypothesis from the Newton-step bookkeeping by
--- feeding `serreHenselTaylorQuadraticFactor_all` into the existing divisibility API.
+-- Concrete one-step Newton improvement, with no external Taylor or cancellation hypotheses.
+theorem serreHenselUnivariateStepConclusion_of_hypothesis
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serreHenselUnivariateStepConclusion p f x n k := by
+  ...
 ```
 
-Concretely, add wrapper lemmas around:
+The proof should choose `z` from `serreHensel_exists_linear_cancel`, use `serreHenselTaylorQuadraticFactor_all` for the Taylor remainder, and use `serreHensel_derivative_valuation_add_correction` for the derivative valuation.
 
-- `serreHenselTaylorDefect_dvd_target_of_hensel_correction`;
-- `serreHensel_eval_add_correction_dvd_of_linear_cancel`;
-- `serreHenselUnivariateStepConclusion_of_linear_cancel`.
-
-After that, specialize `h = (p : SerrePadicInt p)^(n-k) * z` and combine:
-
-- `p^n ∣ f.eval x` from the source hypothesis;
-- `v_p(f.derivative.eval x) = k`, so the derivative is `p^k * unit`;
-- `2*k < n`, giving positivity and the needed exponent inequalities;
-- a residue-level choice of `z` to cancel the normalized first-order term modulo `p`.
-
-Useful existing APIs:
-
-- `padicDivisibilityDepth p n a` for `p^n ∣ a`;
-- `serrePadicCongruent p n x y` for `y ≡ x (mod p^n)`;
-- `serrePadicCongruent_refl`, `serrePadicCongruent_symm`, `serrePadicCongruent_trans`, and `serrePadicCongruent_mono` for managing congruence chains;
-- `serreHenselUnivariateStepConclusion` for the target of a single Newton step;
-- `serreHenselTaylorQuadraticFactor_all` for the concrete polynomial Taylor remainder interface;
-- `serreHenselTaylorDefect_dvd_of_hensel_correction` for turning a quadratic Taylor remainder into the p-power depth needed by the Newton step;
-- `serrePadicIntAddValuation p a = (k : ℕ∞)` for exact source valuation;
-- `serrePadicInt_pow_dvd_iff_le_addValuation` for converting valuation inequalities into divisibility;
-- `serrePadicIntAddValuation_mul` and `serrePadicIntAddValuation_add` for algebraic valuation estimates;
-- `serreHenselMultivariateConclusion_of_univariateConclusion` for the later multivariate transfer once a concrete specialization is available.
+After that, the next major block is the Cauchy-sequence iteration from one-step improvement to an exact root.
 
 Avoid using a packaged Hensel theorem or mathlib's completed `PadicInt` result.
