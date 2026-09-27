@@ -20,6 +20,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicFieldTopology
 import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 import SerreNumberTheoryAI.Formalization.Chapter02.PrimitiveHomogeneousZeros
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselLifting
 
 /-!
 # Formalization root
