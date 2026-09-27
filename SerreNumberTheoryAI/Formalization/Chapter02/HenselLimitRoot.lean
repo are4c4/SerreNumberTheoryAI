@@ -162,12 +162,35 @@ theorem serreHenselCoordinateSpecialization_eval
   | C a =>
       simp [serreHenselCoordinateSpecialization]
   | add f g hf hg =>
-      simp [serreHenselCoordinateSpecialization, hf, hg]
+      calc
+        (serreHenselCoordinateSpecialization (p := p) x j (f + g)).eval t =
+            (serreHenselCoordinateSpecialization (p := p) x j f).eval t +
+              (serreHenselCoordinateSpecialization (p := p) x j g).eval t := by
+          simp [serreHenselCoordinateSpecialization]
+        _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f +
+              MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) g := by
+          rw [hf, hg]
+        _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) (f + g) := by
+          simp
   | mul_X f i hf =>
       by_cases hij : i = j
       · subst i
-        simp [serreHenselCoordinateSpecialization, serreHenselUpdateCoord, hf]
-      · simp [serreHenselCoordinateSpecialization, serreHenselUpdateCoord, hij, hf]
+        calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X j)).eval t =
+              (serreHenselCoordinateSpecialization (p := p) x j f).eval t * t := by
+            simp [serreHenselCoordinateSpecialization]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f * t := by
+            rw [hf]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) (f * MvPolynomial.X j) := by
+            simp [serreHenselUpdateCoord]
+      · calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X i)).eval t =
+              (serreHenselCoordinateSpecialization (p := p) x j f).eval t * x i := by
+            simp [serreHenselCoordinateSpecialization, hij]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f * x i := by
+            rw [hf]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) (f * MvPolynomial.X i) := by
+            simp [serreHenselUpdateCoord, hij]
 
 /-- The derivative of the coordinate specialization is the selected partial derivative. -/
 theorem serreHenselCoordinateSpecialization_derivative_eval
@@ -180,12 +203,39 @@ theorem serreHenselCoordinateSpecialization_derivative_eval
   | C a =>
       simp [serreHenselCoordinateSpecialization]
   | add f g hf hg =>
-      simp [serreHenselCoordinateSpecialization, hf, hg]
+      calc
+        (serreHenselCoordinateSpecialization (p := p) x j (f + g)).derivative.eval (x j) =
+            (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) +
+              (serreHenselCoordinateSpecialization (p := p) x j g).derivative.eval (x j) := by
+          simp [serreHenselCoordinateSpecialization]
+        _ = MvPolynomial.eval x (MvPolynomial.pderiv j f) +
+              MvPolynomial.eval x (MvPolynomial.pderiv j g) := by
+          rw [hf, hg]
+        _ = MvPolynomial.eval x (MvPolynomial.pderiv j (f + g)) := by
+          simp
   | mul_X f i hf =>
       by_cases hij : i = j
       · subst i
-        simp [serreHenselCoordinateSpecialization, hf, MvPolynomial.pderiv_mul]
-      · simp [serreHenselCoordinateSpecialization, hij, hf, MvPolynomial.pderiv_mul]
+        calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X j)).derivative.eval (x j) =
+              (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) * x j +
+                (serreHenselCoordinateSpecialization (p := p) x j f).eval (x j) := by
+            simp [serreHenselCoordinateSpecialization, Polynomial.derivative_mul]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j f) * x j + MvPolynomial.eval x f := by
+            rw [hf, serreHenselCoordinateSpecialization_eval (p := p) x j f (x j),
+              serreHenselUpdateCoord_eq_self (p := p) x j]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j (f * MvPolynomial.X j)) := by
+            simp [MvPolynomial.pderiv_mul]
+            ring
+      · calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X i)).derivative.eval (x j) =
+              (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) * x i := by
+            simp [serreHenselCoordinateSpecialization, hij, Polynomial.derivative_mul]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j f) * x i := by
+            rw [hf]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j (f * MvPolynomial.X i)) := by
+            simp [MvPolynomial.pderiv_mul, hij]
+            ring
 
 /--
 Multivariate Hensel follows once a chosen coordinate specialization and its
