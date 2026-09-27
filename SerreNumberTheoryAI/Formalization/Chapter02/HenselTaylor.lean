@@ -29,6 +29,99 @@ def serreHenselTaylorQuadraticFactor
     (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) : Prop :=
   ∃ a : SerrePadicInt p, serreHenselTaylorDefect p f x h = h ^ 2 * a
 
+/-- The zero polynomial has no Taylor defect. -/
+theorem serreHenselTaylorQuadraticFactor_zero
+    (p : ℕ) [Fact p.Prime] (x h : SerrePadicInt p) :
+    serreHenselTaylorQuadraticFactor p (0 : Polynomial (SerrePadicInt p)) x h := by
+  refine ⟨0, ?_⟩
+  simp [serreHenselTaylorDefect]
+
+/-- Constant polynomials have no Taylor defect. -/
+theorem serreHenselTaylorQuadraticFactor_C
+    (p : ℕ) [Fact p.Prime] (c x h : SerrePadicInt p) :
+    serreHenselTaylorQuadraticFactor p (Polynomial.C c) x h := by
+  refine ⟨0, ?_⟩
+  simp [serreHenselTaylorDefect]
+
+/-- The polynomial `X` has no Taylor defect. -/
+theorem serreHenselTaylorQuadraticFactor_X
+    (p : ℕ) [Fact p.Prime] (x h : SerrePadicInt p) :
+    serreHenselTaylorQuadraticFactor p (Polynomial.X : Polynomial (SerrePadicInt p)) x h := by
+  refine ⟨0, ?_⟩
+  simp [serreHenselTaylorDefect]
+  ring
+
+/-- Taylor defects are additive in the polynomial variable. -/
+theorem serreHenselTaylorDefect_add
+    (p : ℕ) [Fact p.Prime]
+    (f g : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) :
+    serreHenselTaylorDefect p (f + g) x h =
+      serreHenselTaylorDefect p f x h + serreHenselTaylorDefect p g x h := by
+  unfold serreHenselTaylorDefect
+  simp [Polynomial.eval_add]
+  ring
+
+/-- The quadratic Taylor-factor predicate is closed under addition. -/
+theorem serreHenselTaylorQuadraticFactor_add
+    {p : ℕ} [Fact p.Prime]
+    {f g : Polynomial (SerrePadicInt p)} {x h : SerrePadicInt p}
+    (hf : serreHenselTaylorQuadraticFactor p f x h)
+    (hg : serreHenselTaylorQuadraticFactor p g x h) :
+    serreHenselTaylorQuadraticFactor p (f + g) x h := by
+  rcases hf with ⟨a, ha⟩
+  rcases hg with ⟨b, hb⟩
+  refine ⟨a + b, ?_⟩
+  calc
+    serreHenselTaylorDefect p (f + g) x h =
+        serreHenselTaylorDefect p f x h + serreHenselTaylorDefect p g x h := by
+      exact serreHenselTaylorDefect_add p f g x h
+    _ = h ^ 2 * a + h ^ 2 * b := by rw [ha, hb]
+    _ = h ^ 2 * (a + b) := by ring
+
+/-- Taylor defects are negated by negating the polynomial. -/
+theorem serreHenselTaylorDefect_neg
+    (p : ℕ) [Fact p.Prime]
+    (f : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) :
+    serreHenselTaylorDefect p (-f) x h = -serreHenselTaylorDefect p f x h := by
+  unfold serreHenselTaylorDefect
+  simp
+  ring
+
+/-- The quadratic Taylor-factor predicate is closed under negation. -/
+theorem serreHenselTaylorQuadraticFactor_neg
+    {p : ℕ} [Fact p.Prime]
+    {f : Polynomial (SerrePadicInt p)} {x h : SerrePadicInt p}
+    (hf : serreHenselTaylorQuadraticFactor p f x h) :
+    serreHenselTaylorQuadraticFactor p (-f) x h := by
+  rcases hf with ⟨a, ha⟩
+  refine ⟨-a, ?_⟩
+  calc
+    serreHenselTaylorDefect p (-f) x h = -serreHenselTaylorDefect p f x h := by
+      exact serreHenselTaylorDefect_neg p f x h
+    _ = -(h ^ 2 * a) := by rw [ha]
+    _ = h ^ 2 * (-a) := by ring
+
+/-- Taylor defects are subtractive in the polynomial variable. -/
+theorem serreHenselTaylorDefect_sub
+    (p : ℕ) [Fact p.Prime]
+    (f g : Polynomial (SerrePadicInt p)) (x h : SerrePadicInt p) :
+    serreHenselTaylorDefect p (f - g) x h =
+      serreHenselTaylorDefect p f x h - serreHenselTaylorDefect p g x h := by
+  unfold serreHenselTaylorDefect
+  simp [sub_eq_add_neg]
+  ring
+
+/-- The quadratic Taylor-factor predicate is closed under subtraction. -/
+theorem serreHenselTaylorQuadraticFactor_sub
+    {p : ℕ} [Fact p.Prime]
+    {f g : Polynomial (SerrePadicInt p)} {x h : SerrePadicInt p}
+    (hf : serreHenselTaylorQuadraticFactor p f x h)
+    (hg : serreHenselTaylorQuadraticFactor p g x h) :
+    serreHenselTaylorQuadraticFactor p (f - g) x h := by
+  simpa [sub_eq_add_neg] using
+    serreHenselTaylorQuadraticFactor_add (p := p) (x := x) (h := h) hf
+      (serreHenselTaylorQuadraticFactor_neg (p := p) (x := x) (h := h) hg)
+
 /-- Reassemble the linear Taylor part and the defect into the shifted evaluation. -/
 theorem serreHenselTaylor_linear_add_defect
     (p : ℕ) [Fact p.Prime]
