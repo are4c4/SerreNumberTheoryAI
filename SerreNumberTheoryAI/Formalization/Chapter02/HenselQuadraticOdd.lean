@@ -70,6 +70,41 @@ theorem serrePadicTuplePrimitive_firstProj_ne_zero
     (fun s => serrePadicIntProj p 0 (x s)) ≠ 0 :=
   (serrePadicTuplePrimitive_iff_firstProj_ne_zero p x).1 hprim
 
+/-- The first residue vector attached to a p-adic tuple. -/
+abbrev serreFirstResidueVector
+    {σ : Type*} (p : ℕ) [Fact p.Prime] (x : σ → SerrePadicInt p) :
+    σ → padicResidueRing p 0 :=
+  fun s => serrePadicIntProj p 0 (x s)
+
+/-- A primitive p-adic tuple has a nonzero first residue vector. -/
+theorem serreFirstResidueVector_ne_zero_of_primitive
+    {σ : Type*} {p : ℕ} [Fact p.Prime] {x : σ → SerrePadicInt p}
+    (hprim : serrePadicTuplePrimitive x) :
+    serreFirstResidueVector p x ≠ 0 := by
+  simpa [serreFirstResidueVector] using
+    (serrePadicTuplePrimitive_firstProj_ne_zero (p := p) hprim)
+
+/--
+A lightweight first-residue matrix-vector boundary.  This deliberately avoids
+using the field instance for `padicResidueRing p 0`; the next proof slice can
+connect this predicate to the generic field-level determinant lemma without
+retriggering the earlier elaboration timeout.
+-/
+def serreFirstResidueMatrixCoordinateWitness
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    (B : Matrix σ σ (padicResidueRing p 0)) (x : σ → SerrePadicInt p) : Prop :=
+  ∃ j : σ, B.mulVec (serreFirstResidueVector p x) j ≠ 0
+
+/-- Unpack the first-residue matrix-coordinate witness. -/
+theorem serreFirstResidueMatrixCoordinateWitness.exists_coordinate
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {B : Matrix σ σ (padicResidueRing p 0)} {x : σ → SerrePadicInt p}
+    (h : serreFirstResidueMatrixCoordinateWitness B x) :
+    ∃ j : σ, B.mulVec (serreFirstResidueVector p x) j ≠ 0 :=
+  h
+
 /--
 The current odd-prime quadratic boundary after the Hensel step: a primitive
 quadratic congruence should supply a coordinate where the symmetric Serre
