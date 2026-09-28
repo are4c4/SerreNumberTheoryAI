@@ -10,6 +10,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddSourceConsequences
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -195,15 +196,22 @@ source-shaped な多変数仮定から多変数結論を直接得る境界まで
 Hensel で得た exact value root を、必要な合同深さへ再包装するための小さな API として使う。
 :::
 
+:::lemma_ "henselquadraticgradientbridge"
+  (lean := "SerreNumberTheoryAI.serreQuadraticSymmetricGradientBridge_of_symmetric")
+  (uses := "henselvalueconclusionapi")
+座標表示の二次多項式を一項ずつ偏微分すると、選んだ座標に対して
+行側と列側の2つの和が現れる。係数行列が対称なら両者は一致するので、
+偏微分評価は Serre の展開形である 2 倍の和になる。
+Lean では一つの単項式の偏微分、有限和への展開、対称性による2つの和の
+同一視を別々の補題として証明している。
+:::
+
 :::theorem "henselquadraticvaluecorollary"
-  (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi")
-系 2・系 3 の Hensel に依存する部分を包装する。
-`f(x) ≡ a` に対して、奇素数の場合は選んだ偏微分が単元であれば
-mod `p` の解を `f(y)=a` へ持ち上げる。`p=2` の場合は
-mod `8` の解と偏微分付値 `1` から、mod `4` で合同な真の解を得る。
-また、Serre の記述に合わせて「そのような座標 `j` が存在する」形の
-existential-coordinate wrapper も用意している。さらに
-`Σ a_ij X_i X_j` の座標行列表現と評価式をLean補題として切り出している。
-偏微分公式、および行列式や原始ベクトルからそのような偏微分を取り出す線形代数部分は、
-別の境界として残す。
+  (lean := "SerreNumberTheoryAI.serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient")
+  (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge")
+二次形式に対する Hensel の値持ち上げを、偏微分付値を入力とする
+再利用可能な形で包装する。奇素数側では、行列式と原始性から
+必要な偏微分付値0を導き、Serre の系2まで閉じる。
+一方 `p=2` の mod `8`・偏微分付値1の値持ち上げ wrapper もここで共有し、
+系3の本体は次の独立workに残す。
 :::

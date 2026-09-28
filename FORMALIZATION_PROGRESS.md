@@ -87,7 +87,7 @@
 | §1.2 Proposition 3: metric / completeness / density | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §1.3 `Q_p` fraction field / Proposition 4 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-- #71 / PR #86: project-local inverse-limit `SerrePadicInt`, residue projections, integer embedding, compactness/continuityをend-to-end統合済み。
+- #71 / PR #86: project-local inverse-limit `SerrePadicInt`, residue projections、integer embedding、compactness/continuityをend-to-end統合済み。
 - #72 / PR #140: projection-kernel/quotient、unit criterion、unique `p^n * unit` decomposition、domain structure、project additive valuationをlatest mainへ統合済み。
 - #89 / PR #142: p-adic distance、有限剰余levelとの対応、inverse-limit topologyとの一致、compact→complete、整数像の稠密性を統合。main `f4f0710b262ef294919983f40141e788fc8280f7`、CI #374 green。
 - #96 / PR #143 は main `5b021cb96378c51709ba8dac52d0ff6784fbbb76` へ統合済み。Definition 2、unique `p^n u` decomposition、project valuation/metric、Proposition 4 local compactness/open integer subring/rational density、Blueprint/root linkageを完了し、final CI #428 green。
@@ -99,14 +99,14 @@
 | §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
 | §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
 - #100 / PR #145 は main `32c68109beac3f3b27504501c166022864c34c1c` へ統合済み。primitive finite-level compatibility、primitive inverse-limit recovery、homogeneous evaluation scaling、nonzero `Q_p` tuple normalization、Proposition 6 の three-condition equivalence、Blueprint/root integrationを完了し、final PR-head CI #462 green。
-- #102 / PR #146 は main `3695fa0bd60adb0f0f1cb0863d5b0a4269c60bd4` へ統合済み。source-shaped Hensel hypotheses/conclusions、Taylor remainder algebra、one-step Newton improvement、Cauchy iteration、limit exact-root bridge、coordinate specialization、多変数定理、Corollary 1 simple-root lifting、Hensel-facing value-lift packages、Blueprint/root integrationを完了し、final CI #590 green。
-- #104 is the current single-lane ACTIVE item. Preflight is complete and #102/#146 has now unblocked the Hensel value-lift/simple-root dependency. The next proof boundary is the odd-prime quadratic linear-algebra step: symmetric coordinate-matrix derivative identity, primitive residue vector, nonzero gradient coordinate from invertible determinant, then Hensel value-lift.
-- #105 はdyadic quadratic liftingのpreflight complete。#102 main `n,k` Hensel theoremは使用可能になったが、直列運用上は#104 completion後に再確認して着手する。#96は不要。
+- #102 / PR #146 は main `3695fa0bd60adb0f0f1cb0863d5b0a4269c60bd4` へ統合済み。Taylor one-step improvement、Cauchy iteration、exact root from finite residues、coordinate specialization、multivariate theorem、Corollary 1、quadratic value-lift wrappersを完了し、final PR-head CI #590 green。
+- #104 / PR #147 is the current single-lane ACTIVE item. The Lean proof is now source-shaped end-to-end: monomial differentiation and symmetry prove `formal derivative = 2 * Σ_i a_ij x_i`; a no-zero-divisors adjugate/determinant argument proves determinant nonzero + primitive first-residue vector gives a nonzero gradient coordinate; unit determinant over project `Z_p` projects to nonzero first-residue determinant; and `serreOddQuadratic_exists_solution_lift` closes Corollary 2 via the merged Hensel theorem. Blueprint/explanation are synchronized; only the final latest-head CI/self-review/merge gate remains.
+- #105 はdyadic quadratic liftingのpreflight complete。proofは#104 active完了後に開始する。#96は不要。
 
 ## Phase 8 — 第2章 §3 `Q_p` の乗法群と平方類
 
@@ -153,9 +153,5 @@
 ## Single-lane operation rules
 
 - active mathematical implementationは原則1 item / 1 PRだけ。
-- source解釈、mathlib調査、Lean、Blueprint、explanation、CI、self-review、mergeを同じレーンで完結する。
-- CI pendingを理由に別の実装workへ移らない。
-- 新しいstacked downstream proof実装は行わない。必要なupstreamをmainへmergeしてから進む。
-- 旧並列運用のbranch/PRはPARKEDとして保存できるが、再開時はlatest mainへ適合させて全checkを再実行する。
-- hard blockerで別itemへ移る場合は、現在のactive PRをpark/closeし、docs/ACTIVE_WORK.mdとdocs/WORK_QUEUE.mdを同期してから移る。
-- 全列completeはInterpretation / Explanation / Blueprint / Lean statement / Lean proof / CIが揃いmainへ統合された後に記録する。
+- 現在のactive itemは `docs/ACTIVE_WORK.md` とlive GitHub stateを優先する。
+- 既存PRのレビュー待ちやmerge待ちを理由に新しい数学sliceを開始しない。

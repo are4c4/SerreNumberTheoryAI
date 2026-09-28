@@ -1,70 +1,88 @@
 # Hensel next-step notes
 
-Current branch: `work/c2-s2-2-hensel-lifting-serial`.
+Current branch: `work/c2-s2-2-hensel-quadratic-odd-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, the one-variable source conclusion from the source hypothesis, the coordinate specialization for the multivariate reduction, the multivariate source conclusion from its source hypothesis, the `n = 1`, `k = 0` simple-root corollary packages, the Hensel-facing value-lift packages for Serre's quadratic corollaries, and the coordinate-matrix quadratic polynomial evaluation API are now in place.
+The core Chapter 2 §2.2 Hensel lifting theorem and Corollary 1 are already on
+main.  The current ACTIVE item is Corollary 2 for odd-prime nondegenerate
+quadratic forms (#104 / PR #147).
 
-## 25-minute continuation mode
+## Continuation rule
 
-For this Hensel branch, a single user instruction such as `続けて` or `形式化を続けて` should normally be treated as a 25-minute continuous work budget for the current ACTIVE item.  Do not stop after a short status check unless a stop condition below is hit.
+A user instruction such as `続けて` or `形式化を続けて` means: continue this
+single ACTIVE PR through the next safe Lean / Blueprint / CI / review step.
+Do not stop merely because a commit or CI run has started.  Stop only for a
+real proof/source/API uncertainty, a CI failure that first needs diagnosis, a
+GitHub state conflict, or a context/time boundary.
 
-Use the following mini-loop until the 25-minute budget is used or a stop condition is hit:
+## Current Lean result
 
-1. Check latest PR head and CI.
-2. If CI failed, read the failure and fix it before adding unrelated work.
-3. If CI is green or pending, continue within this branch by doing the next safe Hensel subtask.
-4. Do not stop merely because CI is pending; while waiting, do safe same-PR work.
-5. After each meaningful Lean/Blueprint/docs commit, update the next-step notes or PR body if the continuation point changed.
-6. Before responding, report latest head, CI state, and the next concrete proof slice.
+The two proof boundaries that previously remained explicit are now discharged.
 
-Safe tasks while CI is pending:
+### 1. Formal derivative bridge
 
-- self-review the last Lean statements for hidden assumption strengthening;
-- update Blueprint nodes to match Lean boundaries;
-- update progress/next docs;
-- prepare the next lemma statement, provided it does not assert an unproved mathematical fact as proved;
-- inspect existing project APIs needed for valuation/divisibility/cancellation;
-- update the PR body when the continuation point or run policy changed.
+`HenselQuadraticOddDerivativeBridge.lean` proves:
 
-Stop rather than continuing if:
+- `serreQuadraticTerm_pderiv_eval`: the evaluated partial derivative of one
+  quadratic monomial;
+- `serreQuadraticGradientCoordinate_eq_row_add_column`: the formal derivative
+  is the sum of the selected row and selected column contributions;
+- `serreQuadraticGradientCoordinate_eq_symmetricExpression`: symmetry turns
+  those two sums into `2 * ∑ i, A i j * x i`;
+- `serreQuadraticSymmetricGradientBridge_of_symmetric`: symmetry alone
+  supplies the previously explicit Hensel-facing bridge.
 
-- the Taylor or Newton-step statement is mathematically uncertain;
-- a CI failure needs log-based repair;
-- a GitHub write is rejected or branch state is inconsistent;
-- the next proof would require guessing source content not already checked;
-- context/time limits risk leaving unverified changes;
-- the user explicitly requests a shorter run or stop.
+### 2. Determinant / primitive-vector bridge
 
-## Immediate proof/status target
+`HenselQuadraticOdd.lean` now proves the determinant-to-coordinate step over
+a commutative ring with no zero divisors, using the adjugate/determinant matrix
+API rather than constructing a Field instance for the first residue ring.
+Consequently:
 
-The current source-shaped Hensel stack now includes the core boundary lemmas:
+- nonzero determinant + nonzero vector gives a nonzero matrix-vector
+  coordinate;
+- a primitive p-adic tuple gives a nonzero first-residue vector;
+- `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary_proved` discharges the
+  previously named first-residue boundary.
 
-- `serreHenselUnivariateStepConclusion_of_hypothesis`;
-- `serreHenselIterateSeq_cauchySeq`;
-- `serreHenselIterateSeq_exists_tendsto`;
-- `serreHenselIterateLimit_initial_congruent`;
-- `serreHenselIterateLimit_is_root`;
-- `serreHenselUnivariateConclusion_of_hypothesis`;
-- `serreHenselCoordinateSpecialization`;
-- `serreHenselCoordinateSpecialization_eval`;
-- `serreHenselCoordinateSpecialization_derivative_eval`;
-- `serreHenselMultivariateConclusion_of_hypothesis`;
-- `serreHenselUnivariateSimpleRootConclusion_of_hypothesis`;
-- `serreHenselMultivariateSimpleRootConclusion_of_hypothesis`;
-- `serreHenselValueLift_mod_p_of_simple_derivative`;
-- `serreHenselValueLift_mod_p_of_exists_simple_derivative`;
-- `serreHenselValueLift_mod_eight_of_derivative_valuation_one`;
-- `serreHenselValueLift_mod_eight_of_exists_derivative_valuation_one`;
-- `serreQuadraticPolynomial_eval`.
+This route avoids the earlier deterministic `whnf` timeout and residue-field
+typeclass mismatch.
 
-The next mathematical work is the determinant/primitive-vector side of Serre's quadratic corollaries:
+### 3. Coefficient determinant to first residue
 
-- use `serreQuadraticPolynomial` as the project representation of `Σ a_ij X_i X_j`;
-- identify a determinant/invertibility API for the coefficient matrix over the first residue field;
-- formalize the partial-derivative formula and then prove, for odd `p`, that a primitive solution and an invertible coefficient matrix force some partial derivative to have valuation `0`;
-- prove, for `p = 2`, the corresponding derivative-valuation-one boundary from the mod `8`/mod `4` assumptions;
-- then connect those derivative-existence lemmas to the existential-coordinate value-lift theorems above.
+`HenselQuadraticOddResidue.lean` identifies the determinant of the
+first-residue gradient matrix with the first projection of the determinant of
+the p-adic coefficient matrix.  Therefore a unit p-adic determinant has
+nonzero first-residue determinant.
 
-This is a genuine new linear-algebra boundary.  Stop before implementing it if the determinant/invertibility API is unclear or if the source statement would need to be guessed.
+### 4. Source-shaped Corollary 2
 
-Avoid packaged Hensel theorems and avoid adding non-source assumptions to the final statements.
+`HenselQuadraticOddSourceConsequences.lean` exposes:
+
+- `serreHenselValueLift_mod_p_of_odd_quadratic`;
+- `serreOddQuadratic_exists_solution_lift`.
+
+Their hypotheses are the source-shaped data for Corollary 2: odd prime,
+symmetric coefficient matrix, unit determinant, primitive mod-`p` starting
+tuple, and the value congruence modulo `p`.  The conclusion is an exact
+`Z_p` value solution, with the constructed lift also congruent to the
+starting tuple modulo `p`.
+
+## Verification state
+
+The derivative bridge and no-zero-divisors determinant bridge were already
+accepted by PR-head Lean/CI before the final source-level assembly.  The current
+head should be checked for the final policy / Lean / Verso Blueprint CI after
+the Blueprint and progress synchronization commits in this run.
+
+## Remaining work before merge
+
+1. finish the latest PR-head CI;
+2. synchronize `FORMALIZATION_PROGRESS.md`, `docs/WORK_QUEUE.md`, and
+   `docs/ACTIVE_WORK.md` with the completed Corollary 2 proof;
+3. self-review statement integrity, dependency integrity, source/copyright
+   boundary, and near-target mathlib usage;
+4. update the PR body with the final proof strategy and CI;
+5. merge PR #147 when green and blocker-free;
+6. after merge, clear ACTIVE state on main before beginning Corollary 3.
+
+Do not begin the dyadic item (#105) while PR #147 remains active.

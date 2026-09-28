@@ -28,6 +28,11 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOdd
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddResidue
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddResidueExtractors
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddDerivativeBridge
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddSourceConsequences
 
 /-!
 # Formalization root
