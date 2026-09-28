@@ -297,6 +297,109 @@ theorem serreHenselValueLift_mod_eight_of_exists_derivative_valuation_one
   exact serreHenselValueLift_mod_eight_of_derivative_valuation_one
     (f := f) (a := a) (x := x) (j := j) hvalue hj
 
+/-- A dyadic quadratic gradient coordinate with exact valuation `1`. -/
+def serreQuadraticTwoGradientWitness
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    (A : σ → σ → SerrePadicInt 2) (x : σ → SerrePadicInt 2) : Prop :=
+  ∃ j : σ,
+    serrePadicIntAddValuation 2
+      (serreQuadraticSymmetricGradientCoordinate A x j) = (1 : ℕ∞)
+
+/--
+Dyadic Hensel value lifting for the coordinate quadratic polynomial, stated with
+its formal gradient coordinate.
+-/
+theorem serreHenselValueLift_mod_eight_of_quadratic_gradient
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2} {j : σ}
+    (hvalue :
+      padicDivisibilityDepth 2 3
+        (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a))
+    (hgrad :
+      serrePadicIntAddValuation 2
+        (serreQuadraticGradientCoordinate A x j) = (1 : ℕ∞)) :
+    serreHenselValueLiftConclusion 2 (serreQuadraticPolynomial (p := 2) A) a x 2 := by
+  exact serreHenselValueLift_mod_eight_of_derivative_valuation_one
+    (f := serreQuadraticPolynomial (p := 2) A) (a := a) (x := x) (j := j)
+    hvalue (by simpa [serreQuadraticGradientCoordinate] using hgrad)
+
+/-- The same dyadic value-lift package using the symmetric Hensel-facing coordinate. -/
+theorem serreHenselValueLift_mod_eight_of_symmetric_quadratic_gradient
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2} {j : σ}
+    (_hA : serreQuadraticMatrixSymmetric A)
+    (hvalue :
+      padicDivisibilityDepth 2 3
+        (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a))
+    (hgrad :
+      serrePadicIntAddValuation 2
+        (serreQuadraticSymmetricGradientCoordinate A x j) = (1 : ℕ∞)) :
+    serreHenselValueLiftConclusion 2 (serreQuadraticPolynomial (p := 2) A) a x 2 := by
+  exact serreHenselValueLift_mod_eight_of_derivative_valuation_one
+    (f := serreQuadraticPolynomial (p := 2) A) (a := a) (x := x) (j := j)
+    hvalue (by
+      simpa [serreQuadraticSymmetricGradientCoordinate, serreQuadraticGradientCoordinate] using hgrad)
+
+/--
+Dyadic Hensel-facing quadratic package: symmetry, value congruence modulo `8`,
+and a gradient coordinate of valuation exactly `1`.
+-/
+def serreQuadraticTwoHenselHypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    (A : σ → σ → SerrePadicInt 2) (a : SerrePadicInt 2)
+    (x : σ → SerrePadicInt 2) : Prop :=
+  serreQuadraticMatrixSymmetric A ∧
+    padicDivisibilityDepth 2 3
+      (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a) ∧
+      serreQuadraticTwoGradientWitness A x
+
+/-- The dyadic quadratic Hensel package gives the value-lift conclusion. -/
+theorem serreHenselValueLift_mod_eight_of_quadratic_two_hypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoHenselHypothesis A a x) :
+    serreHenselValueLiftConclusion 2 (serreQuadraticPolynomial (p := 2) A) a x 2 := by
+  rcases h with ⟨hA, hvalue, hgrad⟩
+  rcases hgrad with ⟨j, hj⟩
+  exact serreHenselValueLift_mod_eight_of_symmetric_quadratic_gradient
+    (A := A) (a := a) (x := x) (j := j) hA hvalue hj
+
+/-- Extract the exact value root from the dyadic quadratic Hensel package. -/
+theorem serreQuadraticTwoHenselHypothesis.exists_value_root
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt 2,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := 2) A) = a := by
+  exact serreHenselValueLiftConclusion.exists_value_root
+    (serreHenselValueLift_mod_eight_of_quadratic_two_hypothesis h)
+
+/-- Extract the congruent lift modulo `4` from the dyadic quadratic Hensel package. -/
+theorem serreQuadraticTwoHenselHypothesis.exists_congruent_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt 2,
+      ∀ i, serrePadicCongruent 2 2 (x i) (y i) := by
+  exact serreHenselValueLiftConclusion.exists_congruent_lift
+    (serreHenselValueLift_mod_eight_of_quadratic_two_hypothesis h)
+
+/-- Extract one lift with both the exact value equation and the modulo-`4` congruence. -/
+theorem serreQuadraticTwoHenselHypothesis.exists_solution_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt 2,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := 2) A) = a ∧
+        ∀ i, serrePadicCongruent 2 2 (x i) (y i) :=
+  serreHenselValueLift_mod_eight_of_quadratic_two_hypothesis h
+
 end HenselQuadraticCorollary
 
 end
