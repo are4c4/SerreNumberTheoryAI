@@ -51,7 +51,7 @@ Stop rather than continuing if:
 
 ## Current Lean boundary
 
-The branch currently separates five layers:
+The branch currently separates six layers:
 
 - `serreQuadraticPolynomial` and `serreQuadraticPolynomial_eval` represent and
   evaluate the coordinate quadratic form `Σᵢⱼ aᵢⱼ Xᵢ Xⱼ`.
@@ -68,11 +68,16 @@ The branch currently separates five layers:
 - The residue linear-algebra side has generic field-level nonvanishing lemmas:
   an invertible matrix, or a matrix with nonzero determinant, sends a nonzero
   vector to a vector with some nonzero coordinate.
-- The first-residue side now names the lightweight project-specific API:
+- The first-residue side names the lightweight project-specific API:
   `serreFirstResidueVector`,
   `serreFirstResidueVector_ne_zero_of_primitive`,
   `serreFirstResidueMatrixCoordinateWitness`, and
   `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary`.
+- `HenselQuadraticOddResidue.lean` now adds the first-residue gradient bridge:
+  nonzero first residue implies `serrePadicIntAddValuation = 0`, the expanded
+  symmetric gradient projects to the first-residue gradient matrix-vector
+  coordinate with the explicit source factor `2`, and a matrix-shaped
+  first-residue gradient witness yields the valuation-zero expression witness.
 
 ## Immediate proof/status target
 
@@ -84,14 +89,24 @@ boundary is now named explicitly as
 `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary` rather than hidden in a
 slow proof.
 
+The first-residue valuation bridge is now in place:
+
+- `serrePadicIntAddValuation_eq_zero_of_firstResidue_ne_zero`;
+- `serreFirstResidueGradientMatrix` and
+  `serreFirstResidueGradientMatrix_mulVec`;
+- `serreQuadraticSymmetricGradientExpression_firstResidue`;
+- `serreQuadraticOddFirstResidueExpressionWitness` and
+  `serreQuadraticOddFirstResidueGradientWitness`;
+- `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`.
+
 Next safe slices:
 
+- prove, for odd `p`, that the first-residue image of `2` is nonzero/unit, so a
+  nonzero matrix-vector coordinate yields the matrix-shaped gradient witness;
 - identify a lighter representation or existing API for the first residue ring
   before reintroducing the determinant-to-coordinate proof;
 - keep the determinant/nonzero-vector bridge as a separate lemma rather than
   expanding it inside the odd-quadratic Hensel package;
-- convert nonzero first residue into project-local valuation `0` for the
-  symmetric gradient coordinate once the residue witness is available;
 - formalize the bridge between the formal partial derivative and the expanded
   symmetric expression `2 * Σᵢ aᵢⱼ xᵢ`;
 - connect that witness to `serreQuadraticOddHenselHypothesis` and the existing
