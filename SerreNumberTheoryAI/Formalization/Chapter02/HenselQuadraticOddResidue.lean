@@ -122,8 +122,9 @@ theorem serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness
     serreQuadraticOddFirstResidueGradientWitness A x := by
   rcases h with ⟨j, hj⟩
   refine ⟨j, ?_⟩
+  haveI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
   haveI : NoZeroDivisors (padicResidueRing p 0) := by
-    simpa [padicResidueRing] using (inferInstance : NoZeroDivisors (ZMod p))
+    simpa [padicResidueRing] using (inferInstance : NoZeroDivisors (ZMod (p ^ 1)))
   exact mul_ne_zero (serrePadicIntProj_two_ne_zero_of_ne_two (p := p) hp2) hj
 
 /-- The matrix-shaped first-residue witness gives the expression nonvanishing witness. -/
