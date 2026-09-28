@@ -196,7 +196,7 @@ Hensel で得た exact value root を、必要な合同深さへ再包装する�
 :::
 
 :::lemma_ "henselquadraticgradientbridge"
-  (lean := "SerreNumberTheoryAI.serreQuadraticPolynomial_pderiv_eval")
+  (lean := "SerreNumberTheoryAI.serreQuadraticPolynomial_pderiv_eval_of_symmetric")
   (uses := "henselvalueconclusionapi")
 座標行列で書いた二次多項式 `Σ a_ij X_i X_j` について、偏微分を評価すると
 `Σ_i (a_{ji}+a_{ij})x_i` が得られる。行列が対称ならこれは
@@ -206,6 +206,7 @@ Hensel で得た exact value root を、必要な合同深さへ再包装する�
 :::
 
 :::theorem "henselquadraticvaluecorollary"
+  (lean := "SerreNumberTheoryAI.serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient")
   (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge")
 系 2・系 3 の Hensel に依存する部分を包装する。
 `f(x) ≡ a` に対して、奇素数の場合は選んだ偏微分が単元であれば
