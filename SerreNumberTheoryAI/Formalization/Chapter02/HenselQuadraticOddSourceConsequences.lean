@@ -5,10 +5,10 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddDerivativeB
 # Source-level consequences for odd-prime quadratic Hensel lifting
 
 This file exposes direct source-shaped corollaries for the odd-prime quadratic
-pipeline.  The lower-level files keep the determinant/nonzero-coordinate and
-formal-derivative bridges explicit; once those assumptions are supplied, these
-lemmas assemble the corresponding Hensel package and immediately return the
-value-lift conclusion or a single exact/congruent lift.
+pipeline.  Lower-level files keep the polynomial and residue-linear-algebra
+steps visible, while the final source-level theorems derive the formal gradient
+bridge from symmetry and the first-residue determinant condition from
+invertibility of the p-adic coefficient determinant.
 -/
 
 namespace SerreNumberTheoryAI
@@ -123,6 +123,49 @@ theorem serreOddQuadratic_exists_solution_lift_of_detBoundary
         ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
   exact (serreQuadraticOddDetBoundaryHenselHypothesis_of_assumptions
     hp2 hA hprim hvalue hdet).exists_solution_lift
+
+/--
+Serre's odd-prime quadratic corollary in source-shaped form: an odd prime,
+symmetric coefficient matrix with unit determinant, a primitive solution modulo
+\`p\`, and the value congruence give the Hensel value-lift conclusion.
+-/
+theorem serreHenselValueLift_mod_p_of_odd_quadratic
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (hA : serreQuadraticMatrixSymmetric A)
+    (hdet : IsUnit (Matrix.det A))
+    (hprim : serrePadicTuplePrimitive x)
+    (hvalue : padicDivisibilityDepth p 1
+      (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a)) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary
+    hp2 hA hprim hvalue
+      (serreFirstResidueGradientMatrix_det_ne_zero_of_isUnit_det hdet)
+
+/--
+Source-level exact/congruent lift for Serre's odd-prime quadratic corollary.
+-/
+theorem serreOddQuadratic_exists_solution_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (hA : serreQuadraticMatrixSymmetric A)
+    (hdet : IsUnit (Matrix.det A))
+    (hprim : serrePadicTuplePrimitive x)
+    (hvalue : padicDivisibilityDepth p 1
+      (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a)) :
+    ∃ y : σ → SerrePadicInt p,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := p) A) = a ∧
+        ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
+  exact serreOddQuadratic_exists_solution_lift_of_detBoundary
+    hp2 hA hprim hvalue
+      (serreFirstResidueGradientMatrix_det_ne_zero_of_isUnit_det hdet)
+
 
 end HenselQuadraticOddSourceConsequences
 
