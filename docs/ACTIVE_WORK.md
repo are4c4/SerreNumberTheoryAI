@@ -50,14 +50,15 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 1. confirm PR #147 latest head / CI;
 2. keep the Hensel-facing value-lift interface from #146 as the upstream boundary;
-3. formalize the coordinate quadratic polynomial derivative identity;
-4. rewrite the derivative under symmetry to Serre's `2 * Σ_i a_ij x_i` gradient expression;
-5. package the Hensel lift from a gradient coordinate of valuation zero;
-6. audit the residue/matrix API for the determinant + primitive-vector step;
-7. next safe mathematical boundary after CI: express residue-level primitive nonzero vector and matrix-vector nonvanishing without adding unverified determinant assumptions;
-8. add independent Blueprint explanation / Lean linkage and root integration;
-9. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
-10. self-review and merge before selecting the next item.
+3. keep the formal-derivative / expanded-expression equality visible as `serreQuadraticSymmetricGradientBridge` until the polynomial-algebra proof is completed;
+4. keep the determinant / primitive-vector input visible as `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary` until the first-residue field API is light enough to specialize the generic matrix lemma safely;
+5. continue adding small, verified bridge lemmas that thread first-residue witnesses to expression witnesses, Hensel-facing gradient witnesses, Hensel hypotheses, and exact-root / congruent-lift conclusions;
+6. audit the residue/matrix API for a lightweight `padicResidueRing p 0` or `ZMod p` route that avoids the previous `whnf` timeout and typeclass mismatch;
+7. after the API route is clear, prove determinant nonzero + primitive first-residue vector gives `serreFirstResidueMatrixCoordinateWitness`;
+8. separately prove the formal derivative equals `2 * Σ_i a_ij x_i` for symmetric coordinate matrices;
+9. add independent Blueprint explanation / Lean linkage and root integration;
+10. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
+11. self-review and merge before selecting the next item.
 
 ## Parked legacy implementation
 
