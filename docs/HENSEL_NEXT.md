@@ -72,8 +72,8 @@ hypotheses silently.
 
 - PR #148 head `9afafcef1d6adc36be8eae00583fd57d430baea7`: CI #706 green
   for policy / Lean / Verso.
-- Later commits add `HenselQuadraticTwo.lean`, import it from the formalization
-  root, and synchronize the Blueprint.  Check the latest PR-head CI before
-  moving to the next source bridge.
+- PR #148 head `107ce2912344d6dbaa1db1aeedded72b287c8f06`: CI #710 green
+  for policy / Lean / Verso.  This includes `HenselQuadraticTwo.lean`, the
+  formalization-root import, the dyadic Blueprint node, and this notes sync.
 
 Do not begin §3 or another work item while PR #148 remains active.
