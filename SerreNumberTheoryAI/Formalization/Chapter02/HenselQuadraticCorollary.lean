@@ -94,6 +94,32 @@ theorem serreQuadraticPolynomial_eval
   classical
   simp [serreQuadraticPolynomial, mul_assoc]
 
+/-- Symmetry of the coordinate matrix of Serre's quadratic form. -/
+def serreQuadraticMatrixSymmetric
+    {σ : Type*} {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) : Prop :=
+  ∀ i j : σ, A i j = A j i
+
+/--
+The formal gradient coordinate for `∑ᵢⱼ aᵢⱼ Xᵢ Xⱼ`: before imposing symmetry,
+the `j`-th partial derivative has coefficients `a_{j i} + a_{i j}`.
+-/
+def serreQuadraticGradientCoordinate
+    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
+    SerrePadicInt p :=
+  ∑ i : σ, (A j i + A i j) * x i
+
+/--
+The symmetric-form version of the same gradient coordinate, written in the
+source shape `2 * ∑ᵢ aᵢⱼ xᵢ`.
+-/
+def serreQuadraticSymmetricGradientCoordinate
+    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
+    SerrePadicInt p :=
+  (2 : SerrePadicInt p) * ∑ i : σ, A i j * x i
+
 /--
 The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
 `f(x) ≡ a (mod p)` and some selected derivative is a unit, then the congruence
