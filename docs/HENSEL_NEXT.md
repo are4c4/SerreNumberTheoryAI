@@ -2,7 +2,7 @@
 
 Current branch: `work/c2-s2-2-hensel-lifting-serial`.
 
-The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, the one-variable source conclusion from the source hypothesis, the coordinate specialization for the multivariate reduction, the multivariate source conclusion from its source hypothesis, and the `n = 1`, `k = 0` simple-root corollary packages are now in place.
+The source predicates, source-aligned exact-root conclusions, congruence API, concrete one-step Hensel theorem, abstract multivariate-to-univariate transfer, concrete polynomial Taylor-defect algebra, Taylor-defect divisibility bookkeeping, derivative-valuation preservation under Hensel corrections, derivative `p^k * unit` factorization, existence of a linear-cancelling correction, finite-tail congruence API, congruence-depth Cauchy proof, metric-radius Cauchy proof, the `CauchySeq` bridge, completeness-based limit existence, retained initial congruence for the limit, finite-residue polynomial evaluation compatibility, exact-root proof for the selected limit, the one-variable source conclusion from the source hypothesis, the coordinate specialization for the multivariate reduction, the multivariate source conclusion from its source hypothesis, the `n = 1`, `k = 0` simple-root corollary packages, and the Hensel-facing value-lift packages for Serre's quadratic corollaries are now in place.
 
 ## 25-minute continuation mode
 
@@ -50,12 +50,17 @@ The current source-shaped Hensel stack now includes the core boundary lemmas:
 - `serreHenselCoordinateSpecialization_derivative_eval`;
 - `serreHenselMultivariateConclusion_of_hypothesis`;
 - `serreHenselUnivariateSimpleRootConclusion_of_hypothesis`;
-- `serreHenselMultivariateSimpleRootConclusion_of_hypothesis`.
+- `serreHenselMultivariateSimpleRootConclusion_of_hypothesis`;
+- `serreHenselValueLift_mod_p_of_simple_derivative`;
+- `serreHenselValueLift_mod_eight_of_derivative_valuation_one`.
 
-Next safe work is not to invent a new Hensel statement, but to finish synchronization around the now-proved boundary:
+The next mathematical work is the determinant/primitive-vector side of Serre's quadratic corollaries:
 
-- update Blueprint/progress/PR body to mention the concrete coordinate specialization and simple-root corollary modules;
-- self-review the final statements against Serre §2.2 so derivative valuations remain iteration invariants rather than final-conclusion fields;
-- after CI is green on the latest head, decide whether to mark the PR ready/merge or continue only after checking the next source boundary.
+- define or identify the project API for symmetric coefficient matrices and the quadratic polynomial `Σ a_ij X_i X_j`;
+- prove, for odd `p`, that a primitive solution and an invertible coefficient matrix force some partial derivative to have valuation `0`;
+- prove, for `p = 2`, the corresponding derivative-valuation-one boundary from the mod `8`/mod `4` assumptions;
+- then connect those derivative-existence lemmas to the value-lift theorems above.
+
+This is a genuine new linear-algebra boundary.  Stop before implementing it if the available matrix/quadratic-form API is unclear or if the source statement would need to be guessed.
 
 Avoid packaged Hensel theorems and avoid adding non-source assumptions to the final statements.
