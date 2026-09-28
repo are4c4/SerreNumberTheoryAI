@@ -1,4 +1,5 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddDerivativeBridge
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddResidue
 
 /-!
 # Dyadic quadratic Hensel packages
@@ -13,6 +14,45 @@ namespace SerreNumberTheoryAI
 noncomputable section
 
 section HenselQuadraticTwo
+
+/-- The element `2 ∈ Z₂` has additive valuation exactly `1`. -/
+theorem serrePadicIntAddValuation_two :
+    serrePadicIntAddValuation 2 (2 : SerrePadicInt 2) = (1 : ℕ∞) := by
+  change emultiplicity (2 : SerrePadicInt 2) (2 : SerrePadicInt 2) = (1 : ℕ∞)
+  exact emultiplicity_eq_of_dvd_of_not_dvd
+    (by simpa using (dvd_refl (2 : SerrePadicInt 2)))
+    (serrePadicInt_pow_succ_not_dvd_of_eq_pow_mul_isUnit
+      (p := 2) (n := 1) (x := (2 : SerrePadicInt 2)) (u := 1)
+      isUnit_one (by simp))
+
+/--
+A dyadic inner-gradient coordinate whose first residue is nonzero.  Since the
+expanded symmetric gradient is `2` times this inner sum, this is the residue
+input that should produce valuation `1`.
+-/
+def serreQuadraticTwoInnerSumWitness
+    {σ : Type*} [Fintype σ]
+    (A : σ → σ → SerrePadicInt 2) (x : σ → SerrePadicInt 2) : Prop :=
+  ∃ j : σ,
+    serrePadicIntProj 2 0 (∑ i : σ, A i j * x i) ≠ 0
+
+/--
+A nonzero first residue of the inner sum makes the expanded dyadic gradient have
+valuation exactly `1`, because the source gradient is `2` times that sum.
+-/
+theorem serreQuadraticTwoExpressionWitness_of_innerSumWitness
+    {σ : Type*} [Fintype σ]
+    {A : σ → σ → SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoInnerSumWitness A x) :
+    serreQuadraticTwoExpressionWitness A x := by
+  rcases h with ⟨j, hj⟩
+  refine ⟨j, ?_⟩
+  rw [serreQuadraticSymmetricGradientExpression,
+    serrePadicIntAddValuation_mul]
+  have hinner :
+      serrePadicIntAddValuation 2 (∑ i : σ, A i j * x i) = (0 : ℕ∞) :=
+    serrePadicIntAddValuation_eq_zero_of_firstResidue_ne_zero hj
+  simp [serrePadicIntAddValuation_two, hinner]
 
 /--
 The source-shaped dyadic gradient witness: some expanded symmetric gradient
@@ -53,6 +93,29 @@ def serreQuadraticTwoExpressionHenselHypothesis
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a) ∧
       serreQuadraticTwoExpressionWitness A x
 
+/--
+Dyadic Hensel package in which the gradient condition is supplied by first
+residue nonvanishing of the inner sum `Σᵢ aᵢⱼxᵢ`.
+-/
+def serreQuadraticTwoInnerSumHenselHypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    (A : σ → σ → SerrePadicInt 2) (a : SerrePadicInt 2)
+    (x : σ → SerrePadicInt 2) : Prop :=
+  serreQuadraticMatrixSymmetric A ∧
+    padicDivisibilityDepth 2 3
+      (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a) ∧
+      serreQuadraticTwoInnerSumWitness A x
+
+/-- Convert the inner-sum residue package to the expanded-gradient package. -/
+theorem serreQuadraticTwoExpressionHenselHypothesis_of_innerSum
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoInnerSumHenselHypothesis A a x) :
+    serreQuadraticTwoExpressionHenselHypothesis A a x := by
+  rcases h with ⟨hA, hvalue, hinner⟩
+  exact ⟨hA, hvalue, serreQuadraticTwoExpressionWitness_of_innerSumWitness hinner⟩
+
 /-- Convert the source-shaped expanded-gradient package to the Hensel-facing package. -/
 theorem serreQuadraticTwoHenselHypothesis_of_expression
     {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
@@ -72,6 +135,16 @@ theorem serreHenselValueLift_mod_eight_of_quadratic_two_expression_hypothesis
     serreHenselValueLiftConclusion 2 (serreQuadraticPolynomial (p := 2) A) a x 2 := by
   exact serreHenselValueLift_mod_eight_of_quadratic_two_hypothesis
     (serreQuadraticTwoHenselHypothesis_of_expression h)
+
+/-- The inner-sum residue dyadic package gives the Hensel value-lift conclusion. -/
+theorem serreHenselValueLift_mod_eight_of_quadratic_two_innerSum_hypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoInnerSumHenselHypothesis A a x) :
+    serreHenselValueLiftConclusion 2 (serreQuadraticPolynomial (p := 2) A) a x 2 := by
+  exact serreHenselValueLift_mod_eight_of_quadratic_two_expression_hypothesis
+    (serreQuadraticTwoExpressionHenselHypothesis_of_innerSum h)
 
 /-- Extract the exact value root from the expanded-gradient dyadic package. -/
 theorem serreQuadraticTwoExpressionHenselHypothesis.exists_value_root
@@ -105,6 +178,17 @@ theorem serreQuadraticTwoExpressionHenselHypothesis.exists_solution_lift
       MvPolynomial.eval y (serreQuadraticPolynomial (p := 2) A) = a ∧
         ∀ i, serrePadicCongruent 2 2 (x i) (y i) :=
   serreHenselValueLift_mod_eight_of_quadratic_two_expression_hypothesis h
+
+/-- Extract one lift with both exact value and modulo-`4` congruence from the inner-sum package. -/
+theorem serreQuadraticTwoInnerSumHenselHypothesis.exists_solution_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoInnerSumHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt 2,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := 2) A) = a ∧
+        ∀ i, serrePadicCongruent 2 2 (x i) (y i) :=
+  serreHenselValueLift_mod_eight_of_quadratic_two_innerSum_hypothesis h
 
 end HenselQuadraticTwo
 
