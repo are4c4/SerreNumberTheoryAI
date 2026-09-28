@@ -48,19 +48,18 @@ theorem serreFirstResidueGradientMatrix_mulVec
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
     (serreFirstResidueGradientMatrix A).mulVec (serreFirstResidueVector p x) j =
       serrePadicIntProj p 0 (∑ i : σ, A i j * x i) := by
-  simp [Matrix.mulVec, serreFirstResidueGradientMatrix, serreFirstResidueVector,
-    map_sum, map_mul]
+  simp [Matrix.mulVec, Matrix.dotProduct, serreFirstResidueGradientMatrix,
+    serreFirstResidueVector, map_sum, map_mul]
 
 /-- First residue of Serre's expanded symmetric gradient expression. -/
 theorem serreQuadraticSymmetricGradientExpression_firstResidue
     {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
     serrePadicIntProj p 0 (serreQuadraticSymmetricGradientExpression A x j) =
-      (2 : padicResidueRing p 0) *
+      serrePadicIntProj p 0 (2 : SerrePadicInt p) *
         (serreFirstResidueGradientMatrix A).mulVec (serreFirstResidueVector p x) j := by
   rw [serreQuadraticSymmetricGradientExpression, map_mul,
     ← serreFirstResidueGradientMatrix_mulVec (A := A) (x := x) (j := j)]
-  simp
 
 /--
 A first-residue nonvanishing witness for the expanded symmetric gradient itself.
@@ -80,7 +79,7 @@ def serreQuadraticOddFirstResidueGradientWitness
     {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) : Prop :=
   ∃ j : σ,
-    (2 : padicResidueRing p 0) *
+    serrePadicIntProj p 0 (2 : SerrePadicInt p) *
       (serreFirstResidueGradientMatrix A).mulVec (serreFirstResidueVector p x) j ≠ 0
 
 /-- The matrix-shaped first-residue witness gives the expression nonvanishing witness. -/
