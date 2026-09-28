@@ -27,6 +27,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimit
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
 
 /-!
 # Formalization root
