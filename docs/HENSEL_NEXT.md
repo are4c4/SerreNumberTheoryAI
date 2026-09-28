@@ -52,14 +52,16 @@ The current source-shaped Hensel stack now includes the core boundary lemmas:
 - `serreHenselUnivariateSimpleRootConclusion_of_hypothesis`;
 - `serreHenselMultivariateSimpleRootConclusion_of_hypothesis`;
 - `serreHenselValueLift_mod_p_of_simple_derivative`;
-- `serreHenselValueLift_mod_eight_of_derivative_valuation_one`.
+- `serreHenselValueLift_mod_p_of_exists_simple_derivative`;
+- `serreHenselValueLift_mod_eight_of_derivative_valuation_one`;
+- `serreHenselValueLift_mod_eight_of_exists_derivative_valuation_one`.
 
 The next mathematical work is the determinant/primitive-vector side of Serre's quadratic corollaries:
 
 - define or identify the project API for symmetric coefficient matrices and the quadratic polynomial `Σ a_ij X_i X_j`;
 - prove, for odd `p`, that a primitive solution and an invertible coefficient matrix force some partial derivative to have valuation `0`;
 - prove, for `p = 2`, the corresponding derivative-valuation-one boundary from the mod `8`/mod `4` assumptions;
-- then connect those derivative-existence lemmas to the value-lift theorems above.
+- then connect those derivative-existence lemmas to the existential-coordinate value-lift theorems above.
 
 This is a genuine new linear-algebra boundary.  Stop before implementing it if the available matrix/quadratic-form API is unclear or if the source statement would need to be guessed.
 
