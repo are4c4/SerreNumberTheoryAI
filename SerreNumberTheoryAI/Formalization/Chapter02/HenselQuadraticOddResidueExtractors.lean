@@ -46,41 +46,6 @@ theorem serreQuadraticOddExpressionWitness_of_detBoundary
     (hboundary hdet hprim)
 
 /--
-Direct specialization of determinant nonvanishing to the first-residue
-matrix-coordinate witness.  The finite-field instance is used only to turn the
-nonzero determinant into a unit; the matrix injectivity step then works from the
-resulting matrix unit.
--/
-set_option maxHeartbeats 800000
-theorem serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero
-    {σ : Type*} [Fintype σ] [DecidableEq σ]
-    {p : ℕ} [Fact p.Prime]
-    {B : Matrix σ σ (padicResidueRing p 0)} {x : σ → SerrePadicInt p}
-    (hdet : B.det ≠ 0) (hprim : serrePadicTuplePrimitive x) :
-    serreFirstResidueMatrixCoordinateWitness B x := by
-  change ∃ j : σ, B.mulVec (serreFirstResidueVector p x) j ≠ 0
-  have hx : serreFirstResidueVector p x ≠ 0 :=
-    serreFirstResidueVector_ne_zero_of_primitive (p := p) hprim
-  have hdetUnit : IsUnit B.det := by
-    letI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
-    letI : Field (padicResidueRing p 0) := by
-      simpa [padicResidueRing] using
-        (inferInstance : Field (ZMod (p ^ 1)))
-    exact (isUnit_iff_ne_zero).2 hdet
-  have hB : IsUnit B := (Matrix.isUnit_iff_isUnit_det B).2 hdetUnit
-  by_contra hnone
-  apply hx
-  have hzero : B.mulVec (serreFirstResidueVector p x) = 0 := by
-    funext j
-    by_contra hj
-    exact hnone ⟨j, hj⟩
-  have hzero' :
-      B.mulVec (serreFirstResidueVector p x) =
-        B.mulVec (0 : σ → padicResidueRing p 0) := by
-    simpa using hzero
-  exact (Matrix.mulVec_injective_iff_isUnit (A := B)).2 hB hzero'
-
-/--
 The matrix-coordinate Hensel package directly gives the expanded-expression
 Hensel package.
 -/
