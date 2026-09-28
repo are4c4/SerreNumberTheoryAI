@@ -156,6 +156,43 @@ theorem serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness
   serreQuadraticOddExpressionWitness_of_firstResidueExpressionWitness
     (serreQuadraticOddFirstResidueExpressionWitness_of_gradientWitness h)
 
+
+/--
+The determinant of the first-residue gradient matrix is the first projection of
+the determinant of the p-adic coefficient matrix.  The transpose appears
+because the gradient matrix stores the column \`i ↦ aᵢⱼ\` as its \`j\`-th row.
+-/
+theorem serreFirstResidueGradientMatrix_det_eq_proj_det
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) :
+    (serreFirstResidueGradientMatrix A).det =
+      serrePadicIntProj p 0 (Matrix.det A) := by
+  classical
+  have hmatrix :
+      serreFirstResidueGradientMatrix A =
+        (serrePadicIntProj p 0).mapMatrix Aᵀ := by
+    ext i j
+    rfl
+  rw [hmatrix, ← RingHom.map_det, Matrix.det_transpose]
+
+/--
+If the p-adic coefficient determinant is a unit, its first residue is nonzero,
+hence the first-residue gradient matrix has nonzero determinant.
+-/
+theorem serreFirstResidueGradientMatrix_det_ne_zero_of_isUnit_det
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    (hdet : IsUnit (Matrix.det A)) :
+    (serreFirstResidueGradientMatrix A).det ≠ 0 := by
+  rw [serreFirstResidueGradientMatrix_det_eq_proj_det]
+  haveI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
+  haveI : Nontrivial (padicResidueRing p 0) := by
+    simpa [padicResidueRing] using
+      (inferInstance : Nontrivial (ZMod (p ^ 1)))
+  exact (hdet.map (serrePadicIntProj p 0)).ne_zero
+
 /--
 Source-facing Hensel package in which the expanded gradient witness is supplied
 by first-residue nonvanishing of the gradient matrix-vector coordinate.
