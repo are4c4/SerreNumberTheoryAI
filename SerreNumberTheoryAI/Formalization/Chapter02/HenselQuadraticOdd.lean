@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.PrimitiveHomogeneousZeros
 
@@ -18,6 +19,49 @@ namespace SerreNumberTheoryAI
 noncomputable section
 
 section HenselQuadraticOdd
+
+/--
+Residue linear algebra boundary: an invertible coordinate matrix over a field
+cannot send a nonzero vector to zero.
+-/
+theorem serreResidueMatrix_mulVec_ne_zero_of_isUnit
+    {ι K : Type*} [Fintype ι] [DecidableEq ι] [Field K]
+    {A : Matrix ι ι K} {x : ι → K}
+    (hA : IsUnit A) (hx : x ≠ 0) :
+    A *ᵥ x ≠ 0 := by
+  intro hzero
+  have hinj : Function.Injective A.mulVec :=
+    (Matrix.mulVec_injective_iff_isUnit (A := A)).2 hA
+  exact hx (hinj (by simpa using hzero))
+
+/--
+If an invertible residue matrix acts on a nonzero vector, some output coordinate
+is nonzero.  This is the residue-level shape needed before translating the
+coordinate into a p-adic gradient unit.
+-/
+theorem serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_isUnit
+    {ι K : Type*} [Fintype ι] [DecidableEq ι] [Field K]
+    {A : Matrix ι ι K} {x : ι → K}
+    (hA : IsUnit A) (hx : x ≠ 0) :
+    ∃ j : ι, (A *ᵥ x) j ≠ 0 := by
+  by_contra hnone
+  apply serreResidueMatrix_mulVec_ne_zero_of_isUnit hA hx
+  funext j
+  by_contra hj
+  exact hnone ⟨j, hj⟩
+
+/--
+The determinant form of the same residue boundary over a field.  Later work can
+specialize this to the first residue ring and the reduced quadratic matrix.
+-/
+theorem serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
+    {ι K : Type*} [Fintype ι] [DecidableEq ι] [Field K]
+    {A : Matrix ι ι K} {x : ι → K}
+    (hdet : A.det ≠ 0) (hx : x ≠ 0) :
+    ∃ j : ι, (A *ᵥ x) j ≠ 0 := by
+  have hA : IsUnit A :=
+    (Matrix.isUnit_iff_isUnit_det A).2 (isUnit_iff_ne_zero.2 hdet)
+  exact serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_isUnit hA hx
 
 /--
 The current odd-prime quadratic boundary after the Hensel step: a primitive
