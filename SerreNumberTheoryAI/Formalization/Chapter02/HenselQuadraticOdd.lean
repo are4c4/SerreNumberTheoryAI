@@ -109,6 +109,22 @@ theorem serreFirstResidueMatrixCoordinateWitness.exists_coordinate
   h
 
 /--
+A determinant-nondegenerate first-residue matrix has a nonzero output coordinate
+on every primitive p-adic tuple.
+-/
+theorem serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {B : Matrix σ σ (padicResidueRing p 0)} {x : σ → SerrePadicInt p}
+    (hdet : B.det ≠ 0) (hprim : serrePadicTuplePrimitive x) :
+    serreFirstResidueMatrixCoordinateWitness B x := by
+  have hx0 : serreFirstResidueVector p x ≠ 0 :=
+    serreFirstResidueVector_ne_zero_of_primitive (p := p) (x := x) hprim
+  exact serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
+    (ι := σ) (K := padicResidueRing p 0)
+    (A := B) (x := serreFirstResidueVector p x) hdet hx0
+
+/--
 The current odd-prime quadratic boundary after the Hensel step: a primitive
 quadratic congruence should supply a coordinate where the symmetric Serre
 gradient is a unit.  This predicate records only that gradient witness.
