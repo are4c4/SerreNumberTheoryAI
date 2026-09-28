@@ -51,7 +51,7 @@ Stop rather than continuing if:
 
 ## Current Lean boundary
 
-The branch currently separates eight layers:
+The branch currently separates nine layers:
 
 - `serreQuadraticPolynomial` and `serreQuadraticPolynomial_eval` represent and
   evaluate the coordinate quadratic form `Σᵢⱼ aᵢⱼ Xᵢ Xⱼ`.
@@ -89,6 +89,11 @@ The branch currently separates eight layers:
   `serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary`,
   `serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis`, and
   determinant-boundary exact-root / congruent-lift extractors.
+- `HenselQuadraticOddResidueExtractors.lean` exposes composite convenience
+  consequences: matrix-coordinate / determinant-boundary data directly produce
+  the expanded-expression witness, and each odd-quadratic Hensel package has a
+  combined `exists_solution_lift` extractor returning one lift with both the
+  exact value equation and the congruence data.
 
 ## Immediate proof/status target
 
@@ -112,16 +117,20 @@ The first-residue valuation and Hensel bridge now consists of:
   `serreQuadraticOddFirstResidueGradientWitness`;
 - `serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness`;
 - `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`;
+- `serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness`;
+- `serreQuadraticOddExpressionWitness_of_detBoundary`;
 - `serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient`;
 - `serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate`;
 - `serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary`;
 - `serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis`;
 - `serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis`;
-- `serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis`.
+- `serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis`;
+- combined `exists_solution_lift` extractors for the Hensel, expression,
+  first-residue, matrix-coordinate, and determinant-boundary packages.
 
 Latest verified Lean status:
 
-- PR head `dcc689590d9ba3ea79a4ee1870e0d6054af8ff8a` passed CI #652: policy,
+- PR head `7e76d04f334c9dbf23ec78660c994c061c837ec1` passed CI #655: policy,
   Lean build, and Verso Blueprint build.
 
 Next safe slices:
