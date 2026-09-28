@@ -144,7 +144,6 @@ theorem serreQuadraticGradientCoordinate_eq_row_add_column
   simp [serreQuadraticGradientCoordinate, serreQuadraticPolynomial,
     MvPolynomial.pderiv_mul, Pi.single_apply, Finset.sum_add_distrib, mul_assoc]
   simp_rw [apply_ite]
-  simp only [MvPolynomial.eval_X, map_zero]
   simp_rw [mul_add, Finset.sum_add_distrib]
   simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq',
     Finset.sum_ite_irrel, Finset.mem_univ, ite_true, add_comm]
