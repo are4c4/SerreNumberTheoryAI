@@ -206,20 +206,12 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 同一視を別々の補題として証明している。
 :::
 
-:::theorem "henselquadraticoddcorollary"
-  (lean := "SerreNumberTheoryAI.serreOddQuadratic_exists_solution_lift")
-  (uses := "henselsimplerootcorollary, henselquadraticgradientbridge")
-奇素数の場合の二次形式の系をまとめる。
-対称性から偏微分の展開式を得て、行列式と原始性から
-単元偏微分を取り出し、ヘンゼルの定理を適用する。
-:::
-
 :::theorem "henselquadraticvaluecorollary"
   (lean := "SerreNumberTheoryAI.serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient")
   (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge")
 二次形式に対する Hensel の値持ち上げを、偏微分付値を入力とする
-再利用可能な形で包装する。奇素数側では上の
-`henselquadraticoddcorollary` が行列式・原始性から必要な偏微分付値0を
-導いて Serre の系2まで閉じる。一方 `p=2` の mod `8`・偏微分付値1の
-値持ち上げ wrapper もここで共有し、系3の本体は次の独立workに残す。
+再利用可能な形で包装する。奇素数側では、行列式と原始性から
+必要な偏微分付値0を導き、Serre の系2まで閉じる。
+一方 `p=2` の mod `8`・偏微分付値1の値持ち上げ wrapper もここで共有し、
+系3の本体は次の独立workに残す。
 :::
