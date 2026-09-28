@@ -142,8 +142,12 @@ theorem serreQuadraticGradientCoordinate_eq_row_add_column
       (∑ i : σ, A j i * x i) + ∑ i : σ, A i j * x i := by
   classical
   simp [serreQuadraticGradientCoordinate, serreQuadraticPolynomial,
-    Pi.single_apply, apply_ite, mul_add, mul_ite, Finset.sum_add_distrib,
-    Finset.sum_ite_eq, Finset.sum_ite_eq', Finset.sum_ite_irrel, add_comm, mul_assoc]
+    MvPolynomial.pderiv_mul, Pi.single_apply, Finset.sum_add_distrib, mul_assoc]
+  simp_rw [apply_ite]
+  simp only [MvPolynomial.eval_X, map_zero]
+  simp_rw [mul_add, Finset.sum_add_distrib]
+  simp only [mul_ite, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq',
+    Finset.sum_ite_irrel, Finset.mem_univ, ite_true, add_comm]
 
 /-- The evaluated partial derivative of the coordinate quadratic polynomial is the gradient coordinate. -/
 theorem serreQuadraticPolynomial_pderiv_eval
