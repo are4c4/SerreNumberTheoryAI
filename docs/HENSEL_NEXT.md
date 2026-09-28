@@ -147,6 +147,20 @@ Latest verified Lean status:
 - PR head `b87d06d250df44bde8b0c928b87fd5a2ee9f2964` passed CI #667: policy,
   Lean build, and Verso Blueprint build.
 
+First-residue field API note:
+
+- mathlib provides the field instance for `ZMod p` when `[Fact p.Prime]` is
+  available via `Mathlib.Algebra.Field.ZMod`.
+- The project first-residue type is `padicResidueRing p 0`, definitionally a
+  `ZMod (p ^ (0 + 1))` shape.  Directly forcing that type through the generic
+  matrix lemma has so far created either `whnf` heartbeat timeout or a mismatch
+  between the determinant's existing semiring/comm-ring instance and the field
+  instance used by the generic lemma.
+- The next determinant slice should avoid rebuilding the whole field instance in
+  the statement.  Prefer a small dedicated first-residue lemma, or an explicit
+  lightweight equivalence/abbrev path to `ZMod p`, before reintroducing the
+  determinant-to-coordinate proof.
+
 Next safe slices:
 
 - identify a lighter representation or existing API for the first residue ring
