@@ -2,7 +2,7 @@
 
 Work ID: `C2S2.2-HenselLifting`
 
-Source: Serre, Chapter 2 §2.2, printed pp.20-21 / uploaded PDF pp.30-31.
+Source: Serre, Chapter 2 §2.2, printed pp.20-22 / uploaded PDF pp.30-32.
 
 ## Source boundary checked in this run
 
@@ -23,6 +23,14 @@ Theorem 1 then iterates this one-step improvement to obtain a Cauchy
 sequence.  The multivariate case is reduced to the one-variable case by
 varying only the chosen coordinate `X_j`.  Corollary 1 is the special
 case `n = 1`, `k = 0`.
+
+The source then states quadratic-form corollaries.  For odd `p`, a
+primitive solution of a nondegenerate quadratic congruence mod `p` lifts
+to a `Z_p`-solution.  For `p = 2`, a solution mod `8` with a selected
+partial derivative nonzero mod `4` lifts.  In Lean, this run formalizes
+the Hensel-facing value-lift part once the required derivative valuation
+has already been supplied; the determinant/primitive-vector argument that
+produces such a coordinate is left as a separate linear-algebra boundary.
 
 ## Implemented in Lean so far
 
@@ -54,14 +62,17 @@ case `n = 1`, `k = 0`.
 - coordinate specialization `serreHenselCoordinateSpecialization`, its evaluation identity, and its derivative identity with the selected partial derivative;
 - multivariate source theorem boundary `serreHenselMultivariateConclusion_of_hypothesis`;
 - one-variable and multivariate simple-root corollary packages for `n = 1`, `k = 0`;
-- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, exact-root bridge, one-variable theorem boundary, and multivariate reduction boundary.
+- Hensel-facing value-lift packages for the quadratic corollaries: odd-prime simple-derivative lifting modulo `p`, and the `p = 2`, mod `8` to mod `4` lifting with derivative valuation `1`;
+- Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, exact-root bridge, one-variable theorem boundary, multivariate reduction boundary, simple-root corollary, and quadratic value-lift boundary.
 
 ## Next proof target
 
-The source-shaped one-variable theorem, multivariate theorem boundary, and simple-root corollary packages are now implemented.  The next safe work is synchronization and self-review rather than inventing a stronger theorem:
+The source-shaped one-variable theorem, multivariate theorem boundary, simple-root corollary packages, and the Hensel-facing parts of the quadratic corollaries are now implemented.
 
-1. update Blueprint/PR body to reflect the concrete coordinate specialization and corollary module;
-2. verify that final conclusions remain exact-root plus congruence only, with derivative valuation kept as an iteration invariant;
-3. after CI is green on the latest head, either mark the PR ready/merge according to the project workflow or check the next source boundary before starting another section.
+The next mathematical boundary is the remaining linear algebra in Serre's quadratic corollaries:
 
-Keep the proof project-local and avoid packaged Hensel theorems or non-source assumptions.
+1. represent the symmetric coefficient matrix and the associated quadratic polynomial in the current project API;
+2. formalize the primitive-vector/nondegenerate-matrix argument that some partial derivative has the required valuation;
+3. connect that derivative-existence result to `serreHenselValueLift_mod_p_of_simple_derivative` and `serreHenselValueLift_mod_eight_of_derivative_valuation_one`.
+
+Stop before attempting this if the matrix/quadratic-form API is not clear.  Keep the proof project-local and avoid packaged Hensel theorems or non-source assumptions.
