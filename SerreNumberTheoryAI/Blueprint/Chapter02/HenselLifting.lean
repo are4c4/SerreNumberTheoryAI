@@ -11,6 +11,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddSourceConsequences
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwo
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -214,4 +215,18 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 必要な偏微分付値0を導き、Serre の系2まで閉じる。
 一方 `p=2` の mod `8`・偏微分付値1の値持ち上げ wrapper もここで共有し、
 系3の本体は次の独立workに残す。
+:::
+
+:::theorem "henselquadraticdyadicvaluecorollary"
+  (lean := "SerreNumberTheoryAI.serreQuadraticTwoExpressionHenselHypothesis.exists_solution_lift")
+  (uses := "henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge, henselquadraticvaluecorollary")
+`p=2` の場合は Hensel の定理に `n=3`, `k=1` を入れるため、値の合同は
+mod `8`、得られる lift の合同は mod `4` になる。Lean ではまず、対称な
+二次形式、値合同 mod `8`、および展開形勾配のある座標の付値がちょうど `1`
+であるという Hensel-facing な package を作る。対称性から形式偏微分と
+展開形勾配が一致するので、この package は直接 Hensel の値持ち上げ結論に渡せる。
+
+この時点では、Serre の本文に現れる「偏微分が mod `4` で 0 でない」という条件を
+付値 `1` の条件へ変換する部分と、行列式・原始性からその条件を得る部分は、
+次の独立した証明境界として残している。
 :::
