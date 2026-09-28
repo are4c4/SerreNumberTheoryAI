@@ -98,15 +98,15 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
 - #100 / PR #145 は main `32c68109beac3f3b27504501c166022864c34c1c` へ統合済み。primitive finite-level compatibility、primitive inverse-limit recovery、homogeneous evaluation scaling、nonzero `Q_p` tuple normalization、Proposition 6 の three-condition equivalence、Blueprint/root integrationを完了し、final PR-head CI #462 green。
-- #102 is the current single-lane ACTIVE item. Source/API/dependency preflight is complete; required project `Z_p` valuation/divisibility and metric/completeness interfaces from #72/#89 are now merged on main. The implementation will follow Serre's Taylor one-step improvement → Cauchy iteration → multivariate one-coordinate reduction → Corollary 1 route.
-- #104 はB-ownedでodd-`p` quadratic liftingのpreflight complete。#72 primitive/unit/congruence subsetはfreeze済みで、proofは#102 simple-root liftingのDONE/STACK-READY待ち。
-- #105 はB-ownedでdyadic quadratic liftingのpreflight complete。#72 domain/dyadic-divisibility/valuation/primitive subsetはfreeze済みで、proofは#102 main `n,k` Hensel theoremのDONE/STACK-READY待ち。#96は不要。
+- #102 / PR #146 は main `3695fa0bd60adb0f0f1cb0863d5b0a4269c60bd4` へ統合済み。source-shaped Hensel hypotheses/conclusions、Taylor remainder algebra、one-step Newton improvement、Cauchy iteration、limit exact-root bridge、coordinate specialization、多変数定理、Corollary 1 simple-root lifting、Hensel-facing value-lift packages、Blueprint/root integrationを完了し、final CI #590 green。
+- #104 is the current single-lane ACTIVE item. Preflight is complete and #102/#146 has now unblocked the Hensel value-lift/simple-root dependency. The next proof boundary is the odd-prime quadratic linear-algebra step: symmetric coordinate-matrix derivative identity, primitive residue vector, nonzero gradient coordinate from invertible determinant, then Hensel value-lift.
+- #105 はdyadic quadratic liftingのpreflight complete。#102 main `n,k` Hensel theoremは使用可能になったが、直列運用上は#104 completion後に再確認して着手する。#96は不要。
 
 ## Phase 8 — 第2章 §3 `Q_p` の乗法群と平方類
 
