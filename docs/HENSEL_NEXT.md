@@ -147,6 +147,12 @@ Latest verified Lean status:
 - PR head `b87d06d250df44bde8b0c928b87fd5a2ee9f2964` passed CI #667: policy,
   Lean build, and Verso Blueprint build.
 
+Current live head under verification:
+
+- PR head `8625088db18b8f2262cc3389efc8e1bee9b7befa` is a docs/API-note-only
+  continuation commit after the last verified Lean head.  Its PR-head CI should
+  be checked before further proof work or merge readiness decisions.
+
 First-residue field API note:
 
 - mathlib provides the field instance for `ZMod p` when `[Fact p.Prime]` is
