@@ -61,7 +61,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 ## Parked legacy implementation
 
 | Legacy PR | Work | Preserved branch | State |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | #123 | Chapter 2 §1.3 project `Q_p` | `work/c2-s1-3-qp-field` | superseded by merged #143 |
 | #125 | Chapter 2 §3.1 unit filtration | `work/c2-s3-1-unit-filtration` | PARKED |
 
