@@ -13,9 +13,27 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §2.2, Corollary 3, printed p.22 / uploaded PDF p.32
 - State: ACTIVE
 - Base main: after PR #147 merge and active-work cleanup; odd-prime Corollary 2 is DONE.
+- Latest verified head: `36d330ef3fa619a8f29b49d7899893e7f8ee6901` passed CI #717: policy / Lean / Verso all green.
 - Dependencies now on main: Hensel lifting theorem with explicit `n,k` interface (#102/#146), dyadic value-lift wrapper in `HenselQuadraticCorollary.lean`, shared quadratic polynomial / derivative bridge / first-residue matrix infrastructure from #104/#147, project `Z_p` valuation/divisibility/unit interface (#72/#140).
 - No project `Q_2` dependency is required for this slice.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
+
+## Current dyadic proof state
+
+The source-facing theorem has now been assembled in Lean:
+
+- `serrePadicIntAddValuation_two`: the element `2 ∈ Z₂` has additive valuation exactly `1`;
+- `serreQuadraticTwoExpressionWitness_of_innerSumWitness`: nonzero first residue of the inner sum gives valuation `1` for the expanded gradient `2 * Σᵢ aᵢⱼxᵢ`;
+- `serreQuadraticTwoInnerSumWitness_of_isUnit_det`: unit determinant plus primitive tuple supplies a nonzero inner-sum coordinate by the first-residue matrix argument;
+- `serreHenselValueLift_mod_eight_of_quadratic_two`: source-shaped value-lift conclusion for the dyadic quadratic corollary;
+- `serreDyadicQuadratic_exists_solution_lift`: exact value solution congruent modulo `4`.
+
+The remaining work is integration rather than a new mathematical boundary:
+
+1. sync Blueprint and progress docs to the completed source-shaped theorem;
+2. update PR body with final theorem and CI;
+3. self-review statement integrity and theorem-strength boundary;
+4. when latest head is green and docs are synchronized, mark ready/merge if no blocker appears.
 
 ## Run-length preference for this ACTIVE item
 
@@ -39,16 +57,6 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - source boundaryやcopyright policyに不安がある場合。
 - context/time上限が近く、未検証の主張を残しそうな場合。
 - ユーザーが短時間作業や停止を明示した場合。
-
-## Current dyadic quadratic plan
-
-1. keep the existing Hensel-facing wrapper `serreHenselValueLift_mod_eight_of_derivative_valuation_one` as the direct `n=3,k=1` boundary;
-2. package the coordinate-quadratic version preserving the congruence depth `2`, i.e. source modulus `4`;
-3. expose the dyadic quadratic Hensel hypothesis with symmetry, value congruence mod `8`, and a chosen gradient of valuation exactly `1`;
-4. add extractors for exact root, congruent lift, and combined exact/congruent lift;
-5. separately investigate the source-facing `∂f/∂X_j(x) ≠ 0 (mod 4)` to valuation-one bridge;
-6. separately adapt the determinant + primitive vector argument from #104 to the dyadic factor-`2` condition;
-7. synchronize Blueprint / progress docs / PR body, then run policy / Lean / Verso CI.
 
 ## Just completed
 
