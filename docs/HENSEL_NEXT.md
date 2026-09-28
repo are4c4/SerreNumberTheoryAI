@@ -16,7 +16,8 @@ GitHub state conflict, or a context/time boundary.
 
 ## Current Lean result
 
-The direct Hensel-facing dyadic package is in place.
+The direct Hensel-facing dyadic package is in place and the determinant/primitive
+residue route now reaches the inner-gradient witness.
 
 ### 1. Shared Hensel wrapper
 
@@ -35,38 +36,47 @@ The PR adds coordinate-quadratic wrappers around this boundary:
 - `serreQuadraticTwoHenselHypothesis`;
 - exact-root, congruent-lift, and combined lift extractors.
 
-### 2. Expanded-gradient package
+### 2. Expanded-gradient and inner-sum packages
 
-`HenselQuadraticTwo.lean` exposes the source-shaped expanded-gradient version:
+`HenselQuadraticTwo.lean` exposes:
 
-- `serreQuadraticTwoExpressionWitness`;
-- `serreQuadraticTwoExpressionHenselHypothesis`;
-- `serreQuadraticTwoHenselHypothesis_of_expression`;
-- `serreHenselValueLift_mod_eight_of_quadratic_two_expression_hypothesis`;
+- `serrePadicIntAddValuation_two`, proving `v₂(2)=1`;
+- `serreQuadraticTwoExpressionWitness` and its Hensel package;
+- `serreQuadraticTwoInnerSumWitness` and its Hensel package;
+- the bridge from first-residue nonvanishing of the inner sum to valuation `1`
+  of Serre's expanded symmetric gradient;
 - exact-root, congruent-lift, and combined lift extractors.
 
 This reuses the already-proved formal derivative bridge from
 `HenselQuadraticOddDerivativeBridge.lean`, specialized to `p = 2`; despite the
 file name, the polynomial identity itself is prime-uniform.
 
-### 3. Blueprint synchronization
+### 3. Determinant/primitive-vector to inner sum
 
-The Hensel Blueprint now imports `HenselQuadraticTwo` and records a separate
-`henselquadraticdyadicvaluecorollary` node.  This node states only the current
-Hensel-facing result: value congruence mod `8` plus expanded-gradient valuation
-`1` gives an exact lift congruent mod `4`.
+`HenselQuadraticTwoResidue.lean` adapts the Corollary 2 first-residue matrix
+API to the dyadic inner sum:
 
-## Remaining proof boundaries
+- a matrix-coordinate witness for `serreFirstResidueGradientMatrix A` is exactly
+  nonvanishing of the first residue of `Σᵢ aᵢⱼ xᵢ`;
+- nonzero determinant plus primitive tuple gives that matrix-coordinate witness;
+- unit p-adic determinant gives nonzero first-residue determinant;
+- `serreQuadraticTwoDetHenselHypothesis.exists_solution_lift` packages the
+  determinant-shaped dyadic value lift.
 
-Two source-facing bridges remain, and neither should be hidden by strengthening
-hypotheses silently.
+### 4. Blueprint synchronization
 
-1. Bridge the source condition `∂f/∂X_j(x) ≠ 0 (mod 4)` to the project-local
-   additive valuation equation `v₂(∂f/∂X_j(x)) = 1`.
-2. Adapt the determinant/primitive-vector argument from Corollary 2 to the
-   dyadic situation.  Because the symmetric gradient is `2 * Σ_i a_ij x_i`, the
-   first-residue nonvanishing should apply to the inner sum, and then the factor
-   `2` must raise valuation from `0` to `1`.
+The Hensel Blueprint imports `HenselQuadraticTwo` and records a separate
+`henselquadraticdyadicvaluecorollary` node.  This node currently cites the
+expanded-gradient package; the next docs pass can retarget it to the determinant
+package now that `HenselQuadraticTwoResidue.lean` is green.
+
+## Remaining proof boundary
+
+The main remaining source-facing bridge is to relate the source phrase
+`∂f/∂X_j(x) ≠ 0 (mod 4)` to the project-local package now used in Lean.  For a
+symmetric dyadic quadratic form the derivative is `2 * Σᵢ aᵢⱼ xᵢ`, so the safe
+route is to express nonzero modulo `4` as nonzero first residue of the inner sum,
+not as an arbitrary nonzero-mod-`4` fact about an unrelated p-adic integer.
 
 ## Verification state
 
@@ -74,6 +84,9 @@ hypotheses silently.
   for policy / Lean / Verso.
 - PR #148 head `107ce2912344d6dbaa1db1aeedded72b287c8f06`: CI #710 green
   for policy / Lean / Verso.  This includes `HenselQuadraticTwo.lean`, the
-  formalization-root import, the dyadic Blueprint node, and this notes sync.
+  formalization-root import, the dyadic Blueprint node, and notes sync.
+- PR #148 head `9840ef2d1863600dc9deef232747a84f9ed380a2`: CI #715 green
+  for policy / Lean / Verso.  This includes `HenselQuadraticTwoResidue.lean`
+  and the determinant/primitive-vector to inner-sum bridge.
 
 Do not begin §3 or another work item while PR #148 remains active.
