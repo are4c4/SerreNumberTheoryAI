@@ -12,6 +12,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - PR: #147
 - Source: Chapter 2 §2.2, Corollary 2, printed pp.21–22 / uploaded PDF pp.31–32
 - State: ACTIVE
+- Latest head to verify: `9307d2664d4bd5cbe94123b8ec991ffe43537e54`
 - Dependencies now on main: Hensel lifting theorem and simple-root/value-lift interface (#102/#146), project `Z_p` valuation/divisibility/unit interface (#72/#140)
 - No project `Q_p` dependency is required for this slice.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
