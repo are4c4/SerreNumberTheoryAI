@@ -120,6 +120,80 @@ def serreQuadraticSymmetricGradientCoordinate
     SerrePadicInt p :=
   (2 : SerrePadicInt p) * ∑ i : σ, A i j * x i
 
+/-- The evaluated partial derivative of the coordinate quadratic polynomial is the gradient coordinate. -/
+theorem serreQuadraticPolynomial_pderiv_eval
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
+    MvPolynomial.eval x
+        (MvPolynomial.pderiv j (serreQuadraticPolynomial (p := p) A)) =
+      serreQuadraticGradientCoordinate A x j := by
+  classical
+  simp [serreQuadraticPolynomial, serreQuadraticGradientCoordinate,
+    Finset.sum_add_distrib, mul_add, add_mul, mul_assoc, mul_left_comm, mul_comm]
+
+/-- Under symmetry, the gradient coordinate has Serre's `2 * ∑ᵢ aᵢⱼ xᵢ` shape. -/
+theorem serreQuadraticGradientCoordinate_eq_symmetric
+    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
+    (hA : serreQuadraticMatrixSymmetric A) :
+    serreQuadraticGradientCoordinate A x j =
+      serreQuadraticSymmetricGradientCoordinate A x j := by
+  classical
+  have hsym : ∀ i : σ, A j i = A i j := fun i => hA j i
+  simp [serreQuadraticGradientCoordinate, serreQuadraticSymmetricGradientCoordinate,
+    hsym, two_mul, Finset.sum_add_distrib, Finset.mul_sum, add_mul, mul_assoc,
+    mul_left_comm, mul_comm]
+
+/-- The evaluated partial derivative of a symmetric coordinate quadratic polynomial has source shape. -/
+theorem serreQuadraticPolynomial_pderiv_eval_of_symmetric
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
+    (hA : serreQuadraticMatrixSymmetric A) :
+    MvPolynomial.eval x
+        (MvPolynomial.pderiv j (serreQuadraticPolynomial (p := p) A)) =
+      serreQuadraticSymmetricGradientCoordinate A x j := by
+  rw [serreQuadraticPolynomial_pderiv_eval]
+  exact serreQuadraticGradientCoordinate_eq_symmetric hA
+
+/--
+Hensel value lifting for the coordinate quadratic polynomial, stated using the
+formal gradient coordinate.  The separate matrix/primitive argument is precisely
+the step that supplies a coordinate where this gradient has valuation zero.
+-/
+theorem serreHenselValueLift_mod_p_of_quadratic_gradient
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
+    (hvalue :
+      padicDivisibilityDepth p 1
+        (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
+    (hgrad :
+      serrePadicIntAddValuation p
+        (serreQuadraticGradientCoordinate A x j) = (0 : ℕ∞)) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_simple_derivative
+    (p := p) (f := serreQuadraticPolynomial (p := p) A) (a := a) (x := x) (j := j)
+    hvalue (by simpa [serreQuadraticPolynomial_pderiv_eval] using hgrad)
+
+/-- The same Hensel-facing lift package using the symmetric Serre gradient expression. -/
+theorem serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
+    (hA : serreQuadraticMatrixSymmetric A)
+    (hvalue :
+      padicDivisibilityDepth p 1
+        (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
+    (hgrad :
+      serrePadicIntAddValuation p
+        (serreQuadraticSymmetricGradientCoordinate A x j) = (0 : ℕ∞)) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_simple_derivative
+    (p := p) (f := serreQuadraticPolynomial (p := p) A) (a := a) (x := x) (j := j)
+    hvalue (by simpa [serreQuadraticPolynomial_pderiv_eval_of_symmetric hA] using hgrad)
+
 /--
 The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
 `f(x) ≡ a (mod p)` and some selected derivative is a unit, then the congruence
