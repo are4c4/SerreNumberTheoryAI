@@ -121,6 +121,68 @@ def serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
     serrePadicTuplePrimitive x →
       serreFirstResidueMatrixCoordinateWitness B x
 
+
+/--
+Over a commutative ring without zero divisors, nonzero determinant already
+forces a nonzero vector to have some nonzero image coordinate.  This avoids
+requiring a field instance and is therefore suitable for the first residue
+ring, where the earlier field specialization caused elaboration trouble.
+-/
+theorem serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero_of_noZeroDivisors
+    {ι R : Type*} [Fintype ι] [DecidableEq ι]
+    [CommRing R] [NoZeroDivisors R] [Nontrivial R]
+    {A : Matrix ι ι R} {x : ι → R}
+    (hdet : A.det ≠ 0) (hx : x ≠ 0) :
+    ∃ j : ι, A.mulVec x j ≠ 0 := by
+  by_contra hnone
+  have hzero : A.mulVec x = 0 := by
+    funext j
+    by_contra hj
+    exact hnone ⟨j, hj⟩
+  have hxi : ∃ i : ι, x i ≠ 0 := by
+    by_contra hnone
+    apply hx
+    funext i
+    by_contra hi
+    exact hnone ⟨i, hi⟩
+  rcases hxi with ⟨i, hi⟩
+  apply hdet
+  exact Matrix.det_eq_zero_of_mulVec_eq_zero_of_mem_nonZeroDivisors
+    hzero (mem_nonZeroDivisors_iff_ne_zero.mpr hi)
+
+/--
+The determinant/nonzero-vector argument now specializes to the first residue
+ring without constructing a field instance.
+-/
+theorem serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero_of_primitive
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {B : Matrix σ σ (padicResidueRing p 0)} {x : σ → SerrePadicInt p}
+    (hdet : B.det ≠ 0) (hprim : serrePadicTuplePrimitive x) :
+    serreFirstResidueMatrixCoordinateWitness B x := by
+  haveI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
+  haveI : NoZeroDivisors (padicResidueRing p 0) := by
+    simpa [padicResidueRing] using
+      (inferInstance : NoZeroDivisors (ZMod (p ^ 1)))
+  haveI : Nontrivial (padicResidueRing p 0) := by
+    simpa [padicResidueRing] using
+      (inferInstance : Nontrivial (ZMod (p ^ 1)))
+  exact
+    serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero_of_noZeroDivisors
+      hdet (serreFirstResidueVector_ne_zero_of_primitive hprim)
+
+/--
+The previously explicit determinant/primitive boundary is therefore discharged
+by the dedicated no-zero-divisors argument.
+-/
+theorem serreFirstResidueMatrixDetNonzeroPrimitiveBoundary_proved
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    (B : Matrix σ σ (padicResidueRing p 0)) (x : σ → SerrePadicInt p) :
+    serreFirstResidueMatrixDetNonzeroPrimitiveBoundary B x := by
+  intro hdet hprim
+  exact serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero_of_primitive hdet hprim
+
 /--
 The current odd-prime quadratic boundary after the Hensel step: a primitive
 quadratic congruence should supply a coordinate where the symmetric Serre
