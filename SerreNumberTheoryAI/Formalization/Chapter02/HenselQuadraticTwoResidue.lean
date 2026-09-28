@@ -103,6 +103,44 @@ theorem serreQuadraticTwoDetHenselHypothesis.exists_solution_lift
         ∀ i, serrePadicCongruent 2 2 (x i) (y i) :=
   serreHenselValueLift_mod_eight_of_quadratic_two_det_hypothesis h
 
+/--
+Serre's dyadic quadratic corollary in source-shaped form: a symmetric matrix
+with unit determinant, a primitive solution modulo `8`, and the value congruence
+produce a Hensel value-lift conclusion congruent modulo `4`.
+-/
+theorem serreHenselValueLift_mod_eight_of_quadratic_two
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (hA : serreQuadraticMatrixSymmetric A)
+    (hdet : IsUnit (Matrix.det A))
+    (hprim : serrePadicTuplePrimitive x)
+    (hvalue :
+      padicDivisibilityDepth 2 3
+        (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a)) :
+    serreHenselValueLiftConclusion 2 (serreQuadraticPolynomial (p := 2) A) a x 2 := by
+  exact serreHenselValueLift_mod_eight_of_quadratic_two_det_hypothesis
+    ⟨hA, hdet, hprim, hvalue⟩
+
+/--
+Source-level exact/congruent lift for Serre's dyadic quadratic corollary.
+-/
+theorem serreDyadicQuadratic_exists_solution_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (hA : serreQuadraticMatrixSymmetric A)
+    (hdet : IsUnit (Matrix.det A))
+    (hprim : serrePadicTuplePrimitive x)
+    (hvalue :
+      padicDivisibilityDepth 2 3
+        (MvPolynomial.eval x (serreQuadraticPolynomial (p := 2) A) - a)) :
+    ∃ y : σ → SerrePadicInt 2,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := 2) A) = a ∧
+        ∀ i, serrePadicCongruent 2 2 (x i) (y i) := by
+  exact serreQuadraticTwoDetHenselHypothesis.exists_solution_lift
+    ⟨hA, hdet, hprim, hvalue⟩
+
 end HenselQuadraticTwoResidue
 
 end
