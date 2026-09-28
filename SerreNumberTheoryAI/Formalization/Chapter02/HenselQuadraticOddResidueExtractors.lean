@@ -46,6 +46,29 @@ theorem serreQuadraticOddExpressionWitness_of_detBoundary
     (hboundary hdet hprim)
 
 /--
+Attempted direct specialization of the generic determinant/nonzero-vector lemma
+to the first residue field.  This keeps the specialization isolated from the
+source-facing Hensel packages so the previous heartbeat-sensitive boundary stays
+visible if the API changes.
+-/
+set_option maxHeartbeats 800000 in
+theorem serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero
+    {σ : Type*} [Fintype σ] [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {B : Matrix σ σ (padicResidueRing p 0)} {x : σ → SerrePadicInt p}
+    (hdet : B.det ≠ 0) (hprim : serrePadicTuplePrimitive x) :
+    serreFirstResidueMatrixCoordinateWitness B x := by
+  change ∃ j : σ, B.mulVec (serreFirstResidueVector p x) j ≠ 0
+  have hx : serreFirstResidueVector p x ≠ 0 :=
+    serreFirstResidueVector_ne_zero_of_primitive (p := p) hprim
+  haveI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
+  haveI : Field (padicResidueRing p 0) := by
+    simpa [padicResidueRing] using
+      (inferInstance : Field (ZMod (p ^ 1)))
+  exact serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
+    (A := B) (x := serreFirstResidueVector p x) hdet hx
+
+/--
 The matrix-coordinate Hensel package directly gives the expanded-expression
 Hensel package.
 -/
