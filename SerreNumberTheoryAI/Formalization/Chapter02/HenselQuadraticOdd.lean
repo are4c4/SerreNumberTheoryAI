@@ -32,6 +32,41 @@ def serreQuadraticOddGradientWitness
       (serreQuadraticSymmetricGradientCoordinate A x j) = (0 : ℕ∞)
 
 /--
+The expanded-expression version of the same witness.  This is the target shape
+for the residue linear-algebra proof, because Serre writes the symmetric
+derivative as `2 * Σᵢ aᵢⱼ xᵢ` for odd `p`.
+-/
+def serreQuadraticOddExpressionWitness
+    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) : Prop :=
+  ∃ j : σ,
+    serrePadicIntAddValuation p
+      (serreQuadraticSymmetricGradientExpression A x j) = (0 : ℕ∞)
+
+/--
+An explicit bridge hypothesis from the Hensel-facing formal derivative coordinate
+to the expanded symmetric expression.  Proving this bridge from polynomial
+algebra is a separate, visible boundary.
+-/
+def serreQuadraticSymmetricGradientBridge
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) : Prop :=
+  ∀ j : σ,
+    serreQuadraticSymmetricGradientCoordinate A x j =
+      serreQuadraticSymmetricGradientExpression A x j
+
+/-- An expanded-expression witness gives the Hensel-facing witness once the bridge is known. -/
+theorem serreQuadraticOddGradientWitness_of_expressionWitness
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hbridge : serreQuadraticSymmetricGradientBridge A x)
+    (hexpr : serreQuadraticOddExpressionWitness A x) :
+    serreQuadraticOddGradientWitness A x := by
+  rcases hexpr with ⟨j, hj⟩
+  refine ⟨j, ?_⟩
+  simpa [hbridge j] using hj
+
+/--
 Source-shaped package for the odd-prime quadratic Hensel boundary, stopping
 exactly at the point where the determinant/primitive-vector argument has
 already produced a nonzero gradient coordinate.
@@ -48,6 +83,32 @@ def serreQuadraticOddHenselHypothesis
           serreQuadraticOddGradientWitness A x
 
 /--
+A source-facing variant of the odd-prime Hensel package in which the gradient
+witness is provided in the expanded expression shape.
+-/
+def serreQuadraticOddExpressionHenselHypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (a : SerrePadicInt p)
+    (x : σ → SerrePadicInt p) : Prop :=
+  p ≠ 2 ∧
+    serreQuadraticMatrixSymmetric A ∧
+      serrePadicTuplePrimitive x ∧
+        padicDivisibilityDepth p 1
+          (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a) ∧
+          serreQuadraticSymmetricGradientBridge A x ∧
+            serreQuadraticOddExpressionWitness A x
+
+/-- The expression-shaped package implies the Hensel-facing package once the bridge is included. -/
+theorem serreQuadraticOddHenselHypothesis_of_expression
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddExpressionHenselHypothesis A a x) :
+    serreQuadraticOddHenselHypothesis A a x := by
+  rcases h with ⟨hpodd, hA, hprim, hvalue, hbridge, hexpr⟩
+  exact ⟨hpodd, hA, hprim, hvalue,
+    serreQuadraticOddGradientWitness_of_expressionWitness hbridge hexpr⟩
+
+/--
 Once the odd-prime linear-algebra boundary supplies a symmetric gradient
 witness, the Hensel value-lift package gives an exact value root.
 -/
@@ -62,6 +123,19 @@ theorem serreHenselValueLift_mod_p_of_odd_quadratic_hypothesis
   rcases hgrad with ⟨j, hj⟩
   exact serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient
     (p := p) (A := A) (a := a) (x := x) (j := j) hA hvalue hj
+
+/--
+Source-facing expression package followed by the Hensel value-lift package.
+-/
+theorem serreHenselValueLift_mod_p_of_odd_quadratic_expression_hypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddExpressionHenselHypothesis A a x) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_odd_quadratic_hypothesis
+    (serreQuadraticOddHenselHypothesis_of_expression h)
 
 end HenselQuadraticOdd
 
