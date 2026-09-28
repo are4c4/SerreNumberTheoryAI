@@ -91,17 +91,20 @@ The branch currently separates nine layers:
   determinant-boundary exact-root / congruent-lift extractors.
 - `HenselQuadraticOddResidueExtractors.lean` exposes composite convenience
   consequences: matrix-coordinate / determinant-boundary data directly produce
-  the expanded-expression witness, and each odd-quadratic Hensel package has a
-  combined `exists_solution_lift` extractor returning one lift with both the
-  exact value equation and the congruence data.
+  first-residue expression witnesses, expanded-expression witnesses,
+  expression Hensel packages, and Hensel-facing odd-prime packages; each
+  odd-quadratic Hensel package also has a combined `exists_solution_lift`
+  extractor returning one lift with both the exact value equation and the
+  congruence data.
 
 ## Immediate proof/status target
 
 The current stable boundary keeps the direct specialization of the generic
 field-level determinant lemma out of the first-residue theorem path.  A direct
 proof of the determinant-to-coordinate witness over `padicResidueRing p 0`
-reproduced the earlier deterministic `whnf` heartbeat timeout, so the active
-boundary is now named explicitly as
+reproduced the earlier deterministic `whnf` heartbeat timeout and later ran
+into incompatible type-class elaboration for the residue-field structure, so the
+active boundary remains named explicitly as
 `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary` rather than hidden in a
 slow proof.
 
@@ -116,12 +119,20 @@ The first-residue valuation and Hensel bridge now consists of:
 - `serreQuadraticOddFirstResidueExpressionWitness` and
   `serreQuadraticOddFirstResidueGradientWitness`;
 - `serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness`;
+- `serreQuadraticOddFirstResidueExpressionWitness_of_matrixCoordinateWitness`;
+- `serreQuadraticOddFirstResidueExpressionWitness_of_detBoundary`;
 - `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`;
 - `serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness`;
 - `serreQuadraticOddExpressionWitness_of_detBoundary`;
 - `serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient`;
 - `serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate`;
 - `serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary`;
+- `serreQuadraticOddHenselHypothesis_of_firstResidueGradient`;
+- `serreQuadraticOddExpressionHenselHypothesis_of_matrixCoordinate`;
+- `serreQuadraticOddHenselHypothesis_of_matrixCoordinate`;
+- `serreQuadraticOddFirstResidueGradientHenselHypothesis_of_detBoundary`;
+- `serreQuadraticOddExpressionHenselHypothesis_of_detBoundary`;
+- `serreQuadraticOddHenselHypothesis_of_detBoundary`;
 - `serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis`;
 - `serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis`;
 - `serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis`;
@@ -130,7 +141,7 @@ The first-residue valuation and Hensel bridge now consists of:
 
 Latest verified Lean status:
 
-- PR head `90f98ac48633cc47bf565745868305e1b5298981` passed CI #659: policy,
+- PR head `aa93f7cf2a9757c69da86ca037bd426705fbd32c` passed CI #665: policy,
   Lean build, and Verso Blueprint build.
 
 Next safe slices:
