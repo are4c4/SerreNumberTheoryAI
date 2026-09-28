@@ -130,7 +130,7 @@ The first-residue valuation and Hensel bridge now consists of:
 
 Latest verified Lean status:
 
-- PR head `7e76d04f334c9dbf23ec78660c994c061c837ec1` passed CI #655: policy,
+- PR head `7f8310f573250092118683ada6159f0577faaac8` passed CI #656: policy,
   Lean build, and Verso Blueprint build.
 
 Next safe slices:
