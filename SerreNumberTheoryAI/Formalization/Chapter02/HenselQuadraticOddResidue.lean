@@ -188,6 +188,24 @@ def serreQuadraticOddMatrixCoordinateHenselHypothesis
           serreQuadraticSymmetricGradientBridge A x ∧
             serreFirstResidueMatrixCoordinateWitness (serreFirstResidueGradientMatrix A) x
 
+/--
+Source-facing Hensel package in which the determinant/nonzero-vector argument is
+kept as the explicit first-residue boundary predicate.
+-/
+def serreQuadraticOddDetBoundaryHenselHypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (a : SerrePadicInt p)
+    (x : σ → SerrePadicInt p) : Prop :=
+  p ≠ 2 ∧
+    serreQuadraticMatrixSymmetric A ∧
+      serrePadicTuplePrimitive x ∧
+        padicDivisibilityDepth p 1
+          (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a) ∧
+          serreQuadraticSymmetricGradientBridge A x ∧
+            (serreFirstResidueGradientMatrix A).det ≠ 0 ∧
+              serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
+                (serreFirstResidueGradientMatrix A) x
+
 /-- The first-residue gradient package implies the expanded-expression Hensel package. -/
 theorem serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient
     {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
@@ -207,6 +225,15 @@ theorem serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinat
   rcases h with ⟨hpodd, hA, hprim, hvalue, hbridge, hcoord⟩
   exact ⟨hpodd, hA, hprim, hvalue, hbridge,
     serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness hpodd hcoord⟩
+
+/-- The determinant-boundary package implies the matrix-coordinate Hensel package. -/
+theorem serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    serreQuadraticOddMatrixCoordinateHenselHypothesis A a x := by
+  rcases h with ⟨hpodd, hA, hprim, hvalue, hbridge, hdet, hboundary⟩
+  exact ⟨hpodd, hA, hprim, hvalue, hbridge, hboundary hdet hprim⟩
 
 /-- First-residue gradient data followed by the Hensel value-lift package. -/
 theorem serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis
@@ -229,6 +256,17 @@ theorem serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis
     serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
   exact serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis
     (serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate h)
+
+/-- Determinant-boundary data followed by the Hensel value-lift package. -/
+theorem serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis
+    (serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary h)
 
 /-- Extract the exact value root from the first-residue gradient package. -/
 theorem serreQuadraticOddFirstResidueGradientHenselHypothesis.exists_value_root
@@ -275,6 +313,29 @@ theorem serreQuadraticOddMatrixCoordinateHenselHypothesis.exists_congruent_lift
     ∃ y : σ → SerrePadicInt p, ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
   exact serreHenselValueLiftConclusion.exists_congruent_lift
     (serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis h)
+
+/-- Extract the exact value root from the determinant-boundary package. -/
+theorem serreQuadraticOddDetBoundaryHenselHypothesis.exists_value_root
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt p,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := p) A) = a := by
+  exact serreHenselValueLiftConclusion.exists_value_root
+    (serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis h)
+
+/-- Extract the congruent lift from the determinant-boundary package. -/
+theorem serreQuadraticOddDetBoundaryHenselHypothesis.exists_congruent_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt p, ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
+  exact serreHenselValueLiftConclusion.exists_congruent_lift
+    (serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis h)
 
 end HenselQuadraticOddResidue
 
