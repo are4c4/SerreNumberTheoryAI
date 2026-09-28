@@ -81,8 +81,11 @@ theorem serreFirstResidueVector_ne_zero_of_primitive
     {σ : Type*} {p : ℕ} [Fact p.Prime] {x : σ → SerrePadicInt p}
     (hprim : serrePadicTuplePrimitive x) :
     serreFirstResidueVector p x ≠ 0 := by
-  simpa [serreFirstResidueVector] using
-    (serrePadicTuplePrimitive_firstProj_ne_zero (p := p) hprim)
+  intro hzero
+  apply (serrePadicTuplePrimitive_firstProj_ne_zero (p := p) hprim)
+  funext s
+  have hs := congrFun hzero s
+  simpa [serreFirstResidueVector] using hs
 
 /--
 A lightweight first-residue matrix-vector boundary.  This deliberately avoids
