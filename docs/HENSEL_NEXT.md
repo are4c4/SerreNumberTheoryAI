@@ -92,10 +92,10 @@ The branch currently separates nine layers:
 - `HenselQuadraticOddResidueExtractors.lean` exposes composite convenience
   consequences: matrix-coordinate / determinant-boundary data directly produce
   first-residue expression witnesses, expanded-expression witnesses,
-  expression Hensel packages, and Hensel-facing odd-prime packages; each
-  odd-quadratic Hensel package also has a combined `exists_solution_lift`
-  extractor returning one lift with both the exact value equation and the
-  congruence data.
+  Hensel-facing gradient witnesses, expression Hensel packages, and
+  Hensel-facing odd-prime packages; each odd-quadratic Hensel package also has a
+  combined `exists_solution_lift` extractor returning one lift with both the
+  exact value equation and the congruence data.
 
 ## Immediate proof/status target
 
@@ -124,6 +124,9 @@ The first-residue valuation and Hensel bridge now consists of:
 - `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`;
 - `serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness`;
 - `serreQuadraticOddExpressionWitness_of_detBoundary`;
+- `serreQuadraticOddGradientWitness_of_firstResidueGradientWitness`;
+- `serreQuadraticOddGradientWitness_of_matrixCoordinateWitness`;
+- `serreQuadraticOddGradientWitness_of_detBoundary`;
 - `serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient`;
 - `serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate`;
 - `serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary`;
@@ -141,7 +144,7 @@ The first-residue valuation and Hensel bridge now consists of:
 
 Latest verified Lean status:
 
-- PR head `aa93f7cf2a9757c69da86ca037bd426705fbd32c` passed CI #665: policy,
+- PR head `b87d06d250df44bde8b0c928b87fd5a2ee9f2964` passed CI #667: policy,
   Lean build, and Verso Blueprint build.
 
 Next safe slices:
