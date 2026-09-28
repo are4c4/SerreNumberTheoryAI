@@ -51,7 +51,7 @@ Stop rather than continuing if:
 
 ## Current Lean boundary
 
-The branch currently separates six layers:
+The branch currently separates seven layers:
 
 - `serreQuadraticPolynomial` and `serreQuadraticPolynomial_eval` represent and
   evaluate the coordinate quadratic form `Σᵢⱼ aᵢⱼ Xᵢ Xⱼ`.
@@ -79,10 +79,15 @@ The branch currently separates six layers:
   coordinate with the explicit source factor `2`, oddness of `p` makes that
   projected factor nonzero, and a matrix-coordinate witness yields the
   valuation-zero expression witness.
+- The same file now packages these first-residue witnesses back into the Hensel
+  value-lift API via
+  `serreQuadraticOddFirstResidueGradientHenselHypothesis`,
+  `serreQuadraticOddMatrixCoordinateHenselHypothesis`, and their exact-root /
+  congruent-lift extractors.
 
 ## Immediate proof/status target
 
-The current CI-green boundary keeps the direct specialization of the generic
+The current stable boundary keeps the direct specialization of the generic
 field-level determinant lemma out of the first-residue theorem path.  A direct
 proof of the determinant-to-coordinate witness over `padicResidueRing p 0`
 reproduced the earlier deterministic `whnf` heartbeat timeout, so the active
@@ -90,7 +95,7 @@ boundary is now named explicitly as
 `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary` rather than hidden in a
 slow proof.
 
-The first-residue valuation bridge is now in place:
+The first-residue valuation and Hensel bridge now consists of:
 
 - `serrePadicIntAddValuation_eq_zero_of_firstResidue_ne_zero`;
 - `serreFirstResidue_two_ne_zero_of_ne_two`, `serrePadicIntProj_two`, and
@@ -101,7 +106,11 @@ The first-residue valuation bridge is now in place:
 - `serreQuadraticOddFirstResidueExpressionWitness` and
   `serreQuadraticOddFirstResidueGradientWitness`;
 - `serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness`;
-- `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`.
+- `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`;
+- `serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient`;
+- `serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate`;
+- `serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis`;
+- `serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis`.
 
 Next safe slices:
 
@@ -111,9 +120,8 @@ Next safe slices:
   expanding it inside the odd-quadratic Hensel package;
 - formalize the bridge between the formal partial derivative and the expanded
   symmetric expression `2 * Σᵢ aᵢⱼ xᵢ`;
-- connect the expression witness and derivative bridge to
-  `serreQuadraticOddHenselHypothesis` and the existing Hensel value-lift
-  theorem.
+- once the derivative bridge is proved, reduce the remaining source boundary to
+  determinant/nonzero-vector plus primitive first-residue nonvanishing.
 
 Avoid packaged Hensel theorems and avoid adding non-source assumptions to final
 statements.  If the matrix API is unclear, stop at explicit definitions and
