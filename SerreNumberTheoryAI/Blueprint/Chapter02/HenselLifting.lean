@@ -223,9 +223,9 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
   (uses := "henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge, henselquadraticvaluecorollary")
 `p=2` の場合は Hensel の定理に `n=3`, `k=1` を入れるため、値の合同は
 mod `8`、得られる lift の合同は mod `4` になる。対称な座標二次形式では
-形式偏微分は Serre の展開形 `2 * Σᵢ aᵢⱼ xᵢ` と一致する。
+形式偏微分は、2 と内側の和を掛けた Serre の展開形と一致する。
 
-Lean ではまず `v₂(2)=1` を示し、内側の和 `Σᵢ aᵢⱼ xᵢ` の第一剰余が
+Lean ではまず、2 の 2-adic 付値が 1 であることを示し、内側の和の第一剰余が
 非零なら展開形勾配の付値がちょうど `1` になることを証明する。次に、
 Corollary 2 で使った第一剰余行列の determinant / primitive-vector 議論を
 `p=2` に特殊化し、単元 determinant と primitive tuple からその非零な内側の和を取り出す。
