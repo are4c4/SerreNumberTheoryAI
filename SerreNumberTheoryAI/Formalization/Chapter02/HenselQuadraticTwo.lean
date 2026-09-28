@@ -20,10 +20,21 @@ theorem serrePadicIntAddValuation_two :
     serrePadicIntAddValuation 2 (2 : SerrePadicInt 2) = (1 : ℕ∞) := by
   change emultiplicity (2 : SerrePadicInt 2) (2 : SerrePadicInt 2) = (1 : ℕ∞)
   exact emultiplicity_eq_of_dvd_of_not_dvd
-    (by simpa using (dvd_refl (2 : SerrePadicInt 2)))
+    (by simp)
     (serrePadicInt_pow_succ_not_dvd_of_eq_pow_mul_isUnit
       (p := 2) (n := 1) (x := (2 : SerrePadicInt 2)) (u := 1)
       isUnit_one (by simp))
+
+/--
+The source-shaped dyadic gradient witness: some expanded symmetric gradient
+coordinate has additive valuation exactly `1`.
+-/
+def serreQuadraticTwoExpressionWitness
+    {σ : Type*} [Fintype σ] [Fact (Nat.Prime 2)]
+    (A : σ → σ → SerrePadicInt 2) (x : σ → SerrePadicInt 2) : Prop :=
+  ∃ j : σ,
+    serrePadicIntAddValuation 2
+      (serreQuadraticSymmetricGradientExpression A x j) = (1 : ℕ∞)
 
 /--
 A dyadic inner-gradient coordinate whose first residue is nonzero.  Since the
@@ -41,7 +52,7 @@ A nonzero first residue of the inner sum makes the expanded dyadic gradient have
 valuation exactly `1`, because the source gradient is `2` times that sum.
 -/
 theorem serreQuadraticTwoExpressionWitness_of_innerSumWitness
-    {σ : Type*} [Fintype σ]
+    {σ : Type*} [Fintype σ] [Fact (Nat.Prime 2)]
     {A : σ → σ → SerrePadicInt 2} {x : σ → SerrePadicInt 2}
     (h : serreQuadraticTwoInnerSumWitness A x) :
     serreQuadraticTwoExpressionWitness A x := by
@@ -53,17 +64,6 @@ theorem serreQuadraticTwoExpressionWitness_of_innerSumWitness
       serrePadicIntAddValuation 2 (∑ i : σ, A i j * x i) = (0 : ℕ∞) :=
     serrePadicIntAddValuation_eq_zero_of_firstResidue_ne_zero hj
   simp [serrePadicIntAddValuation_two, hinner]
-
-/--
-The source-shaped dyadic gradient witness: some expanded symmetric gradient
-coordinate has additive valuation exactly `1`.
--/
-def serreQuadraticTwoExpressionWitness
-    {σ : Type*} [Fintype σ] [Fact (Nat.Prime 2)]
-    (A : σ → σ → SerrePadicInt 2) (x : σ → SerrePadicInt 2) : Prop :=
-  ∃ j : σ,
-    serrePadicIntAddValuation 2
-      (serreQuadraticSymmetricGradientExpression A x j) = (1 : ℕ∞)
 
 /--
 The expanded-gradient witness implies the Hensel-facing formal-gradient witness
