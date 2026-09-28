@@ -186,8 +186,17 @@ source-shaped な多変数仮定から多変数結論を直接得る境界まで
 両方を source-shaped な仮定・結論として包装している。
 :::
 
+:::lemma_ "henselvalueconclusionapi"
+  (lean := "SerreNumberTheoryAI.serreHenselValueLiftConclusion.exists_value_root")
+  (uses := "henselcongruencerelation")
+`f(y)=a` 型の持ち上げ結論から、実際の値の解と合同な lift を個別に取り出せる。
+また、すでに厳密解である点は任意の深さで自明な lift になり、強い合同深さで
+得た lift は弱い深さへ単調に落とせる。後続の二次形式系では、
+Hensel で得た exact value root を、必要な合同深さへ再包装するための小さな API として使う。
+:::
+
 :::theorem "henselquadraticvaluecorollary"
-  (uses := "henselsimplerootcorollary, henseltheorem")
+  (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi")
 系 2・系 3 の Hensel に依存する部分を包装する。
 `f(x) ≡ a` に対して、奇素数の場合は選んだ偏微分が単元であれば
 mod `p` の解を `f(y)=a` へ持ち上げる。`p=2` の場合は
