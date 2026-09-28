@@ -34,6 +34,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddResidueExtr
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddDerivativeBridge
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddSourceConsequences
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwo
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwoResidue
 
 /-!
 # Formalization root
