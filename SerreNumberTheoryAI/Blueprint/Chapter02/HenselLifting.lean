@@ -195,15 +195,25 @@ source-shaped な多変数仮定から多変数結論を直接得る境界まで
 Hensel で得た exact value root を、必要な合同深さへ再包装するための小さな API として使う。
 :::
 
+:::lemma_ "henselquadraticgradientbridge"
+  (lean := "SerreNumberTheoryAI.serreQuadraticPolynomial_pderiv_eval")
+  (uses := "henselvalueconclusionapi")
+座標行列で書いた二次多項式 `Σ a_ij X_i X_j` について、偏微分を評価すると
+`Σ_i (a_{ji}+a_{ij})x_i` が得られる。行列が対称ならこれは
+`2 * Σ_i a_ij x_i` という Serre の勾配座標になる。
+この補題により、二次形式系の残りの仕事は、原始解と行列式条件から
+この勾配座標のどれかが単元になることを示す線形代数部分に切り出される。
+:::
+
 :::theorem "henselquadraticvaluecorollary"
-  (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi")
+  (uses := "henselsimplerootcorollary, henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge")
 系 2・系 3 の Hensel に依存する部分を包装する。
 `f(x) ≡ a` に対して、奇素数の場合は選んだ偏微分が単元であれば
 mod `p` の解を `f(y)=a` へ持ち上げる。`p=2` の場合は
 mod `8` の解と偏微分付値 `1` から、mod `4` で合同な真の解を得る。
 また、Serre の記述に合わせて「そのような座標 `j` が存在する」形の
 existential-coordinate wrapper も用意している。さらに
-`Σ a_ij X_i X_j` の座標行列表現と評価式をLean補題として切り出している。
-偏微分公式、および行列式や原始ベクトルからそのような偏微分を取り出す線形代数部分は、
+`Σ a_ij X_i X_j` の座標行列表現、評価式、偏微分評価式をLean補題として切り出している。
+偏微分が単元となる座標を行列式や原始ベクトルから取り出す線形代数部分は、
 別の境界として残す。
 :::
