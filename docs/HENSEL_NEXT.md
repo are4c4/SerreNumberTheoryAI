@@ -51,7 +51,7 @@ Stop rather than continuing if:
 
 ## Current Lean boundary
 
-The branch currently separates four layers:
+The branch currently separates five layers:
 
 - `serreQuadraticPolynomial` and `serreQuadraticPolynomial_eval` represent and
   evaluate the coordinate quadratic form `Σᵢⱼ aᵢⱼ Xᵢ Xⱼ`.
@@ -65,27 +65,35 @@ The branch currently separates four layers:
   gradient witness, and
   `serreHenselValueLift_mod_p_of_odd_quadratic_hypothesis` turns that package
   into an exact `Z_p` value root.
-- The residue linear-algebra side now has generic field-level nonvanishing
-  lemmas: an invertible matrix, or a matrix with nonzero determinant, sends a
-  nonzero vector to a vector with some nonzero coordinate.  The primitive
-  p-adic tuple API also exposes that the first residue projection is nonzero.
+- The residue linear-algebra side has generic field-level nonvanishing lemmas:
+  an invertible matrix, or a matrix with nonzero determinant, sends a nonzero
+  vector to a vector with some nonzero coordinate.
+- The first-residue side now names the lightweight project-specific API:
+  `serreFirstResidueVector`,
+  `serreFirstResidueVector_ne_zero_of_primitive`,
+  `serreFirstResidueMatrixCoordinateWitness`, and
+  `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary`.
 
 ## Immediate proof/status target
 
-The current CI-green boundary keeps the residue matrix nonvanishing lemmas over
-an arbitrary field.  A direct specialization to `padicResidueRing p 0` hit a
-Lean elaboration/performance timeout, so the next safe slice is to identify the
-right lightweight first-residue API before reintroducing that specialization.
+The current CI-green boundary keeps the direct specialization of the generic
+field-level determinant lemma out of the first-residue theorem path.  A direct
+proof of the determinant-to-coordinate witness over `padicResidueRing p 0`
+reproduced the earlier deterministic `whnf` heartbeat timeout, so the active
+boundary is now named explicitly as
+`serreFirstResidueMatrixDetNonzeroPrimitiveBoundary` rather than hidden in a
+slow proof.
 
-After that API boundary is clear, the next mathematical work is the
-determinant/primitive-vector side of Serre's quadratic corollary:
+Next safe slices:
 
+- identify a lighter representation or existing API for the first residue ring
+  before reintroducing the determinant-to-coordinate proof;
+- keep the determinant/nonzero-vector bridge as a separate lemma rather than
+  expanding it inside the odd-quadratic Hensel package;
+- convert nonzero first residue into project-local valuation `0` for the
+  symmetric gradient coordinate once the residue witness is available;
 - formalize the bridge between the formal partial derivative and the expanded
   symmetric expression `2 * Σᵢ aᵢⱼ xᵢ`;
-- identify or introduce a clean residue-level matrix/nondegeneracy predicate;
-- prove that, for odd `p`, a primitive residue vector and nondegenerate symmetric
-  coefficient matrix force some gradient coordinate to be nonzero modulo `p`;
-- convert nonzero first residue into project-local valuation `0`;
 - connect that witness to `serreQuadraticOddHenselHypothesis` and the existing
   Hensel value-lift theorem.
 
