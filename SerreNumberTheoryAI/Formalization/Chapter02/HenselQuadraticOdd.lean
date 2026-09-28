@@ -25,7 +25,7 @@ quadratic congruence should supply a coordinate where the symmetric Serre
 gradient is a unit.  This predicate records only that gradient witness.
 -/
 def serreQuadraticOddGradientWitness
-    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) : Prop :=
   ∃ j : σ,
     serrePadicIntAddValuation p
@@ -37,7 +37,7 @@ exactly at the point where the determinant/primitive-vector argument has
 already produced a nonzero gradient coordinate.
 -/
 def serreQuadraticOddHenselHypothesis
-    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
     (A : σ → σ → SerrePadicInt p) (a : SerrePadicInt p)
     (x : σ → SerrePadicInt p) : Prop :=
   p ≠ 2 ∧
