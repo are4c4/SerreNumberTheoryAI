@@ -46,12 +46,12 @@ theorem serreQuadraticOddExpressionWitness_of_detBoundary
     (hboundary hdet hprim)
 
 /--
-Attempted direct specialization of the generic determinant/nonzero-vector lemma
-to the first residue field.  This keeps the specialization isolated from the
-source-facing Hensel packages so the previous heartbeat-sensitive boundary stays
-visible if the API changes.
+Direct specialization of determinant nonvanishing to the first-residue
+matrix-coordinate witness.  The finite-field instance is used only to turn the
+nonzero determinant into a unit; the matrix injectivity step then works from the
+resulting matrix unit.
 -/
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 800000
 theorem serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero
     {σ : Type*} [Fintype σ] [DecidableEq σ]
     {p : ℕ} [Fact p.Prime]
@@ -61,12 +61,24 @@ theorem serreFirstResidueMatrixCoordinateWitness_of_det_ne_zero
   change ∃ j : σ, B.mulVec (serreFirstResidueVector p x) j ≠ 0
   have hx : serreFirstResidueVector p x ≠ 0 :=
     serreFirstResidueVector_ne_zero_of_primitive (p := p) hprim
-  haveI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
-  haveI : Field (padicResidueRing p 0) := by
-    simpa [padicResidueRing] using
-      (inferInstance : Field (ZMod (p ^ 1)))
-  exact serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
-    (A := B) (x := serreFirstResidueVector p x) hdet hx
+  have hdetUnit : IsUnit B.det := by
+    letI : Fact (Nat.Prime (p ^ 1)) := ⟨by simpa using (Fact.out : p.Prime)⟩
+    letI : Field (padicResidueRing p 0) := by
+      simpa [padicResidueRing] using
+        (inferInstance : Field (ZMod (p ^ 1)))
+    exact (isUnit_iff_ne_zero).2 hdet
+  have hB : IsUnit B := (Matrix.isUnit_iff_isUnit_det B).2 hdetUnit
+  by_contra hnone
+  apply hx
+  have hzero : B.mulVec (serreFirstResidueVector p x) = 0 := by
+    funext j
+    by_contra hj
+    exact hnone ⟨j, hj⟩
+  have hzero' :
+      B.mulVec (serreFirstResidueVector p x) =
+        B.mulVec (0 : σ → padicResidueRing p 0) := by
+    simpa using hzero
+  exact (Matrix.mulVec_injective_iff_isUnit (A := B)).2 hB hzero'
 
 /--
 The matrix-coordinate Hensel package directly gives the expanded-expression
