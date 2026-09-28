@@ -12,7 +12,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - PR: #147
 - Source: Chapter 2 §2.2, Corollary 2, printed pp.21–22 / uploaded PDF pp.31–32
 - State: ACTIVE
-- Latest PR head: live GitHub state must be checked before continuing, merging, or starting determinant work.
+- Latest verified PR head: `ace0789188e31988be07bac619b1aee727204f74` passed CI #675: policy / Lean / Verso all green.
 - Dependencies now on main: Hensel lifting theorem and simple-root/value-lift interface (#102/#146), project `Z_p` valuation/divisibility/unit interface (#72/#140)
 - No project `Q_p` dependency is required for this slice.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
@@ -52,13 +52,14 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 2. keep the Hensel-facing value-lift interface from #146 as the upstream boundary;
 3. keep the formal-derivative / expanded-expression equality visible as `serreQuadraticSymmetricGradientBridge` until the polynomial-algebra proof is completed;
 4. keep the determinant / primitive-vector input visible as `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary` until the first-residue field API is light enough to specialize the generic matrix lemma safely;
-5. continue adding small, verified bridge lemmas that thread first-residue witnesses to expression witnesses, Hensel-facing gradient witnesses, Hensel hypotheses, and exact-root / congruent-lift conclusions;
-6. audit the residue/matrix API for a lightweight `padicResidueRing p 0` or `ZMod p` route that avoids the previous `whnf` timeout and typeclass mismatch;
-7. after the API route is clear, prove determinant nonzero + primitive first-residue vector gives `serreFirstResidueMatrixCoordinateWitness`;
-8. separately prove the formal derivative equals `2 * Σ_i a_ij x_i` for symmetric coordinate matrices;
-9. add independent Blueprint explanation / Lean linkage and root integration;
-10. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
-11. self-review and merge before selecting the next item.
+5. keep `HenselQuadraticOddSourceConsequences.lean` as the source-facing assembly layer: matrix-coordinate or determinant-boundary source data directly yields the Hensel value-lift conclusion and a combined exact/congruent lift;
+6. continue adding only small, verified bridge lemmas that thread first-residue witnesses to expression witnesses, Hensel-facing gradient witnesses, Hensel hypotheses, and exact-root / congruent-lift conclusions;
+7. audit the residue/matrix API for a lightweight `padicResidueRing p 0` or `ZMod p` route that avoids the previous `whnf` timeout and typeclass mismatch;
+8. after the API route is clear, prove determinant nonzero + primitive first-residue vector gives `serreFirstResidueMatrixCoordinateWitness`;
+9. separately prove the formal derivative equals `2 * Σ_i a_ij x_i` for symmetric coordinate matrices;
+10. add independent Blueprint explanation / Lean linkage and root integration;
+11. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
+12. self-review and merge before selecting the next item.
 
 ## Parked legacy implementation
 
