@@ -221,14 +221,14 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 :::theorem "henselquadraticdyadicvaluecorollary"
   (lean := "SerreNumberTheoryAI.serreDyadicQuadratic_exists_solution_lift")
   (uses := "henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge, henselquadraticvaluecorollary")
-`p=2` の場合は Hensel の定理に `n=3`, `k=1` を入れるため、値の合同は
-mod `8`、得られる lift の合同は mod `4` になる。対称な座標二次形式では
+p が 2 の場合は Hensel の定理に n=3, k=1 を入れるため、値の合同は
+法 8、得られる持ち上げの合同は法 4 になる。対称な座標二次形式では、
 形式偏微分は、2 と内側の和を掛けた Serre の展開形と一致する。
 
-Lean ではまず、2 の 2-adic 付値が 1 であることを示し、内側の和の第一剰余が
-非零なら展開形勾配の付値がちょうど `1` になることを証明する。次に、
-Corollary 2 で使った第一剰余行列の determinant / primitive-vector 議論を
-`p=2` に特殊化し、単元 determinant と primitive tuple からその非零な内側の和を取り出す。
-これを Hensel の値持ち上げ wrapper に渡すことで、Serre の系3の
-source-shaped な exact value solution と mod `4` 合同 lift が得られる。
+Lean ではまず、2 の二進付値が 1 であることを示し、内側の和の第一剰余が
+非零なら展開形勾配の付値がちょうど 1 になることを証明する。次に、
+Corollary 2 で使った第一剰余行列の行列式と原始ベクトルの議論を
+p が 2 の場合に特殊化し、単元行列式と原始組からその非零な内側の和を取り出す。
+これを Hensel の値持ち上げ wrapper に渡すことで、Serre の系3に対応する
+厳密な値解と法 4 の合同な持ち上げが得られる。
 :::
