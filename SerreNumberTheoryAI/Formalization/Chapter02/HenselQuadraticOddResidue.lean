@@ -156,6 +156,126 @@ theorem serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness
   serreQuadraticOddExpressionWitness_of_firstResidueExpressionWitness
     (serreQuadraticOddFirstResidueExpressionWitness_of_gradientWitness h)
 
+/--
+Source-facing Hensel package in which the expanded gradient witness is supplied
+by first-residue nonvanishing of the gradient matrix-vector coordinate.
+-/
+def serreQuadraticOddFirstResidueGradientHenselHypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (a : SerrePadicInt p)
+    (x : σ → SerrePadicInt p) : Prop :=
+  p ≠ 2 ∧
+    serreQuadraticMatrixSymmetric A ∧
+      serrePadicTuplePrimitive x ∧
+        padicDivisibilityDepth p 1
+          (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a) ∧
+          serreQuadraticSymmetricGradientBridge A x ∧
+            serreQuadraticOddFirstResidueGradientWitness A x
+
+/--
+Source-facing Hensel package in which residue linear algebra supplies the
+nonzero matrix-vector coordinate before the explicit factor `2` is attached.
+-/
+def serreQuadraticOddMatrixCoordinateHenselHypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (a : SerrePadicInt p)
+    (x : σ → SerrePadicInt p) : Prop :=
+  p ≠ 2 ∧
+    serreQuadraticMatrixSymmetric A ∧
+      serrePadicTuplePrimitive x ∧
+        padicDivisibilityDepth p 1
+          (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a) ∧
+          serreQuadraticSymmetricGradientBridge A x ∧
+            serreFirstResidueMatrixCoordinateWitness (serreFirstResidueGradientMatrix A) x
+
+/-- The first-residue gradient package implies the expanded-expression Hensel package. -/
+theorem serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddFirstResidueGradientHenselHypothesis A a x) :
+    serreQuadraticOddExpressionHenselHypothesis A a x := by
+  rcases h with ⟨hpodd, hA, hprim, hvalue, hbridge, hgrad⟩
+  exact ⟨hpodd, hA, hprim, hvalue, hbridge,
+    serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness hgrad⟩
+
+/-- The matrix-coordinate package implies the first-residue gradient Hensel package. -/
+theorem serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddMatrixCoordinateHenselHypothesis A a x) :
+    serreQuadraticOddFirstResidueGradientHenselHypothesis A a x := by
+  rcases h with ⟨hpodd, hA, hprim, hvalue, hbridge, hcoord⟩
+  exact ⟨hpodd, hA, hprim, hvalue, hbridge,
+    serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness hpodd hcoord⟩
+
+/-- First-residue gradient data followed by the Hensel value-lift package. -/
+theorem serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddFirstResidueGradientHenselHypothesis A a x) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_odd_quadratic_expression_hypothesis
+    (serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient h)
+
+/-- Matrix-coordinate data followed by the Hensel value-lift package. -/
+theorem serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddMatrixCoordinateHenselHypothesis A a x) :
+    serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
+  exact serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis
+    (serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate h)
+
+/-- Extract the exact value root from the first-residue gradient package. -/
+theorem serreQuadraticOddFirstResidueGradientHenselHypothesis.exists_value_root
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddFirstResidueGradientHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt p,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := p) A) = a := by
+  exact serreHenselValueLiftConclusion.exists_value_root
+    (serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis h)
+
+/-- Extract the congruent lift from the first-residue gradient package. -/
+theorem serreQuadraticOddFirstResidueGradientHenselHypothesis.exists_congruent_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddFirstResidueGradientHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt p, ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
+  exact serreHenselValueLiftConclusion.exists_congruent_lift
+    (serreHenselValueLift_mod_p_of_odd_quadratic_firstResidueGradient_hypothesis h)
+
+/-- Extract the exact value root from the matrix-coordinate package. -/
+theorem serreQuadraticOddMatrixCoordinateHenselHypothesis.exists_value_root
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddMatrixCoordinateHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt p,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := p) A) = a := by
+  exact serreHenselValueLiftConclusion.exists_value_root
+    (serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis h)
+
+/-- Extract the congruent lift from the matrix-coordinate package. -/
+theorem serreQuadraticOddMatrixCoordinateHenselHypothesis.exists_congruent_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ]
+    {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddMatrixCoordinateHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt p, ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
+  exact serreHenselValueLiftConclusion.exists_congruent_lift
+    (serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis h)
+
 end HenselQuadraticOddResidue
 
 end
