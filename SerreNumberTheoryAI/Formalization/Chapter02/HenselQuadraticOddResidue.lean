@@ -123,8 +123,7 @@ theorem serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness
   rcases h with ⟨j, hj⟩
   refine ⟨j, ?_⟩
   haveI : NoZeroDivisors (padicResidueRing p 0) := by
-    change NoZeroDivisors (ZMod p)
-    infer_instance
+    simpa [padicResidueRing] using (inferInstance : NoZeroDivisors (ZMod p))
   exact mul_ne_zero (serrePadicIntProj_two_ne_zero_of_ne_two (p := p) hp2) hj
 
 /-- The matrix-shaped first-residue witness gives the expression nonvanishing witness. -/
