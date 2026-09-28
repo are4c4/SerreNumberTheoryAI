@@ -199,7 +199,7 @@ Hensel で得た exact value root を、必要な合同深さへ再包装する�
 :::lemma_ "henselquadraticgradientbridge"
   (lean := "SerreNumberTheoryAI.serreQuadraticSymmetricGradientBridge_of_symmetric")
   (uses := "henselvalueconclusionapi")
-座標表示の二次多項式を一項ずつ偏微分すると、選んだ座標 `j` に対して
+座標表示の二次多項式を一項ずつ偏微分すると、選んだ座標に対して
 行側と列側の2つの和が現れる。係数行列が対称なら両者は一致するので、
 偏微分評価は Serre の展開形である 2 倍の和になる。
 Lean では一つの単項式の偏微分、有限和への展開、対称性による2つの和の
@@ -209,18 +209,18 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 :::theorem "henselquadraticoddcorollary"
   (lean := "SerreNumberTheoryAI.serreOddQuadratic_exists_solution_lift")
   (uses := "henselsimplerootcorollary, henselquadraticgradientbridge")
-奇素数 p と対称係数行列 A を考え、その行列式が project-local な
-p進整数環の単元であるとする。mod p の値合同式に原始解があれば、
+奇素数と対称係数行列を考え、その行列式がプロジェクト内の
+p進整数環の単元であるとする。法pの値合同式に原始解があれば、
 その第一剰余ベクトルは非零である。第一剰余上でも行列式は非零なので、
 行列を掛けたベクトルのどこかの座標は非零になる。
-p が 2 でないことにより係数 2 も第一剰余で非零だから、その座標の偏微分は
-付値0である。したがって単純根型 Hensel の系を適用でき、
-同じ mod p 類にある project-local p進整数上の厳密な値解が得られる。
+さらにpが2でないため、係数2も第一剰余で非零であり、
+その座標の偏微分は付値0である。したがって単純根型 Hensel の系を
+適用でき、法pで同じ剰余類にある p進整数上の厳密な値解が得られる。
 
-Lean では第一剰余環を Field として作り直さず、
-可換整域上の adjugate/determinant の一般論を使って
+Lean では第一剰余環を体として作り直さず、
+可換整域上の余因子行列と行列式の一般論を使って、
 非零ベクトルの像に非零座標があることを示す。
-これにより以前の residue-field instance の elaboration 境界を避けている。
+これにより以前の第一剰余環インスタンスに関する詳細な構成を避けている。
 :::
 
 :::theorem "henselquadraticvaluecorollary"
