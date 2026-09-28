@@ -41,6 +41,19 @@ theorem serreFirstResidue_two_ne_zero_of_ne_two
     simpa using hpowdvd
   exact hp2 ((Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) Nat.prime_two).1 hpdvd)
 
+/-- The first projection of the p-adic integer `2` is the residue class `2`. -/
+theorem serrePadicIntProj_two
+    (p : ℕ) :
+    serrePadicIntProj p 0 (2 : SerrePadicInt p) = (2 : padicResidueRing p 0) := by
+  rfl
+
+/-- For odd prime `p`, the projected p-adic integer `2` is nonzero. -/
+theorem serrePadicIntProj_two_ne_zero_of_ne_two
+    {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) :
+    serrePadicIntProj p 0 (2 : SerrePadicInt p) ≠ 0 := by
+  rw [serrePadicIntProj_two]
+  exact serreFirstResidue_two_ne_zero_of_ne_two (p := p) hp2
+
 /--
 The first-residue matrix whose `j`-th row is the first residue of the `j`-th
 Serre gradient column `i ↦ aᵢⱼ`.
@@ -96,6 +109,20 @@ def serreQuadraticOddFirstResidueGradientWitness
   ∃ j : σ,
     serrePadicIntProj p 0 (2 : SerrePadicInt p) *
       (serreFirstResidueGradientMatrix A).mulVec (serreFirstResidueVector p x) j ≠ 0
+
+/--
+A nonzero matrix-vector coordinate gives the matrix-shaped gradient witness when
+`p` is odd.
+-/
+theorem serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (h : serreFirstResidueMatrixCoordinateWitness (serreFirstResidueGradientMatrix A) x) :
+    serreQuadraticOddFirstResidueGradientWitness A x := by
+  rcases h with ⟨j, hj⟩
+  refine ⟨j, ?_⟩
+  exact mul_ne_zero (serrePadicIntProj_two_ne_zero_of_ne_two (p := p) hp2) hj
 
 /-- The matrix-shaped first-residue witness gives the expression nonvanishing witness. -/
 theorem serreQuadraticOddFirstResidueExpressionWitness_of_gradientWitness
