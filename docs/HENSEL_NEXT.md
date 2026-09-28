@@ -51,7 +51,7 @@ Stop rather than continuing if:
 
 ## Current Lean boundary
 
-The branch currently separates three layers:
+The branch currently separates four layers:
 
 - `serreQuadraticPolynomial` and `serreQuadraticPolynomial_eval` represent and
   evaluate the coordinate quadratic form `Σᵢⱼ aᵢⱼ Xᵢ Xⱼ`.
@@ -65,12 +65,20 @@ The branch currently separates three layers:
   gradient witness, and
   `serreHenselValueLift_mod_p_of_odd_quadratic_hypothesis` turns that package
   into an exact `Z_p` value root.
+- The residue linear-algebra side now has generic field-level nonvanishing
+  lemmas: an invertible matrix, or a matrix with nonzero determinant, sends a
+  nonzero vector to a vector with some nonzero coordinate.  The primitive
+  p-adic tuple API also exposes that the first residue projection is nonzero.
 
 ## Immediate proof/status target
 
-First get CI green for the stabilized Hensel-facing gradient boundary.  Then the
-next mathematical work is the determinant/primitive-vector side of Serre's
-quadratic corollary:
+The current CI-green boundary keeps the residue matrix nonvanishing lemmas over
+an arbitrary field.  A direct specialization to `padicResidueRing p 0` hit a
+Lean elaboration/performance timeout, so the next safe slice is to identify the
+right lightweight first-residue API before reintroducing that specialization.
+
+After that API boundary is clear, the next mathematical work is the
+determinant/primitive-vector side of Serre's quadratic corollary:
 
 - formalize the bridge between the formal partial derivative and the expanded
   symmetric expression `2 * Σᵢ aᵢⱼ xᵢ`;
