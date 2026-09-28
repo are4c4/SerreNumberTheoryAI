@@ -54,7 +54,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 4. rewrite the derivative under symmetry to Serre's `2 * Σ_i a_ij x_i` gradient expression;
 5. package the Hensel lift from a gradient coordinate of valuation zero;
 6. audit the residue/matrix API for the determinant + primitive-vector step;
-7. only then attempt the nonvanishing-gradient theorem for odd `p`;
+7. next safe mathematical boundary after CI: express residue-level primitive nonzero vector and matrix-vector nonvanishing without adding unverified determinant assumptions;
 8. add independent Blueprint explanation / Lean linkage and root integration;
 9. run policy / `lake build` / `lake exe vbp build` / PR-head CI;
 10. self-review and merge before selecting the next item.
