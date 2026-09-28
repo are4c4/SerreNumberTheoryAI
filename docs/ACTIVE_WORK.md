@@ -9,7 +9,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Work ID: C2S2.2-HenselQuadraticTwo
 - Issue: #105
 - Branch: `work/c2-s2-2-hensel-quadratic-two`
-- PR: not opened yet
+- PR: #148
 - Source: Chapter 2 §2.2, Corollary 3, printed p.22 / uploaded PDF p.32
 - State: ACTIVE
 - Base main: after PR #147 merge and active-work cleanup; odd-prime Corollary 2 is DONE.
