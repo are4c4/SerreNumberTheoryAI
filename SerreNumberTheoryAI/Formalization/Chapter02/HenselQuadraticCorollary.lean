@@ -51,40 +51,6 @@ theorem serreQuadraticPolynomial_eval
   simp [serreQuadraticPolynomial, mul_assoc]
 
 /--
-Evaluating a partial derivative of `∑ᵢⱼ aᵢⱼ Xᵢ Xⱼ` gives the sum of the
-corresponding row and column linear forms.
--/
-theorem serreQuadraticPolynomial_pderiv_eval
-    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
-    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (k : σ) :
-    MvPolynomial.eval x
-        (MvPolynomial.pderiv k (serreQuadraticPolynomial (p := p) A)) =
-      (∑ j : σ, A k j * x j) + (∑ i : σ, A i k * x i) := by
-  classical
-  simp [serreQuadraticPolynomial, MvPolynomial.pderiv_sum, MvPolynomial.pderiv_mul,
-    Finset.sum_add_distrib, mul_assoc, mul_left_comm, mul_comm]
-
-/--
-For a symmetric coefficient matrix, the selected partial derivative evaluates to
-`2 * ∑ᵢ aⱼᵢ xᵢ`, matching the formula used in Serre's proof.
--/
-theorem serreQuadraticPolynomial_pderiv_eval_of_symm
-    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
-    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (k : σ)
-    (hA : ∀ i j, A i j = A j i) :
-    MvPolynomial.eval x
-        (MvPolynomial.pderiv k (serreQuadraticPolynomial (p := p) A)) =
-      (2 : SerrePadicInt p) * (∑ i : σ, A k i * x i) := by
-  classical
-  rw [serreQuadraticPolynomial_pderiv_eval (p := p) A x k]
-  have hsum : (∑ i : σ, A i k * x i) = ∑ i : σ, A k i * x i := by
-    apply Finset.sum_congr rfl
-    intro i _
-    rw [hA i k]
-  rw [hsum]
-  ring
-
-/--
 The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
 `f(x) ≡ a (mod p)` and some selected derivative is a unit, then the congruence
 lifts to an exact equation over `Z_p`.
