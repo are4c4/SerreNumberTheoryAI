@@ -31,6 +31,50 @@ def serreHenselValueLiftConclusion
     MvPolynomial.eval y f = a ∧
       ∀ i, serrePadicCongruent p depth (x i) (y i)
 
+/-- Extract the exact value solution from a value-lift conclusion. -/
+theorem serreHenselValueLiftConclusion.exists_value_root
+    {σ : Type*} {p : ℕ} [Fact p.Prime]
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {depth : ℕ}
+    (h : serreHenselValueLiftConclusion p f a x depth) :
+    ∃ y : σ → SerrePadicInt p, MvPolynomial.eval y f = a := by
+  rcases h with ⟨y, hyroot, _⟩
+  exact ⟨y, hyroot⟩
+
+/-- Extract a lift that is congruent to the original approximate point. -/
+theorem serreHenselValueLiftConclusion.exists_congruent_lift
+    {σ : Type*} {p : ℕ} [Fact p.Prime]
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {depth : ℕ}
+    (h : serreHenselValueLiftConclusion p f a x depth) :
+    ∃ y : σ → SerrePadicInt p, ∀ i, serrePadicCongruent p depth (x i) (y i) := by
+  rcases h with ⟨y, _, hycong⟩
+  exact ⟨y, hycong⟩
+
+/-- A solution that is already exact gives a value-lift conclusion at every depth. -/
+theorem serreHenselValueLiftConclusion_of_exact
+    {σ : Type*} (p : ℕ) [Fact p.Prime]
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {depth : ℕ}
+    (hroot : MvPolynomial.eval x f = a) :
+    serreHenselValueLiftConclusion p f a x depth := by
+  refine ⟨x, hroot, ?_⟩
+  intro i
+  exact serrePadicCongruent_refl p depth (x i)
+
+/-- A value-lift conclusion modulo a stronger depth also gives one modulo any weaker depth. -/
+theorem serreHenselValueLiftConclusion.mono
+    {σ : Type*} {p : ℕ} [Fact p.Prime]
+    {m n : ℕ} (hmn : m ≤ n)
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreHenselValueLiftConclusion p f a x n) :
+    serreHenselValueLiftConclusion p f a x m := by
+  rcases h with ⟨y, hyroot, hycong⟩
+  refine ⟨y, hyroot, ?_⟩
+  intro i
+  exact serrePadicCongruent_mono hmn (hycong i)
+
 /--
 The coordinate-matrix quadratic polynomial `∑ᵢⱼ aᵢⱼ Xᵢ Xⱼ` used in Serre's
 quadratic corollaries.
