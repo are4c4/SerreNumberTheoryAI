@@ -171,7 +171,7 @@ theorem serreFirstResidueGradientMatrix_det_eq_proj_det
   classical
   have hmatrix :
       serreFirstResidueGradientMatrix A =
-        (serrePadicIntProj p 0).mapMatrix Aᵀ := by
+        (serrePadicIntProj p 0).mapMatrix (Aᵀ) := by
     ext i j
     rfl
   rw [hmatrix, ← RingHom.map_det, Matrix.det_transpose]
