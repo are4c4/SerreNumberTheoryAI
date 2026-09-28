@@ -99,13 +99,13 @@
 | §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | ⬜ |
+| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
 | §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
 - #100 / PR #145 は main `32c68109beac3f3b27504501c166022864c34c1c` へ統合済み。primitive finite-level compatibility、primitive inverse-limit recovery、homogeneous evaluation scaling、nonzero `Q_p` tuple normalization、Proposition 6 の three-condition equivalence、Blueprint/root integrationを完了し、final PR-head CI #462 green。
 - #102 / PR #146 は main `3695fa0bd60adb0f0f1cb0863d5b0a4269c60bd4` へ統合済み。Taylor one-step improvement、Cauchy iteration、exact root from finite residues、coordinate specialization、multivariate theorem、Corollary 1、quadratic value-lift wrappersを完了し、final PR-head CI #590 green。
-- #104 / PR #147 is the current single-lane ACTIVE item. The current PR records the Hensel-facing formal derivative coordinate and the expanded symmetric expression as a separate bridge boundary, packages the odd-prime Hensel lift from a valuation-zero gradient witness, adds the first-residue gradient/matrix-coordinate/determinant-boundary packages, and threads those packages to exact-root and congruent-lift conclusions. The remaining explicit proof boundaries are the polynomial-algebra bridge `formal derivative = 2 * Σ_i a_ij x_i` and the determinant/primitive-vector first-residue nonvanishing step.
+- #104 / PR #147 is the current single-lane ACTIVE item. The Lean proof is now source-shaped end-to-end: monomial differentiation and symmetry prove `formal derivative = 2 * Σ_i a_ij x_i`; a no-zero-divisors adjugate/determinant argument proves determinant nonzero + primitive first-residue vector gives a nonzero gradient coordinate; unit determinant over project `Z_p` projects to nonzero first-residue determinant; and `serreOddQuadratic_exists_solution_lift` closes Corollary 2 via the merged Hensel theorem. Blueprint/explanation are synchronized; only the final latest-head CI/self-review/merge gate remains.
 - #105 はdyadic quadratic liftingのpreflight complete。proofは#104 active完了後に開始する。#96は不要。
 
 ## Phase 8 — 第2章 §3 `Q_p` の乗法群と平方類
