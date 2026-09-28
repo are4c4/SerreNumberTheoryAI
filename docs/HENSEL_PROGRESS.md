@@ -64,7 +64,7 @@ produces such a coordinate is left as a separate linear-algebra boundary.
 - one-variable and multivariate simple-root corollary packages for `n = 1`, `k = 0`;
 - Hensel-facing value-lift packages for the quadratic corollaries: odd-prime simple-derivative lifting modulo `p`, and the `p = 2`, mod `8` to mod `4` lifting with derivative valuation `1`;
 - existential-coordinate wrappers for those value-lift packages, matching the source's formulation where the matrix argument supplies some coordinate `j`;
-- coordinate-matrix quadratic polynomial API `serreQuadraticPolynomial`, including evaluation and partial-derivative evaluation formulas, and the symmetric-matrix formula `∂f/∂X_j(x) = 2 * ∑ᵢ a_{j i} x_i`;
+- coordinate-matrix quadratic polynomial API `serreQuadraticPolynomial`, including its evaluation formula;
 - Blueprint nodes now mirror the congruence API, Taylor-defect algebra, Taylor defect bookkeeping, one-step conclusion, iteration Cauchy/completeness API, exact-root bridge, one-variable theorem boundary, multivariate reduction boundary, simple-root corollary, and quadratic value-lift boundary.
 
 ## Next proof target
@@ -74,7 +74,7 @@ The source-shaped one-variable theorem, multivariate theorem boundary, simple-ro
 The next mathematical boundary is the remaining linear algebra in Serre's quadratic corollaries:
 
 1. use the new `serreQuadraticPolynomial` API as the polynomial representation of `Σ a_ij X_i X_j`;
-2. formalize the primitive-vector/nondegenerate-matrix argument that some partial derivative has the required valuation;
+2. formalize the partial-derivative formula for that polynomial and the primitive-vector/nondegenerate-matrix argument that some partial derivative has the required valuation;
 3. connect that derivative-existence result to `serreHenselValueLift_mod_p_of_exists_simple_derivative` and `serreHenselValueLift_mod_eight_of_exists_derivative_valuation_one`.
 
 Stop before attempting this if the determinant/invertibility API is not clear.  Keep the proof project-local and avoid packaged Hensel theorems or non-source assumptions.
