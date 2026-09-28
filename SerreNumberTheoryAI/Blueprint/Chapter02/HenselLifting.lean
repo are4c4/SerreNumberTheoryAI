@@ -209,18 +209,9 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 :::theorem "henselquadraticoddcorollary"
   (lean := "SerreNumberTheoryAI.serreOddQuadratic_exists_solution_lift")
   (uses := "henselsimplerootcorollary, henselquadraticgradientbridge")
-奇素数と対称係数行列を考え、その行列式がプロジェクト内の
-p進整数環の単元であるとする。法pの値合同式に原始解があれば、
-その第一剰余ベクトルは非零である。第一剰余上でも行列式は非零なので、
-行列を掛けたベクトルのどこかの座標は非零になる。
-さらにpが2でないため、係数2も第一剰余で非零であり、
-その座標の偏微分は付値0である。したがって単純根型 Hensel の系を
-適用でき、同じ剰余類に属する厳密な値解が得られる。
-
-Lean では第一剰余環を体として作り直さず、
-可換整域上の余因子行列と行列式の一般論を使って、
-非零ベクトルの像に非零座標があることを示す。
-これにより以前の第一剰余環インスタンスに関する詳細な構成を避けている。
+奇素数の場合の二次形式の系をまとめる。
+対称性から偏微分の展開式を得て、行列式と原始性から
+単元偏微分を取り出し、ヘンゼルの定理を適用する。
 :::
 
 :::theorem "henselquadraticvaluecorollary"
