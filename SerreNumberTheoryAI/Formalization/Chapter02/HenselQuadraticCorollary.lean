@@ -1,0 +1,96 @@
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
+
+/-!
+# Quadratic-form lift packages after Hensel's lemma
+
+Serre, Chapter 2, §2.2 derives two quadratic-form lifting corollaries after
+Hensel's theorem.  This file records the Hensel-facing part of those corollaries:
+once a quadratic congruence has a coordinate whose derivative has the required
+valuation, the solution lifts to an actual `Z_p`-solution.
+
+The determinant/primitive-vector argument that produces such a coordinate is a
+separate linear-algebra boundary and is intentionally not smuggled into these
+statements.
+-/
+
+namespace SerreNumberTheoryAI
+
+noncomputable section
+
+section HenselQuadraticCorollary
+
+/--
+A lift conclusion for an equation `f(y) = a`, keeping the Serre congruence
+modulus explicit.
+-/
+def serreHenselValueLiftConclusion
+    {σ : Type*} (p : ℕ) [Fact p.Prime]
+    (f : MvPolynomial σ (SerrePadicInt p))
+    (a : SerrePadicInt p) (x : σ → SerrePadicInt p) (depth : ℕ) : Prop :=
+  ∃ y : σ → SerrePadicInt p,
+    MvPolynomial.eval y f = a ∧
+      ∀ i, serrePadicCongruent p depth (x i) (y i)
+
+/--
+The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
+`f(x) ≡ a (mod p)` and some selected derivative is a unit, then the congruence
+lifts to an exact equation over `Z_p`.
+-/
+theorem serreHenselValueLift_mod_p_of_simple_derivative
+    {σ : Type*} [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
+    (hvalue : padicDivisibilityDepth p 1 (MvPolynomial.eval x f - a))
+    (hderiv :
+      serrePadicIntAddValuation p
+        (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (0 : ℕ∞)) :
+    serreHenselValueLiftConclusion p f a x 1 := by
+  have hsimple :
+      serreHenselMultivariateSimpleRootHypothesis p
+        (f - (MvPolynomial.C a : MvPolynomial σ (SerrePadicInt p))) x j := by
+    refine ⟨?_, ?_⟩
+    · simpa using hvalue
+    · simpa using hderiv
+  rcases serreHenselMultivariateSimpleRootConclusion_of_hypothesis hsimple with
+    ⟨y, hyroot, hycong⟩
+  refine ⟨y, ?_, hycong⟩
+  have hsub : MvPolynomial.eval y f - a = 0 := by
+    simpa using hyroot
+  exact sub_eq_zero.mp hsub
+
+/--
+The Hensel-facing form of Serre's `p = 2` quadratic lifting corollary: a
+solution modulo `8` with a selected derivative of valuation `1` lifts to an
+actual solution, congruent modulo `4`.
+-/
+theorem serreHenselValueLift_mod_eight_of_derivative_valuation_one
+    {σ : Type*} [DecidableEq σ]
+    [Fact (Nat.Prime 2)]
+    {f : MvPolynomial σ (SerrePadicInt 2)}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2} {j : σ}
+    (hvalue : padicDivisibilityDepth 2 3 (MvPolynomial.eval x f - a))
+    (hderiv :
+      serrePadicIntAddValuation 2
+        (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (1 : ℕ∞)) :
+    serreHenselValueLiftConclusion 2 f a x 2 := by
+  have hhyp :
+      serreHenselMultivariateHypothesis 2
+        (f - (MvPolynomial.C a : MvPolynomial σ (SerrePadicInt 2))) x j 3 1 := by
+    refine ⟨by norm_num, ?_, ?_⟩
+    · simpa using hvalue
+    · simpa using hderiv
+  rcases serreHenselMultivariateConclusion_of_hypothesis hhyp with
+    ⟨y, hyroot, hycong⟩
+  refine ⟨y, ?_, ?_⟩
+  · have hsub : MvPolynomial.eval y f - a = 0 := by
+      simpa using hyroot
+    exact sub_eq_zero.mp hsub
+  · intro i
+    simpa using hycong i
+
+end HenselQuadraticCorollary
+
+end
+
+end SerreNumberTheoryAI
