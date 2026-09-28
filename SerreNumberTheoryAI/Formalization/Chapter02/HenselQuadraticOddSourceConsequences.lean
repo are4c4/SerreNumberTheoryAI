@@ -1,4 +1,5 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddResidueExtractors
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddDerivativeBridge
 
 /-!
 # Source-level consequences for odd-prime quadratic Hensel lifting
@@ -27,11 +28,11 @@ theorem serreQuadraticOddMatrixCoordinateHenselHypothesis_of_assumptions
     (hprim : serrePadicTuplePrimitive x)
     (hvalue : padicDivisibilityDepth p 1
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
-    (hbridge : serreQuadraticSymmetricGradientBridge A x)
     (hcoord : serreFirstResidueMatrixCoordinateWitness
       (serreFirstResidueGradientMatrix A) x) :
     serreQuadraticOddMatrixCoordinateHenselHypothesis A a x := by
-  exact ⟨hp2, hA, hprim, hvalue, hbridge, hcoord⟩
+  exact ⟨hp2, hA, hprim, hvalue,
+    serreQuadraticSymmetricGradientBridge_of_symmetric x hA, hcoord⟩
 
 /-- Assemble the determinant-boundary Hensel package directly from source-shaped assumptions. -/
 theorem serreQuadraticOddDetBoundaryHenselHypothesis_of_assumptions
@@ -44,12 +45,12 @@ theorem serreQuadraticOddDetBoundaryHenselHypothesis_of_assumptions
     (hprim : serrePadicTuplePrimitive x)
     (hvalue : padicDivisibilityDepth p 1
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
-    (hbridge : serreQuadraticSymmetricGradientBridge A x)
     (hdet : (serreFirstResidueGradientMatrix A).det ≠ 0)
     (hboundary : serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
       (serreFirstResidueGradientMatrix A) x) :
     serreQuadraticOddDetBoundaryHenselHypothesis A a x := by
-  exact ⟨hp2, hA, hprim, hvalue, hbridge, hdet, hboundary⟩
+  exact ⟨hp2, hA, hprim, hvalue,
+    serreQuadraticSymmetricGradientBridge_of_symmetric x hA, hdet, hboundary⟩
 
 /-- Matrix-coordinate source data gives the Hensel value-lift conclusion. -/
 theorem serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate
@@ -62,13 +63,12 @@ theorem serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate
     (hprim : serrePadicTuplePrimitive x)
     (hvalue : padicDivisibilityDepth p 1
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
-    (hbridge : serreQuadraticSymmetricGradientBridge A x)
     (hcoord : serreFirstResidueMatrixCoordinateWitness
       (serreFirstResidueGradientMatrix A) x) :
     serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
   exact serreHenselValueLift_mod_p_of_odd_quadratic_matrixCoordinate_hypothesis
     (serreQuadraticOddMatrixCoordinateHenselHypothesis_of_assumptions
-      hp2 hA hprim hvalue hbridge hcoord)
+      hp2 hA hprim hvalue hcoord)
 
 /-- Determinant-boundary source data gives the Hensel value-lift conclusion. -/
 theorem serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary
@@ -81,14 +81,13 @@ theorem serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary
     (hprim : serrePadicTuplePrimitive x)
     (hvalue : padicDivisibilityDepth p 1
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
-    (hbridge : serreQuadraticSymmetricGradientBridge A x)
     (hdet : (serreFirstResidueGradientMatrix A).det ≠ 0)
     (hboundary : serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
       (serreFirstResidueGradientMatrix A) x) :
     serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
   exact serreHenselValueLift_mod_p_of_odd_quadratic_detBoundary_hypothesis
     (serreQuadraticOddDetBoundaryHenselHypothesis_of_assumptions
-      hp2 hA hprim hvalue hbridge hdet hboundary)
+      hp2 hA hprim hvalue hdet hboundary)
 
 /-- Matrix-coordinate source data produces one lift with both the value equation and congruence. -/
 theorem serreOddQuadratic_exists_solution_lift_of_matrixCoordinate
@@ -101,14 +100,13 @@ theorem serreOddQuadratic_exists_solution_lift_of_matrixCoordinate
     (hprim : serrePadicTuplePrimitive x)
     (hvalue : padicDivisibilityDepth p 1
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
-    (hbridge : serreQuadraticSymmetricGradientBridge A x)
     (hcoord : serreFirstResidueMatrixCoordinateWitness
       (serreFirstResidueGradientMatrix A) x) :
     ∃ y : σ → SerrePadicInt p,
       MvPolynomial.eval y (serreQuadraticPolynomial (p := p) A) = a ∧
         ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
   exact (serreQuadraticOddMatrixCoordinateHenselHypothesis_of_assumptions
-    hp2 hA hprim hvalue hbridge hcoord).exists_solution_lift
+    hp2 hA hprim hvalue hcoord).exists_solution_lift
 
 /-- Determinant-boundary source data produces one lift with both the value equation and congruence. -/
 theorem serreOddQuadratic_exists_solution_lift_of_detBoundary
@@ -121,7 +119,6 @@ theorem serreOddQuadratic_exists_solution_lift_of_detBoundary
     (hprim : serrePadicTuplePrimitive x)
     (hvalue : padicDivisibilityDepth p 1
       (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
-    (hbridge : serreQuadraticSymmetricGradientBridge A x)
     (hdet : (serreFirstResidueGradientMatrix A).det ≠ 0)
     (hboundary : serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
       (serreFirstResidueGradientMatrix A) x) :
@@ -129,7 +126,7 @@ theorem serreOddQuadratic_exists_solution_lift_of_detBoundary
       MvPolynomial.eval y (serreQuadraticPolynomial (p := p) A) = a ∧
         ∀ i, serrePadicCongruent p 1 (x i) (y i) := by
   exact (serreQuadraticOddDetBoundaryHenselHypothesis_of_assumptions
-    hp2 hA hprim hvalue hbridge hdet hboundary).exists_solution_lift
+    hp2 hA hprim hvalue hdet hboundary).exists_solution_lift
 
 end HenselQuadraticOddSourceConsequences
 
