@@ -46,7 +46,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 ## Current serial state
 
 - ACTIVE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / branch `work/c2-s2-2-hensel-quadratic-odd-serial`
-- ACTIVE CI watch: latest pushed PR head should be checked before any merge or further determinant work.
+- ACTIVE CI watch: Corollary 2 proof and Blueprint are complete on PR #147; latest pushed head needs final CI/self-review before merge.
 - JUST DONE: `C2S2.2-HenselLifting` — Issue #102 / PR #146 / main `3695fa0b…`, CI #590 green
 - JUST DONE: `C2S2.1-PrimitiveHomogeneousZeros` — Issue #100 / PR #145 / main `32c68109…`, CI #462 green
 - JUST DONE: `C2S1.3-QpField` — Issue #96 / PR #143 / main `5b021cb9…`, CI #428 green
@@ -73,7 +73,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 1 | `C2S1.3-QpField` | §1.3 `Q_p`, decomposition/valuation, Proposition 4 | DONE | PR #143 merged as `5b021cb9…`, CI #428 green | PR #123 / old branch `work/c2-s1-3-qp-field` |
 | 2 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 Proposition 6 | DONE | PR #145 merged as `32c68109…`, CI #462 green | Issue #100 |
 | 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | DONE | PR #146 merged as `3695fa0b…`, CI #590 green | Issue #102 |
-| 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | ACTIVE | continue PR #147: verify derivative/gradient bridge CI, then formulate residue primitive-vector nonvanishing-gradient boundary | Issue #104 |
+| 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | ACTIVE | proof/Blueprint complete in PR #147; finish latest-head CI, self-review, then merge | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | WAITING | needs odd item complete/active cleared, then dyadic derivative-valuation boundary | Issue #105 |
 | 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | PARKED | recover old #125 only when this item becomes ACTIVE | PR #125 |
 | 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | WAITING | depends on §3.1 and project `Q_p` | Issue #112 |
