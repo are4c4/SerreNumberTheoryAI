@@ -41,12 +41,6 @@ theorem serreFirstResidue_two_ne_zero_of_ne_two
     simpa using hpowdvd
   exact hp2 ((Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) Nat.prime_two).1 hpdvd)
 
-/-- For odd prime `p`, the source factor `2` is a unit in the first residue field. -/
-theorem serreFirstResidue_two_isUnit_of_ne_two
-    {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) :
-    IsUnit (2 : padicResidueRing p 0) := by
-  exact isUnit_iff_ne_zero.2 (serreFirstResidue_two_ne_zero_of_ne_two (p := p) hp2)
-
 /--
 The first-residue matrix whose `j`-th row is the first residue of the `j`-th
 Serre gradient column `i ↦ aᵢⱼ`.
