@@ -48,8 +48,11 @@ theorem serreFirstResidueGradientMatrix_mulVec
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
     (serreFirstResidueGradientMatrix A).mulVec (serreFirstResidueVector p x) j =
       serrePadicIntProj p 0 (∑ i : σ, A i j * x i) := by
-  simp [Matrix.mulVec, Matrix.dotProduct, serreFirstResidueGradientMatrix,
-    serreFirstResidueVector, map_sum, map_mul]
+  rw [Matrix.mulVec]
+  change (∑ i : σ, serrePadicIntProj p 0 (A i j) *
+      serrePadicIntProj p 0 (x i)) =
+    serrePadicIntProj p 0 (∑ i : σ, A i j * x i)
+  simp [map_sum, map_mul]
 
 /-- First residue of Serre's expanded symmetric gradient expression. -/
 theorem serreQuadraticSymmetricGradientExpression_firstResidue
