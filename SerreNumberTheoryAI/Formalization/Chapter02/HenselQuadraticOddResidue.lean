@@ -29,6 +29,24 @@ theorem serrePadicIntAddValuation_eq_zero_of_firstResidue_ne_zero
     exact (Nat.find_eq_zero _).2 hz
   simpa [horder] using serrePadicIntAddValuation_eq_order (p := p) hz0
 
+/-- For odd prime `p`, the source factor `2` is nonzero in the first residue ring. -/
+theorem serreFirstResidue_two_ne_zero_of_ne_two
+    {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) :
+    (2 : padicResidueRing p 0) ≠ 0 := by
+  intro hzero
+  have hpowdvd : p ^ (0 + 1) ∣ 2 := by
+    exact (ZMod.natCast_eq_zero_iff 2 (p ^ (0 + 1))).1
+      (by simpa [padicResidueRing] using hzero)
+  have hpdvd : p ∣ 2 := by
+    simpa using hpowdvd
+  exact hp2 ((Nat.prime_dvd_prime_iff_eq (Fact.out : p.Prime) Nat.prime_two).1 hpdvd)
+
+/-- For odd prime `p`, the source factor `2` is a unit in the first residue field. -/
+theorem serreFirstResidue_two_isUnit_of_ne_two
+    {p : ℕ} [Fact p.Prime] (hp2 : p ≠ 2) :
+    IsUnit (2 : padicResidueRing p 0) := by
+  exact isUnit_iff_ne_zero.2 (serreFirstResidue_two_ne_zero_of_ne_two (p := p) hp2)
+
 /--
 The first-residue matrix whose `j`-th row is the first residue of the `j`-th
 Serre gradient column `i ↦ aᵢⱼ`.
