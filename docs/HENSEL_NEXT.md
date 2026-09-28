@@ -73,11 +73,12 @@ The branch currently separates six layers:
   `serreFirstResidueVector_ne_zero_of_primitive`,
   `serreFirstResidueMatrixCoordinateWitness`, and
   `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary`.
-- `HenselQuadraticOddResidue.lean` now adds the first-residue gradient bridge:
+- `HenselQuadraticOddResidue.lean` adds the first-residue gradient bridge:
   nonzero first residue implies `serrePadicIntAddValuation = 0`, the expanded
   symmetric gradient projects to the first-residue gradient matrix-vector
-  coordinate with the explicit source factor `2`, and a matrix-shaped
-  first-residue gradient witness yields the valuation-zero expression witness.
+  coordinate with the explicit source factor `2`, oddness of `p` makes that
+  projected factor nonzero, and a matrix-coordinate witness yields the
+  valuation-zero expression witness.
 
 ## Immediate proof/status target
 
@@ -92,25 +93,27 @@ slow proof.
 The first-residue valuation bridge is now in place:
 
 - `serrePadicIntAddValuation_eq_zero_of_firstResidue_ne_zero`;
+- `serreFirstResidue_two_ne_zero_of_ne_two`, `serrePadicIntProj_two`, and
+  `serrePadicIntProj_two_ne_zero_of_ne_two`;
 - `serreFirstResidueGradientMatrix` and
   `serreFirstResidueGradientMatrix_mulVec`;
 - `serreQuadraticSymmetricGradientExpression_firstResidue`;
 - `serreQuadraticOddFirstResidueExpressionWitness` and
   `serreQuadraticOddFirstResidueGradientWitness`;
+- `serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness`;
 - `serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness`.
 
 Next safe slices:
 
-- prove, for odd `p`, that the first-residue image of `2` is nonzero/unit, so a
-  nonzero matrix-vector coordinate yields the matrix-shaped gradient witness;
 - identify a lighter representation or existing API for the first residue ring
   before reintroducing the determinant-to-coordinate proof;
 - keep the determinant/nonzero-vector bridge as a separate lemma rather than
   expanding it inside the odd-quadratic Hensel package;
 - formalize the bridge between the formal partial derivative and the expanded
   symmetric expression `2 * Σᵢ aᵢⱼ xᵢ`;
-- connect that witness to `serreQuadraticOddHenselHypothesis` and the existing
-  Hensel value-lift theorem.
+- connect the expression witness and derivative bridge to
+  `serreQuadraticOddHenselHypothesis` and the existing Hensel value-lift
+  theorem.
 
 Avoid packaged Hensel theorems and avoid adding non-source assumptions to final
 statements.  If the matrix API is unclear, stop at explicit definitions and
