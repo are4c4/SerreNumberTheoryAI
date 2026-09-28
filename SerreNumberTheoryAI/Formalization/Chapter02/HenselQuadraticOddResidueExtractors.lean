@@ -45,6 +45,42 @@ theorem serreQuadraticOddExpressionWitness_of_detBoundary
   exact serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness hp2
     (hboundary hdet hprim)
 
+/--
+The matrix-coordinate Hensel package directly gives the expanded-expression
+Hensel package.
+-/
+theorem serreQuadraticOddExpressionHenselHypothesis_of_matrixCoordinate
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddMatrixCoordinateHenselHypothesis A a x) :
+    serreQuadraticOddExpressionHenselHypothesis A a x := by
+  exact serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient
+    (serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate h)
+
+/--
+The determinant-boundary Hensel package directly gives the first-residue
+gradient Hensel package.
+-/
+theorem serreQuadraticOddFirstResidueGradientHenselHypothesis_of_detBoundary
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    serreQuadraticOddFirstResidueGradientHenselHypothesis A a x := by
+  exact serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate
+    (serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary h)
+
+/--
+The determinant-boundary Hensel package directly gives the expanded-expression
+Hensel package.
+-/
+theorem serreQuadraticOddExpressionHenselHypothesis_of_detBoundary
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    serreQuadraticOddExpressionHenselHypothesis A a x := by
+  exact serreQuadraticOddExpressionHenselHypothesis_of_matrixCoordinate
+    (serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary h)
+
 /-- Extract the exact root together with the congruence lift from the odd-prime package. -/
 theorem serreQuadraticOddHenselHypothesis.exists_solution_lift
     {σ : Type*} [DecidableEq σ] [Fintype σ]
