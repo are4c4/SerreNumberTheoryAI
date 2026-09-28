@@ -156,6 +156,34 @@ theorem serreQuadraticPolynomial_pderiv_eval_of_symmetric
   exact serreQuadraticGradientCoordinate_eq_symmetric hA
 
 /--
+The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
+`f(x) ≡ a (mod p)` and some selected derivative is a unit, then the congruence
+lifts to an exact equation over `Z_p`.
+-/
+theorem serreHenselValueLift_mod_p_of_simple_derivative
+    {σ : Type*} [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
+    (hvalue : padicDivisibilityDepth p 1 (MvPolynomial.eval x f - a))
+    (hderiv :
+      serrePadicIntAddValuation p
+        (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (0 : ℕ∞)) :
+    serreHenselValueLiftConclusion p f a x 1 := by
+  have hsimple :
+      serreHenselMultivariateSimpleRootHypothesis p
+        (f - (MvPolynomial.C a : MvPolynomial σ (SerrePadicInt p))) x j := by
+    refine ⟨?_, ?_⟩
+    · simpa using hvalue
+    · simpa using hderiv
+  rcases serreHenselMultivariateSimpleRootConclusion_of_hypothesis hsimple with
+    ⟨y, hyroot, hycong⟩
+  refine ⟨y, ?_, hycong⟩
+  have hsub : MvPolynomial.eval y f - a = 0 := by
+    simpa using hyroot
+  exact sub_eq_zero.mp hsub
+
+/--
 Hensel value lifting for the coordinate quadratic polynomial, stated using the
 formal gradient coordinate.  The separate matrix/primitive argument is precisely
 the step that supplies a coordinate where this gradient has valuation zero.
@@ -193,34 +221,6 @@ theorem serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient
   exact serreHenselValueLift_mod_p_of_simple_derivative
     (p := p) (f := serreQuadraticPolynomial (p := p) A) (a := a) (x := x) (j := j)
     hvalue (by simpa [serreQuadraticPolynomial_pderiv_eval_of_symmetric hA] using hgrad)
-
-/--
-The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
-`f(x) ≡ a (mod p)` and some selected derivative is a unit, then the congruence
-lifts to an exact equation over `Z_p`.
--/
-theorem serreHenselValueLift_mod_p_of_simple_derivative
-    {σ : Type*} [DecidableEq σ]
-    {p : ℕ} [Fact p.Prime]
-    {f : MvPolynomial σ (SerrePadicInt p)}
-    {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
-    (hvalue : padicDivisibilityDepth p 1 (MvPolynomial.eval x f - a))
-    (hderiv :
-      serrePadicIntAddValuation p
-        (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (0 : ℕ∞)) :
-    serreHenselValueLiftConclusion p f a x 1 := by
-  have hsimple :
-      serreHenselMultivariateSimpleRootHypothesis p
-        (f - (MvPolynomial.C a : MvPolynomial σ (SerrePadicInt p))) x j := by
-    refine ⟨?_, ?_⟩
-    · simpa using hvalue
-    · simpa using hderiv
-  rcases serreHenselMultivariateSimpleRootConclusion_of_hypothesis hsimple with
-    ⟨y, hyroot, hycong⟩
-  refine ⟨y, ?_, hycong⟩
-  have hsub : MvPolynomial.eval y f - a = 0 := by
-    simpa using hyroot
-  exact sub_eq_zero.mp hsub
 
 /--
 The same odd-prime value-lift package with the derivative coordinate expressed
