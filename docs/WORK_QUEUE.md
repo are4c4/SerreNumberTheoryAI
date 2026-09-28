@@ -46,7 +46,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 ## Current serial state
 
 - ACTIVE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / branch `work/c2-s2-2-hensel-quadratic-odd-serial`
-- ACTIVE CI watch: latest pushed head should be checked before any merge or further determinant work.
+- ACTIVE CI watch: latest pushed PR head should be checked before any merge or further determinant work.
 - JUST DONE: `C2S2.2-HenselLifting` — Issue #102 / PR #146 / main `3695fa0b…`, CI #590 green
 - JUST DONE: `C2S2.1-PrimitiveHomogeneousZeros` — Issue #100 / PR #145 / main `32c68109…`, CI #462 green
 - JUST DONE: `C2S1.3-QpField` — Issue #96 / PR #143 / main `5b021cb9…`, CI #428 green
