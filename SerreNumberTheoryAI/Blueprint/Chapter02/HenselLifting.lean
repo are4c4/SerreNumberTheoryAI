@@ -209,13 +209,13 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 :::theorem "henselquadraticoddcorollary"
   (lean := "SerreNumberTheoryAI.serreOddQuadratic_exists_solution_lift")
   (uses := "henselsimplerootcorollary, henselquadraticgradientbridge")
-奇素数 `p` と対称係数行列 `A` を考え、`det A` が project-local な
-p進整数環の単元であるとする。mod `p` の値合同式に原始解があれば、
-その第一剰余ベクトルは非零である。第一剰余上で `det A` も非零なので、
+奇素数 p と対称係数行列 A を考え、その行列式が project-local な
+p進整数環の単元であるとする。mod p の値合同式に原始解があれば、
+その第一剰余ベクトルは非零である。第一剰余上でも行列式は非零なので、
 行列を掛けたベクトルのどこかの座標は非零になる。
-`p ≠ 2` により係数 `2` も第一剰余で非零だから、その座標の偏微分は
+p が 2 でないことにより係数 2 も第一剰余で非零だから、その座標の偏微分は
 付値0である。したがって単純根型 Hensel の系を適用でき、
-同じ mod `p` 類にある project-local p進整数上の厳密な値解が得られる。
+同じ mod p 類にある project-local p進整数上の厳密な値解が得られる。
 
 Lean では第一剰余環を Field として作り直さず、
 可換整域上の adjugate/determinant の一般論を使って
