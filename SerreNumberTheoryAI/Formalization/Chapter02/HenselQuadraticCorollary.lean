@@ -60,6 +60,26 @@ theorem serreHenselValueLift_mod_p_of_simple_derivative
   exact sub_eq_zero.mp hsub
 
 /--
+The same odd-prime value-lift package with the derivative coordinate expressed
+existentially, matching the way Serre obtains the coordinate from primitivity
+and nondegeneracy of the quadratic matrix.
+-/
+theorem serreHenselValueLift_mod_p_of_exists_simple_derivative
+    {σ : Type*} [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime]
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hvalue : padicDivisibilityDepth p 1 (MvPolynomial.eval x f - a))
+    (hderiv :
+      ∃ j : σ,
+        serrePadicIntAddValuation p
+          (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (0 : ℕ∞)) :
+    serreHenselValueLiftConclusion p f a x 1 := by
+  rcases hderiv with ⟨j, hj⟩
+  exact serreHenselValueLift_mod_p_of_simple_derivative
+    (p := p) (f := f) (a := a) (x := x) (j := j) hvalue hj
+
+/--
 The Hensel-facing form of Serre's `p = 2` quadratic lifting corollary: a
 solution modulo `8` with a selected derivative of valuation `1` lifts to an
 actual solution, congruent modulo `4`.
@@ -88,6 +108,26 @@ theorem serreHenselValueLift_mod_eight_of_derivative_valuation_one
     exact sub_eq_zero.mp hsub
   · intro i
     simpa using hycong i
+
+/--
+The same dyadic value-lift package with the derivative coordinate expressed
+existentially, matching the statement of Serre's Corollary 3 before the
+matrix argument supplies such a coordinate.
+-/
+theorem serreHenselValueLift_mod_eight_of_exists_derivative_valuation_one
+    {σ : Type*} [DecidableEq σ]
+    [Fact (Nat.Prime 2)]
+    {f : MvPolynomial σ (SerrePadicInt 2)}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (hvalue : padicDivisibilityDepth 2 3 (MvPolynomial.eval x f - a))
+    (hderiv :
+      ∃ j : σ,
+        serrePadicIntAddValuation 2
+          (MvPolynomial.eval x (MvPolynomial.pderiv j f)) = (1 : ℕ∞)) :
+    serreHenselValueLiftConclusion 2 f a x 2 := by
+  rcases hderiv with ⟨j, hj⟩
+  exact serreHenselValueLift_mod_eight_of_derivative_valuation_one
+    (f := f) (a := a) (x := x) (j := j) hvalue hj
 
 end HenselQuadraticCorollary
 
