@@ -20,6 +20,14 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicField
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicFieldTopology
 import SerreNumberTheoryAI.Formalization.Chapter02.RootExistence
 import SerreNumberTheoryAI.Formalization.Chapter02.PrimitiveHomogeneousZeros
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselLifting
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselTaylor
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselIteration
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimit
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
 
 /-!
 # Formalization root

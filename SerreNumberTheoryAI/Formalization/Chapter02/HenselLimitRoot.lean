@@ -1,0 +1,293 @@
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
+
+/-!
+# Exact-root bridge for the Hensel iteration limit
+
+This file starts the final one-variable Hensel step: passing the increasing
+finite-level divisibility statements for the iterates to the selected limit.
+The proof remains project-local; it uses residue projections and the already
+constructed iterate limit, not a packaged Hensel theorem.
+-/
+
+namespace SerreNumberTheoryAI
+
+noncomputable section
+
+section HenselLimitRoot
+
+/-- Evaluating a one-variable polynomial commutes with finite residue projection. -/
+theorem serrePadicIntProj_polynomial_eval
+    (p : ℕ) [Fact p.Prime] (d : ℕ)
+    (f : Polynomial (SerrePadicInt p)) (x : SerrePadicInt p) :
+    serrePadicIntProj p d (f.eval x) =
+      (Polynomial.map (serrePadicIntProj p d) f).eval
+        (serrePadicIntProj p d x) := by
+  refine Polynomial.induction_on f ?_ ?_ ?_
+  · intro a
+    simp
+  · intro f g hf hg
+    calc
+      serrePadicIntProj p d ((f + g).eval x) =
+          serrePadicIntProj p d (f.eval x + g.eval x) := by
+        simp [Polynomial.eval_add]
+      _ = serrePadicIntProj p d (f.eval x) +
+            serrePadicIntProj p d (g.eval x) := by
+        exact map_add (serrePadicIntProj p d) (f.eval x) (g.eval x)
+      _ = (Polynomial.map (serrePadicIntProj p d) f).eval
+            (serrePadicIntProj p d x) +
+          (Polynomial.map (serrePadicIntProj p d) g).eval
+            (serrePadicIntProj p d x) := by
+        rw [hf, hg]
+      _ = (Polynomial.map (serrePadicIntProj p d) (f + g)).eval
+            (serrePadicIntProj p d x) := by
+        simp [Polynomial.eval_add]
+  · intro n a _
+    simp
+
+/-- Polynomial evaluation at a finite residue level only depends on the input at that level. -/
+theorem serrePadicIntProj_polynomial_eval_eq_of_proj_eq
+    {p : ℕ} [Fact p.Prime] {d : ℕ}
+    {x y : SerrePadicInt p} (f : Polynomial (SerrePadicInt p))
+    (hxy : serrePadicIntProj p d x = serrePadicIntProj p d y) :
+    serrePadicIntProj p d (f.eval x) =
+      serrePadicIntProj p d (f.eval y) := by
+  rw [serrePadicIntProj_polynomial_eval p d f x,
+    serrePadicIntProj_polynomial_eval p d f y, hxy]
+
+/-- The selected Hensel limit inherits every finite divisibility depth of the values. -/
+theorem serreHenselIterateLimit_eval_dvd
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) (d : ℕ) :
+    padicDivisibilityDepth p d (f.eval (serreHenselIterateLimit hhyp)) := by
+  cases d with
+  | zero =>
+      simpa [padicDivisibilityDepth]
+  | succ m =>
+      letI : MetricSpace (SerrePadicInt p) := serrePadicIntMetricSpace p
+      have heventually :
+          ∀ᶠ r in Filter.atTop,
+            serreHenselIterateSeq hhyp r ∈
+              serrePadicIntProjFiber p (serreHenselIterateLimit hhyp) m :=
+        (serreHenselIterateSeq_tendsto_limit hhyp).eventually
+          ((isOpen_serrePadicIntProjFiber p (serreHenselIterateLimit hhyp) m).mem_nhds
+            (self_mem_serrePadicIntProjFiber p (serreHenselIterateLimit hhyp) m))
+      obtain ⟨N, hN⟩ := Filter.eventually_atTop.1 heventually
+      let r : ℕ := max N (m + 1)
+      have hrN : N ≤ r := by
+        exact le_max_left N (m + 1)
+      have hproj_arg :
+          serrePadicIntProj p m (serreHenselIterateSeq hhyp r) =
+            serrePadicIntProj p m (serreHenselIterateLimit hhyp) := by
+        exact hN r hrN
+      have hdepth : m + 1 ≤ n + r := by
+        have hm : m + 1 ≤ r := le_max_right N (m + 1)
+        omega
+      have hdvd_seq :
+          padicDivisibilityDepth p (m + 1)
+            (f.eval (serreHenselIterateSeq hhyp r)) :=
+        padicDivisibilityDepth_mono
+          (p := p) (m := m + 1) (n := n + r) hdepth
+          (serreHenselIterateSeq_eval_dvd hhyp r)
+      have hproj_eval_seq :
+          serrePadicIntProj p m (f.eval (serreHenselIterateSeq hhyp r)) = 0 :=
+        (pow_dvd_serrePadicInt_iff_proj_zero p m
+          (f.eval (serreHenselIterateSeq hhyp r))).1 hdvd_seq
+      have hproj_eval_eq :
+          serrePadicIntProj p m (f.eval (serreHenselIterateSeq hhyp r)) =
+            serrePadicIntProj p m (f.eval (serreHenselIterateLimit hhyp)) :=
+        serrePadicIntProj_polynomial_eval_eq_of_proj_eq f hproj_arg
+      have hproj_eval_limit :
+          serrePadicIntProj p m (f.eval (serreHenselIterateLimit hhyp)) = 0 := by
+        rw [← hproj_eval_eq]
+        exact hproj_eval_seq
+      exact (pow_dvd_serrePadicInt_iff_proj_zero p m
+        (f.eval (serreHenselIterateLimit hhyp))).2 hproj_eval_limit
+
+/-- The selected Hensel iteration limit is an exact root. -/
+theorem serreHenselIterateLimit_is_root
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    f.eval (serreHenselIterateLimit hhyp) = 0 := by
+  apply serrePadicInt_ext p
+  intro m
+  change serrePadicIntProj p m (f.eval (serreHenselIterateLimit hhyp)) =
+    serrePadicIntProj p m 0
+  rw [map_zero]
+  exact (pow_dvd_serrePadicInt_iff_proj_zero p m
+    (f.eval (serreHenselIterateLimit hhyp))).1
+    (serreHenselIterateLimit_eval_dvd hhyp (m + 1))
+
+/-- The one-variable Hensel conclusion follows from the source-shaped hypothesis. -/
+theorem serreHenselUnivariateConclusion_of_hypothesis
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : Polynomial (SerrePadicInt p)} {x : SerrePadicInt p}
+    (hhyp : serreHenselUnivariateHypothesis p f x n k) :
+    serreHenselUnivariateConclusion p f x n k :=
+  serreHenselUnivariateConclusion_of_iterateLimit_root hhyp
+    (serreHenselIterateLimit_is_root hhyp)
+
+/--
+Freeze all coordinates except `j`, turning a multivariate polynomial into the
+one-variable polynomial used in Serre's reduction to the one-variable Hensel
+lemma.
+-/
+def serreHenselCoordinateSpecialization
+    {σ : Type*} [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    (x : σ → SerrePadicInt p) (j : σ)
+    (f : MvPolynomial σ (SerrePadicInt p)) :
+    Polynomial (SerrePadicInt p) :=
+  MvPolynomial.eval₂ Polynomial.C
+    (fun i => if i = j then Polynomial.X else Polynomial.C (x i)) f
+
+/-- Updating a coordinate by its existing value gives the original tuple. -/
+theorem serreHenselUpdateCoord_eq_self [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime] (x : σ → SerrePadicInt p) (j : σ) :
+    serreHenselUpdateCoord (p := p) x j (x j) = x := by
+  funext i
+  by_cases hij : i = j
+  · subst i
+    simp [serreHenselUpdateCoord]
+  · simp [serreHenselUpdateCoord, hij]
+
+/-- The coordinate specialization evaluates as the original polynomial after one-coordinate update. -/
+theorem serreHenselCoordinateSpecialization_eval
+    {σ : Type*} [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    (x : σ → SerrePadicInt p) (j : σ)
+    (f : MvPolynomial σ (SerrePadicInt p)) (t : SerrePadicInt p) :
+    (serreHenselCoordinateSpecialization (p := p) x j f).eval t =
+      MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f := by
+  induction f using MvPolynomial.induction_on with
+  | C a =>
+      simp [serreHenselCoordinateSpecialization]
+  | add f g hf hg =>
+      calc
+        (serreHenselCoordinateSpecialization (p := p) x j (f + g)).eval t =
+            (serreHenselCoordinateSpecialization (p := p) x j f).eval t +
+              (serreHenselCoordinateSpecialization (p := p) x j g).eval t := by
+          simp [serreHenselCoordinateSpecialization]
+        _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f +
+              MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) g := by
+          rw [hf, hg]
+        _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) (f + g) := by
+          simp
+  | mul_X f i hf =>
+      by_cases hij : i = j
+      · subst i
+        calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X j)).eval t =
+              (serreHenselCoordinateSpecialization (p := p) x j f).eval t * t := by
+            simp [serreHenselCoordinateSpecialization]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f * t := by
+            rw [hf]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) (f * MvPolynomial.X j) := by
+            simp [serreHenselUpdateCoord]
+      · calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X i)).eval t =
+              (serreHenselCoordinateSpecialization (p := p) x j f).eval t * x i := by
+            simp [serreHenselCoordinateSpecialization, hij]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f * x i := by
+            rw [hf]
+          _ = MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) (f * MvPolynomial.X i) := by
+            simp [serreHenselUpdateCoord, hij]
+
+/-- The derivative of the coordinate specialization is the selected partial derivative. -/
+theorem serreHenselCoordinateSpecialization_derivative_eval
+    {σ : Type*} [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    (x : σ → SerrePadicInt p) (j : σ)
+    (f : MvPolynomial σ (SerrePadicInt p)) :
+    (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) =
+      MvPolynomial.eval x (MvPolynomial.pderiv j f) := by
+  induction f using MvPolynomial.induction_on with
+  | C a =>
+      simp [serreHenselCoordinateSpecialization]
+  | add f g hf hg =>
+      calc
+        (serreHenselCoordinateSpecialization (p := p) x j (f + g)).derivative.eval (x j) =
+            (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) +
+              (serreHenselCoordinateSpecialization (p := p) x j g).derivative.eval (x j) := by
+          simp [serreHenselCoordinateSpecialization]
+        _ = MvPolynomial.eval x (MvPolynomial.pderiv j f) +
+              MvPolynomial.eval x (MvPolynomial.pderiv j g) := by
+          rw [hf, hg]
+        _ = MvPolynomial.eval x (MvPolynomial.pderiv j (f + g)) := by
+          simp
+  | mul_X f i hf =>
+      by_cases hij : i = j
+      · subst i
+        calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X j)).derivative.eval (x j) =
+              (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) * x j +
+                (serreHenselCoordinateSpecialization (p := p) x j f).eval (x j) := by
+            simp [serreHenselCoordinateSpecialization, Polynomial.derivative_mul]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j f) * x j + MvPolynomial.eval x f := by
+            rw [hf, serreHenselCoordinateSpecialization_eval (p := p) x j f (x j),
+              serreHenselUpdateCoord_eq_self (p := p) x j]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j (f * MvPolynomial.X j)) := by
+            simp [MvPolynomial.pderiv_mul]
+            ring
+      · calc
+          (serreHenselCoordinateSpecialization (p := p) x j (f * MvPolynomial.X i)).derivative.eval (x j) =
+              (serreHenselCoordinateSpecialization (p := p) x j f).derivative.eval (x j) * x i := by
+            simp [serreHenselCoordinateSpecialization, hij, Polynomial.derivative_mul]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j f) * x i := by
+            rw [hf]
+          _ = MvPolynomial.eval x (MvPolynomial.pderiv j (f * MvPolynomial.X i)) := by
+            simp [MvPolynomial.pderiv_mul, hij]
+            ring
+
+/--
+Multivariate Hensel follows once a chosen coordinate specialization and its
+derivative identity have been supplied.
+-/
+theorem serreHenselMultivariateConclusion_of_specialization
+    {σ : Type*} [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {x : σ → SerrePadicInt p} {j : σ}
+    {g : Polynomial (SerrePadicInt p)}
+    (heval₀ : g.eval (x j) = MvPolynomial.eval x f)
+    (hderiv₀ : g.derivative.eval (x j) =
+        MvPolynomial.eval x (MvPolynomial.pderiv j f))
+    (heval : ∀ t : SerrePadicInt p,
+      MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f = g.eval t)
+    (hhyp : serreHenselMultivariateHypothesis p f x j n k) :
+    serreHenselMultivariateConclusion p f x j n k := by
+  have huni : serreHenselUnivariateHypothesis p g (x j) n k :=
+    serreHenselUnivariateHypothesis_of_multivariateHypothesis
+      (p := p) (f := f) (x := x) (j := j) (n := n) (k := k) (g := g)
+      heval₀ hderiv₀ hhyp
+  exact serreHenselMultivariateConclusion_of_univariateConclusion
+    (p := p) (f := f) (x := x) (j := j) (n := n) (k := k) (g := g)
+    heval (serreHenselUnivariateConclusion_of_hypothesis huni)
+
+/-- The multivariate Hensel conclusion follows from the source-shaped multivariate hypothesis. -/
+theorem serreHenselMultivariateConclusion_of_hypothesis
+    {σ : Type*} [DecidableEq σ]
+    {p : ℕ} [Fact p.Prime] {n k : ℕ}
+    {f : MvPolynomial σ (SerrePadicInt p)}
+    {x : σ → SerrePadicInt p} {j : σ}
+    (hhyp : serreHenselMultivariateHypothesis p f x j n k) :
+    serreHenselMultivariateConclusion p f x j n k := by
+  let g := serreHenselCoordinateSpecialization (p := p) x j f
+  have heval_update :
+      ∀ t : SerrePadicInt p,
+        MvPolynomial.eval (serreHenselUpdateCoord (p := p) x j t) f = g.eval t := by
+    intro t
+    exact (serreHenselCoordinateSpecialization_eval (p := p) x j f t).symm
+  have heval₀ : g.eval (x j) = MvPolynomial.eval x f := by
+    rw [serreHenselCoordinateSpecialization_eval (p := p) x j f (x j),
+      serreHenselUpdateCoord_eq_self (p := p) x j]
+  have hderiv₀ : g.derivative.eval (x j) =
+      MvPolynomial.eval x (MvPolynomial.pderiv j f) := by
+    exact serreHenselCoordinateSpecialization_derivative_eval (p := p) x j f
+  exact serreHenselMultivariateConclusion_of_specialization
+    (p := p) (f := f) (x := x) (j := j) (n := n) (k := k) (g := g)
+    heval₀ hderiv₀ heval_update hhyp
+
+end HenselLimitRoot
+
+end
+
+end SerreNumberTheoryAI

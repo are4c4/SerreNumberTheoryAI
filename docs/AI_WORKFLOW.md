@@ -36,6 +36,36 @@ progress同期
 
 設計・形式化・Blueprint・mathlib調査・integrationは別workerへ分けず、同じwork itemの工程として直列に処理します。
 
+### 1.1 Single-instruction run budget
+
+ユーザーが「続けて」「作業を続けて」「形式化を続けて」「長めに」など、現在のACTIVE itemの継続を依頼した場合、1回の返答内で短い確認だけで止めず、プラットフォームと安全性が許す範囲で連続作業します。
+
+標準目安:
+
+- 明示的な短時間指定がない通常の継続依頼では、原則として最大25分間を1 runの作業予算として扱う。
+- 25分の作業予算はバックグラウンド実行を意味しない。実際の応答内で、設計・実装・docs同期・Blueprint同期・CI確認・self-reviewのうち安全に進められるものを連続して行う。
+- 実装系のrunでは、単に1 commitを作っただけ、またはCIがpendingになっただけでは原則終了しない。CI待ちの間に、同じACTIVE item内のread-only review、次補題の設計、Blueprint/docs同期、PR本文更新、差分自己確認を進める。
+- ユーザーが「10分くらい」「25分上限まで」など時間を明示した場合、その範囲を優先する。ユーザーが25分より短い時間を指定した場合は、その短い指定に従う。
+- 複数commitを作る場合も、各commitは同じACTIVE itemに限定し、最後にlatest headのCIまたは少なくとも起動状況を確認する。
+- 失敗したCIの原因を読まずに、同じ不確かな変更を積み増ししない。CI失敗が見えたら、まずログを確認して修正する。
+
+25分run中に進めてよい作業例:
+
+- Lean補題を追加し、root importやBlueprintを同期する。
+- CI pending中にPR本文、progress docs、next-step docsを更新する。
+- 直前のgreen headと最新headの差分を確認し、危険な仮定強化やsource逸脱がないか自己レビューする。
+- 次の補題のstatementだけを安全に切り出す。
+- 既存APIを調査して、次回の証明再開地点をdocsへ明記する。
+
+25分runでも、次のstop conditionを超えないこと:
+
+- Lean/Blueprint/CI failureの原因確認と修正が必要になった。
+- 数学的statementが原典から安全に復元できない。
+- source/copyright policy上、本文・画像の過度な再現になりそう。
+- GitHub write権限、merge conflict、branch state不整合、tool安全性拒否が出た。
+- context/time上限が近く、未保存の変更や未確認の主張が残る。
+- ユーザーが明示的に停止・短時間作業を指示した。
+
 ## 2. Source of truth
 
 作業開始時の確認順:
