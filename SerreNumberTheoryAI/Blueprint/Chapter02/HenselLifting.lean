@@ -9,6 +9,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimit
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselConclusion
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -17,7 +18,7 @@ open Informal
 #doc (Manual) "第2章 2.2 近似解の改良" =>
 
 *出典メタデータ:* J.-P. セール著・弥永健一訳『数論講義』日本語版、
-第2章・§2・2.2、印刷頁20--21（uploaded PDF pages 30--31）。
+第2章・§2・2.2、印刷頁20--21（uploaded PDF pages 30--32）。
 
 この節では、mod `p^n` の近似解から、Newton 型の改良によって
 `Z_p` 上の真の解を作る。まず一変数の場合に、
@@ -183,4 +184,14 @@ source-shaped な多変数仮定から多変数結論を直接得る境界まで
 `n = 1`, `k = 0` の特殊化として、単純零点 modulo `p` が
 `Z_p` 上の真の零点へ持ち上がる Corollary 1 を得る。一変数版と多変数版の
 両方を source-shaped な仮定・結論として包装している。
+:::
+
+:::theorem "henselquadraticvaluecorollary"
+  (uses := "henselsimplerootcorollary, henseltheorem")
+系 2・系 3 の Hensel に依存する部分を包装する。
+`f(x) ≡ a` に対して、奇素数の場合は選んだ偏微分が単元であれば
+mod `p` の解を `f(y)=a` へ持ち上げる。`p=2` の場合は
+mod `8` の解と偏微分付値 `1` から、mod `4` で合同な真の解を得る。
+行列式や原始ベクトルからそのような偏微分を取り出す線形代数部分は、
+別の境界として残す。
 :::
