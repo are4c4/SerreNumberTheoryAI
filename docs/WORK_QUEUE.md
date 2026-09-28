@@ -45,8 +45,8 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 
 ## Current serial state
 
-- ACTIVE: `C2S2.2-HenselQuadraticTwo` — Issue #105 / branch `work/c2-s2-2-hensel-quadratic-two` / PR not opened yet
-- ACTIVE CI watch: latest pushed head should be checked after opening the PR.
+- ACTIVE: `C2S2.2-HenselQuadraticTwo` — Issue #105 / PR #148 / branch `work/c2-s2-2-hensel-quadratic-two`
+- ACTIVE CI watch: PR #148 latest head should be checked before further merge or source-bridge work.
 - JUST DONE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / main `3bd49171…`, PR-head CI #700 green
 - JUST DONE: `C2S2.2-HenselLifting` — Issue #102 / PR #146 / main `3695fa0b…`, CI #590 green
 - JUST DONE: `C2S2.1-PrimitiveHomogeneousZeros` — Issue #100 / PR #145 / main `32c68109…`, CI #462 green
@@ -75,7 +75,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 2 | `C2S2.1-PrimitiveHomogeneousZeros` | §2.1 Proposition 6 | DONE | PR #145 merged as `32c68109…`, CI #462 green | Issue #100 |
 | 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | DONE | PR #146 merged as `3695fa0b…`, CI #590 green | Issue #102 |
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | DONE | PR #147 merged as `3bd49171…`, PR-head CI #700 green | Issue #104 |
-| 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | ACTIVE | implement direct derivative-valuation-one package, then dyadic source bridges | Issue #105 |
+| 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | ACTIVE | continue PR #148: verify dyadic Hensel-facing package, then add source bridges | Issue #105 |
 | 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | PARKED | recover old #125 only when this item becomes ACTIVE | PR #125 |
 | 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | WAITING | depends on §3.1 and project `Q_p` | Issue #112 |
 | 8 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 | WAITING | depends on §3.2 and project `Q_p` | Issue #120 |
