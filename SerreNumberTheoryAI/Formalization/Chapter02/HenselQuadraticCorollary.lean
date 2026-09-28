@@ -131,23 +131,6 @@ def serreQuadraticSymmetricGradientCoordinate
     SerrePadicInt p :=
   serreQuadraticGradientCoordinate A x j
 
-/--
-Expanding the formal partial derivative of the coordinate quadratic polynomial
-gives the sum of the selected row and selected column contributions.
--/
-theorem serreQuadraticGradientCoordinate_eq_row_add_column
-    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
-    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
-    serreQuadraticGradientCoordinate A x j =
-      (∑ i : σ, A j i * x i) + ∑ i : σ, A i j * x i := by
-  classical
-  simp [serreQuadraticGradientCoordinate, serreQuadraticPolynomial,
-    MvPolynomial.pderiv_mul, Pi.single_apply, Finset.sum_add_distrib, mul_assoc]
-  simp_rw [apply_ite]
-  simp only [MvPolynomial.eval_X, map_zero, mul_add, Finset.sum_add_distrib,
-    mul_ite, mul_zero, Finset.sum_ite_eq, Finset.sum_ite_eq',
-    Finset.sum_ite_irrel, Finset.mem_univ, ite_true, add_comm]
-
 /-- The evaluated partial derivative of the coordinate quadratic polynomial is the gradient coordinate. -/
 theorem serreQuadraticPolynomial_pderiv_eval
     {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
