@@ -51,8 +51,8 @@ theorem serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_isUnit
   exact hnone ⟨j, hj⟩
 
 /--
-The determinant form of the same residue boundary over a field.  Later work can
-specialize this to the first residue ring and the reduced quadratic matrix.
+The determinant form of the same residue boundary over a field.  Specializing
+this to the first residue ring is left as the next API/performance boundary.
 -/
 theorem serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
     {ι K : Type*} [Fintype ι] [DecidableEq ι] [Field K]
@@ -69,36 +69,6 @@ theorem serrePadicTuplePrimitive_firstProj_ne_zero
     (hprim : serrePadicTuplePrimitive x) :
     (fun s => serrePadicIntProj p 0 (x s)) ≠ 0 :=
   (serrePadicTuplePrimitive_iff_firstProj_ne_zero p x).1 hprim
-
-/--
-The determinant residue boundary specialized to the first residue ring.
-This is the matrix part of the odd-prime quadratic argument before translating
-matrix-vector nonvanishing into a gradient valuation statement.
--/
-theorem serreFirstResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
-    {σ : Type*} [Fintype σ] [DecidableEq σ]
-    {p : ℕ} [Fact p.Prime]
-    {A : Matrix σ σ (padicResidueRing p 0)} {x : σ → padicResidueRing p 0}
-    (hdet : A.det ≠ 0) (hx : x ≠ 0) :
-    ∃ j : σ, A.mulVec x j ≠ 0 := by
-  exact serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
-    (A := A) (x := x) hdet hx
-
-/--
-A primitive p-adic tuple and a nondegenerate first-residue matrix give a nonzero
-matrix-vector coordinate over the first residue ring.
--/
-theorem serreFirstResidueMatrix_exists_nonzero_mulVec_coordinate_of_primitive
-    {σ : Type*} [Fintype σ] [DecidableEq σ]
-    {p : ℕ} [Fact p.Prime]
-    {A : Matrix σ σ (padicResidueRing p 0)} {x : σ → SerrePadicInt p}
-    (hdet : A.det ≠ 0) (hprim : serrePadicTuplePrimitive x) :
-    ∃ j : σ,
-      A.mulVec (fun i => serrePadicIntProj p 0 (x i)) j ≠ 0 := by
-  have hxred : (fun i => serrePadicIntProj p 0 (x i)) ≠ 0 :=
-    serrePadicTuplePrimitive_firstProj_ne_zero hprim
-  exact serreResidueMatrix_exists_nonzero_mulVec_coordinate_of_det_ne_zero
-    (A := A) (x := fun i => serrePadicIntProj p 0 (x i)) hdet hxred
 
 /--
 The current odd-prime quadratic boundary after the Hensel step: a primitive
