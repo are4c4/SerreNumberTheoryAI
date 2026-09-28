@@ -75,6 +75,52 @@ theorem serreQuadraticOddExpressionWitness_of_detBoundary
     (serreQuadraticOddFirstResidueExpressionWitness_of_detBoundary hp2 hdet hprim hboundary)
 
 /--
+A first-residue gradient witness gives the Hensel-facing gradient witness once
+the formal-derivative / expanded-expression bridge is supplied.
+-/
+theorem serreQuadraticOddGradientWitness_of_firstResidueGradientWitness
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hbridge : serreQuadraticSymmetricGradientBridge A x)
+    (hgrad : serreQuadraticOddFirstResidueGradientWitness A x) :
+    serreQuadraticOddGradientWitness A x := by
+  exact serreQuadraticOddGradientWitness_of_expressionWitness hbridge
+    (serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness hgrad)
+
+/--
+A matrix-coordinate first-residue witness gives the Hensel-facing gradient
+witness once `p` is odd and the formal-derivative / expanded-expression bridge
+is supplied.
+-/
+theorem serreQuadraticOddGradientWitness_of_matrixCoordinateWitness
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (hbridge : serreQuadraticSymmetricGradientBridge A x)
+    (hcoord : serreFirstResidueMatrixCoordinateWitness (serreFirstResidueGradientMatrix A) x) :
+    serreQuadraticOddGradientWitness A x := by
+  exact serreQuadraticOddGradientWitness_of_expressionWitness hbridge
+    (serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness hp2 hcoord)
+
+/--
+The explicit determinant/primitive first-residue boundary gives the Hensel-facing
+gradient witness once `p` is odd and the formal-derivative /
+expanded-expression bridge is supplied.
+-/
+theorem serreQuadraticOddGradientWitness_of_detBoundary
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (hbridge : serreQuadraticSymmetricGradientBridge A x)
+    (hdet : (serreFirstResidueGradientMatrix A).det ≠ 0)
+    (hprim : serrePadicTuplePrimitive x)
+    (hboundary : serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
+      (serreFirstResidueGradientMatrix A) x) :
+    serreQuadraticOddGradientWitness A x := by
+  exact serreQuadraticOddGradientWitness_of_expressionWitness hbridge
+    (serreQuadraticOddExpressionWitness_of_detBoundary hp2 hdet hprim hboundary)
+
+/--
 The first-residue gradient Hensel package directly gives the Hensel-facing
 odd-prime package.
 -/
