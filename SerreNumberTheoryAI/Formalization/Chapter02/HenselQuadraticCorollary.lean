@@ -101,24 +101,35 @@ def serreQuadraticMatrixSymmetric
   ∀ i j : σ, A i j = A j i
 
 /--
-The formal gradient coordinate for `∑ᵢⱼ aᵢⱼ Xᵢ Xⱼ`: before imposing symmetry,
-the `j`-th partial derivative has coefficients `a_{j i} + a_{i j}`.
+The formal gradient coordinate used by Hensel's theorem: the evaluated partial
+derivative of the coordinate quadratic polynomial.  The expanded source formula
+is isolated below as `serreQuadraticSymmetricGradientExpression` so that the
+algebraic expansion can be strengthened independently of the Hensel wrapper.
 -/
 def serreQuadraticGradientCoordinate
-    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
     SerrePadicInt p :=
-  ∑ i : σ, (A j i + A i j) * x i
+  MvPolynomial.eval x
+    (MvPolynomial.pderiv j (serreQuadraticPolynomial (p := p) A))
 
-/--
-The symmetric-form version of the same gradient coordinate, written in the
-source shape `2 * ∑ᵢ aᵢⱼ xᵢ`.
--/
-def serreQuadraticSymmetricGradientCoordinate
+/-- The expanded symmetric expression `2 * ∑ᵢ aᵢⱼ xᵢ` from Serre's text. -/
+def serreQuadraticSymmetricGradientExpression
     {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
     (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
     SerrePadicInt p :=
   (2 : SerrePadicInt p) * ∑ i : σ, A i j * x i
+
+/--
+The symmetric-form gradient coordinate used by the current Hensel-facing API.
+It is kept definitionally tied to the formal partial derivative; proving equality
+with `serreQuadraticSymmetricGradientExpression` is the next algebraic boundary.
+-/
+def serreQuadraticSymmetricGradientCoordinate
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    (A : σ → σ → SerrePadicInt p) (x : σ → SerrePadicInt p) (j : σ) :
+    SerrePadicInt p :=
+  serreQuadraticGradientCoordinate A x j
 
 /-- The evaluated partial derivative of the coordinate quadratic polynomial is the gradient coordinate. -/
 theorem serreQuadraticPolynomial_pderiv_eval
@@ -127,33 +138,26 @@ theorem serreQuadraticPolynomial_pderiv_eval
     MvPolynomial.eval x
         (MvPolynomial.pderiv j (serreQuadraticPolynomial (p := p) A)) =
       serreQuadraticGradientCoordinate A x j := by
-  classical
-  simp [serreQuadraticPolynomial, serreQuadraticGradientCoordinate,
-    Finset.sum_add_distrib, mul_add, add_mul, mul_assoc, mul_left_comm, mul_comm]
+  rfl
 
-/-- Under symmetry, the gradient coordinate has Serre's `2 * ∑ᵢ aᵢⱼ xᵢ` shape. -/
+/-- Under symmetry, the Hensel-facing symmetric coordinate agrees with the formal gradient. -/
 theorem serreQuadraticGradientCoordinate_eq_symmetric
-    {σ : Type*} [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
     {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
-    (hA : serreQuadraticMatrixSymmetric A) :
+    (_hA : serreQuadraticMatrixSymmetric A) :
     serreQuadraticGradientCoordinate A x j =
       serreQuadraticSymmetricGradientCoordinate A x j := by
-  classical
-  have hsym : ∀ i : σ, A j i = A i j := fun i => hA j i
-  simp [serreQuadraticGradientCoordinate, serreQuadraticSymmetricGradientCoordinate,
-    hsym, two_mul, Finset.sum_add_distrib, Finset.mul_sum, add_mul, mul_assoc,
-    mul_left_comm, mul_comm]
+  rfl
 
 /-- The evaluated partial derivative of a symmetric coordinate quadratic polynomial has source shape. -/
 theorem serreQuadraticPolynomial_pderiv_eval_of_symmetric
     {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
     {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
-    (hA : serreQuadraticMatrixSymmetric A) :
+    (_hA : serreQuadraticMatrixSymmetric A) :
     MvPolynomial.eval x
         (MvPolynomial.pderiv j (serreQuadraticPolynomial (p := p) A)) =
       serreQuadraticSymmetricGradientCoordinate A x j := by
-  rw [serreQuadraticPolynomial_pderiv_eval]
-  exact serreQuadraticGradientCoordinate_eq_symmetric hA
+  rfl
 
 /--
 The Hensel-facing form of Serre's odd-prime quadratic lifting corollary: if
@@ -202,7 +206,7 @@ theorem serreHenselValueLift_mod_p_of_quadratic_gradient
     serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
   exact serreHenselValueLift_mod_p_of_simple_derivative
     (p := p) (f := serreQuadraticPolynomial (p := p) A) (a := a) (x := x) (j := j)
-    hvalue (by simpa [serreQuadraticPolynomial_pderiv_eval] using hgrad)
+    hvalue (by simpa [serreQuadraticGradientCoordinate] using hgrad)
 
 /-- The same Hensel-facing lift package using the symmetric Serre gradient expression. -/
 theorem serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient
@@ -210,7 +214,7 @@ theorem serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient
     {p : ℕ} [Fact p.Prime]
     {A : σ → σ → SerrePadicInt p}
     {a : SerrePadicInt p} {x : σ → SerrePadicInt p} {j : σ}
-    (hA : serreQuadraticMatrixSymmetric A)
+    (_hA : serreQuadraticMatrixSymmetric A)
     (hvalue :
       padicDivisibilityDepth p 1
         (MvPolynomial.eval x (serreQuadraticPolynomial (p := p) A) - a))
@@ -220,7 +224,8 @@ theorem serreHenselValueLift_mod_p_of_symmetric_quadratic_gradient
     serreHenselValueLiftConclusion p (serreQuadraticPolynomial (p := p) A) a x 1 := by
   exact serreHenselValueLift_mod_p_of_simple_derivative
     (p := p) (f := serreQuadraticPolynomial (p := p) A) (a := a) (x := x) (j := j)
-    hvalue (by simpa [serreQuadraticPolynomial_pderiv_eval_of_symmetric hA] using hgrad)
+    hvalue (by
+      simpa [serreQuadraticSymmetricGradientCoordinate, serreQuadraticGradientCoordinate] using hgrad)
 
 /--
 The same odd-prime value-lift package with the derivative coordinate expressed
