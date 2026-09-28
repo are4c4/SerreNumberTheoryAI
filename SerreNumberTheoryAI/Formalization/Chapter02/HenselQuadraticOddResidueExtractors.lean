@@ -17,6 +17,35 @@ noncomputable section
 section HenselQuadraticOddResidueExtractors
 
 /--
+A nonzero first-residue matrix coordinate gives nonvanishing of the projected
+expanded symmetric gradient when `p` is odd.
+-/
+theorem serreQuadraticOddFirstResidueExpressionWitness_of_matrixCoordinateWitness
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (hcoord : serreFirstResidueMatrixCoordinateWitness (serreFirstResidueGradientMatrix A) x) :
+    serreQuadraticOddFirstResidueExpressionWitness A x := by
+  exact serreQuadraticOddFirstResidueExpressionWitness_of_gradientWitness
+    (serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness hp2 hcoord)
+
+/--
+The explicit determinant/primitive first-residue boundary gives nonvanishing of
+the projected expanded symmetric gradient when `p` is odd.
+-/
+theorem serreQuadraticOddFirstResidueExpressionWitness_of_detBoundary
+    {σ : Type*} [Fintype σ] [DecidableEq σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (hp2 : p ≠ 2)
+    (hdet : (serreFirstResidueGradientMatrix A).det ≠ 0)
+    (hprim : serrePadicTuplePrimitive x)
+    (hboundary : serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
+      (serreFirstResidueGradientMatrix A) x) :
+    serreQuadraticOddFirstResidueExpressionWitness A x := by
+  exact serreQuadraticOddFirstResidueExpressionWitness_of_matrixCoordinateWitness hp2
+    (hboundary hdet hprim)
+
+/--
 A nonzero first-residue matrix coordinate already gives the valuation-zero
 expanded-expression witness when `p` is odd.
 -/
@@ -26,8 +55,8 @@ theorem serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness
     (hp2 : p ≠ 2)
     (hcoord : serreFirstResidueMatrixCoordinateWitness (serreFirstResidueGradientMatrix A) x) :
     serreQuadraticOddExpressionWitness A x := by
-  exact serreQuadraticOddExpressionWitness_of_firstResidueGradientWitness
-    (serreQuadraticOddFirstResidueGradientWitness_of_matrixCoordinateWitness hp2 hcoord)
+  exact serreQuadraticOddExpressionWitness_of_firstResidueExpressionWitness
+    (serreQuadraticOddFirstResidueExpressionWitness_of_matrixCoordinateWitness hp2 hcoord)
 
 /--
 The explicit determinant/primitive first-residue boundary gives the
@@ -42,8 +71,20 @@ theorem serreQuadraticOddExpressionWitness_of_detBoundary
     (hboundary : serreFirstResidueMatrixDetNonzeroPrimitiveBoundary
       (serreFirstResidueGradientMatrix A) x) :
     serreQuadraticOddExpressionWitness A x := by
-  exact serreQuadraticOddExpressionWitness_of_matrixCoordinateWitness hp2
-    (hboundary hdet hprim)
+  exact serreQuadraticOddExpressionWitness_of_firstResidueExpressionWitness
+    (serreQuadraticOddFirstResidueExpressionWitness_of_detBoundary hp2 hdet hprim hboundary)
+
+/--
+The first-residue gradient Hensel package directly gives the Hensel-facing
+odd-prime package.
+-/
+theorem serreQuadraticOddHenselHypothesis_of_firstResidueGradient
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddFirstResidueGradientHenselHypothesis A a x) :
+    serreQuadraticOddHenselHypothesis A a x := by
+  exact serreQuadraticOddHenselHypothesis_of_expression
+    (serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient h)
 
 /--
 The matrix-coordinate Hensel package directly gives the expanded-expression
@@ -56,6 +97,18 @@ theorem serreQuadraticOddExpressionHenselHypothesis_of_matrixCoordinate
     serreQuadraticOddExpressionHenselHypothesis A a x := by
   exact serreQuadraticOddExpressionHenselHypothesis_of_firstResidueGradient
     (serreQuadraticOddFirstResidueGradientHenselHypothesis_of_matrixCoordinate h)
+
+/--
+The matrix-coordinate Hensel package directly gives the Hensel-facing odd-prime
+package.
+-/
+theorem serreQuadraticOddHenselHypothesis_of_matrixCoordinate
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddMatrixCoordinateHenselHypothesis A a x) :
+    serreQuadraticOddHenselHypothesis A a x := by
+  exact serreQuadraticOddHenselHypothesis_of_expression
+    (serreQuadraticOddExpressionHenselHypothesis_of_matrixCoordinate h)
 
 /--
 The determinant-boundary Hensel package directly gives the first-residue
@@ -80,6 +133,18 @@ theorem serreQuadraticOddExpressionHenselHypothesis_of_detBoundary
     serreQuadraticOddExpressionHenselHypothesis A a x := by
   exact serreQuadraticOddExpressionHenselHypothesis_of_matrixCoordinate
     (serreQuadraticOddMatrixCoordinateHenselHypothesis_of_detBoundary h)
+
+/--
+The determinant-boundary Hensel package directly gives the Hensel-facing
+odd-prime package.
+-/
+theorem serreQuadraticOddHenselHypothesis_of_detBoundary
+    {σ : Type*} [DecidableEq σ] [Fintype σ] {p : ℕ} [Fact p.Prime]
+    {A : σ → σ → SerrePadicInt p} {a : SerrePadicInt p} {x : σ → SerrePadicInt p}
+    (h : serreQuadraticOddDetBoundaryHenselHypothesis A a x) :
+    serreQuadraticOddHenselHypothesis A a x := by
+  exact serreQuadraticOddHenselHypothesis_of_expression
+    (serreQuadraticOddExpressionHenselHypothesis_of_detBoundary h)
 
 /-- Extract the exact root together with the congruence lift from the odd-prime package. -/
 theorem serreQuadraticOddHenselHypothesis.exists_solution_lift
