@@ -30,11 +30,11 @@ theorem serreQuadraticTerm_pderiv_eval
   by_cases hji : j = i <;> by_cases hjk : j = k
   · subst i
     subst k
-    simp [MvPolynomial.pderiv_mul]
+    simp [MvPolynomial.pderiv_mul, mul_comm]
   · subst i
-    simp [MvPolynomial.pderiv_mul, hjk]
+    simp [MvPolynomial.pderiv_mul, hjk, mul_comm]
   · subst k
-    simp [MvPolynomial.pderiv_mul, hji]
+    simp [MvPolynomial.pderiv_mul, hji, mul_comm]
   · simp [MvPolynomial.pderiv_mul, hji, hjk]
 
 /--
