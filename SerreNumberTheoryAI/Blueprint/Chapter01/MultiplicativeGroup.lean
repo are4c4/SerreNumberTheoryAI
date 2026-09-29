@@ -29,12 +29,17 @@ Leanでは `Nat.sum_totient` を通してこの標準的な算術恒等式を利
 :::proof "totient_divisor_sum"
 巡回群の各元をその位数で分類すると、位数が `d` の元は `φ(d)` 個である。
 可能な位数は群の位数の約数なので、全要素を数えると約数上の `φ` の和が得られる。
-形式化では、この算術部分はmathlibの一般定理に委ねる。
+形式化では、この算術恒等式そのものはmathlibの一般定理に委ねる。
 :::
+
+なお、次の巡回性補題のLean実装は `totient_divisor_sum` を直接呼ぶのではなく、
+同じ位数別・Euler関数の数え上げを内部で証明しているmathlibの一般群論定理
+`isCyclic_of_card_pow_eq_one_le` を利用する。したがってBlueprintの依存グラフでは
+この二つを直接のLean依存としては結ばない。
 
 ## 方程式の解の個数から巡回性を得る
 
-:::lemma_ "finite_group_cyclic_from_power_root_bound" (lean := "SerreNumberTheoryAI.finiteGroup_isCyclic_of_power_root_bound") (uses := "totient_divisor_sum")
+:::lemma_ "finite_group_cyclic_from_power_root_bound" (lean := "SerreNumberTheoryAI.finiteGroup_isCyclic_of_power_root_bound")
 有限群 `G` について、任意の正整数 `n` に対して方程式 `x^n=1` の解が高々 `n` 個なら、`G` は巡回群である。
 :::
 
