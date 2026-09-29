@@ -28,6 +28,12 @@ theorem serreResidueUnitRootsOfUnity_eq_top :
     rw [← serrePadicFirstResidueUnits_card p]
     exact pow_card_eq_one'
 
+/-- The first-residue root subgroup is canonically the full residue-unit group. -/
+noncomputable def serreResidueUnitRootsOfUnityEquivUnits :
+    serreResidueUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  (MulEquiv.subgroupCongr (serreResidueUnitRootsOfUnity_eq_top p)).trans
+    Subgroup.topEquiv
+
 end PadicResidueUnitRoots
 
 end SerreNumberTheoryAI
