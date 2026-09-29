@@ -43,7 +43,7 @@ open Informal
 
 ## Chevalley–Warning 定理
 
-:::theorem "serre_chevalley_warning" (lean := "SerreNumberTheoryAI.serre_chevalleyWarning") (uses := "multivariate_grid_sum_zero, chevalley_indicator_idea")
+:::theorem "serre_chevalley_warning" (lean := "SerreNumberTheoryAI.serre_theorem3") (uses := "multivariate_grid_sum_zero, chevalley_indicator_idea")
 有限体 `K` の標数を `p` とする。有限集合で添字付けられた `σ` 変数多項式 `fᵢ` について、全次数の総和が `#σ` より小さいなら、共通零点の個数は `p` で割り切れる。
 :::
 
@@ -55,4 +55,4 @@ open Informal
 よって共通零点数を `K` に移したものは0になる。標数が `p` であることから、これは整数として共通零点数が `p` で割り切れることと同値である。
 :::
 
-この節の直後に続く「原点以外の共通零点の存在」や二次形式への応用は、この核心定理からの下流結果として別のwork itemに分離する。
+この節の直後に続く「原点以外の共通零点の存在」と二次形式への応用は、核心定理からの下流結果として `ChevalleyNontrivialZero` と `ChevalleyQuadraticForm` の別モジュールに分離して形式化している。
