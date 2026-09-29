@@ -1,6 +1,7 @@
 # Unit filtration next-step notes
 
 Current branch: `work/c2-s3-1-unit-filtration-serial`.
+Current PR: #149.
 
 The Hensel and quadratic lifting chain through Chapter 2 §2.2 is already on `main`.  The current ACTIVE item is Chapter 2 §3.1, the unit filtration / Proposition 7 work (#108), recovered from the parked PR #125 onto latest main.
 
@@ -33,3 +34,7 @@ For each meaningful Lean slice:
 2. if CI fails, inspect logs before changing direction;
 3. keep Blueprint and progress docs synchronized with implemented declarations only;
 4. preserve source-shaped statements without importing a packaged p-adic unit decomposition theorem.
+
+## Current CI
+
+- head `4bbb2973ba4d9acbc920f8522acbb43100e8102b`: CI #733 queued/in progress at the time this note was synchronized.
