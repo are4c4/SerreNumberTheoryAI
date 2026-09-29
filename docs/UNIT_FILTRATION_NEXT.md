@@ -46,7 +46,14 @@ The finite-complement layer now contains:
 - `serrePadicResidueUnitReductionToFirst`: finite residue-unit reduction `(Z/p^(n+1)Z)^× → (Z/pZ)^×`;
 - `serrePadicFirstResidueUnits_card` and `serrePadicResidueUnits_card`: the cardinal calculations `p - 1` and `p^n * (p - 1)`;
 - `serrePadicResidueUnitReductionToFirst_ker_card` and `_coprime`: the finite kernel has order `p^n` and is coprime to the first residue-unit group;
-- `serrePadicFiniteUnitComplement`, `serrePadicFiniteUnitComplementEquiv`, and `serrePadicFiniteUnitComplement_unique`.
+- `serrePadicFiniteUnitComplement`, `serrePadicFiniteUnitComplementEquiv`, and `serrePadicFiniteUnitComplement_unique`;
+- `serrePadicFiniteUnitComplementTransition` and its compatibility with first-residue equivalences;
+- `serrePadicFiniteUnitComplementResidueRootsEquiv` and its transition compatibility.
+
+The project-roots/finite-complement comparison layer now contains:
+
+- `serrePadicUnitRootsReductionLevelToFiniteComplement`: project `(p-1)`-st roots reduce to the distinguished finite complement at every level;
+- `serrePadicUnitRootsReductionLevelToFiniteComplement_transition`: those reductions commute with adjacent finite-complement transition maps.
 
 ## CI notes
 
@@ -56,16 +63,19 @@ The finite-complement layer now contains:
 - CI #796 validated the Lean conditional injectivity and injectivity-equivalence lemmas.
 - CI #798 validated the Blueprint documentation of those injectivity criteria.
 - CI #810 validated the finite residue-unit complement Lean layer before Blueprint/docs sync.
-- The newest docs/Blueprint refresh should be checked against the next PR-head CI before using it as the validated head.
+- CI #831 validated the finite-complement residue-roots Blueprint after the duplicate-tag fix.
+- CI #835 validated the finite-complement limit Lean layer at head `474ff6bf1cdcda24b6ad349bfaa166073198fa45`.
+- CI #837 validated the Blueprint inclusion for the finite-complement limit page at head `25459d3a701253f20e99b17f82a0be0d3e320a9d`.
+- This docs sync should be checked against the next PR-head CI before using it as the latest validated head.
 
 ## Next proof boundary
 
-The filtration, successive quotient, roots-reduction interfaces, and finite residue-unit complement layer are implemented. The next source-shaped boundary is to connect the two complement pictures:
+The filtration, successive quotient, roots-reduction interfaces, finite residue-unit complement layer, residue-root comparison, and the first project-roots-to-finite-complement transition comparison are implemented. The next source-shaped boundary is to compare the project roots subgroup with the inverse-compatible finite complements strongly enough to package the finite complement `V` inside the full p-adic unit group:
 
 1. prove kernel triviality for roots of unity lying in `U_1`;
 2. package the roots subgroup → first-residue roots map as an isomorphism;
-3. identify the first-residue roots subgroup with all first-residue units;
-4. compare the project roots subgroup with the inverse-compatible finite complements;
+3. compare this isomorphism with the finite-complement residue-root equivalences;
+4. upgrade the levelwise compatible reductions to the intended finite complement `V` picture;
 5. then complete the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
 Keep §3.2 Proposition 8 separate.
