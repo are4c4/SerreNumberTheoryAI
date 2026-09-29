@@ -82,3 +82,35 @@ Lean 側では `serrePadicUnitRootsReduction_eq_one_iff` として実装して�
 余域を residue roots に狭めた還元写像についても、1 に写る条件は同じく `U_1` への所属である。
 Lean 側では `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff` として実装している。
 :::
+
+:::theorem "padicunitrootsnarrowinjectiveiff"
+  (uses := "padicunitrootsreductiontoresidueroots, padicunitrootsreduction")
+通常の還元写像と、余域を residue roots に狭めた還元写像は、単射性に関して同じ情報を持つ。
+Lean 側では `serrePadicUnitRootsReductionToResidueRoots_injective_iff` として実装している。
+:::
+
+:::theorem "padicunitrootsconditionalinjective"
+  (uses := "padicunitrootseqonecriterion")
+roots-of-unity subgroup と `U_1` の交わりが自明であることを仮定すれば、
+`serrePadicUnitRootsReduction` は単射である。
+Lean 側では `serrePadicUnitRootsReduction_injective_of_principal_one_trivial` として実装している。
+:::
+
+:::theorem "padicunitrootsinjectiveiffkerneltrivial"
+  (uses := "padicunitrootsconditionalinjective, padicunitrootseqonecriterion")
+還元写像の単射性は、未解決の kernel-triviality 目標、すなわち roots-of-unity subgroup と
+`U_1` の交わりが自明であることと同値である。
+Lean 側では `serrePadicUnitRootsReduction_injective_iff_principal_one_trivial` として実装している。
+:::
+
+:::theorem "padicunitrootsnarrowconditionalinjective"
+  (uses := "padicunitrootsnarrowinjectiveiff, padicunitrootsconditionalinjective")
+同じ条件付き単射性は、residue roots を余域にした還元写像にも移る。
+Lean 側では `serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial` として実装している。
+:::
+
+:::theorem "padicunitrootsnarrowinjectiveiffkerneltrivial"
+  (uses := "padicunitrootsnarrowconditionalinjective, padicunitrootsinjectiveiffkerneltrivial")
+residue roots を余域にした還元写像の単射性も、同じ kernel-triviality 目標と同値である。
+Lean 側では `serrePadicUnitRootsReductionToResidueRoots_injective_iff_principal_one_trivial` として実装している。
+:::
