@@ -195,6 +195,103 @@ theorem serrePadicPrincipalUnitCoeffResidue_surjective (n : ℕ) :
   simpa using hx
 
 /--
+Modulo \`p\`, the coefficient of a product of principal units is the sum
+of the two coefficients.  This is the homomorphism calculation behind
+\`U_(n+1) / U_(n+2)\`.
+-/
+theorem serrePadicPrincipalUnitCoeffResidue_mul
+    (n : ℕ)
+    (u v : serrePadicPrincipalUnits p (n + 1)) :
+    serrePadicPrincipalUnitCoeffResidue p n (u * v) =
+      serrePadicPrincipalUnitCoeffResidue p n u +
+        serrePadicPrincipalUnitCoeffResidue p n v := by
+  let x := serrePadicPrincipalUnitCoeff p n u
+  let y := serrePadicPrincipalUnitCoeff p n v
+  let z := serrePadicPrincipalUnitCoeff p n (u * v)
+  have huspec :
+      (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
+        (p : SerrePadicInt p) ^ (n + 1) * x := by
+    simpa [x] using serrePadicPrincipalUnitCoeff_spec p n u
+  have hvspec :
+      (((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
+        (p : SerrePadicInt p) ^ (n + 1) * y := by
+    simpa [y] using serrePadicPrincipalUnitCoeff_spec p n v
+  have hzspec :
+      ((((u * v : serrePadicPrincipalUnits p (n + 1)) :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
+        (p : SerrePadicInt p) ^ (n + 1) * z := by
+    simpa [z] using
+      serrePadicPrincipalUnitCoeff_spec p n (u * v)
+  have huval :
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+        1 + (p : SerrePadicInt p) ^ (n + 1) * x := by
+    calc
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+          (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
+      _ = (p : SerrePadicInt p) ^ (n + 1) * x + 1 := by rw [huspec]
+      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * x := by ring
+  have hvval :
+      ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+        1 + (p : SerrePadicInt p) ^ (n + 1) * y := by
+    calc
+      ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+          (((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
+      _ = (p : SerrePadicInt p) ^ (n + 1) * y + 1 := by rw [hvspec]
+      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * y := by ring
+  have heq :
+      (p : SerrePadicInt p) ^ (n + 1) * z =
+        (p : SerrePadicInt p) ^ (n + 1) *
+          ((x + y) + (p : SerrePadicInt p) ^ (n + 1) * (x * y)) := by
+    calc
+      (p : SerrePadicInt p) ^ (n + 1) * z =
+          ((((u * v : serrePadicPrincipalUnits p (n + 1)) :
+              (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) := hzspec.symm
+      _ = (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) *
+            ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p)) - 1 := by rfl
+      _ = (1 + (p : SerrePadicInt p) ^ (n + 1) * x) *
+            (1 + (p : SerrePadicInt p) ^ (n + 1) * y) - 1 := by
+          rw [huval, hvval]
+      _ = (p : SerrePadicInt p) ^ (n + 1) *
+          ((x + y) + (p : SerrePadicInt p) ^ (n + 1) * (x * y)) := by ring
+  have hz :
+      z = (x + y) +
+        (p : SerrePadicInt p) ^ (n + 1) * (x * y) :=
+    serrePadicInt_mul_pow_injective p (n + 1) heq
+  have hpdiv :
+      (p : SerrePadicInt p) ∣
+        (p : SerrePadicInt p) ^ (n + 1) * (x * y) := by
+    refine ⟨(p : SerrePadicInt p) ^ n * (x * y), ?_⟩
+    rw [pow_succ]
+    ring
+  have hpzero :
+      serrePadicIntProj p 0
+          ((p : SerrePadicInt p) ^ (n + 1) * (x * y)) = 0 :=
+    (p_dvd_serrePadicInt_iff_proj_zero p _).1 hpdiv
+  change serrePadicIntProj p 0 z =
+    serrePadicIntProj p 0 x + serrePadicIntProj p 0 y
+  rw [hz, map_add, map_add, hpzero, add_zero]
+
+/--
+The coefficient-residue map as a homomorphism from the multiplicative
+principal-unit group to the additive residue group, encoded with
+\`Multiplicative\`.
+-/
+noncomputable def serrePadicPrincipalUnitCoeffResidueHom (n : ℕ) :
+    serrePadicPrincipalUnits p (n + 1) →*
+      Multiplicative (padicResidueRing p 0) where
+  toFun u :=
+    Multiplicative.ofAdd
+      (serrePadicPrincipalUnitCoeffResidue p n u)
+  map_one' := by
+    change serrePadicPrincipalUnitCoeffResidue p n 1 = 0
+    exact (serrePadicPrincipalUnitCoeffResidue_eq_zero_iff p n 1).2 (by simp)
+  map_mul' u v := by
+    change serrePadicPrincipalUnitCoeffResidue p n (u * v) =
+      serrePadicPrincipalUnitCoeffResidue p n u +
+        serrePadicPrincipalUnitCoeffResidue p n v
+    exact serrePadicPrincipalUnitCoeffResidue_mul p n u v
+
+/--
 The coefficient has zero first residue exactly when the principal unit lies
 one step deeper in the filtration.
 -/
