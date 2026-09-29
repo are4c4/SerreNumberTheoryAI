@@ -118,3 +118,64 @@ theorem blueprint_unitRootsResidueRootsReductionInjective
   serrePadicUnitRootsReductionToResidueRoots_injective p
 end SerreNumberTheoryAI
 ```
+
+:::theorem "unitrootsreductiontrivialfiber"
+  (uses := "unitrootsprincipalonetrivial")
+第一剰余単元群への還元で `1` に移る project 側の根は、ちょうど `1` 自身である。
+:::
+
+```lean "unitrootsreductiontrivialfiber"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsReductionTrivialFiber
+    (p : ℕ) [Fact p.Prime]
+    (u : serrePadicUnitRootsOfUnity p) :
+    serrePadicUnitRootsReduction p u = 1 ↔ u = 1 :=
+  serrePadicUnitRootsReduction_eq_one_iff_eq_one p u
+end SerreNumberTheoryAI
+```
+
+:::theorem "unitrootsreductionkernelbot"
+  (uses := "unitrootsreductiontrivialfiber")
+第一剰余単元群への還元の kernel は bottom subgroup である。
+:::
+
+```lean "unitrootsreductionkernelbot"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsReductionKernelBot
+    (p : ℕ) [Fact p.Prime] :
+    (serrePadicUnitRootsReduction p).ker = ⊥ :=
+  serrePadicUnitRootsReduction_ker_eq_bot p
+end SerreNumberTheoryAI
+```
+
+:::definition "unitrootsresiduerootsequivofsurjective"
+  (uses := "unitrootsresiduerootsreductioninjective")
+第一剰余の根部分群への還元が全射であることを別途証明できれば、
+すでに得た単射性と合わせて、それは同型として package できる。
+:::
+
+```lean "unitrootsresiduerootsequivofsurjective"
+namespace SerreNumberTheoryAI
+noncomputable def blueprint_unitRootsResidueRootsEquivOfSurjective
+    (p : ℕ) [Fact p.Prime]
+    (hsurj : Function.Surjective (serrePadicUnitRootsReductionToResidueRoots p)) :
+    serrePadicUnitRootsOfUnity p ≃* serreResidueUnitRootsOfUnity p :=
+  serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective p hsurj
+end SerreNumberTheoryAI
+```
+
+:::definition "unitrootsresidueunitsequivofsurjective"
+  (uses := "unitrootsresiduerootsequivofsurjective")
+さらに第一剰余の根部分群が全第一剰余単元群であることを合成して、
+全射性だけを残した `V ≃ (Z/pZ)^×` 型の条件付き同型を得る。
+:::
+
+```lean "unitrootsresidueunitsequivofsurjective"
+namespace SerreNumberTheoryAI
+noncomputable def blueprint_unitRootsResidueUnitsEquivOfSurjective
+    (p : ℕ) [Fact p.Prime]
+    (hsurj : Function.Surjective (serrePadicUnitRootsReductionToResidueRoots p)) :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective p hsurj
+end SerreNumberTheoryAI
+```
