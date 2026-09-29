@@ -9,7 +9,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Work ID: C2S3.1-UnitFiltration
 - Issue: #108
 - Branch: `work/c2-s3-1-unit-filtration-serial`
-- PR: not opened yet in this recovery run
+- PR: #149
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
@@ -30,11 +30,10 @@ The first recovered Lean slice contains:
 
 ## Next proof targets for this ACTIVE item
 
-1. Open the recovery PR and let CI validate the recovered first slice on latest main.
+1. Let PR #149 CI validate the recovered first slice on latest main.
 2. If CI fails, inspect logs first and fix the concrete API mismatch.
 3. If CI is green or pending, continue inside the same PR toward a source-shaped successive quotient statement `U_n/U_(n+1) ≃ Z/pZ`, without using a packaged p-adic unit decomposition theorem.
-4. Add Blueprint linkage for the recovered filtration definitions and first quotient.
-5. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this first proof boundary unless the required interfaces are already isolated.
+4. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this first proof boundary unless the required interfaces are already isolated.
 
 ## Run-length preference for this ACTIVE item
 
