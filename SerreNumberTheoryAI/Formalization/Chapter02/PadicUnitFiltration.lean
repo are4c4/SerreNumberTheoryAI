@@ -61,6 +61,13 @@ theorem mem_serrePadicPrincipalUnits_succ_iff_pow_dvd
     rw [map_sub] at hzero
     exact sub_eq_zero.mp (by simpa using hzero)
 
+/-- The source principal-unit filtration is descending at consecutive positive levels. -/
+theorem serrePadicPrincipalUnits_succ_succ_le_succ (n : ℕ) :
+    serrePadicPrincipalUnits p (n + 2) ≤ serrePadicPrincipalUnits p (n + 1) := by
+  intro u hu
+  rw [mem_serrePadicPrincipalUnits_succ_iff_pow_dvd] at hu ⊢
+  exact (pow_dvd_pow (p : SerrePadicInt p) (Nat.le_succ (n + 1))).trans hu
+
 /-- The first reduction map `U → (Z/pZ)ˣ`, expressed in the project residue indexing. -/
 def serrePadicUnitReduction :
     (SerrePadicInt p)ˣ →* (padicResidueRing p 0)ˣ :=
