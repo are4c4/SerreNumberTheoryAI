@@ -86,7 +86,7 @@ theorem serreCoprimeKernelComplement_surjective
     (f : E →* B)
     (hsurj : Function.Surjective f)
     (hcop : Nat.Coprime (Nat.card f.ker) (Nat.card B)) :
-    Function.Surjective (f.domRestrict (serreCoprimeKernelComplement f)) := by
+    Function.Surjective (f.comp (serreCoprimeKernelComplement f).subtype) := by
   intro z
   obtain ⟨x, rfl⟩ := hsurj z
   have hord :
@@ -120,7 +120,7 @@ theorem serreCoprimeKernelComplement_surjective
 theorem serreCoprimeKernelComplement_injective
     (f : E →* B)
     (hcop : Nat.Coprime (Nat.card f.ker) (Nat.card B)) :
-    Function.Injective (f.domRestrict (serreCoprimeKernelComplement f)) := by
+    Function.Injective (f.comp (serreCoprimeKernelComplement f).subtype) := by
   intro x y hxy
   apply Subtype.ext
   change (x : E) = (y : E)
@@ -154,7 +154,7 @@ noncomputable def serreCoprimeKernelComplementEquiv
     (hcop : Nat.Coprime (Nat.card f.ker) (Nat.card B)) :
     serreCoprimeKernelComplement f ≃* B :=
   MulEquiv.ofBijective
-    (f.domRestrict (serreCoprimeKernelComplement f))
+    (f.comp (serreCoprimeKernelComplement f).subtype)
     ⟨serreCoprimeKernelComplement_injective f hcop,
       serreCoprimeKernelComplement_surjective f hsurj hcop⟩
 
