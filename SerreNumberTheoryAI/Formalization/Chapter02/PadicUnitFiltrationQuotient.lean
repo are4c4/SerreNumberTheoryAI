@@ -63,10 +63,12 @@ noncomputable def serrePadicPrincipalUnitsSuccessiveQuotientEquiv
     (n : ℕ) :
     serrePadicPrincipalUnitsSuccessiveQuotient p n ≃*
       Multiplicative (padicResidueRing p 0) := by
-  rw [← serrePadicPrincipalUnitCoeffResidueHom_ker p n]
-  exact QuotientGroup.quotientKerEquivOfSurjective
-    (serrePadicPrincipalUnitCoeffResidueHom p n)
-    (serrePadicPrincipalUnitCoeffResidueHom_surjective p n)
+  exact
+    (QuotientGroup.quotientMulEquivOfEq
+      (serrePadicPrincipalUnitCoeffResidueHom_ker p n).symm).trans
+      (QuotientGroup.quotientKerEquivOfSurjective
+        (serrePadicPrincipalUnitCoeffResidueHom p n)
+        (serrePadicPrincipalUnitCoeffResidueHom_surjective p n))
 
 end PadicUnitFiltrationQuotient
 
