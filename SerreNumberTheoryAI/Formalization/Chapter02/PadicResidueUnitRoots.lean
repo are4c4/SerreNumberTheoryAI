@@ -1,12 +1,13 @@
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiniteComplement
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitRoots
-import Mathlib.FieldTheory.Finite.Basic
 
 /-!
 # Roots of unity in the first residue-unit group
 
-At the first residue level, Fermat's little theorem says that every nonzero
-residue class is a `(p-1)`-st root of unity.  This identifies the residue-root
-subgroup used by the p-adic roots-of-unity map with the full residue-unit group.
+At the first residue level, every unit is a `(p-1)`-st root of unity because
+the residue-unit group has cardinality `p - 1`.  This identifies the
+residue-root subgroup used by the p-adic roots-of-unity map with the full
+residue-unit group.
 -/
 
 namespace SerreNumberTheoryAI
@@ -24,8 +25,8 @@ theorem serreResidueUnitRootsOfUnity_eq_top :
     trivial
   · intro _
     change a ^ (p - 1) = 1
-    simpa [padicResidueRing] using
-      ZMod.units_pow_card_sub_one_eq_one p a
+    rw [← serrePadicFirstResidueUnits_card p]
+    exact pow_card_eq_one'
 
 end PadicResidueUnitRoots
 
