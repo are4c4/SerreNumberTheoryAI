@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltration
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltrationQuotient
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -136,6 +137,19 @@ theorem blueprint_padicPrincipalUnitMulCongruence
 end SerreNumberTheoryAI
 ```
 
+:::definition "padicprincipalunitcoeffresiduehom"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitCoeffResidueHom")
+  (uses := "padicprincipalunitmulcongruence")
+係数の一階剰余を、principal-unit group から最初の剰余環の加法群への準同型としてまとめる。
+加法群は `Multiplicative` 型タグで乗法的準同型として扱う。
+:::
+
+:::theorem "padicprincipalunitssuccessivequotientequiv"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitsSuccessiveQuotientEquiv")
+  (uses := "padicprincipalunitcoeffresiduehom, padicprincipalunitcoeffkernel")
+第一同型定理により、source の successive quotient `Uₙ₊₁/Uₙ₊₂` は最初の剰余環の加法群と同型である。
+:::
+
 :::definition "padicunitreductionfirst"
   (lean := "SerreNumberTheoryAI.serrePadicUnitReduction")
   (uses := "padicunitreductionlevel")
@@ -148,27 +162,9 @@ end SerreNumberTheoryAI
 p進整数環の単数へ持ち上げる。
 :::
 
-```lean "padicunitreductionsurjective"
-namespace SerreNumberTheoryAI
-theorem blueprint_padicUnitReductionSurjective
-    (p : ℕ) [Fact p.Prime] :
-    Function.Surjective (serrePadicUnitReduction p) :=
-  serrePadicUnitReduction_surjective p
-end SerreNumberTheoryAI
-```
-
 :::theorem "padicunitsfirstquotient"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitsQuotientPrincipalOneEquiv")
   (uses := "padicprincipalunits, padicunitreductionsurjective")
 第一同型定理により、最初の商 `U/U₁` は最初の剰余単数群と同型になる。
 後続では、これを successive quotient と finite complement の議論の入口として使う。
 :::
-
-```lean "padicunitsfirstquotient"
-namespace SerreNumberTheoryAI
-noncomputable def blueprint_padicUnitsFirstQuotient
-    (p : ℕ) [Fact p.Prime] :
-    (SerrePadicInt p)ˣ ⧸ serrePadicPrincipalUnits p 1 ≃*
-      (padicResidueRing p 0)ˣ :=
-  serrePadicUnitsQuotientPrincipalOneEquiv p
-end SerreNumberTheoryAI
-```
