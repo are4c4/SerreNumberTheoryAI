@@ -188,6 +188,80 @@ theorem serrePadicUnitRootsReductionToResidueRoots_eq_one_iff
     (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1
   exact mem_serrePadicUnitRootsReductionToResidueRoots_ker p u
 
+/--
+The ordinary reduction and the codomain-narrowed reduction have the same
+injectivity content.
+-/
+theorem serrePadicUnitRootsReductionToResidueRoots_injective_iff :
+    Function.Injective (serrePadicUnitRootsReductionToResidueRoots p) ↔
+      Function.Injective (serrePadicUnitRootsReduction p) := by
+  constructor
+  · intro hinj u v hred
+    apply hinj
+    exact Subtype.ext hred
+  · intro hinj u v hred
+    apply hinj
+    simpa [serrePadicUnitRootsReductionToResidueRoots_apply] using congrArg
+      (fun a : serreResidueUnitRootsOfUnity p =>
+        (a : (padicResidueRing p 0)ˣ)) hred
+
+/--
+A conditional injectivity criterion: once the intersection of roots of unity
+with `U_1` is proved trivial, the reduction to residue units is injective.
+-/
+theorem serrePadicUnitRootsReduction_injective_of_principal_one_trivial
+    (htriv : ∀ u : serrePadicUnitRootsOfUnity p,
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1) :
+    Function.Injective (serrePadicUnitRootsReduction p) := by
+  intro u v hred
+  have hker : serrePadicUnitRootsReduction p (u * v⁻¹) = 1 := by
+    rw [map_mul, map_inv, hred, mul_inv_cancel]
+  have hprincipal :
+      ((u * v⁻¹ : serrePadicUnitRootsOfUnity p) : (SerrePadicInt p)ˣ) ∈
+        serrePadicPrincipalUnits p 1 :=
+    (serrePadicUnitRootsReduction_eq_one_iff p (u * v⁻¹)).1 hker
+  have hmul : u * v⁻¹ = 1 := htriv (u * v⁻¹) hprincipal
+  calc
+    u = u * 1 := by rw [mul_one]
+    _ = u * (v⁻¹ * v) := by rw [inv_mul_cancel]
+    _ = (u * v⁻¹) * v := by rw [mul_assoc]
+    _ = 1 * v := by rw [hmul]
+    _ = v := by rw [one_mul]
+
+/--
+The injectivity target is exactly the pending kernel-triviality target, stated
+without proving that target yet.
+-/
+theorem serrePadicUnitRootsReduction_injective_iff_principal_one_trivial :
+    Function.Injective (serrePadicUnitRootsReduction p) ↔
+      ∀ u : serrePadicUnitRootsOfUnity p,
+        (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1 := by
+  constructor
+  · intro hinj u hu
+    apply hinj
+    simpa using (serrePadicUnitRootsReduction_eq_one_iff p u).2 hu
+  · intro htriv
+    exact serrePadicUnitRootsReduction_injective_of_principal_one_trivial p htriv
+
+/-- The same conditional injectivity criterion for the narrowed codomain. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial
+    (htriv : ∀ u : serrePadicUnitRootsOfUnity p,
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1) :
+    Function.Injective (serrePadicUnitRootsReductionToResidueRoots p) := by
+  have hred := serrePadicUnitRootsReduction_injective_of_principal_one_trivial p htriv
+  exact (serrePadicUnitRootsReductionToResidueRoots_injective_iff p).2 hred
+
+/--
+For the narrowed codomain, injectivity is again equivalent to the same pending
+kernel-triviality target.
+-/
+theorem serrePadicUnitRootsReductionToResidueRoots_injective_iff_principal_one_trivial :
+    Function.Injective (serrePadicUnitRootsReductionToResidueRoots p) ↔
+      ∀ u : serrePadicUnitRootsOfUnity p,
+        (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1 := by
+  rw [serrePadicUnitRootsReductionToResidueRoots_injective_iff,
+    serrePadicUnitRootsReduction_injective_iff_principal_one_trivial]
+
 end PadicUnitRoots
 
 end SerreNumberTheoryAI
