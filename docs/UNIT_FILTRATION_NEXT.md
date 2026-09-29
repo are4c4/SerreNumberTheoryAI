@@ -1,7 +1,6 @@
 # Unit filtration next-step notes
 
 Current branch: `work/c2-s3-1-unit-filtration-serial`.
-Current PR: #149.
 
 The Hensel and quadratic lifting chain through Chapter 2 §2.2 is already on `main`.  The current ACTIVE item is Chapter 2 §3.1, the unit filtration / Proposition 7 work (#108), recovered from the parked PR #125 onto latest main.
 
@@ -16,9 +15,14 @@ The first recovered slice defines the source-indexed filtration in the project-l
 - `serrePadicUnitReductionLevel`: reduction of units to one finite residue-unit level;
 - `serrePadicPrincipalUnits`: `U_0 = U`, and `U_(n+1)` as the kernel of reduction modulo `p^(n+1)`;
 - `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: `u ∈ U_(n+1)` iff `p^(n+1)` divides `u - 1`;
+- `serrePadicPrincipalUnits_succ_succ_le_succ`: the positive principal-unit filtration is descending at consecutive levels;
 - `serrePadicUnitReduction`: first reduction `U → (Z/pZ)^×`;
 - `serrePadicUnitReduction_surjective`: every first-residue unit lifts to a p-adic unit;
 - `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`.
+
+## CI notes
+
+CI #735 failed in the Lean build at the first direction of `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the fix at head `d140c36...` inserted the explicit projection equality bridge before proving the zero statement.  The later head `bdb0a88...` adds the consecutive filtration inclusion and supersedes the earlier CI run.
 
 ## Next proof boundary
 
@@ -34,7 +38,3 @@ For each meaningful Lean slice:
 2. if CI fails, inspect logs before changing direction;
 3. keep Blueprint and progress docs synchronized with implemented declarations only;
 4. preserve source-shaped statements without importing a packaged p-adic unit decomposition theorem.
-
-## Current CI
-
-- head `4bbb2973ba4d9acbc920f8522acbb43100e8102b`: CI #733 queued/in progress at the time this note was synchronized.
