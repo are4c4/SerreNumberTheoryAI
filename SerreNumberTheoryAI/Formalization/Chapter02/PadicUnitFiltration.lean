@@ -248,6 +248,75 @@ theorem serrePadicPrincipalUnitCoeffResidue_eq_zero_iff
     exact ⟨z, hcoeff⟩
 
 /--
+Modulo the first residue, the coefficient of a product of principal units is
+the sum of their coefficients.  This is the homomorphism calculation behind
+the successive quotient.
+-/
+theorem serrePadicPrincipalUnitCoeffResidue_mul
+    (n : ℕ)
+    (u v : serrePadicPrincipalUnits p (n + 1)) :
+    serrePadicPrincipalUnitCoeffResidue p n (u * v) =
+      serrePadicPrincipalUnitCoeffResidue p n u +
+        serrePadicPrincipalUnitCoeffResidue p n v := by
+  let x := serrePadicPrincipalUnitCoeff p n u
+  let y := serrePadicPrincipalUnitCoeff p n v
+  let z := serrePadicPrincipalUnitCoeff p n (u * v)
+  have hu :
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+        1 + (p : SerrePadicInt p) ^ (n + 1) * x := by
+    calc
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+          (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
+      _ = (p : SerrePadicInt p) ^ (n + 1) * x + 1 := by
+        rw [serrePadicPrincipalUnitCoeff_spec p n u]
+      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * x := by ring
+  have hv :
+      ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+        1 + (p : SerrePadicInt p) ^ (n + 1) * y := by
+    calc
+      ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+          (((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
+      _ = (p : SerrePadicInt p) ^ (n + 1) * y + 1 := by
+        rw [serrePadicPrincipalUnitCoeff_spec p n v]
+      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * y := by ring
+  have hzprod :
+      (p : SerrePadicInt p) ^ (n + 1) * z =
+        (p : SerrePadicInt p) ^ (n + 1) *
+          ((x + y) +
+            (p : SerrePadicInt p) ^ (n + 1) * (x * y)) := by
+    calc
+      (p : SerrePadicInt p) ^ (n + 1) * z =
+          ((((u * v : serrePadicPrincipalUnits p (n + 1)) :
+              (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) := by
+        simpa [z] using
+          (serrePadicPrincipalUnitCoeff_spec p n (u * v)).symm
+      _ = (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) *
+            ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p)) - 1 := by rfl
+      _ = (1 + (p : SerrePadicInt p) ^ (n + 1) * x) *
+            (1 + (p : SerrePadicInt p) ^ (n + 1) * y) - 1 := by
+        rw [hu, hv]
+      _ = (p : SerrePadicInt p) ^ (n + 1) *
+          ((x + y) +
+            (p : SerrePadicInt p) ^ (n + 1) * (x * y)) := by ring
+  have hz :
+      z = (x + y) +
+        (p : SerrePadicInt p) ^ (n + 1) * (x * y) :=
+    serrePadicInt_mul_pow_injective p (n + 1) hzprod
+  have hpdiv :
+      (p : SerrePadicInt p) ∣
+        (p : SerrePadicInt p) ^ (n + 1) * (x * y) := by
+    refine ⟨(p : SerrePadicInt p) ^ n * (x * y), ?_⟩
+    rw [pow_succ]
+    ring
+  have hpzero :
+      serrePadicIntProj p 0
+          ((p : SerrePadicInt p) ^ (n + 1) * (x * y)) = 0 :=
+    (p_dvd_serrePadicInt_iff_proj_zero p _).1 hpdiv
+  change serrePadicIntProj p 0 z =
+    serrePadicIntProj p 0 x + serrePadicIntProj p 0 y
+  rw [hz, map_add, hpzero, add_zero, map_add]
+
+/--
 Source congruence behind the successive quotient map:
 for `n ≥ 1`, multiplication of `1 + p^n x` and `1 + p^n y`
 agrees with addition of coefficients modulo `p^(n+1)`.
