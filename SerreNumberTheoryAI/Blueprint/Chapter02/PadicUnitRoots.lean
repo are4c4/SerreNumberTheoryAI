@@ -49,7 +49,34 @@ theorem blueprint_padicUnitRootsReductionPow
 end SerreNumberTheoryAI
 ```
 
+:::definition "residueunitrootsofunity"
+  (lean := "SerreNumberTheoryAI.serreResidueUnitRootsOfUnity")
+最初の剰余単数群の側でも、同じ `(p-1)` 乗根条件を満たす部分群を切り出す。
+これにより還元写像の target を、単なる residue units から residue roots に狭められる。
+:::
+
+:::definition "padicunitrootsreductiontoresidueroots"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitRootsReductionToResidueRoots")
+`serrePadicUnitRootsReduction` の余域を residue roots-of-unity subgroup へ狭めた写像である。
+:::
+
+:::theorem "padicunitrootsnarrowkernel"
+  (uses := "padicunitrootsreductiontoresidueroots, padicunitrootsreduction")
+余域を residue roots に狭めても、還元写像の kernel は変わらない。
+:::
+
+```lean "padicunitrootsnarrowkernel"
+namespace SerreNumberTheoryAI
+theorem blueprint_padicUnitRootsNarrowKernel
+    (p : ℕ) [Fact p.Prime] :
+    (serrePadicUnitRootsReductionToResidueRoots p).ker =
+      (serrePadicUnitRootsReduction p).ker :=
+  serrePadicUnitRootsReductionToResidueRoots_ker p
+end SerreNumberTheoryAI
+```
+
 :::theorem "padicunitrootsreductionkernel"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitRootsReduction_ker")
   (uses := "padicunitrootsreduction, padicunitreductionfirst")
 roots-of-unity subgroup の還元写像の核は、第一 principal-unit subgroup との交わりとして表せる。
 この核が自明であることが、`V` が residue unit group へ単射的に写ることの次の目標である。
@@ -63,5 +90,21 @@ theorem blueprint_padicUnitRootsReductionKernel
       (serrePadicPrincipalUnits p 1).comap
         (serrePadicUnitRootsOfUnity p).subtype :=
   serrePadicUnitRootsReduction_ker p
+end SerreNumberTheoryAI
+```
+
+:::theorem "padicunitrootsnarrowkernelprincipal"
+  (uses := "padicunitrootsnarrowkernel, padicunitrootsreductionkernel")
+余域を狭めた還元写像の kernel も、第一 principal-unit subgroup との交わりとして表せる。
+:::
+
+```lean "padicunitrootsnarrowkernelprincipal"
+namespace SerreNumberTheoryAI
+theorem blueprint_padicUnitRootsNarrowKernelPrincipal
+    (p : ℕ) [Fact p.Prime] :
+    (serrePadicUnitRootsReductionToResidueRoots p).ker =
+      (serrePadicPrincipalUnits p 1).comap
+        (serrePadicUnitRootsOfUnity p).subtype :=
+  serrePadicUnitRootsReductionToResidueRoots_ker_principal p
 end SerreNumberTheoryAI
 ```
