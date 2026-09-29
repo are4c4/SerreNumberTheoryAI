@@ -124,13 +124,12 @@ theorem serrePadicUnitRootsReductionToResidueRoots_ker :
   constructor
   · intro hu
     change (serrePadicUnitRootsReductionToResidueRoots p) u = 1 at hu
-    exact congrArg
+    simpa using congrArg
       (fun a : serreResidueUnitRootsOfUnity p =>
         (a : (padicResidueRing p 0)ˣ)) hu
   · intro hu
     change serrePadicUnitRootsReduction p u = 1 at hu
-    ext
-    exact hu
+    exact Subtype.ext hu
 
 /--
 The kernel of the roots-of-unity reduction is its intersection with the first
