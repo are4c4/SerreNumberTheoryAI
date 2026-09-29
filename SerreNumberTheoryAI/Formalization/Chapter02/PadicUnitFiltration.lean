@@ -195,6 +195,59 @@ theorem serrePadicPrincipalUnitCoeffResidue_surjective (n : ℕ) :
   simpa using hx
 
 /--
+The coefficient has zero first residue exactly when the principal unit lies
+one step deeper in the filtration.
+-/
+theorem serrePadicPrincipalUnitCoeffResidue_eq_zero_iff
+    (n : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
+    serrePadicPrincipalUnitCoeffResidue p n u = 0 ↔
+      ((u : (SerrePadicInt p)ˣ) ∈
+        serrePadicPrincipalUnits p (n + 2)) := by
+  rw [mem_serrePadicPrincipalUnits_succ_iff_pow_dvd]
+  constructor
+  · intro hzero
+    have hpcoeff :
+        (p : SerrePadicInt p) ∣ serrePadicPrincipalUnitCoeff p n u := by
+      exact (p_dvd_serrePadicInt_iff_proj_zero p _).2 hzero
+    obtain ⟨z, hz⟩ := hpcoeff
+    refine ⟨z, ?_⟩
+    calc
+      (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
+          (p : SerrePadicInt p) ^ (n + 1) *
+            serrePadicPrincipalUnitCoeff p n u :=
+        serrePadicPrincipalUnitCoeff_spec p n u
+      _ = (p : SerrePadicInt p) ^ (n + 1) *
+            ((p : SerrePadicInt p) * z) := by rw [hz]
+      _ = (p : SerrePadicInt p) ^ (n + 2) * z := by
+        rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+        ring
+  · intro hdeep
+    obtain ⟨z, hz⟩ := hdeep
+    have heq :
+        (p : SerrePadicInt p) ^ (n + 1) *
+            serrePadicPrincipalUnitCoeff p n u =
+          (p : SerrePadicInt p) ^ (n + 1) *
+            ((p : SerrePadicInt p) * z) := by
+      calc
+        (p : SerrePadicInt p) ^ (n + 1) *
+            serrePadicPrincipalUnitCoeff p n u =
+            (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) :=
+          (serrePadicPrincipalUnitCoeff_spec p n u).symm
+        _ = (p : SerrePadicInt p) ^ (n + 2) * z := hz
+        _ = (p : SerrePadicInt p) ^ (n + 1) *
+            ((p : SerrePadicInt p) * z) := by
+          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+          ring
+    have hcoeff :
+        serrePadicPrincipalUnitCoeff p n u =
+          (p : SerrePadicInt p) * z :=
+      serrePadicInt_mul_pow_injective p (n + 1) heq
+    change serrePadicIntProj p 0
+        (serrePadicPrincipalUnitCoeff p n u) = 0
+    apply (p_dvd_serrePadicInt_iff_proj_zero p _).1
+    exact ⟨z, hcoeff⟩
+
+/--
 Modulo \`p\`, the coefficient of a product of principal units is the sum
 of the two coefficients.  This is the homomorphism calculation behind
 \`U_(n+1) / U_(n+2)\`.
@@ -326,59 +379,6 @@ noncomputable def serrePadicPrincipalUnitsSuccessiveQuotientEquiv
   exact QuotientGroup.quotientKerEquivOfSurjective
     (serrePadicPrincipalUnitCoeffResidueHom p n)
     (serrePadicPrincipalUnitCoeffResidueHom_surjective p n)
-
-/--
-The coefficient has zero first residue exactly when the principal unit lies
-one step deeper in the filtration.
--/
-theorem serrePadicPrincipalUnitCoeffResidue_eq_zero_iff
-    (n : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
-    serrePadicPrincipalUnitCoeffResidue p n u = 0 ↔
-      ((u : (SerrePadicInt p)ˣ) ∈
-        serrePadicPrincipalUnits p (n + 2)) := by
-  rw [mem_serrePadicPrincipalUnits_succ_iff_pow_dvd]
-  constructor
-  · intro hzero
-    have hpcoeff :
-        (p : SerrePadicInt p) ∣ serrePadicPrincipalUnitCoeff p n u := by
-      exact (p_dvd_serrePadicInt_iff_proj_zero p _).2 hzero
-    obtain ⟨z, hz⟩ := hpcoeff
-    refine ⟨z, ?_⟩
-    calc
-      (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
-          (p : SerrePadicInt p) ^ (n + 1) *
-            serrePadicPrincipalUnitCoeff p n u :=
-        serrePadicPrincipalUnitCoeff_spec p n u
-      _ = (p : SerrePadicInt p) ^ (n + 1) *
-            ((p : SerrePadicInt p) * z) := by rw [hz]
-      _ = (p : SerrePadicInt p) ^ (n + 2) * z := by
-        rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
-        ring
-  · intro hdeep
-    obtain ⟨z, hz⟩ := hdeep
-    have heq :
-        (p : SerrePadicInt p) ^ (n + 1) *
-            serrePadicPrincipalUnitCoeff p n u =
-          (p : SerrePadicInt p) ^ (n + 1) *
-            ((p : SerrePadicInt p) * z) := by
-      calc
-        (p : SerrePadicInt p) ^ (n + 1) *
-            serrePadicPrincipalUnitCoeff p n u =
-            (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) :=
-          (serrePadicPrincipalUnitCoeff_spec p n u).symm
-        _ = (p : SerrePadicInt p) ^ (n + 2) * z := hz
-        _ = (p : SerrePadicInt p) ^ (n + 1) *
-            ((p : SerrePadicInt p) * z) := by
-          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
-          ring
-    have hcoeff :
-        serrePadicPrincipalUnitCoeff p n u =
-          (p : SerrePadicInt p) * z :=
-      serrePadicInt_mul_pow_injective p (n + 1) heq
-    change serrePadicIntProj p 0
-        (serrePadicPrincipalUnitCoeff p n u) = 0
-    apply (p_dvd_serrePadicInt_iff_proj_zero p _).1
-    exact ⟨z, hcoeff⟩
 
 /--
 Source congruence behind the successive quotient map:
