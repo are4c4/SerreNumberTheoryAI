@@ -10,25 +10,42 @@ A user instruction such as `続けて` or `形式化を続けて` means: continu
 
 ## Current Lean result
 
-The first recovered slice defines the source-indexed filtration in the project-local `SerrePadicInt` unit group:
+The recovered and extended slice defines the source-indexed filtration in the project-local `SerrePadicInt` unit group:
 
 - `serrePadicUnitReductionLevel`: reduction of units to one finite residue-unit level;
 - `serrePadicPrincipalUnits`: `U_0 = U`, and `U_(n+1)` as the kernel of reduction modulo `p^(n+1)`;
 - `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: `u ∈ U_(n+1)` iff `p^(n+1)` divides `u - 1`;
 - `serrePadicPrincipalUnits_succ_succ_le_succ`: `U_(n+2) ≤ U_(n+1)` for consecutive positive levels;
-- `serrePadicUnitReduction`: first reduction `U → (Z/pZ)^×`;
-- `serrePadicUnitReduction_surjective`: every first-residue unit lifts to a p-adic unit;
-- `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`.
+- `serrePadicPrincipalUnitsNextSubgroup`: `U_(n+2)` regarded as a subgroup of `U_(n+1)`;
+- `serrePadicPrincipalUnitsSuccessiveQuotient`: the quotient carrier `U_(n+1)/U_(n+2)`;
+- `serrePadicPrincipalUnitCoeff` and `serrePadicPrincipalUnitCoeffResidue`: the coefficient of `u - 1` after dividing by `p^(n+1)` and its first residue;
+- `serrePadicPrincipalUnitOfCoeff`: source-shaped elements `1 + p^(n+1) x` as principal units;
+- `serrePadicPrincipalUnitCoeffResidue_surjective`: every first residue appears as a coefficient residue;
+- `serrePadicPrincipalUnitCoeffResidue_eq_zero_iff`: the coefficient residue is zero exactly on `U_(n+2)`;
+- `serrePadicPrincipalUnitCoeffResidue_mul`: coefficient residues add under multiplication of principal units;
+- `serrePadicPrincipalUnitCoeffResidueHom`: the coefficient residue as a homomorphism to the additive first residue group, encoded by `Multiplicative`;
+- `serrePadicPrincipalUnitCoeffResidueHom_ker` and `serrePadicPrincipalUnitCoeffResidueHom_surjective`;
+- `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: `U_(n+1)/U_(n+2)` is the additive first residue group;
+- `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: the first quotient `U/U_1 ≃ (Z/pZ)^×`.
 
 ## CI notes
 
-CI #735 failed in the Lean build at the first direction of `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the fix at head `d140c36...` inserted the explicit projection equality bridge before proving the zero statement.  The later Lean head `bdb0a88...` adds the consecutive filtration inclusion.  The latest docs-synced head is `a910869...`; check the corresponding PR-head CI before further mathematical expansion.
+- CI #735 failed in the Lean build at the first direction of `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the projection equality bridge fixed it.
+- CI #757 validated the extended coefficient-residue calculation through `serrePadicPrincipalUnitCoeffResidue_mul`.
+- CI #762 failed at a dependent rewrite in `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`.
+- The latest fix replaces the dependent rewrite by `QuotientGroup.quotientMulEquivOfEq` followed by `QuotientGroup.quotientKerEquivOfSurjective`.
+- CI #763 validated policy, Lean build, and Verso Blueprint for head `60ab1a52d6f4ccaafe31d176d7cb115f04aa0844`.
 
 ## Next proof boundary
 
-The next mathematical boundary is the source layer for successive quotients.  The safe target is a theorem/definition package expressing the map from `U_(n+1)` to the additive first residue of `(u - 1) / p^(n+1)`, with kernel `U_(n+2)`, eventually yielding `U_(n+1)/U_(n+2) ≃ Z/pZ`.
+The successive quotient layer is now implemented and CI-valid.  The next source-shaped boundary is the finite complement subgroup `V` in Proposition 7:
 
-Do not jump directly to the finite complement subgroup `V` or `U = V × U_1` until the successive quotient layer has been validated.
+1. formulate a project-local finite-level splitting / complement interface for `U/U_1 ≃ (Z/pZ)^×` and the principal-unit tower;
+2. avoid using a packaged p-adic unit decomposition theorem;
+3. identify which finite abelian/coprime-order lemmas are already available in mathlib;
+4. only then begin the construction of a compatible finite-level complement system leading to `U ≃ V × U_1`.
+
+Keep §3.2 Proposition 8 separate.
 
 ## Verification plan
 
