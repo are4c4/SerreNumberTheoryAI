@@ -52,10 +52,7 @@ theorem serrePadicUnitRootsReductionLevelToFiniteComplement_transition
     serrePadicFiniteUnitComplementTransition p n
         (serrePadicUnitRootsReductionLevelToFiniteComplement p (n + 1) u) =
       serrePadicUnitRootsReductionLevelToFiniteComplement p n u := by
-  ext
-  change serrePadicResidueUnitTransition p n
-      (serrePadicUnitReductionLevel p (n + 1) (u : (SerrePadicInt p)ˣ)) =
-    serrePadicUnitReductionLevel p n (u : (SerrePadicInt p)ˣ)
+  apply Subtype.ext
   apply Units.ext
   change ZMod.castHom
       (show p ^ (n + 1) ∣ p ^ ((n + 1) + 1) from
