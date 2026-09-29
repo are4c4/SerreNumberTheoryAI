@@ -237,7 +237,7 @@ def serrePadicUnitRootsToFiniteComplementTower :
     serrePadicUnitRootsOfUnity p →* serrePadicFiniteUnitComplementTower p where
   toFun u :=
     ⟨fun n => serrePadicUnitRootsReductionLevelToFiniteComplement p n u,
-      serrePadicUnitRootsReductionLevelToFiniteComplement_transition p · u⟩
+      fun n => serrePadicUnitRootsReductionLevelToFiniteComplement_transition p n u⟩
   map_one' := by
     apply Subtype.ext
     funext n
@@ -307,6 +307,10 @@ theorem serrePadicFiniteUnitComplementTowerToResidueRoots_injective :
   apply Subtype.ext
   funext n
   apply (serrePadicFiniteUnitComplementResidueRootsEquiv p n).injective
+  change serrePadicFiniteUnitComplementResidueRootsEquiv p n
+      (serrePadicFiniteUnitComplementTowerProj p n x) =
+    serrePadicFiniteUnitComplementResidueRootsEquiv p n
+      (serrePadicFiniteUnitComplementTowerProj p n y)
   rw [serrePadicFiniteUnitComplementTower_residueRoots_eq_zero p x n,
     serrePadicFiniteUnitComplementTower_residueRoots_eq_zero p y n]
   exact hxy
