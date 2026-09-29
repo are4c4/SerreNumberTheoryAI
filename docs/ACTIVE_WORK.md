@@ -13,9 +13,9 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest active-work sync head before this metadata commit: `fa270c06d46244685abade8767176f91ccb92e25`.
-- Latest validated implementation/docs head: `25459d3a701253f20e99b17f82a0be0d3e320a9d`.
-- Latest validated CI: #837 passed policy / Lean build / Verso Blueprint build.
+- Latest active-work sync head before this metadata commit: `8835c31ef94d6915b8cf0cde2f021d944d5efe74`.
+- Latest validated implementation/docs head: `8835c31ef94d6915b8cf0cde2f021d944d5efe74`.
+- Latest validated CI: #844 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -32,9 +32,13 @@ The Lean development in PR #149 now contains:
 - first-residue roots identified with all first-residue units and packaged as a multiplicative equivalence;
 - finite-complement residue-root equivalence and transition compatibility;
 - project roots reduced to each finite complement via `serrePadicUnitRootsReductionLevelToFiniteComplement`;
-- transition compatibility for those reductions via `serrePadicUnitRootsReductionLevelToFiniteComplement_transition`.
+- transition compatibility for those reductions via `serrePadicUnitRootsReductionLevelToFiniteComplement_transition`;
+- finite-complement reduction separation and level-zero-to-all-levels propagation for project roots;
+- kernel-triviality for project `(p-1)`-st roots lying in `U_1` via `serrePadicUnitRoots_principal_one_trivial`;
+- injectivity and kernel-bottom packaging for both the ordinary first-residue reduction and the narrowed reduction to first-residue roots;
+- conditional equivalence packaging reducing the remaining `V ≃ (Z/pZ)^×` isomorphism to surjectivity of the narrowed reduction.
 
-Blueprint pages are synchronized through the finite-complement limit comparison layer.
+Blueprint pages are synchronized through the finite-complement limit comparison, injectivity bridge, and kernel/equivalence packaging layers.
 
 ## CI / repair state
 
@@ -51,16 +55,21 @@ Blueprint pages are synchronized through the finite-complement limit comparison 
 - CI #831 validated the finite-complement residue-roots Blueprint after the duplicate-tag fix.
 - CI #835 validated the finite-complement limit Lean layer after coercion repairs.
 - CI #837 validated the finite-complement limit Blueprint inclusion.
+- CI #840 validated the Lean kernel-triviality and reduction-injectivity bridge.
+- CI #841 validated the Blueprint documentation for the injectivity bridge.
+- CI #842 validated the Lean kernel/equivalence packaging.
+- CI #843 validated the Blueprint documentation for the kernel/equivalence packaging.
+- CI #844 validated the progress-note sync at head `8835c31ef94d6915b8cf0cde2f021d944d5efe74`.
 
 ## Next proof targets for this ACTIVE item
 
-1. Prove that the kernel of `serrePadicUnitRootsReduction` is trivial.
-2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism using the already-isolated conditional injectivity interface once the kernel-triviality proof is available.
+1. Prove or isolate the inverse-limit/surjectivity argument showing that every first-residue root lifts to a project `(p-1)`-st root.
+2. Use `serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective` to package the narrowed reduction as an isomorphism once that surjectivity proof is available.
 3. Compare that isomorphism with the finite-complement residue-root equivalences.
 4. Upgrade the levelwise compatible finite-complement reductions to the source-shaped finite complement `V` picture.
 5. Then move toward the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
-The immediate mathematical risk remains the kernel-triviality proof: it amounts to showing that a `(p-1)`-st root in `U_1` is already `1`, and should not be forced with an unsupported theorem-strength jump.
+The immediate mathematical risk is now the surjectivity/inverse-limit bridge: it should be proved from the already-built finite compatible complements or a carefully isolated project-local compactness/inverse-limit argument, not by importing a packaged Teichmüller theorem.
 
 ## Run-length preference for this ACTIVE item
 
