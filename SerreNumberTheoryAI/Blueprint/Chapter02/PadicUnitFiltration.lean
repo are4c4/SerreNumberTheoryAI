@@ -29,26 +29,14 @@ source-indexed な principal-unit filtration を定義する。
 `U₀` は単数群全体、`Uₙ₊₁` はレベル `n` の単数還元写像の核である。
 :::
 
-:::lemma_ "padicprincipalunitsmembership"
+:::theorem "padicprincipalunitsmembership"
+  (lean := "SerreNumberTheoryAI.mem_serrePadicPrincipalUnits_succ_iff_pow_dvd")
   (uses := "padicprincipalunits")
 `u ∈ Uₙ₊₁` であることは、`u - 1` が対応する `p` の冪で割り切れることと同値である。
 これは、kernel 表現と source の「1 に高次の `p` 倍を加えた形」を結ぶ基本変換である。
 :::
 
-```lean "padicprincipalunitsmembership"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_mem_serrePadicPrincipalUnits_succ_iff_pow_dvd
-    (p n : ℕ) [Fact p.Prime] (u : (SerrePadicInt p)ˣ) :
-    u ∈ serrePadicPrincipalUnits p (n + 1) ↔
-      (p : SerrePadicInt p) ^ (n + 1) ∣
-        ((u : SerrePadicInt p) - 1) :=
-  mem_serrePadicPrincipalUnits_succ_iff_pow_dvd p n u
-
-end SerreNumberTheoryAI
-```
-
-:::lemma_ "padicprincipalunitsdescending"
+:::theorem "padicprincipalunitsdescending"
   (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnits_succ_succ_le_succ")
   (uses := "padicprincipalunitsmembership")
 隣り合う正のレベルでは filtration が降下する。すなわち次のレベルは現在のレベルの部分群である。
@@ -74,45 +62,31 @@ end SerreNumberTheoryAI
 principal unit の `u - 1` から、対応する `p` の冪を割った係数を選ぶ。
 :::
 
-:::lemma_ "padicprincipalunitcoeffkernel"
+:::definition "padicprincipalunitofcoeff"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitOfCoeff")
+  (uses := "padicprincipalunitcoeff")
+任意の係数 `x` から `1 + p^(n+1) x` という principal unit を作る。
+これにより係数剰余写像の全射性を後で示す。
+:::
+
+:::theorem "padicprincipalunitcoeffsurjective"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitCoeffResidue_surjective")
+  (uses := "padicprincipalunitofcoeff")
+任意の一階剰余類は、ある principal unit の係数の一階剰余として現れる。
+:::
+
+:::theorem "padicprincipalunitcoeffkernel"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitCoeffResidue_eq_zero_iff")
   (uses := "padicprincipalunitcoeff, padicprincipalunitsnextsubgroup")
 係数の一階剰余が 0 であることは、その principal unit が一つ深い level に属することと同値である。
 :::
 
-```lean "padicprincipalunitcoeffkernel"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_serrePadicPrincipalUnitCoeffResidue_eq_zero_iff
-    (p n : ℕ) [Fact p.Prime]
-    (u : serrePadicPrincipalUnits p (n + 1)) :
-    serrePadicPrincipalUnitCoeffResidue p n u = 0 ↔
-      ((u : (SerrePadicInt p)ˣ) ∈
-        serrePadicPrincipalUnits p (n + 2)) :=
-  serrePadicPrincipalUnitCoeffResidue_eq_zero_iff p n u
-
-end SerreNumberTheoryAI
-```
-
-:::lemma_ "padicprincipalunitmulcongruence"
+:::theorem "padicprincipalunitmulcongruence"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnit_mul_congruent_add")
   (uses := "padicprincipalunitcoeff")
 source の合同式として、二つの principal unit を掛けると係数は一階剰余では加法的に振る舞う。
 これは successive quotient を加法群へ送る準同型の中核である。
 :::
-
-```lean "padicprincipalunitmulcongruence"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_serrePadicPrincipalUnit_mul_congruent_add
-    (p n : ℕ) [Fact p.Prime] (hn : 1 ≤ n)
-    (x y : SerrePadicInt p) :
-    (p : SerrePadicInt p) ^ (n + 1) ∣
-      ((1 + (p : SerrePadicInt p) ^ n * x) *
-          (1 + (p : SerrePadicInt p) ^ n * y) -
-        (1 + (p : SerrePadicInt p) ^ n * (x + y))) :=
-  serrePadicPrincipalUnit_mul_congruent_add p n hn x y
-
-end SerreNumberTheoryAI
-```
 
 :::definition "padicunitreductionfirst"
   (lean := "SerreNumberTheoryAI.serrePadicUnitReduction")
@@ -120,22 +94,12 @@ end SerreNumberTheoryAI
 最初の剰余単数群への還元写像を、project の剰余レベル `0` で表す。
 :::
 
-:::lemma_ "padicunitreductionsurjective"
+:::theorem "padicunitreductionsurjective"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitReduction_surjective")
   (uses := "padicunitreductionfirst")
 剰余射影の全射性と一階剰余での単元判定を用いて、任意の `mod p` 単数を
 p進整数環の単数へ持ち上げる。
 :::
-
-```lean "padicunitreductionsurjective"
-namespace SerreNumberTheoryAI
-
-theorem blueprint_serrePadicUnitReduction_surjective
-    (p : ℕ) [Fact p.Prime] :
-    Function.Surjective (serrePadicUnitReduction p) :=
-  serrePadicUnitReduction_surjective p
-
-end SerreNumberTheoryAI
-```
 
 :::theorem "padicunitsfirstquotient"
   (lean := "SerreNumberTheoryAI.serrePadicUnitsQuotientPrincipalOneEquiv")
