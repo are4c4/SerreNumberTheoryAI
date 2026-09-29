@@ -291,6 +291,42 @@ noncomputable def serrePadicPrincipalUnitCoeffResidueHom (n : ℕ) :
         serrePadicPrincipalUnitCoeffResidue p n v
     exact serrePadicPrincipalUnitCoeffResidue_mul p n u v
 
+/-- The coefficient-residue homomorphism has exactly the next filtration level as kernel. -/
+theorem serrePadicPrincipalUnitCoeffResidueHom_ker (n : ℕ) :
+    (serrePadicPrincipalUnitCoeffResidueHom p n).ker =
+      serrePadicPrincipalUnitsNextSubgroup p n := by
+  ext u
+  change (serrePadicPrincipalUnitCoeffResidueHom p n) u = 1 ↔
+    ((u : (SerrePadicInt p)ˣ) ∈
+      serrePadicPrincipalUnits p (n + 2))
+  change serrePadicPrincipalUnitCoeffResidue p n u = 0 ↔
+    ((u : (SerrePadicInt p)ˣ) ∈
+      serrePadicPrincipalUnits p (n + 2))
+  exact serrePadicPrincipalUnitCoeffResidue_eq_zero_iff p n u
+
+/-- The coefficient-residue homomorphism is onto the first residue ring. -/
+theorem serrePadicPrincipalUnitCoeffResidueHom_surjective (n : ℕ) :
+    Function.Surjective (serrePadicPrincipalUnitCoeffResidueHom p n) := by
+  intro a
+  obtain ⟨u, hu⟩ :=
+    serrePadicPrincipalUnitCoeffResidue_surjective p n a.toAdd
+  refine ⟨u, ?_⟩
+  simpa [serrePadicPrincipalUnitCoeffResidueHom] using
+    congrArg Multiplicative.ofAdd hu
+
+/--
+The source successive quotient:
+\`U_(n+1) / U_(n+2)\` is the additive first residue group.
+-/
+noncomputable def serrePadicPrincipalUnitsSuccessiveQuotientEquiv
+    (n : ℕ) :
+    serrePadicPrincipalUnitsSuccessiveQuotient p n ≃*
+      Multiplicative (padicResidueRing p 0) := by
+  rw [← serrePadicPrincipalUnitCoeffResidueHom_ker p n]
+  exact QuotientGroup.quotientKerEquivOfSurjective
+    (serrePadicPrincipalUnitCoeffResidueHom p n)
+    (serrePadicPrincipalUnitCoeffResidueHom_surjective p n)
+
 /--
 The coefficient has zero first residue exactly when the principal unit lies
 one step deeper in the filtration.
