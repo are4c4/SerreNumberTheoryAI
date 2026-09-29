@@ -37,17 +37,8 @@ roots-of-unity subgroup から最初の剰余単数群への還元写像を定�
 :::theorem "padicunitrootsreductionpow"
   (uses := "padicunitrootsreduction")
 `(p-1)` 乗して 1 になる p進単数を還元すると、剰余単数群でも `(p-1)` 乗して 1 になる。
+Lean 側では `serrePadicUnitRootsReduction_pow` として実装している。
 :::
-
-```lean "padicunitrootsreductionpow"
-namespace SerreNumberTheoryAI
-theorem blueprint_padicUnitRootsReductionPow
-    (p : ℕ) [Fact p.Prime]
-    (u : serrePadicUnitRootsOfUnity p) :
-    (serrePadicUnitRootsReduction p u) ^ (p - 1) = 1 :=
-  serrePadicUnitRootsReduction_pow p u
-end SerreNumberTheoryAI
-```
 
 :::definition "residueunitrootsofunity"
   (lean := "SerreNumberTheoryAI.serreResidueUnitRootsOfUnity")
@@ -63,48 +54,18 @@ end SerreNumberTheoryAI
 :::theorem "padicunitrootsnarrowkernel"
   (uses := "padicunitrootsreductiontoresidueroots, padicunitrootsreduction")
 余域を residue roots に狭めても、還元写像の kernel は変わらない。
+Lean 側では `serrePadicUnitRootsReductionToResidueRoots_ker` として実装している。
 :::
 
-```lean "padicunitrootsnarrowkernel"
-namespace SerreNumberTheoryAI
-theorem blueprint_padicUnitRootsNarrowKernel
-    (p : ℕ) [Fact p.Prime] :
-    (serrePadicUnitRootsReductionToResidueRoots p).ker =
-      (serrePadicUnitRootsReduction p).ker :=
-  serrePadicUnitRootsReductionToResidueRoots_ker p
-end SerreNumberTheoryAI
-```
-
 :::theorem "padicunitrootsreductionkernel"
-  (lean := "SerreNumberTheoryAI.serrePadicUnitRootsReduction_ker")
   (uses := "padicunitrootsreduction, padicunitreductionfirst")
 roots-of-unity subgroup の還元写像の核は、第一 principal-unit subgroup との交わりとして表せる。
 この核が自明であることが、`V` が residue unit group へ単射的に写ることの次の目標である。
+Lean 側では `serrePadicUnitRootsReduction_ker` として実装している。
 :::
-
-```lean "padicunitrootsreductionkernel"
-namespace SerreNumberTheoryAI
-theorem blueprint_padicUnitRootsReductionKernel
-    (p : ℕ) [Fact p.Prime] :
-    (serrePadicUnitRootsReduction p).ker =
-      (serrePadicPrincipalUnits p 1).comap
-        (serrePadicUnitRootsOfUnity p).subtype :=
-  serrePadicUnitRootsReduction_ker p
-end SerreNumberTheoryAI
-```
 
 :::theorem "padicunitrootsnarrowkernelprincipal"
   (uses := "padicunitrootsnarrowkernel, padicunitrootsreductionkernel")
 余域を狭めた還元写像の kernel も、第一 principal-unit subgroup との交わりとして表せる。
+Lean 側では `serrePadicUnitRootsReductionToResidueRoots_ker_principal` として実装している。
 :::
-
-```lean "padicunitrootsnarrowkernelprincipal"
-namespace SerreNumberTheoryAI
-theorem blueprint_padicUnitRootsNarrowKernelPrincipal
-    (p : ℕ) [Fact p.Prime] :
-    (serrePadicUnitRootsReductionToResidueRoots p).ker =
-      (serrePadicPrincipalUnits p 1).comap
-        (serrePadicUnitRootsOfUnity p).subtype :=
-  serrePadicUnitRootsReductionToResidueRoots_ker_principal p
-end SerreNumberTheoryAI
-```
