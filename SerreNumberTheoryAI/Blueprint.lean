@@ -25,6 +25,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.HenselLifting
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiltration
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitRoots
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplement
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicResidueUnitRoots
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -79,6 +80,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitRoots}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplement}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicResidueUnitRoots}
 
 # 定理の依存関係
 
