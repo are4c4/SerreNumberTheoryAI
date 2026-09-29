@@ -105,11 +105,92 @@ end SerreNumberTheoryAI
 有限剰余単数群のうち、`(p-1)` 乗して 1 になる元からなる distinguished complement。
 :::
 
+:::theorem "finiteunitcomplementzeroeqtop"
+  (uses := "finiteunitcomplement")
+第一有限レベルでは、この finite complement は剰余単数群全体である。
+:::
+
+```lean "finiteunitcomplementzeroeqtop"
+namespace SerreNumberTheoryAI
+theorem blueprint_finiteUnitComplementZeroEqTop
+    (p : ℕ) [Fact p.Prime] :
+    serrePadicFiniteUnitComplement p 0 = ⊤ :=
+  serrePadicFiniteUnitComplement_zero_eq_top p
+end SerreNumberTheoryAI
+```
+
+:::definition "residueunittransition"
+  (lean := "SerreNumberTheoryAI.serrePadicResidueUnitTransition")
+  (uses := "finiteunitreductiontofirst")
+隣り合う有限剰余単数群 `mod p^(n+2) → mod p^(n+1)` の還元準同型。
+:::
+
+:::theorem "residueunitreductiontofirsttransition"
+  (uses := "residueunittransition, finiteunitreductiontofirst")
+第一剰余単数群への還元は、隣接有限レベルの還元を通して因数分解する。
+:::
+
+```lean "residueunitreductiontofirsttransition"
+namespace SerreNumberTheoryAI
+theorem blueprint_residueUnitReductionToFirstTransition
+    (p n : ℕ) [Fact p.Prime] :
+    (serrePadicResidueUnitReductionToFirst p n).comp
+      (serrePadicResidueUnitTransition p n) =
+        serrePadicResidueUnitReductionToFirst p (n + 1) :=
+  serrePadicResidueUnitReductionToFirst_transition p n
+end SerreNumberTheoryAI
+```
+
+:::definition "finiteunitcomplementtransition"
+  (lean := "SerreNumberTheoryAI.serrePadicFiniteUnitComplementTransition")
+  (uses := "residueunittransition, finiteunitcomplement")
+隣接還元写像は finite complement を finite complement へ写す。
+:::
+
 :::definition "finiteunitcomplementequiv"
   (lean := "SerreNumberTheoryAI.serrePadicFiniteUnitComplementEquiv")
   (uses := "finiteunitcomplement")
 この finite complement は第一剰余単数群へ同型に写る。
 :::
+
+:::definition "finiteunitcomplementtransitionequiv"
+  (lean := "SerreNumberTheoryAI.serrePadicFiniteUnitComplementTransitionEquiv")
+  (uses := "finiteunitcomplementequiv")
+隣り合う finite complement は、どちらも第一剰余単数群へ同型であることから互いに同型である。
+:::
+
+:::theorem "finiteunitcomplementequivtransitionapply"
+  (uses := "finiteunitcomplementtransition, finiteunitcomplementequiv")
+具体的な finite-complement transition は、第一剰余単数群への同型と整合する。
+:::
+
+```lean "finiteunitcomplementequivtransitionapply"
+namespace SerreNumberTheoryAI
+theorem blueprint_finiteUnitComplementEquivTransitionApply
+    (p n : ℕ) [Fact p.Prime]
+    (u : serrePadicFiniteUnitComplement p (n + 1)) :
+    serrePadicFiniteUnitComplementEquiv p n
+      (serrePadicFiniteUnitComplementTransition p n u) =
+        serrePadicFiniteUnitComplementEquiv p (n + 1) u :=
+  serrePadicFiniteUnitComplementEquiv_transition_apply p n u
+end SerreNumberTheoryAI
+```
+
+:::theorem "finiteunitcomplementtransitionequivapply"
+  (uses := "finiteunitcomplementtransitionequiv, finiteunitcomplementtransition")
+同型として package した adjacent transition は、具体的な還元 transition と同じ写像である。
+:::
+
+```lean "finiteunitcomplementtransitionequivapply"
+namespace SerreNumberTheoryAI
+theorem blueprint_finiteUnitComplementTransitionEquivApply
+    (p n : ℕ) [Fact p.Prime]
+    (u : serrePadicFiniteUnitComplement p (n + 1)) :
+    serrePadicFiniteUnitComplementTransitionEquiv p n u =
+      serrePadicFiniteUnitComplementTransition p n u :=
+  serrePadicFiniteUnitComplementTransitionEquiv_apply p n u
+end SerreNumberTheoryAI
+```
 
 :::theorem "finiteunitcomplementunique"
   (uses := "finiteunitcomplementequiv")
