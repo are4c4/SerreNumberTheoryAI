@@ -21,6 +21,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicField
 import SerreNumberTheoryAI.Blueprint.Chapter02.RootExistence
 import SerreNumberTheoryAI.Blueprint.Chapter02.PrimitiveHomogeneousZeros
 import SerreNumberTheoryAI.Blueprint.Chapter02.HenselLifting
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiltration
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -67,6 +68,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PrimitiveHomogeneousZeros}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.HenselLifting}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiltration}
 
 # 定理の依存関係
 
