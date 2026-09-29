@@ -20,6 +20,34 @@ def serrePadicUnitReductionLevel (n : ℕ) :
     (SerrePadicInt p)ˣ →* (padicResidueRing p n)ˣ :=
   Units.map (serrePadicIntProj p n)
 
+
+/-- Every unit modulo `p^(n+1)` lifts to a project p-adic unit. -/
+theorem serrePadicUnitReductionLevel_surjective (n : ℕ) :
+    Function.Surjective (serrePadicUnitReductionLevel p n) := by
+  intro v
+  obtain ⟨x, hx⟩ :=
+    serrePadicIntProj_surjective p n (v : padicResidueRing p n)
+  let reduce : padicResidueRing p n →+* padicResidueRing p 0 :=
+    ZMod.castHom
+      (pow_dvd_pow p (Nat.add_le_add_right (Nat.zero_le n) 1))
+      (padicResidueRing p 0)
+  have hcompat :
+      reduce (serrePadicIntProj p n x) =
+        serrePadicIntProj p 0 x := by
+    simpa [reduce] using
+      serrePadicIntProj_cast_of_le p x (m := 0) (n := n) (Nat.zero_le n)
+  have hxunit0 : IsUnit (serrePadicIntProj p 0 x) := by
+    rw [← hcompat, hx]
+    exact v.isUnit.map reduce
+  have hxu : IsUnit x :=
+    serrePadicInt_isUnit_of_proj_zero_isUnit p x hxunit0
+  let u : (SerrePadicInt p)ˣ := hxu.unit
+  refine ⟨u, ?_⟩
+  apply Units.ext
+  change serrePadicIntProj p n (u : SerrePadicInt p) =
+    (v : padicResidueRing p n)
+  simpa [u, IsUnit.unit_spec hxu] using hx
+
 /--
 The source-indexed principal-unit filtration.  Source `U_(n+1)` is the kernel of
 reduction to `Z / p^(n+1) Z`; `U_0` is the full unit group.
@@ -384,6 +412,19 @@ theorem serrePadicUnitReduction_surjective :
 theorem serrePadicPrincipalUnits_one_eq_ker :
     serrePadicPrincipalUnits p 1 = (serrePadicUnitReduction p).ker := by
   rfl
+
+/--
+At every positive source level, the quotient `U/U_(n+1)` is the unit group
+of the residue ring modulo `p^(n+1)`.
+-/
+noncomputable def serrePadicUnitsQuotientPrincipalSuccEquiv (n : ℕ) :
+    (SerrePadicInt p)ˣ ⧸ serrePadicPrincipalUnits p (n + 1) ≃*
+      (padicResidueRing p n)ˣ := by
+  change (SerrePadicInt p)ˣ ⧸ (serrePadicUnitReductionLevel p n).ker ≃*
+    (padicResidueRing p n)ˣ
+  exact QuotientGroup.quotientKerEquivOfSurjective
+    (serrePadicUnitReductionLevel p n)
+    (serrePadicUnitReductionLevel_surjective p n)
 
 /-- The first source quotient `U/U_1` is the unit group of the prime residue ring. -/
 noncomputable def serrePadicUnitsQuotientPrincipalOneEquiv :
