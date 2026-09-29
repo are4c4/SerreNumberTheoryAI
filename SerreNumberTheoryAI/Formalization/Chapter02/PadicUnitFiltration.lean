@@ -89,6 +89,48 @@ abbrev serrePadicPrincipalUnitsSuccessiveQuotient (n : ℕ) :=
   serrePadicPrincipalUnits p (n + 1) ⧸
     serrePadicPrincipalUnitsNextSubgroup p n
 
+/--
+Source congruence behind the successive quotient map:
+for \`n ≥ 1\`, multiplication of \`1 + p^n x\` and \`1 + p^n y\`
+agrees with addition of coefficients modulo \`p^(n+1)\`.
+-/
+theorem serrePadicPrincipalUnit_mul_congruent_add
+    (n : ℕ) (hn : 1 ≤ n) (x y : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 1) ∣
+      ((1 + (p : SerrePadicInt p) ^ n * x) *
+          (1 + (p : SerrePadicInt p) ^ n * y) -
+        (1 + (p : SerrePadicInt p) ^ n * (x + y))) := by
+  have hle : n + 1 ≤ 2 * n := by omega
+  obtain ⟨z, hz⟩ :=
+    pow_dvd_pow (p : SerrePadicInt p) hle
+  refine ⟨z * (x * y), ?_⟩
+  calc
+    (1 + (p : SerrePadicInt p) ^ n * x) *
+          (1 + (p : SerrePadicInt p) ^ n * y) -
+        (1 + (p : SerrePadicInt p) ^ n * (x + y)) =
+        (p : SerrePadicInt p) ^ (2 * n) * (x * y) := by ring
+    _ = ((p : SerrePadicInt p) ^ (n + 1) * z) * (x * y) := by rw [hz]
+    _ = (p : SerrePadicInt p) ^ (n + 1) * (z * (x * y)) := by ring
+
+/-- Projection form of the source congruence modulo \`p^(n+1)\`. -/
+theorem serrePadicPrincipalUnit_mul_proj
+    (n : ℕ) (hn : 1 ≤ n) (x y : SerrePadicInt p) :
+    serrePadicIntProj p n
+        ((1 + (p : SerrePadicInt p) ^ n * x) *
+          (1 + (p : SerrePadicInt p) ^ n * y)) =
+      serrePadicIntProj p n
+        (1 + (p : SerrePadicInt p) ^ n * (x + y)) := by
+  have hdiv :=
+    serrePadicPrincipalUnit_mul_congruent_add p n hn x y
+  have hzero :
+      serrePadicIntProj p n
+          (((1 + (p : SerrePadicInt p) ^ n * x) *
+              (1 + (p : SerrePadicInt p) ^ n * y)) -
+            (1 + (p : SerrePadicInt p) ^ n * (x + y))) = 0 :=
+    (pow_dvd_serrePadicInt_iff_proj_zero p n _).1 hdiv
+  rw [map_sub] at hzero
+  exact sub_eq_zero.mp hzero
+
 /-- The first reduction map `U → (Z/pZ)ˣ`, expressed in the project residue indexing. -/
 def serrePadicUnitReduction :
     (SerrePadicInt p)ˣ →* (padicResidueRing p 0)ˣ :=
