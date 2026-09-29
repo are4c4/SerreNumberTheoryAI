@@ -7,7 +7,7 @@ import SerreNumberTheoryAI.Formalization.Chapter01.PowerSums
 Independent formalization of Serre, Chapter 1, §2, 2.2.
 
 Source metadata only: Japanese edition, printed p. 7, uploaded PDF p. 17.
-The two immediate source corollaries are deliberately left for separate work items.
+The two immediate source corollaries are implemented in separate Chapter 1 modules.
 -/
 
 namespace SerreNumberTheoryAI
