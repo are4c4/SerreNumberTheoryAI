@@ -60,7 +60,12 @@ The project-roots/finite-complement comparison layer now contains:
 - `serrePadicUnitRootsReduction_injective` and `serrePadicUnitRootsReductionToResidueRoots_injective`;
 - `serrePadicUnitRootsReduction_eq_one_iff_eq_one` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff_eq_one`;
 - `serrePadicUnitRootsReduction_ker_eq_bot` and `serrePadicUnitRootsReductionToResidueRoots_ker_eq_bot`;
-- `serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective` and `serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective`, which reduce the remaining isomorphism packaging to surjectivity of the narrowed reduction.
+- `serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective` and `serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective`, which reduce the remaining isomorphism packaging to surjectivity of the narrowed reduction;
+- `serrePadicFiniteUnitComplementTowerSubgroup` and `serrePadicFiniteUnitComplementTower`: the inverse-compatible tower of finite complements;
+- `serrePadicUnitRootsToFiniteComplementTower`: the map from project roots into that finite-complement tower;
+- `serrePadicFiniteUnitComplementTower_residueRoots_eq_zero`: the first-residue-root value of a compatible tower is independent of level;
+- `serrePadicFiniteUnitComplementTowerToResidueRoots`, together with its injectivity and surjectivity;
+- `serrePadicFiniteUnitComplementTowerEquivResidueRoots`: the compatible finite-complement tower is canonically equivalent to the first-residue roots.
 
 ## CI notes
 
@@ -77,16 +82,18 @@ The project-roots/finite-complement comparison layer now contains:
 - CI #841 validated the Blueprint documentation for the injectivity bridge at head `c624a774f2e6b90fbb764c6e0d9e4cd955339856`.
 - CI #842 validated the Lean kernel/equivalence packaging at head `e9494f2dfa806eab53525f644c3b08dde9405120`.
 - CI #843 validated the Blueprint documentation for the kernel/equivalence packaging at head `810263a694cccaa66741df4e20ed7f851bd7e53c`.
+- CI #847 validated the finite-complement tower Lean packaging at head `a37cb245a0243043b4fd166399c31e19ef047478`.
+- CI #848 validated the Blueprint documentation of the finite-complement tower packaging at head `dcfe7c7e09f228fce08b3363eb23f308cd0dc5c6`.
 - This docs sync should be checked against the next PR-head CI before using it as the latest validated head.
 
 ## Next proof boundary
 
-The filtration, successive quotient, roots-reduction interfaces, finite residue-unit complement layer, residue-root comparison, project-roots-to-finite-complement transition comparison, and injectivity/kernel-triviality half of the `V` comparison are implemented. The next source-shaped boundary is the surjectivity half:
+The filtration, successive quotient, roots-reduction interfaces, finite residue-unit complement layer, residue-root comparison, project-roots-to-finite-complement transition comparison, injectivity/kernel-triviality half of the `V` comparison, and the finite-complement tower itself are implemented. The next source-shaped boundary is the project-lift/surjectivity half:
 
-1. prove or isolate the inverse-limit argument giving a project root above each first-residue root;
-2. package `serrePadicUnitRootsReductionToResidueRoots` as an isomorphism using the already-proved injectivity;
-3. compare this isomorphism with the finite-complement residue-root equivalences;
-4. upgrade the levelwise compatible reductions to the intended finite complement `V` picture;
+1. show that the map from project roots to the compatible finite-complement tower is onto, or isolate the exact inverse-limit compactness argument needed for it;
+2. compose that result with `serrePadicFiniteUnitComplementTowerEquivResidueRoots` to prove surjectivity of `serrePadicUnitRootsReductionToResidueRoots`;
+3. package `serrePadicUnitRootsReductionToResidueRoots` as an isomorphism using the already-proved injectivity;
+4. compare the resulting project roots equivalence with the finite-complement residue-root equivalences;
 5. then complete the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
 Keep §3.2 Proposition 8 separate.
