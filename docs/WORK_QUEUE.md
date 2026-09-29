@@ -45,8 +45,8 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 
 ## Current serial state
 
-- ACTIVE: `C2S3.1-UnitFiltration` — Issue #108 / branch `work/c2-s3-1-unit-filtration-serial`; PR not opened yet in this recovery run.
-- ACTIVE CI watch: initial recovered branch head should be checked after PR creation.
+- ACTIVE: `C2S3.1-UnitFiltration` — Issue #108 / PR #149 / branch `work/c2-s3-1-unit-filtration-serial`.
+- ACTIVE CI watch: initial PR-head CI should validate recovered definitions, formal root import, and Blueprint build.
 - JUST DONE: `C2S2.2-HenselQuadraticTwo` — Issue #105 / PR #148 / main `c7c03076…`, PR-head CI #729 green
 - JUST DONE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / main `3bd49171…`, PR-head CI #700 green
 - JUST DONE: `C2S2.2-HenselLifting` — Issue #102 / PR #146 / main `3695fa0b…`, CI #590 green
@@ -78,7 +78,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | DONE | PR #146 merged as `3695fa0b…`, CI #590 green | Issue #102 |
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | DONE | PR #147 merged as `3bd49171…`, PR-head CI #700 green | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | DONE | PR #148 merged as `c7c03076…`, PR-head CI #729 green | Issue #105 |
-| 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | ACTIVE | recovering old #125 onto latest main; first slice defines `U_n`, `U/U_1 ≃ (Z/pZ)^×` | Issue #108 / PR #125 |
+| 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | ACTIVE | PR #149 recovers old #125 onto latest main; first slice defines `U_n`, `U/U_1 ≃ (Z/pZ)^×` | Issue #108 / PR #125 |
 | 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | WAITING | depends on §3.1 and project `Q_p` | Issue #112 |
 | 8 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 | WAITING | depends on §3.2 and project `Q_p` | Issue #120 |
 | 9 | `C3S1.1-HilbertBasics` | Chapter 3 §1.1 Hilbert symbol basics | PREFLIGHT | future source-order work; `Q_p` specialization needs current chain | Issue #121 |
