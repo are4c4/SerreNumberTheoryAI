@@ -27,6 +27,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitRoots
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplement
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicResidueUnitRoots
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicFiniteComplementResidueRoots
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplementLimit
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -85,6 +86,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicResidueUnitRoots}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicFiniteComplementResidueRoots}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplementLimit}
 
 # 定理の依存関係
 
