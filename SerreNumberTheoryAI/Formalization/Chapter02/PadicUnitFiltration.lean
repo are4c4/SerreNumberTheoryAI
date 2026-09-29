@@ -68,6 +68,27 @@ theorem serrePadicPrincipalUnits_succ_succ_le_succ (n : ℕ) :
   rw [mem_serrePadicPrincipalUnits_succ_iff_pow_dvd] at hu ⊢
   exact (pow_dvd_pow (p : SerrePadicInt p) (Nat.le_succ (n + 1))).trans hu
 
+/--
+The next filtration level, regarded as a subgroup of the current positive level.
+This is the subgroup used to form the source successive quotient.
+-/
+def serrePadicPrincipalUnitsNextSubgroup (n : ℕ) :
+    Subgroup (serrePadicPrincipalUnits p (n + 1)) :=
+  (serrePadicPrincipalUnits p (n + 2)).comap
+    (serrePadicPrincipalUnits p (n + 1)).subtype
+
+@[simp]
+theorem mem_serrePadicPrincipalUnitsNextSubgroup
+    (n : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
+    u ∈ serrePadicPrincipalUnitsNextSubgroup p n ↔
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p (n + 2) := by
+  rfl
+
+/-- The source successive principal-unit quotient at the positive level \`n+1\`. -/
+abbrev serrePadicPrincipalUnitsSuccessiveQuotient (n : ℕ) :=
+  serrePadicPrincipalUnits p (n + 1) ⧸
+    serrePadicPrincipalUnitsNextSubgroup p n
+
 /-- The first reduction map `U → (Z/pZ)ˣ`, expressed in the project residue indexing. -/
 def serrePadicUnitReduction :
     (SerrePadicInt p)ˣ →* (padicResidueRing p 0)ˣ :=
