@@ -84,14 +84,14 @@ theorem mem_serrePadicPrincipalUnitsNextSubgroup
       (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p (n + 2) := by
   rfl
 
-/-- The source successive principal-unit quotient at the positive level \`n+1\`. -/
+/-- The source successive principal-unit quotient at the positive level `n+1`. -/
 abbrev serrePadicPrincipalUnitsSuccessiveQuotient (n : ℕ) :=
   serrePadicPrincipalUnits p (n + 1) ⧸
     serrePadicPrincipalUnitsNextSubgroup p n
 
 /--
-The unique coefficient \`x\` in \`u - 1 = p^(n+1) x\` for a principal unit
-\`u ∈ U_(n+1)\`.
+The unique coefficient `x` in `u - 1 = p^(n+1) x` for a principal unit
+`u ∈ U_(n+1)`.
 -/
 noncomputable def serrePadicPrincipalUnitCoeff
     (n : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
@@ -115,7 +115,7 @@ noncomputable def serrePadicPrincipalUnitCoeffResidue
     padicResidueRing p 0 :=
   serrePadicIntProj p 0 (serrePadicPrincipalUnitCoeff p n u)
 
-/-- Every source-shaped element \`1 + p^(n+1) x\` is a p-adic unit. -/
+/-- Every source-shaped element `1 + p^(n+1) x` is a p-adic unit. -/
 theorem serrePadicOneAddPowMul_isUnit
     (n : ℕ) (x : SerrePadicInt p) :
     IsUnit (1 + (p : SerrePadicInt p) ^ (n + 1) * x) := by
@@ -133,7 +133,7 @@ theorem serrePadicOneAddPowMul_isUnit
   rw [map_add, map_one, hpzero, add_zero]
   exact isUnit_one
 
-/-- The principal unit represented by the coefficient \`x\` at level \`n+1\`. -/
+/-- The principal unit represented by the coefficient `x` at level `n+1`. -/
 noncomputable def serrePadicPrincipalUnitOfCoeff
     (n : ℕ) (x : SerrePadicInt p) :
     serrePadicPrincipalUnits p (n + 1) := by
@@ -248,142 +248,9 @@ theorem serrePadicPrincipalUnitCoeffResidue_eq_zero_iff
     exact ⟨z, hcoeff⟩
 
 /--
-Modulo \`p\`, the coefficient of a product of principal units is the sum
-of the two coefficients.  This is the homomorphism calculation behind
-\`U_(n+1) / U_(n+2)\`.
--/
-theorem serrePadicPrincipalUnitCoeffResidue_mul
-    (n : ℕ)
-    (u v : serrePadicPrincipalUnits p (n + 1)) :
-    serrePadicPrincipalUnitCoeffResidue p n (u * v) =
-      serrePadicPrincipalUnitCoeffResidue p n u +
-        serrePadicPrincipalUnitCoeffResidue p n v := by
-  let x := serrePadicPrincipalUnitCoeff p n u
-  let y := serrePadicPrincipalUnitCoeff p n v
-  let z := serrePadicPrincipalUnitCoeff p n (u * v)
-  have huspec :
-      (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
-        (p : SerrePadicInt p) ^ (n + 1) * x := by
-    simpa [x] using serrePadicPrincipalUnitCoeff_spec p n u
-  have hvspec :
-      (((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
-        (p : SerrePadicInt p) ^ (n + 1) * y := by
-    simpa [y] using serrePadicPrincipalUnitCoeff_spec p n v
-  have hzspec :
-      ((((u * v : serrePadicPrincipalUnits p (n + 1)) :
-          (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) =
-        (p : SerrePadicInt p) ^ (n + 1) * z := by
-    simpa [z] using
-      serrePadicPrincipalUnitCoeff_spec p n (u * v)
-  have huval :
-      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
-        1 + (p : SerrePadicInt p) ^ (n + 1) * x := by
-    calc
-      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
-          (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
-      _ = (p : SerrePadicInt p) ^ (n + 1) * x + 1 := by rw [huspec]
-      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * x := by ring
-  have hvval :
-      ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
-        1 + (p : SerrePadicInt p) ^ (n + 1) * y := by
-    calc
-      ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
-          (((v : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
-      _ = (p : SerrePadicInt p) ^ (n + 1) * y + 1 := by rw [hvspec]
-      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * y := by ring
-  have heq :
-      (p : SerrePadicInt p) ^ (n + 1) * z =
-        (p : SerrePadicInt p) ^ (n + 1) *
-          ((x + y) + (p : SerrePadicInt p) ^ (n + 1) * (x * y)) := by
-    calc
-      (p : SerrePadicInt p) ^ (n + 1) * z =
-          ((((u * v : serrePadicPrincipalUnits p (n + 1)) :
-              (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) := hzspec.symm
-      _ = (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) *
-            ((v : (SerrePadicInt p)ˣ) : SerrePadicInt p)) - 1 := by rfl
-      _ = (1 + (p : SerrePadicInt p) ^ (n + 1) * x) *
-            (1 + (p : SerrePadicInt p) ^ (n + 1) * y) - 1 := by
-          rw [huval, hvval]
-      _ = (p : SerrePadicInt p) ^ (n + 1) *
-          ((x + y) + (p : SerrePadicInt p) ^ (n + 1) * (x * y)) := by ring
-  have hz :
-      z = (x + y) +
-        (p : SerrePadicInt p) ^ (n + 1) * (x * y) :=
-    serrePadicInt_mul_pow_injective p (n + 1) heq
-  have hpdiv :
-      (p : SerrePadicInt p) ∣
-        (p : SerrePadicInt p) ^ (n + 1) * (x * y) := by
-    refine ⟨(p : SerrePadicInt p) ^ n * (x * y), ?_⟩
-    rw [pow_succ]
-    ring
-  have hpzero :
-      serrePadicIntProj p 0
-          ((p : SerrePadicInt p) ^ (n + 1) * (x * y)) = 0 :=
-    (p_dvd_serrePadicInt_iff_proj_zero p _).1 hpdiv
-  change serrePadicIntProj p 0 z =
-    serrePadicIntProj p 0 x + serrePadicIntProj p 0 y
-  rw [hz, map_add, map_add, hpzero, add_zero]
-
-/--
-The coefficient-residue map as a homomorphism from the multiplicative
-principal-unit group to the additive residue group, encoded with
-\`Multiplicative\`.
--/
-noncomputable def serrePadicPrincipalUnitCoeffResidueHom (n : ℕ) :
-    serrePadicPrincipalUnits p (n + 1) →*
-      Multiplicative (padicResidueRing p 0) where
-  toFun u :=
-    Multiplicative.ofAdd
-      (serrePadicPrincipalUnitCoeffResidue p n u)
-  map_one' := by
-    change serrePadicPrincipalUnitCoeffResidue p n 1 = 0
-    exact (serrePadicPrincipalUnitCoeffResidue_eq_zero_iff p n 1).2 (by simp)
-  map_mul' u v := by
-    change serrePadicPrincipalUnitCoeffResidue p n (u * v) =
-      serrePadicPrincipalUnitCoeffResidue p n u +
-        serrePadicPrincipalUnitCoeffResidue p n v
-    exact serrePadicPrincipalUnitCoeffResidue_mul p n u v
-
-/-- The coefficient-residue homomorphism has exactly the next filtration level as kernel. -/
-theorem serrePadicPrincipalUnitCoeffResidueHom_ker (n : ℕ) :
-    (serrePadicPrincipalUnitCoeffResidueHom p n).ker =
-      serrePadicPrincipalUnitsNextSubgroup p n := by
-  ext u
-  change (serrePadicPrincipalUnitCoeffResidueHom p n) u = 1 ↔
-    ((u : (SerrePadicInt p)ˣ) ∈
-      serrePadicPrincipalUnits p (n + 2))
-  change serrePadicPrincipalUnitCoeffResidue p n u = 0 ↔
-    ((u : (SerrePadicInt p)ˣ) ∈
-      serrePadicPrincipalUnits p (n + 2))
-  exact serrePadicPrincipalUnitCoeffResidue_eq_zero_iff p n u
-
-/-- The coefficient-residue homomorphism is onto the first residue ring. -/
-theorem serrePadicPrincipalUnitCoeffResidueHom_surjective (n : ℕ) :
-    Function.Surjective (serrePadicPrincipalUnitCoeffResidueHom p n) := by
-  intro a
-  obtain ⟨u, hu⟩ :=
-    serrePadicPrincipalUnitCoeffResidue_surjective p n a.toAdd
-  refine ⟨u, ?_⟩
-  simpa [serrePadicPrincipalUnitCoeffResidueHom] using
-    congrArg Multiplicative.ofAdd hu
-
-/--
-The source successive quotient:
-\`U_(n+1) / U_(n+2)\` is the additive first residue group.
--/
-noncomputable def serrePadicPrincipalUnitsSuccessiveQuotientEquiv
-    (n : ℕ) :
-    serrePadicPrincipalUnitsSuccessiveQuotient p n ≃*
-      Multiplicative (padicResidueRing p 0) := by
-  rw [← serrePadicPrincipalUnitCoeffResidueHom_ker p n]
-  exact QuotientGroup.quotientKerEquivOfSurjective
-    (serrePadicPrincipalUnitCoeffResidueHom p n)
-    (serrePadicPrincipalUnitCoeffResidueHom_surjective p n)
-
-/--
 Source congruence behind the successive quotient map:
-for \`n ≥ 1\`, multiplication of \`1 + p^n x\` and \`1 + p^n y\`
-agrees with addition of coefficients modulo \`p^(n+1)\`.
+for `n ≥ 1`, multiplication of `1 + p^n x` and `1 + p^n y`
+agrees with addition of coefficients modulo `p^(n+1)`.
 -/
 theorem serrePadicPrincipalUnit_mul_congruent_add
     (n : ℕ) (hn : 1 ≤ n) (x y : SerrePadicInt p) :
@@ -403,7 +270,7 @@ theorem serrePadicPrincipalUnit_mul_congruent_add
     _ = ((p : SerrePadicInt p) ^ (n + 1) * z) * (x * y) := by rw [hz]
     _ = (p : SerrePadicInt p) ^ (n + 1) * (z * (x * y)) := by ring
 
-/-- Projection form of the source congruence modulo \`p^(n+1)\`. -/
+/-- Projection form of the source congruence modulo `p^(n+1)`. -/
 theorem serrePadicPrincipalUnit_mul_proj
     (n : ℕ) (hn : 1 ≤ n) (x y : SerrePadicInt p) :
     serrePadicIntProj p n
