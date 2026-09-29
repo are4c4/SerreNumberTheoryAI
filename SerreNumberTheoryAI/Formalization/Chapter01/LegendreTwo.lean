@@ -5,6 +5,7 @@ import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
 # The supplementary Legendre law at two
 
 Source-shaped infrastructure for Serre, Chapter 1, §3.2, Theorem 5(iii).
+Source metadata only: Japanese edition, printed p. 9, uploaded PDF p. 19.
 The proof follows the primitive-eighth-root route rather than importing a
 ready-made Legendre-symbol supplementary law.
 -/
