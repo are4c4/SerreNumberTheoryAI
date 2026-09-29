@@ -94,9 +94,14 @@ theorem serreCoprimeKernelComplement_surjective
     hcop.coprime_dvd_right (orderOf_dvd_natCard (f x))
   obtain ⟨m, hm⟩ :=
     exists_pow_eq_self_of_coprime hord
+  have hindex :
+      f.ker.index = Nat.card B := by
+    rw [Subgroup.index_ker, f.range_eq_top_of_surjective hsurj,
+      Subgroup.card_top]
   have hcard :
-      Nat.card f.ker * Nat.card B = Nat.card E :=
-    Subgroup.card_ker_mul_card_of_surjective f hsurj
+      Nat.card f.ker * Nat.card B = Nat.card E := by
+    rw [← hindex]
+    exact f.ker.card_mul_index
   have hxcard : x ^ Nat.card E = 1 :=
     pow_card_eq_one'
   refine ⟨⟨x ^ (Nat.card f.ker * m), ?_⟩, ?_⟩
