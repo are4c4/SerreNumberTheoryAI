@@ -13,10 +13,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest branch head in this run: `c960da7da998821b8b4e0ed970fd2da4e71a0f29`.
-- Latest fully validated mathematical head in this run: `344adc130082b0b5998234f813d3e0d8c2c17e84`.
-- Latest validated CI: #777 passed policy / Lean build / Verso Blueprint build.
-- Current docs-sync CI: #779 in progress at this note.
+- Latest branch head in this run: `572c9d17383b985fb2e4e74c9ae02ad1a730833f`.
+- Latest validated CI: #780 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -49,6 +47,7 @@ Blueprint pages are synchronized for the unit-filtration, successive-quotient, a
 - CI #774 validated the residue-roots codomain and narrowed-kernel bridge.
 - CI #776 exposed a second Blueprint parsing failure around direct theorem preview names containing underscores.
 - CI #777 validated the Blueprint repair that keeps theorem names in prose and avoids direct theorem previews for these declarations.
+- CI #780 validated the final docs-synced head for this run.
 
 ## Next proof targets for this ACTIVE item
 
