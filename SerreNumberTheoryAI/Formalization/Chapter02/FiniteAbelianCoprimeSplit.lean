@@ -158,6 +158,42 @@ noncomputable def serreCoprimeKernelComplementEquiv
     ⟨serreCoprimeKernelComplement_injective f hcop,
       serreCoprimeKernelComplement_surjective f hsurj hcop⟩
 
+
+/--
+The distinguished complement is unique among subgroups on which the quotient
+map is bijective.  This is the uniqueness clause in Serre's supplement.
+-/
+theorem serreCoprimeKernelComplement_unique_of_bijective
+    (f : E →* B)
+    (hcop : Nat.Coprime (Nat.card f.ker) (Nat.card B))
+    (C : Subgroup E)
+    (hbij : Function.Bijective (f.comp C.subtype)) :
+    C = serreCoprimeKernelComplement f := by
+  have hCle : C ≤ serreCoprimeKernelComplement f := by
+    intro x hx
+    change x ^ Nat.card B = 1
+    have hxsub : (⟨x, hx⟩ : C) ^ Nat.card B = 1 := by
+      apply hbij.1
+      simpa using
+        (pow_card_eq_one'
+          (G := B) (x := (f.comp C.subtype) (⟨x, hx⟩ : C)))
+    exact congrArg Subtype.val hxsub
+  apply le_antisymm hCle
+  intro x hx
+  obtain ⟨c, hc⟩ := hbij.2 (f x)
+  have hccomp :
+      (c : E) ∈ serreCoprimeKernelComplement f :=
+    hCle c.property
+  have hceq :
+      (⟨c, hccomp⟩ : serreCoprimeKernelComplement f) =
+        ⟨x, hx⟩ := by
+    apply serreCoprimeKernelComplement_injective f hcop
+    simpa using hc
+  have hval : (c : E) = x :=
+    congrArg Subtype.val hceq
+  rw [← hval]
+  exact c.property
+
 end FiniteAbelianCoprimeSplit
 
 end SerreNumberTheoryAI
