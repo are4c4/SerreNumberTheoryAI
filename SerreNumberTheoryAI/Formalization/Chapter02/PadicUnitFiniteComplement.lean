@@ -114,6 +114,18 @@ def serrePadicResidueUnitTransition (n : ℕ) :
     (show p ^ (n + 1) ∣ p ^ ((n + 1) + 1) from
       pow_dvd_pow p (Nat.le_succ (n + 1)))
 
+/-- Reduction to the first residue level factors through adjacent reductions. -/
+theorem serrePadicResidueUnitReductionToFirst_transition (n : ℕ) :
+    (serrePadicResidueUnitReductionToFirst p n).comp
+      (serrePadicResidueUnitTransition p n) =
+        serrePadicResidueUnitReductionToFirst p (n + 1) := by
+  simpa [serrePadicResidueUnitReductionToFirst,
+    serrePadicResidueUnitTransition] using
+    (ZMod.unitsMap_comp
+      (pow_dvd_pow p (Nat.add_le_add_right (Nat.zero_le n) 1))
+      (show p ^ (n + 1) ∣ p ^ ((n + 1) + 1) from
+        pow_dvd_pow p (Nat.le_succ (n + 1))))
+
 /-- The finite complements are compatible with adjacent residue reductions. -/
 def serrePadicFiniteUnitComplementTransition (n : ℕ) :
     serrePadicFiniteUnitComplement p (n + 1) →*
@@ -145,6 +157,44 @@ noncomputable def serrePadicFiniteUnitComplementEquiv (n : ℕ) :
     (serrePadicResidueUnitReductionToFirst p n)
     (serrePadicResidueUnitReductionToFirst_surjective p n)
     (serrePadicResidueUnitReductionToFirst_ker_card_coprime p n)
+
+/--
+Adjacent finite complements are isomorphic by reducing both sides to the first
+residue-unit group.
+-/
+noncomputable def serrePadicFiniteUnitComplementTransitionEquiv (n : ℕ) :
+    serrePadicFiniteUnitComplement p (n + 1) ≃*
+      serrePadicFiniteUnitComplement p n :=
+  (serrePadicFiniteUnitComplementEquiv p (n + 1)).trans
+    (serrePadicFiniteUnitComplementEquiv p n).symm
+
+/-- The concrete transition agrees with the first-residue equivalences. -/
+theorem serrePadicFiniteUnitComplementEquiv_transition_apply
+    (n : ℕ) (u : serrePadicFiniteUnitComplement p (n + 1)) :
+    serrePadicFiniteUnitComplementEquiv p n
+      (serrePadicFiniteUnitComplementTransition p n u) =
+        serrePadicFiniteUnitComplementEquiv p (n + 1) u := by
+  change serrePadicResidueUnitReductionToFirst p n
+      (serrePadicResidueUnitTransition p n
+        (u : (padicResidueRing p (n + 1))ˣ)) =
+    serrePadicResidueUnitReductionToFirst p (n + 1)
+      (u : (padicResidueRing p (n + 1))ˣ)
+  simpa using congrFun
+    (congrArg DFunLike.coe
+      (serrePadicResidueUnitReductionToFirst_transition p n))
+    (u : (padicResidueRing p (n + 1))ˣ)
+
+/--
+The adjacent complement transition is the same map as the equivalence obtained
+by comparing both complements with the first residue-unit group.
+-/
+theorem serrePadicFiniteUnitComplementTransitionEquiv_apply
+    (n : ℕ) (u : serrePadicFiniteUnitComplement p (n + 1)) :
+    serrePadicFiniteUnitComplementTransitionEquiv p n u =
+      serrePadicFiniteUnitComplementTransition p n u := by
+  apply (serrePadicFiniteUnitComplementEquiv p n).injective
+  rw [serrePadicFiniteUnitComplementEquiv_transition_apply]
+  rfl
 
 /--
 The finite complement is the unique subgroup of the residue-unit group on
