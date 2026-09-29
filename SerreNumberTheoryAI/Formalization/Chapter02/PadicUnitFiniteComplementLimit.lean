@@ -136,6 +136,62 @@ theorem serrePadicUnitRootsReductionToResidueRoots_injective :
   serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial p
     (serrePadicUnitRoots_principal_one_trivial p)
 
+/-- The ordinary roots-of-unity reduction has trivial one-fiber. -/
+theorem serrePadicUnitRootsReduction_eq_one_iff_eq_one
+    (u : serrePadicUnitRootsOfUnity p) :
+    serrePadicUnitRootsReduction p u = 1 ↔ u = 1 := by
+  constructor
+  · intro hred
+    exact serrePadicUnitRoots_principal_one_trivial p u
+      ((serrePadicUnitRootsReduction_eq_one_iff p u).1 hred)
+  · intro hu
+    rw [hu, map_one]
+
+/-- The narrowed roots-of-unity reduction has trivial one-fiber. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_eq_one_iff_eq_one
+    (u : serrePadicUnitRootsOfUnity p) :
+    serrePadicUnitRootsReductionToResidueRoots p u = 1 ↔ u = 1 := by
+  constructor
+  · intro hred
+    exact serrePadicUnitRoots_principal_one_trivial p u
+      ((serrePadicUnitRootsReductionToResidueRoots_eq_one_iff p u).1 hred)
+  · intro hu
+    rw [hu, map_one]
+
+/-- The ordinary roots-of-unity reduction has trivial kernel. -/
+theorem serrePadicUnitRootsReduction_ker_eq_bot :
+    (serrePadicUnitRootsReduction p).ker = ⊥ := by
+  ext u
+  change serrePadicUnitRootsReduction p u = 1 ↔ u = 1
+  exact serrePadicUnitRootsReduction_eq_one_iff_eq_one p u
+
+/-- The narrowed roots-of-unity reduction has trivial kernel. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_ker_eq_bot :
+    (serrePadicUnitRootsReductionToResidueRoots p).ker = ⊥ := by
+  ext u
+  change serrePadicUnitRootsReductionToResidueRoots p u = 1 ↔ u = 1
+  exact serrePadicUnitRootsReductionToResidueRoots_eq_one_iff_eq_one p u
+
+/--
+If the narrowed reduction is onto first-residue roots, then it is an
+isomorphism onto that subgroup.
+-/
+noncomputable def serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective
+    (hsurj : Function.Surjective (serrePadicUnitRootsReductionToResidueRoots p)) :
+    serrePadicUnitRootsOfUnity p ≃* serreResidueUnitRootsOfUnity p :=
+  MulEquiv.ofBijective (serrePadicUnitRootsReductionToResidueRoots p)
+    ⟨serrePadicUnitRootsReductionToResidueRoots_injective p, hsurj⟩
+
+/--
+A surjectivity proof for the narrowed reduction upgrades the roots subgroup to
+an isomorphism with all first residue units.
+-/
+noncomputable def serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective
+    (hsurj : Function.Surjective (serrePadicUnitRootsReductionToResidueRoots p)) :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  (serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective p hsurj).trans
+    (serreResidueUnitRootsOfUnityEquivUnits p)
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
