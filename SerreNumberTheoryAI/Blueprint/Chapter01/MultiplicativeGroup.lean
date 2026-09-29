@@ -36,7 +36,6 @@ Leanでは `Nat.sum_totient` を通してこの標準的な算術恒等式を利
 同じ位数別・Euler関数の数え上げを内部で証明しているmathlibの一般群論定理
 `isCyclic_of_card_pow_eq_one_le` を利用する。したがってBlueprintの依存グラフでは
 この二つを直接のLean依存としては結ばない。
-:::
 
 ## 方程式の解の個数から巡回性を得る
 
