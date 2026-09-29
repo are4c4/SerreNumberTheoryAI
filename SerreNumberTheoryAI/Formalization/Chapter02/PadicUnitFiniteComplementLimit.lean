@@ -67,6 +67,75 @@ theorem serrePadicUnitRootsReductionLevelToFiniteComplement_transition
       ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p)
       (m := n) (n := n + 1) (Nat.le_succ n)
 
+/--
+If the finite-complement reductions of a project root are all one, then the
+project root itself is one.
+-/
+theorem serrePadicUnitRoots_eq_one_of_reductions_eq_one
+    (u : serrePadicUnitRootsOfUnity p)
+    (hred : ∀ n : ℕ,
+      serrePadicUnitRootsReductionLevelToFiniteComplement p n u = 1) :
+    u = 1 := by
+  apply Subtype.ext
+  apply Units.ext
+  apply serrePadicInt_ext p
+  intro n
+  have hunit :
+      serrePadicUnitReductionLevel p n (u : (SerrePadicInt p)ˣ) = 1 := by
+    have h := congrArg
+      (fun v : serrePadicFiniteUnitComplement p n =>
+        (v : (padicResidueRing p n)ˣ)) (hred n)
+    simpa [serrePadicUnitRootsReductionLevelToFiniteComplement_apply] using h
+  have hval := congrArg
+    (fun z : (padicResidueRing p n)ˣ => (z : padicResidueRing p n)) hunit
+  simpa [serrePadicUnitReductionLevel] using hval
+
+/--
+If the level-zero finite-complement reduction of a project root is one, then
+all finite-complement reductions are one.
+-/
+theorem serrePadicUnitRootsReductionLevelToFiniteComplement_eq_one_of_zero
+    (u : serrePadicUnitRootsOfUnity p)
+    (h0 : serrePadicUnitRootsReductionLevelToFiniteComplement p 0 u = 1) :
+    ∀ n : ℕ, serrePadicUnitRootsReductionLevelToFiniteComplement p n u = 1 := by
+  intro n
+  induction n with
+  | zero => exact h0
+  | succ n ih =>
+      apply serrePadicFiniteUnitComplementTransition_injective p n
+      rw [serrePadicUnitRootsReductionLevelToFiniteComplement_transition, ih]
+      simp
+
+/--
+A project `(p-1)`-st root of unity lying in the first principal-unit subgroup
+is trivial.
+-/
+theorem serrePadicUnitRoots_principal_one_trivial :
+    ∀ u : serrePadicUnitRootsOfUnity p,
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1 := by
+  intro u hu
+  have hred0 : serrePadicUnitRootsReduction p u = 1 :=
+    (serrePadicUnitRootsReduction_eq_one_iff p u).2 hu
+  have h0 :
+      serrePadicUnitRootsReductionLevelToFiniteComplement p 0 u = 1 := by
+    apply Subtype.ext
+    change serrePadicUnitReductionLevel p 0 (u : (SerrePadicInt p)ˣ) = 1
+    simpa [serrePadicUnitRootsReduction, serrePadicUnitReduction] using hred0
+  exact serrePadicUnitRoots_eq_one_of_reductions_eq_one p u
+    (serrePadicUnitRootsReductionLevelToFiniteComplement_eq_one_of_zero p u h0)
+
+/-- The roots-of-unity reduction to first residue units is injective. -/
+theorem serrePadicUnitRootsReduction_injective :
+    Function.Injective (serrePadicUnitRootsReduction p) :=
+  serrePadicUnitRootsReduction_injective_of_principal_one_trivial p
+    (serrePadicUnitRoots_principal_one_trivial p)
+
+/-- The roots-of-unity reduction to first-residue roots is injective. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_injective :
+    Function.Injective (serrePadicUnitRootsReductionToResidueRoots p) :=
+  serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial p
+    (serrePadicUnitRoots_principal_one_trivial p)
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
