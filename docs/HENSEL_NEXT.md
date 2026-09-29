@@ -1,88 +1,78 @@
 # Hensel next-step notes
 
-Current branch: `work/c2-s2-2-hensel-quadratic-odd-serial`.
+Current branch: `work/c2-s2-2-hensel-quadratic-two`.
 
-The core Chapter 2 §2.2 Hensel lifting theorem and Corollary 1 are already on
-main.  The current ACTIVE item is Corollary 2 for odd-prime nondegenerate
-quadratic forms (#104 / PR #147).
+The core Chapter 2 §2.2 Hensel lifting theorem, Corollary 1, and odd-prime quadratic Corollary 2 are already on `main`.  The current ACTIVE item is Corollary 3 for dyadic quadratic lifting (#105 / PR #148).
 
 ## Continuation rule
 
-A user instruction such as `続けて` or `形式化を続けて` means: continue this
-single ACTIVE PR through the next safe Lean / Blueprint / CI / review step.
-Do not stop merely because a commit or CI run has started.  Stop only for a
-real proof/source/API uncertainty, a CI failure that first needs diagnosis, a
-GitHub state conflict, or a context/time boundary.
+A user instruction such as `続けて` or `形式化を続けて` means: continue this single ACTIVE PR through the next safe Lean / Blueprint / CI / review step.  Do not stop merely because a commit or CI run has started.  Stop only for a real proof/source/API uncertainty, a CI failure that first needs diagnosis, a GitHub state conflict, or a context/time boundary.
 
 ## Current Lean result
 
-The two proof boundaries that previously remained explicit are now discharged.
+The dyadic quadratic lifting chain now reaches the source-shaped determinant/primitivity statement.
 
-### 1. Formal derivative bridge
+### 1. Shared Hensel wrapper
 
-`HenselQuadraticOddDerivativeBridge.lean` proves:
+`HenselQuadraticCorollary.lean` contains the direct `p = 2`, `n = 3`, `k = 1` value-lift wrapper:
 
-- `serreQuadraticTerm_pderiv_eval`: the evaluated partial derivative of one
-  quadratic monomial;
-- `serreQuadraticGradientCoordinate_eq_row_add_column`: the formal derivative
-  is the sum of the selected row and selected column contributions;
-- `serreQuadraticGradientCoordinate_eq_symmetricExpression`: symmetry turns
-  those two sums into `2 * ∑ i, A i j * x i`;
-- `serreQuadraticSymmetricGradientBridge_of_symmetric`: symmetry alone
-  supplies the previously explicit Hensel-facing bridge.
+- value congruence depth `3`, i.e. modulo `8`;
+- selected derivative valuation exactly `1`;
+- conclusion depth `2`, i.e. congruent modulo `4`.
 
-### 2. Determinant / primitive-vector bridge
+The PR adds coordinate-quadratic wrappers around this boundary:
 
-`HenselQuadraticOdd.lean` now proves the determinant-to-coordinate step over
-a commutative ring with no zero divisors, using the adjugate/determinant matrix
-API rather than constructing a Field instance for the first residue ring.
-Consequently:
+- `serreQuadraticTwoGradientWitness`;
+- `serreHenselValueLift_mod_eight_of_quadratic_gradient`;
+- `serreHenselValueLift_mod_eight_of_symmetric_quadratic_gradient`;
+- `serreQuadraticTwoHenselHypothesis`;
+- exact-root, congruent-lift, and combined lift extractors.
 
-- nonzero determinant + nonzero vector gives a nonzero matrix-vector
-  coordinate;
-- a primitive p-adic tuple gives a nonzero first-residue vector;
-- `serreFirstResidueMatrixDetNonzeroPrimitiveBoundary_proved` discharges the
-  previously named first-residue boundary.
+### 2. Expanded-gradient and inner-sum packages
 
-This route avoids the earlier deterministic `whnf` timeout and residue-field
-typeclass mismatch.
+`HenselQuadraticTwo.lean` exposes:
 
-### 3. Coefficient determinant to first residue
+- `serrePadicIntAddValuation_two`, proving `v₂(2)=1`;
+- `serreQuadraticTwoExpressionWitness` and its Hensel package;
+- `serreQuadraticTwoInnerSumWitness` and its Hensel package;
+- the bridge from first-residue nonvanishing of the inner sum to valuation `1` of Serre's expanded symmetric gradient;
+- exact-root, congruent-lift, and combined lift extractors.
 
-`HenselQuadraticOddResidue.lean` identifies the determinant of the
-first-residue gradient matrix with the first projection of the determinant of
-the p-adic coefficient matrix.  Therefore a unit p-adic determinant has
-nonzero first-residue determinant.
+This reuses the already-proved formal derivative bridge from `HenselQuadraticOddDerivativeBridge.lean`, specialized to `p = 2`; despite the file name, the polynomial identity itself is prime-uniform.
 
-### 4. Source-shaped Corollary 2
+### 3. Determinant/primitive-vector to dyadic inner sum
 
-`HenselQuadraticOddSourceConsequences.lean` exposes:
+`HenselQuadraticTwoResidue.lean` adapts the Corollary 2 first-residue matrix API to the dyadic inner sum:
 
-- `serreHenselValueLift_mod_p_of_odd_quadratic`;
-- `serreOddQuadratic_exists_solution_lift`.
+- a matrix-coordinate witness for `serreFirstResidueGradientMatrix A` is exactly nonvanishing of the first residue of `Σᵢ aᵢⱼ xᵢ`;
+- nonzero determinant plus primitive tuple gives that matrix-coordinate witness;
+- unit p-adic determinant gives nonzero first-residue determinant;
+- `serreHenselValueLift_mod_eight_of_quadratic_two` packages the determinant-shaped value lift;
+- `serreDyadicQuadratic_exists_solution_lift` is the current source-facing Corollary 3 consequence, returning one exact value solution congruent to the initial tuple modulo `4`.
 
-Their hypotheses are the source-shaped data for Corollary 2: odd prime,
-symmetric coefficient matrix, unit determinant, primitive mod-`p` starting
-tuple, and the value congruence modulo `p`.  The conclusion is an exact
-`Z_p` value solution, with the constructed lift also congruent to the
-starting tuple modulo `p`.
+### 4. Blueprint synchronization
+
+The Hensel Blueprint now imports `HenselQuadraticTwoResidue` and retargets `henselquadraticdyadicvaluecorollary` to `SerreNumberTheoryAI.serreDyadicQuadratic_exists_solution_lift`.
+
+## Source-boundary note
+
+The source phrase `∂f/∂X_j(x) ≠ 0 (mod 4)` is represented in this PR through the proved symmetric-gradient decomposition.  For a symmetric dyadic quadratic form the derivative is `2 * Σᵢ aᵢⱼ xᵢ`; the Lean route proves that nonzero first residue of the inner sum gives additive valuation `1` of the derivative.  The determinant/primitivity argument supplies exactly this inner-sum first-residue nonvanishing.  This avoids inventing a second congruence predicate for arbitrary nonzero modulo `4` statements.
 
 ## Verification state
 
-The derivative bridge and no-zero-divisors determinant bridge were already
-accepted by PR-head Lean/CI before the final source-level assembly.  The current
-head should be checked for the final policy / Lean / Verso Blueprint CI after
-the Blueprint and progress synchronization commits in this run.
+- PR #148 head `9afafcef1d6adc36be8eae00583fd57d430baea7`: CI #706 green for policy / Lean / Verso.
+- PR #148 head `107ce2912344d6dbaa1db1aeedded72b287c8f06`: CI #710 green for policy / Lean / Verso.
+- PR #148 head `9840ef2d1863600dc9deef232747a84f9ed380a2`: CI #715 green for policy / Lean / Verso.
+- PR #148 head `f103c83fbafa65a1e06eea10a63757c35ddd5071`: CI #721 green for policy / Lean / Verso.
+- Latest docs/Blueprint-sync head after this note should be checked before merge.
 
 ## Remaining work before merge
 
-1. finish the latest PR-head CI;
-2. synchronize `FORMALIZATION_PROGRESS.md`, `docs/WORK_QUEUE.md`, and
-   `docs/ACTIVE_WORK.md` with the completed Corollary 2 proof;
-3. self-review statement integrity, dependency integrity, source/copyright
-   boundary, and near-target mathlib usage;
-4. update the PR body with the final proof strategy and CI;
-5. merge PR #147 when green and blocker-free;
-6. after merge, clear ACTIVE state on main before beginning Corollary 3.
+1. finish latest-head CI;
+2. synchronize `FORMALIZATION_PROGRESS.md`, `docs/ACTIVE_WORK.md`, and `docs/WORK_QUEUE.md` to the completed pre-merge state;
+3. update the PR body with final theorem names, proof route, and latest CI;
+4. self-review statement integrity, source/copyright boundary, and theorem-strength boundary;
+5. mark PR #148 ready and merge when green and blocker-free;
+6. after merge, clear ACTIVE state on main before beginning §3 work.
 
-Do not begin the dyadic item (#105) while PR #147 remains active.
+Do not begin §3 or another work item while PR #148 remains active.

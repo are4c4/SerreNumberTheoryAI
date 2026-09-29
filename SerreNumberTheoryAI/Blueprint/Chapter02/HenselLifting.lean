@@ -11,6 +11,8 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselLimitRoot
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticCorollary
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddSourceConsequences
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwo
+import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwoResidue
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -214,4 +216,18 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 必要な偏微分付値0を導き、Serre の系2まで閉じる。
 一方 `p=2` の mod `8`・偏微分付値1の値持ち上げ wrapper もここで共有し、
 系3の本体は次の独立workに残す。
+:::
+
+:::theorem "henselquadraticdyadicvaluecorollary"
+  (uses := "henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge, henselquadraticvaluecorollary")
+p が 2 の場合は Hensel の定理に n=3, k=1 を入れるため、値の合同は
+法 8、得られる持ち上げの合同は法 4 になる。対称な座標二次形式では、
+形式偏微分は、2 と内側の和を掛けた Serre の展開形と一致する。
+
+Lean ではまず、2 の二進付値が 1 であることを示し、内側の和の第一剰余が
+非零なら展開形勾配の付値がちょうど 1 になることを証明する。次に、
+Corollary 2 で使った第一剰余行列の行列式と原始ベクトルの議論を
+p が 2 の場合に特殊化し、単元行列式と原始組からその非零な内側の和を取り出す。
+これを Hensel の値持ち上げ wrapper に渡すことで、Serre の系3に対応する
+厳密な値解と法 4 の合同な持ち上げが得られる。
 :::
