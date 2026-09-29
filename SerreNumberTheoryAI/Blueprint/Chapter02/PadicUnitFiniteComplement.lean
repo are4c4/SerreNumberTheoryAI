@@ -2,7 +2,7 @@ import Verso
 import VersoManual
 import VersoBlueprint
 
-import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiniteComplement
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiniteComplementTransition
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -189,6 +189,20 @@ theorem blueprint_finiteUnitComplementTransitionEquivApply
     serrePadicFiniteUnitComplementTransitionEquiv p n u =
       serrePadicFiniteUnitComplementTransition p n u :=
   serrePadicFiniteUnitComplementTransitionEquiv_apply p n u
+end SerreNumberTheoryAI
+```
+
+:::theorem "finiteunitcomplementtransitionbijective"
+  (uses := "finiteunitcomplementtransitionequivapply")
+隣接する finite complement の具体的 transition は全単射である。
+:::
+
+```lean "finiteunitcomplementtransitionbijective"
+namespace SerreNumberTheoryAI
+theorem blueprint_finiteUnitComplementTransitionBijective
+    (p n : ℕ) [Fact p.Prime] :
+    Function.Bijective (serrePadicFiniteUnitComplementTransition p n) :=
+  serrePadicFiniteUnitComplementTransition_bijective p n
 end SerreNumberTheoryAI
 ```
 
