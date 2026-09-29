@@ -13,36 +13,45 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest branch head in this run: `9647fb52d97181ec7a4e8d71d668feb03aca0f0b`.
+- Latest validated branch head in this run: `37f3ba78c6e7ef557bcd49fa23798b0b79f3e253`.
+- Latest CI: #770 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
 ## Current unit-filtration proof state
 
-The first recovered Lean slice contains:
+The Lean development in PR #149 now contains:
 
 - `serrePadicUnitReductionLevel`: reduction of project p-adic units to a finite residue-unit group;
 - `serrePadicPrincipalUnits`: source-indexed principal-unit filtration, with `U_0 = U` and `U_(n+1)` as a kernel of reduction modulo `p^(n+1)`;
 - `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: membership in `U_(n+1)` as divisibility of `u - 1` by `p^(n+1)`;
 - `serrePadicPrincipalUnits_succ_succ_le_succ`: consecutive positive levels are descending, so `U_(n+2) ≤ U_(n+1)`;
-- `serrePadicUnitReduction`: first reduction map `U → (Z/pZ)^×`;
-- `serrePadicUnitReduction_surjective`: surjectivity of first reduction from residue projection surjectivity and the unit-lift criterion;
-- `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`.
+- `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`;
+- `serrePadicPrincipalUnitCoeffResidueHom`, its kernel theorem, its surjectivity, and `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: the source successive quotient layer;
+- `serrePadicUnitRootsOfUnity`, `serrePadicTeichmuellerSubgroup`, and `serrePadicUnitRootsReduction`: the first roots-of-unity / finite-complement interface;
+- `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`.
+
+Blueprint pages are synchronized for the unit-filtration and roots-of-unity layers.
 
 ## CI / repair state
 
-- CI #735 failed in Lean build at `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the residue equality `u = 1` needed an explicit bridge to `(u - 1) = 0`.
-- Commit `d140c36fe95e40e1f918d00ab9983e5400664d4b` fixed that bridge.
-- Commit `bdb0a889407101a65364b1c8891474b9a73ee553` added the consecutive filtration inclusion.
-- Commit `9647fb52d97181ec7a4e8d71d668feb03aca0f0b` synchronized continuation notes after the repair.
-- Latest CI for the current head should be checked before adding further mathematical statements.
+- CI #735 failed in Lean build at `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; fixed by inserting the explicit projection equality bridge.
+- CI #742 validated the first Lean filtration layer, then exposed Blueprint notation/rendering issues.
+- CI #757 validated the extended coefficient-residue Lean layer, with remaining direct Blueprint theorem-preview issues.
+- CI #763/#764 validated successive quotient packaging and progress-note synchronization.
+- CI #766 exposed subgroup-closure proof gaps in the first roots-of-unity file; fixed by converting set-membership hypotheses to the root equations.
+- CI #767 validated the roots-of-unity Lean interface.
+- CI #769 exposed Blueprint parsing failure on direct theorem previews for names containing underscores.
+- CI #770 validated the repair using labeled inline Lean aliases.
 
 ## Next proof targets for this ACTIVE item
 
-1. Let CI validate the recovered first slice on latest main.
-2. If CI fails, inspect logs first and fix the concrete API mismatch.
-3. If CI is green or pending, continue inside the same PR toward a source-shaped successive quotient statement `U_n/U_(n+1) ≃ Z/pZ`, without using a packaged p-adic unit decomposition theorem.
-4. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this first proof boundary unless the required interfaces are already isolated.
+1. Prove that the kernel of `serrePadicUnitRootsReduction` is trivial.
+2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-unit group as an isomorphism when the kernel/surjectivity proof is available.
+3. Use that isomorphism as the source-shaped entry point for the finite complement `V`.
+4. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this proof boundary unless the required interfaces are already isolated.
+
+The immediate mathematical risk is the kernel-triviality proof: it amounts to showing that a `(p-1)`-st root in `U_1` is already `1`, and should not be forced with an unsupported theorem-strength jump.
 
 ## Run-length preference for this ACTIVE item
 
@@ -59,8 +68,8 @@ The first recovered Lean slice contains:
 
 ただし、次の場合は25分を待たず止める:
 
-- `U_n/U_(n+1)` の添字・法の対応が不確かな場合。
-- finite coprime-order complement / inverse-limit subgroup `V` のstatementを勝手に強めそうな場合。
+- roots-of-unity subgroup / finite complement `V` のstatementを勝手に強めそうな場合。
+- kernel triviality で必要な torsion-free / separatedness / Hensel 型補題が未確認の場合。
 - CI failureのログ確認が必要な場合。
 - GitHub write拒否、merge conflict、branch不整合、権限エラーが出た場合。
 - source boundaryやcopyright policyに不安がある場合。
