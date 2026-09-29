@@ -179,3 +179,60 @@ noncomputable def blueprint_unitRootsResidueUnitsEquivOfSurjective
   serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective p hsurj
 end SerreNumberTheoryAI
 ```
+
+:::definition "finitecomplementtower"
+  (lean := "SerreNumberTheoryAI.serrePadicFiniteUnitComplementTowerSubgroup")
+有限補群の compatible tower を、各レベルの finite complement の列で、
+隣接 transition と整合するものとして定義する。
+:::
+
+:::definition "unitrootstofinitecomplementtower"
+  (uses := "unitrootsfinitecomplementtransition")
+project 側の `(p-1)` 乗根は、各有限レベルへの還元を並べることで、
+compatible finite-complement tower を与える。
+:::
+
+```lean "unitrootstofinitecomplementtower"
+namespace SerreNumberTheoryAI
+def blueprint_unitRootsToFiniteComplementTower
+    (p : ℕ) [Fact p.Prime] :
+    serrePadicUnitRootsOfUnity p →*
+      serrePadicFiniteUnitComplementTower p :=
+  serrePadicUnitRootsToFiniteComplementTower p
+end SerreNumberTheoryAI
+```
+
+:::theorem "finitecomplementtowerresiduevalue"
+  (uses := "finitecomplementtower")
+compatible finite-complement tower を第一剰余根へ送る値は、
+どの有限レベルで見ても同じである。
+:::
+
+```lean "finitecomplementtowerresiduevalue"
+namespace SerreNumberTheoryAI
+theorem blueprint_finiteComplementTowerResidueValue
+    (p n : ℕ) [Fact p.Prime]
+    (x : serrePadicFiniteUnitComplementTower p) :
+    serrePadicFiniteUnitComplementResidueRootsEquiv p n
+        (serrePadicFiniteUnitComplementTowerProj p n x) =
+      serrePadicFiniteUnitComplementResidueRootsEquiv p 0
+        (serrePadicFiniteUnitComplementTowerProj p 0 x) :=
+  serrePadicFiniteUnitComplementTower_residueRoots_eq_zero p x n
+end SerreNumberTheoryAI
+```
+
+:::definition "finitecomplementtowerresiduerootsequiv"
+  (uses := "finitecomplementtowerresiduevalue")
+finite-complement tower 全体は、第一剰余根部分群と標準的に同型である。
+これは project 側への持ち上げではなく、有限補群塔そのものの inverse-compatible 構造を package したものである。
+:::
+
+```lean "finitecomplementtowerresiduerootsequiv"
+namespace SerreNumberTheoryAI
+noncomputable def blueprint_finiteComplementTowerResidueRootsEquiv
+    (p : ℕ) [Fact p.Prime] :
+    serrePadicFiniteUnitComplementTower p ≃*
+      serreResidueUnitRootsOfUnity p :=
+  serrePadicFiniteUnitComplementTowerEquivResidueRoots p
+end SerreNumberTheoryAI
+```
