@@ -95,6 +95,46 @@ abbrev serrePadicFiniteUnitComplement (n : ℕ) :
     (serrePadicResidueUnitReductionToFirst p n)
 
 /--
+At the first finite level, the complement is the whole residue-unit group.
+-/
+theorem serrePadicFiniteUnitComplement_zero_eq_top :
+    serrePadicFiniteUnitComplement p 0 = ⊤ := by
+  ext a
+  constructor
+  · intro _
+    trivial
+  · intro _
+    change a ^ Nat.card (padicResidueRing p 0)ˣ = 1
+    exact pow_card_eq_one'
+
+/-- Reduction of residue-unit groups from level `n+1` to level `n`. -/
+def serrePadicResidueUnitTransition (n : ℕ) :
+    (padicResidueRing p (n + 1))ˣ →* (padicResidueRing p n)ˣ :=
+  ZMod.unitsMap
+    (show p ^ (n + 1) ∣ p ^ ((n + 1) + 1) from
+      pow_dvd_pow p (Nat.le_succ (n + 1)))
+
+/-- The finite complements are compatible with adjacent residue reductions. -/
+def serrePadicFiniteUnitComplementTransition (n : ℕ) :
+    serrePadicFiniteUnitComplement p (n + 1) →*
+      serrePadicFiniteUnitComplement p n where
+  toFun u := by
+    refine ⟨serrePadicResidueUnitTransition p n u, ?_⟩
+    have hu := u.property
+    change ((u : (padicResidueRing p (n + 1))ˣ) ^
+      Nat.card (padicResidueRing p 0)ˣ = 1) at hu
+    change (serrePadicResidueUnitTransition p n
+      (u : (padicResidueRing p (n + 1))ˣ)) ^
+        Nat.card (padicResidueRing p 0)ˣ = 1
+    simpa using congrArg (serrePadicResidueUnitTransition p n) hu
+  map_one' := by
+    ext
+    simp [serrePadicResidueUnitTransition]
+  map_mul' u v := by
+    ext
+    simp [serrePadicResidueUnitTransition]
+
+/--
 At every finite level, the distinguished complement maps isomorphically to
 the first residue-unit group.
 -/
