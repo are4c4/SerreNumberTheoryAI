@@ -13,6 +13,7 @@ A user instruction such as `続けて` or `形式化を続けて` means: continu
 The recovered and extended slice defines the source-indexed filtration in the project-local `SerrePadicInt` unit group:
 
 - `serrePadicUnitReductionLevel`: reduction of units to one finite residue-unit level;
+- `serrePadicUnitReductionLevel_surjective`: every finite residue unit lifts to a project p-adic unit;
 - `serrePadicPrincipalUnits`: `U_0 = U`, and `U_(n+1)` as the kernel of reduction modulo `p^(n+1)`;
 - `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: `u ∈ U_(n+1)` iff `p^(n+1)` divides `u - 1`;
 - `serrePadicPrincipalUnits_succ_succ_le_succ`: `U_(n+2) ≤ U_(n+1)` for consecutive positive levels;
@@ -26,15 +27,26 @@ The recovered and extended slice defines the source-indexed filtration in the pr
 - `serrePadicPrincipalUnitCoeffResidueHom`: the coefficient residue as a homomorphism to the additive first residue group, encoded by `Multiplicative`;
 - `serrePadicPrincipalUnitCoeffResidueHom_ker` and `serrePadicPrincipalUnitCoeffResidueHom_surjective`;
 - `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: `U_(n+1)/U_(n+2)` is the additive first residue group;
-- `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: the first quotient `U/U_1 ≃ (Z/pZ)^×`.
+- `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: the first quotient `U/U_1 ≃ (Z/pZ)^×`;
+- `serrePadicUnitsQuotientPrincipalSuccEquiv`: every finite quotient `U/U_(n+1)` is the finite residue-unit group modulo `p^(n+1)`.
 
-The roots-of-unity layer additionally contains:
+The roots-of-unity layer contains:
 
 - `serrePadicUnitRootsOfUnity` and `serrePadicTeichmuellerSubgroup`;
 - `serrePadicUnitRootsReduction` and `serrePadicUnitRootsReductionToResidueRoots`;
 - kernel and one-fiber criteria reducing the injectivity question to membership in `U_1`;
 - conditional injectivity lemmas from the pending kernel-triviality target;
 - equivalences saying injectivity is exactly the same target as showing roots-of-unity elements in `U_1` are trivial.
+
+The finite-complement layer now contains:
+
+- `serreCoprimeKernelComplement`: the abstract finite commutative group complement cut out by `x ^ Nat.card B = 1`;
+- `serreCoprimeKernelComplementEquiv`: the coprime-order splitting supplement for a surjective map of finite commutative groups;
+- `serreCoprimeKernelComplement_unique_of_bijective`: uniqueness of a subgroup that maps bijectively to the quotient side;
+- `serrePadicResidueUnitReductionToFirst`: finite residue-unit reduction `(Z/p^(n+1)Z)^× → (Z/pZ)^×`;
+- `serrePadicFirstResidueUnits_card` and `serrePadicResidueUnits_card`: the cardinal calculations `p - 1` and `p^n * (p - 1)`;
+- `serrePadicResidueUnitReductionToFirst_ker_card` and `_coprime`: the finite kernel has order `p^n` and is coprime to the first residue-unit group;
+- `serrePadicFiniteUnitComplement`, `serrePadicFiniteUnitComplementEquiv`, and `serrePadicFiniteUnitComplement_unique`.
 
 ## CI notes
 
@@ -43,16 +55,17 @@ The roots-of-unity layer additionally contains:
 - CI #794 validated cleanup head `49e90f8ddcc326229363cdae31ebc7ae20799987`.
 - CI #796 validated the Lean conditional injectivity and injectivity-equivalence lemmas.
 - CI #798 validated the Blueprint documentation of those injectivity criteria.
-- Latest documentation refresh should be checked against the next PR-head CI before using it as the validated head.
+- CI #810 validated the finite residue-unit complement Lean layer before Blueprint/docs sync.
+- The newest docs/Blueprint refresh should be checked against the next PR-head CI before using it as the validated head.
 
 ## Next proof boundary
 
-The filtration, successive quotient, and roots-reduction interfaces are implemented and CI-valid through the last checked implementation head. The next source-shaped boundary is proving that a `(p-1)`-st root lying in `U_1` is `1`, then using that to construct the finite complement subgroup `V` in Proposition 7:
+The filtration, successive quotient, roots-reduction interfaces, and finite residue-unit complement layer are implemented. The next source-shaped boundary is to connect the two complement pictures:
 
-1. prove kernel triviality for the roots-of-unity reduction;
+1. prove kernel triviality for roots of unity lying in `U_1`;
 2. package the roots subgroup → first-residue roots map as an isomorphism;
-3. identify the residue-root subgroup with all first-residue units;
-4. use that isomorphism as the project-local finite complement `V`;
+3. identify the first-residue roots subgroup with all first-residue units;
+4. compare the project roots subgroup with the inverse-compatible finite complements;
 5. then complete the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
 Keep §3.2 Proposition 8 separate.
