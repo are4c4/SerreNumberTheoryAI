@@ -58,10 +58,13 @@ theorem serrePadicUnitRootsReductionLevelToFiniteComplement_transition
       (show p ^ (n + 1) ∣ p ^ ((n + 1) + 1) from
         pow_dvd_pow p (Nat.le_succ (n + 1)))
       (padicResidueRing p n)
-      (serrePadicIntProj p (n + 1) (u : SerrePadicInt p)) =
-    serrePadicIntProj p n (u : SerrePadicInt p)
+      (serrePadicIntProj p (n + 1)
+        ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p)) =
+    serrePadicIntProj p n
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p)
   simpa [serrePadicResidueUnitTransition, serrePadicUnitReductionLevel] using
-    serrePadicIntProj_cast_of_le p (u : SerrePadicInt p)
+    serrePadicIntProj_cast_of_le p
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p)
       (m := n) (n := n + 1) (Nat.le_succ n)
 
 end PadicUnitFiniteComplementLimit
