@@ -40,6 +40,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltration
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiniteComplement
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltrationQuotient
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitRoots
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicResidueUnitRoots
 
 /-!
 # Formalization root
