@@ -13,8 +13,7 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest CI: head `e9e62b3d9a8f31467e03c78a1f9c353cbb9faeac`, CI #734 in progress at last sync.
-- Starting commit in this run: recovered the old PR #125 core definitions onto latest main and imported them from `Formalization.lean`.
+- Latest branch head in this run: `9647fb52d97181ec7a4e8d71d668feb03aca0f0b`.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -25,13 +24,22 @@ The first recovered Lean slice contains:
 - `serrePadicUnitReductionLevel`: reduction of project p-adic units to a finite residue-unit group;
 - `serrePadicPrincipalUnits`: source-indexed principal-unit filtration, with `U_0 = U` and `U_(n+1)` as a kernel of reduction modulo `p^(n+1)`;
 - `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: membership in `U_(n+1)` as divisibility of `u - 1` by `p^(n+1)`;
+- `serrePadicPrincipalUnits_succ_succ_le_succ`: consecutive positive levels are descending, so `U_(n+2) ≤ U_(n+1)`;
 - `serrePadicUnitReduction`: first reduction map `U → (Z/pZ)^×`;
 - `serrePadicUnitReduction_surjective`: surjectivity of first reduction from residue projection surjectivity and the unit-lift criterion;
 - `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`.
 
+## CI / repair state
+
+- CI #735 failed in Lean build at `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the residue equality `u = 1` needed an explicit bridge to `(u - 1) = 0`.
+- Commit `d140c36fe95e40e1f918d00ab9983e5400664d4b` fixed that bridge.
+- Commit `bdb0a889407101a65364b1c8891474b9a73ee553` added the consecutive filtration inclusion.
+- Commit `9647fb52d97181ec7a4e8d71d668feb03aca0f0b` synchronized continuation notes after the repair.
+- Latest CI for the current head should be checked before adding further mathematical statements.
+
 ## Next proof targets for this ACTIVE item
 
-1. Let PR #149 CI validate the recovered first slice on latest main.
+1. Let CI validate the recovered first slice on latest main.
 2. If CI fails, inspect logs first and fix the concrete API mismatch.
 3. If CI is green or pending, continue inside the same PR toward a source-shaped successive quotient statement `U_n/U_(n+1) ≃ Z/pZ`, without using a packaged p-adic unit decomposition theorem.
 4. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this first proof boundary unless the required interfaces are already isolated.
