@@ -27,7 +27,7 @@ def serrePadicResidueUnitReductionToFirst (n : ℕ) :
 theorem serrePadicResidueUnitReductionToFirst_surjective (n : ℕ) :
     Function.Surjective (serrePadicResidueUnitReductionToFirst p n) := by
   haveI : NeZero (p ^ (n + 1)) :=
-    ⟨pow_ne_zero _ Fact.out.ne_zero⟩
+    ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   exact
     ZMod.unitsMap_surjective
       (pow_dvd_pow p (Nat.add_le_add_right (Nat.zero_le n) 1))
@@ -35,17 +35,17 @@ theorem serrePadicResidueUnitReductionToFirst_surjective (n : ℕ) :
 /-- The first residue-unit group has order `p - 1`. -/
 theorem serrePadicFirstResidueUnits_card :
     Nat.card (padicResidueRing p 0)ˣ = p - 1 := by
-  haveI : NeZero p := ⟨Fact.out.ne_zero⟩
+  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
   rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient]
-  simpa [padicResidueRing] using Nat.totient_prime Fact.out
+  simpa [padicResidueRing] using Nat.totient_prime (Fact.out : p.Prime)
 
 /-- Units modulo `p^(n+1)` have order `p^n (p-1)`. -/
 theorem serrePadicResidueUnits_card (n : ℕ) :
     Nat.card (padicResidueRing p n)ˣ = p ^ n * (p - 1) := by
   haveI : NeZero (p ^ (n + 1)) :=
-    ⟨pow_ne_zero _ Fact.out.ne_zero⟩
+    ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
   rw [Nat.card_eq_fintype_card, ZMod.card_units_eq_totient]
-  exact Nat.totient_prime_pow_succ Fact.out n
+  exact Nat.totient_prime_pow_succ (Fact.out : p.Prime) n
 
 /--
 The kernel of reduction from units modulo `p^(n+1)` to units modulo `p`
@@ -69,7 +69,7 @@ theorem serrePadicResidueUnitReductionToFirst_ker_card (n : ℕ) :
     serrePadicResidueUnits_card p n] at hmul
   exact
     Nat.eq_of_mul_eq_mul_right
-      (Nat.sub_pos_of_lt Fact.out.one_lt) hmul
+      (Nat.sub_pos_of_lt (Fact.out : p.Prime).one_lt) hmul
 
 /--
 The kernel order and the first residue-unit order are coprime, which is the
@@ -82,7 +82,7 @@ theorem serrePadicResidueUnitReductionToFirst_ker_card_coprime (n : ℕ) :
   rw [serrePadicResidueUnitReductionToFirst_ker_card p n,
     serrePadicFirstResidueUnits_card p]
   apply Nat.Coprime.pow_left
-  rw [Nat.coprime_self_sub_right Fact.out.one_le]
+  rw [Nat.coprime_self_sub_right (Fact.out : p.Prime).one_le]
   simp
 
 /--
