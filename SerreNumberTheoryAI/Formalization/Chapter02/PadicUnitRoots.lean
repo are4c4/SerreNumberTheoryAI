@@ -170,6 +170,24 @@ theorem mem_serrePadicUnitRootsReductionToResidueRoots_ker
   rw [serrePadicUnitRootsReductionToResidueRoots_ker,
     mem_serrePadicUnitRootsReduction_ker]
 
+@[simp]
+theorem serrePadicUnitRootsReduction_eq_one_iff
+    (u : serrePadicUnitRootsOfUnity p) :
+    serrePadicUnitRootsReduction p u = 1 ↔
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 := by
+  change u ∈ (serrePadicUnitRootsReduction p).ker ↔
+    (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1
+  exact mem_serrePadicUnitRootsReduction_ker p u
+
+@[simp]
+theorem serrePadicUnitRootsReductionToResidueRoots_eq_one_iff
+    (u : serrePadicUnitRootsOfUnity p) :
+    serrePadicUnitRootsReductionToResidueRoots p u = 1 ↔
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 := by
+  change u ∈ (serrePadicUnitRootsReductionToResidueRoots p).ker ↔
+    (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1
+  exact mem_serrePadicUnitRootsReductionToResidueRoots_ker p u
+
 end PadicUnitRoots
 
 end SerreNumberTheoryAI
