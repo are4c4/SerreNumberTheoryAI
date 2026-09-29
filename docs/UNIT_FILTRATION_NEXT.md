@@ -35,7 +35,7 @@ The roots-of-unity layer contains:
 - `serrePadicUnitRootsOfUnity` and `serrePadicTeichmuellerSubgroup`;
 - `serrePadicUnitRootsReduction` and `serrePadicUnitRootsReductionToResidueRoots`;
 - kernel and one-fiber criteria reducing the injectivity question to membership in `U_1`;
-- conditional injectivity lemmas from the pending kernel-triviality target;
+- conditional injectivity lemmas from the isolated kernel-triviality target;
 - equivalences saying injectivity is exactly the same target as showing roots-of-unity elements in `U_1` are trivial.
 
 The finite-complement layer now contains:
@@ -53,7 +53,14 @@ The finite-complement layer now contains:
 The project-roots/finite-complement comparison layer now contains:
 
 - `serrePadicUnitRootsReductionLevelToFiniteComplement`: project `(p-1)`-st roots reduce to the distinguished finite complement at every level;
-- `serrePadicUnitRootsReductionLevelToFiniteComplement_transition`: those reductions commute with adjacent finite-complement transition maps.
+- `serrePadicUnitRootsReductionLevelToFiniteComplement_transition`: those reductions commute with adjacent finite-complement transition maps;
+- `serrePadicUnitRoots_eq_one_of_reductions_eq_one`: if all finite-complement reductions are `1`, the project root is `1`;
+- `serrePadicUnitRootsReductionLevelToFiniteComplement_eq_one_of_zero`: level-zero triviality propagates to all finite complement levels;
+- `serrePadicUnitRoots_principal_one_trivial`: a project `(p-1)`-st root in `U_1` is trivial;
+- `serrePadicUnitRootsReduction_injective` and `serrePadicUnitRootsReductionToResidueRoots_injective`;
+- `serrePadicUnitRootsReduction_eq_one_iff_eq_one` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff_eq_one`;
+- `serrePadicUnitRootsReduction_ker_eq_bot` and `serrePadicUnitRootsReductionToResidueRoots_ker_eq_bot`;
+- `serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective` and `serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective`, which reduce the remaining isomorphism packaging to surjectivity of the narrowed reduction.
 
 ## CI notes
 
@@ -66,14 +73,18 @@ The project-roots/finite-complement comparison layer now contains:
 - CI #831 validated the finite-complement residue-roots Blueprint after the duplicate-tag fix.
 - CI #835 validated the finite-complement limit Lean layer at head `474ff6bf1cdcda24b6ad349bfaa166073198fa45`.
 - CI #837 validated the Blueprint inclusion for the finite-complement limit page at head `25459d3a701253f20e99b17f82a0be0d3e320a9d`.
+- CI #840 validated the Lean kernel-triviality and reduction-injectivity bridge at head `bfcf919f284cad3ad8bc84a11ef1a69c2cdfb4c1`.
+- CI #841 validated the Blueprint documentation for the injectivity bridge at head `c624a774f2e6b90fbb764c6e0d9e4cd955339856`.
+- CI #842 validated the Lean kernel/equivalence packaging at head `e9494f2dfa806eab53525f644c3b08dde9405120`.
+- CI #843 validated the Blueprint documentation for the kernel/equivalence packaging at head `810263a694cccaa66741df4e20ed7f851bd7e53c`.
 - This docs sync should be checked against the next PR-head CI before using it as the latest validated head.
 
 ## Next proof boundary
 
-The filtration, successive quotient, roots-reduction interfaces, finite residue-unit complement layer, residue-root comparison, and the first project-roots-to-finite-complement transition comparison are implemented. The next source-shaped boundary is to compare the project roots subgroup with the inverse-compatible finite complements strongly enough to package the finite complement `V` inside the full p-adic unit group:
+The filtration, successive quotient, roots-reduction interfaces, finite residue-unit complement layer, residue-root comparison, project-roots-to-finite-complement transition comparison, and injectivity/kernel-triviality half of the `V` comparison are implemented. The next source-shaped boundary is the surjectivity half:
 
-1. prove kernel triviality for roots of unity lying in `U_1`;
-2. package the roots subgroup → first-residue roots map as an isomorphism;
+1. prove or isolate the inverse-limit argument giving a project root above each first-residue root;
+2. package `serrePadicUnitRootsReductionToResidueRoots` as an isomorphism using the already-proved injectivity;
 3. compare this isomorphism with the finite-complement residue-root equivalences;
 4. upgrade the levelwise compatible reductions to the intended finite complement `V` picture;
 5. then complete the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
