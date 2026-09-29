@@ -8,7 +8,7 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Informal
 
-#doc (Manual) "第2章 3.1 有限補群と第一剰余根" =>
+#doc (Manual) "Chapter 2 section 3.1 finite complement residue roots" =>
 
 *出典メタデータ:* J.-P. セール著・弥永健一訳『数論講義』日本語版、
 第2章・§3・3.1、印刷頁22--24（uploaded PDF pages 32--34）。
