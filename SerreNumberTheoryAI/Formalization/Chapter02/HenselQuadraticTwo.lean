@@ -179,6 +179,28 @@ theorem serreQuadraticTwoExpressionHenselHypothesis.exists_solution_lift
         ∀ i, serrePadicCongruent 2 2 (x i) (y i) :=
   serreHenselValueLift_mod_eight_of_quadratic_two_expression_hypothesis h
 
+/-- Extract the exact value root from the inner-sum dyadic package. -/
+theorem serreQuadraticTwoInnerSumHenselHypothesis.exists_value_root
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoInnerSumHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt 2,
+      MvPolynomial.eval y (serreQuadraticPolynomial (p := 2) A) = a := by
+  exact serreHenselValueLiftConclusion.exists_value_root
+    (serreHenselValueLift_mod_eight_of_quadratic_two_innerSum_hypothesis h)
+
+/-- Extract the modulo-`4` congruent lift from the inner-sum dyadic package. -/
+theorem serreQuadraticTwoInnerSumHenselHypothesis.exists_congruent_lift
+    {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
+    {A : σ → σ → SerrePadicInt 2}
+    {a : SerrePadicInt 2} {x : σ → SerrePadicInt 2}
+    (h : serreQuadraticTwoInnerSumHenselHypothesis A a x) :
+    ∃ y : σ → SerrePadicInt 2,
+      ∀ i, serrePadicCongruent 2 2 (x i) (y i) := by
+  exact serreHenselValueLiftConclusion.exists_congruent_lift
+    (serreHenselValueLift_mod_eight_of_quadratic_two_innerSum_hypothesis h)
+
 /-- Extract one lift with both exact value and modulo-`4` congruence from the inner-sum package. -/
 theorem serreQuadraticTwoInnerSumHenselHypothesis.exists_solution_lift
     {σ : Type*} [DecidableEq σ] [Fintype σ] [Fact (Nat.Prime 2)]
