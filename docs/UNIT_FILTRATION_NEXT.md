@@ -15,14 +15,14 @@ The first recovered slice defines the source-indexed filtration in the project-l
 - `serrePadicUnitReductionLevel`: reduction of units to one finite residue-unit level;
 - `serrePadicPrincipalUnits`: `U_0 = U`, and `U_(n+1)` as the kernel of reduction modulo `p^(n+1)`;
 - `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: `u ∈ U_(n+1)` iff `p^(n+1)` divides `u - 1`;
-- `serrePadicPrincipalUnits_succ_succ_le_succ`: the positive principal-unit filtration is descending at consecutive levels;
+- `serrePadicPrincipalUnits_succ_succ_le_succ`: `U_(n+2) ≤ U_(n+1)` for consecutive positive levels;
 - `serrePadicUnitReduction`: first reduction `U → (Z/pZ)^×`;
 - `serrePadicUnitReduction_surjective`: every first-residue unit lifts to a p-adic unit;
 - `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`.
 
 ## CI notes
 
-CI #735 failed in the Lean build at the first direction of `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the fix at head `d140c36...` inserted the explicit projection equality bridge before proving the zero statement.  The later head `bdb0a88...` adds the consecutive filtration inclusion and supersedes the earlier CI run.
+CI #735 failed in the Lean build at the first direction of `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the fix at head `d140c36...` inserted the explicit projection equality bridge before proving the zero statement.  The later Lean head `bdb0a88...` adds the consecutive filtration inclusion.  The latest docs-synced head is `a910869...`; check the corresponding PR-head CI before further mathematical expansion.
 
 ## Next proof boundary
 
