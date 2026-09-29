@@ -86,3 +86,9 @@ open Informal
 :::theorem "serre_theorem4_odd" (lean := "SerreNumberTheoryAI.serre_theorem4_odd") (uses := "finite_field_nonzero_squares_index_two, finite_field_nonzero_squares_kernel, finite_field_half_power_values")
 奇標数では、零でない平方元は指数2の部分群をなし、それは半乗写像の核であり、半乗写像の値は `{±1}` に入る。
 :::
+
+書籍では同じ内容を
+`1 → F_q^{*2} → F_q^* → {±1} → 1`
+という完全系列でも表している。現在のLean側は完全系列オブジェクトを別に構成せず、
+「平方元部分群の指数が2」「半乗写像の核との一致」「値が `±1`」
+という三つの性質として同じ構造を保持している。

@@ -3,7 +3,6 @@ import VersoManual
 import VersoBlueprint
 
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
-import SerreNumberTheoryAI.Formalization.Chapter01.LegendreTwo
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -76,19 +75,6 @@ Leanでは `(-1)` の冪は指数の偶奇だけに依存するため、自然�
 この値は `±1` なので整数符号へ移しても変わらない。
 :::
 
-:::theorem "serre_theorem5_iii" (lean := "SerreNumberTheoryAI.serre_theorem5_iii") (uses := "legendre_sign")
-奇素数 `p` に対し、`2` のLegendre記号は `(-1)^((p^2-1)/8)` である。
-:::
-
-:::proof "serre_theorem5_iii"
-`F_p` の代数閉包で原始8乗根 `α` を取り、`y=α+α⁻¹` とおく。
-`α^4=-1` から直接計算して `y²=2` を得る。
-
-Frobeniusは `α` を `α^p` へ送る。`p` を8で割った余りが `1` または `7` なら `α^p` は `α` または `α⁻¹` となり、`y^p=y` である。
-余りが `3` または `5` なら対応する冪は符号付きの逆元または元となり、`y^p=-y` である。
-`y` は零でないので、前者では `y^(p-1)=1`、後者では `y^(p-1)=-1` を得る。
-`y²=2` を用いると、これは `2^((p-1)/2)` がそれぞれ `1` または `-1` であることを意味する。
-
-最後に `p mod 8` の4通りを計算すると、`(p^2-1)/8` は余り `1,7` のとき偶数、`3,5` のとき奇数である。
-したがって上の符号はちょうど `(-1)^((p^2-1)/8)` と一致する。
-:::
+定理5(iii) の `(2/p)` 補充法則は、Lean側でも別モジュール
+`LegendreTwo.lean` に分けているため、対応するBlueprintも次の
+「3.2 定理5(iii) — 2の補充法則」に分離する。

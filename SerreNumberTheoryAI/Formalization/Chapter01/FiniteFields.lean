@@ -90,6 +90,18 @@ theorem finiteField_cardinality_prime_power (p : ℕ) [CharP K p] :
     simpa [hf0] using hcard.le
   exact ⟨f, hf, hcard⟩
 
+/--
+Serre, Chapter 1, §1.1, Theorem 1(i): a finite field has prime
+characteristic, and its cardinality is a positive power of that prime.
+
+The proof helper above chooses the exponent as the dimension over the prime
+field `ZMod p`, matching the source degree `[K : F_p]`.
+-/
+theorem serre_theorem1_i (p : ℕ) [CharP K p] :
+    Nat.Prime p ∧ ∃ f : ℕ, 0 < f ∧ Fintype.card K = p ^ f := by
+  exact ⟨finiteField_characteristic_prime K p,
+    finiteField_cardinality_prime_power K p⟩
+
 end FiniteFieldCardinality
 
 section PrimePowerSubfield

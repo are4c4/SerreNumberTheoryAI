@@ -1,4 +1,3 @@
-import Mathlib
 import SerreNumberTheoryAI.Formalization.Chapter01.LegendreSymbol
 
 /-!
