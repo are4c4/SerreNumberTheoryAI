@@ -39,3 +39,82 @@ theorem blueprint_unitRootsFiniteComplementTransition
   serrePadicUnitRootsReductionLevelToFiniteComplement_transition p n u
 end SerreNumberTheoryAI
 ```
+
+:::theorem "unitrootsreductionseparation"
+  (uses := "unitrootsfinitecomplementreduction")
+project 側の根がすべての有限補群レベルで `1` に還元されるなら、
+その根自体が `1` である。これは project `Z_p` の成分ごとの extensionality を使う分離性である。
+:::
+
+```lean "unitrootsreductionseparation"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsReductionSeparation
+    (p : ℕ) [Fact p.Prime]
+    (u : serrePadicUnitRootsOfUnity p)
+    (hred : ∀ n : ℕ,
+      serrePadicUnitRootsReductionLevelToFiniteComplement p n u = 1) :
+    u = 1 :=
+  serrePadicUnitRoots_eq_one_of_reductions_eq_one p u hred
+end SerreNumberTheoryAI
+```
+
+:::theorem "unitrootsreductiononepropagation"
+  (uses := "unitrootsfinitecomplementtransition")
+level `0` の有限補群への還元が `1` なら、有限補群の transition が単射であることから、
+すべての有限レベルで還元は `1` になる。
+:::
+
+```lean "unitrootsreductiononepropagation"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsReductionOnePropagation
+    (p : ℕ) [Fact p.Prime]
+    (u : serrePadicUnitRootsOfUnity p)
+    (h0 : serrePadicUnitRootsReductionLevelToFiniteComplement p 0 u = 1) :
+    ∀ n : ℕ, serrePadicUnitRootsReductionLevelToFiniteComplement p n u = 1 :=
+  serrePadicUnitRootsReductionLevelToFiniteComplement_eq_one_of_zero p u h0
+end SerreNumberTheoryAI
+```
+
+:::theorem "unitrootsprincipalonetrivial"
+  (uses := "unitrootsreductionseparation unitrootsreductiononepropagation")
+`U_1` に入る project 側の `(p-1)` 乗根は自明である。
+これにより、有限補群塔との比較から、根部分群の第一剰余への還元の核が消える。
+:::
+
+```lean "unitrootsprincipalonetrivial"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsPrincipalOneTrivial
+    (p : ℕ) [Fact p.Prime] :
+    ∀ u : serrePadicUnitRootsOfUnity p,
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1 :=
+  serrePadicUnitRoots_principal_one_trivial p
+end SerreNumberTheoryAI
+```
+
+:::theorem "unitrootsreductioninjective"
+  (uses := "unitrootsprincipalonetrivial")
+したがって、project 側の根部分群から第一剰余単元群への還元は単射である。
+:::
+
+```lean "unitrootsreductioninjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsReductionInjective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Injective (serrePadicUnitRootsReduction p) :=
+  serrePadicUnitRootsReduction_injective p
+end SerreNumberTheoryAI
+```
+
+:::theorem "unitrootsresiduerootsreductioninjective"
+  (uses := "unitrootsprincipalonetrivial")
+同じ単射性は、codomain を第一剰余の根部分群に狭めた還元写像についても成り立つ。
+:::
+
+```lean "unitrootsresiduerootsreductioninjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsResidueRootsReductionInjective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Injective (serrePadicUnitRootsReductionToResidueRoots p) :=
+  serrePadicUnitRootsReductionToResidueRoots_injective p
+end SerreNumberTheoryAI
+```
