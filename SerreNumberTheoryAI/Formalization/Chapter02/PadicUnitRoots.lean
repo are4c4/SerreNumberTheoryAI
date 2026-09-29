@@ -24,16 +24,19 @@ def serrePadicUnitRootsOfUnity : Subgroup (SerrePadicInt p)ˣ where
   one_mem' := by simp
   mul_mem' := by
     intro u v hu hv
+    change u ^ (p - 1) = 1 at hu
+    change v ^ (p - 1) = 1 at hv
     calc
       (u * v) ^ (p - 1) = u ^ (p - 1) * v ^ (p - 1) := by
         rw [mul_pow]
-      _ = 1 := by simp [hu, hv]
+      _ = 1 := by rw [hu, hv, one_mul]
   inv_mem' := by
     intro u hu
+    change u ^ (p - 1) = 1 at hu
     calc
       u⁻¹ ^ (p - 1) = (u ^ (p - 1))⁻¹ := by
         rw [inv_pow]
-      _ = 1 := by simp [hu]
+      _ = 1 := by rw [hu, inv_one]
 
 @[simp]
 theorem mem_serrePadicUnitRootsOfUnity
