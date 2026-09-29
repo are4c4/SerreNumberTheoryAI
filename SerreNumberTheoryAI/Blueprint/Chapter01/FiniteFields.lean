@@ -54,6 +54,8 @@ Frobenius写像が環準同型であることを先に構成した。
 Leanでは一般的な field-range equivalence を使ってこの同型を組み立てる。
 :::
 
+## 定理1(i) — 標数と位数
+
 :::theorem "finite_field_characteristic_prime" (lean := "SerreNumberTheoryAI.finiteField_characteristic_prime")
 有限体の標数は素数である。
 :::
@@ -78,6 +80,12 @@ Leanでは一般的な field-range equivalence を使ってこの同型を組み
 Leanでは `F_p` を `ZMod p` で表し、一般的な有限次元ベクトル空間の要素数公式
 `Module.card_eq_pow_finrank` を使う。
 対象そのものに近い `FiniteField.card` は意図的に使用しない。
+:::
+
+:::theorem "serre_theorem1_i" (lean := "SerreNumberTheoryAI.serre_theorem1_i") (uses := "finite_field_characteristic_prime, finite_field_cardinality_prime_power")
+有限体 `K` の標数はある素数 `p` であり、ある正整数 `f` に対して
+`Card(K)=p^f` となる。Leanの補助定理では、この `f` を素体 `F_p`
+上の有限次元ベクトル空間としての次元に取っている。
 :::
 
 ## 定理1(ii) — 固定された代数閉体の中の有限部分体
