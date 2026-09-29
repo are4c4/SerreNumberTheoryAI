@@ -192,6 +192,132 @@ noncomputable def serrePadicUnitRootsReductionEquivResidueUnitsOfSurjective
   (serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective p hsurj).trans
     (serreResidueUnitRootsOfUnityEquivUnits p)
 
+/--
+The inverse-compatible tower of finite complements, expressed as a subgroup of
+all levelwise finite-complement choices.
+-/
+def serrePadicFiniteUnitComplementTowerSubgroup :
+    Subgroup (∀ n : ℕ, serrePadicFiniteUnitComplement p n) where
+  carrier := {x | ∀ n : ℕ,
+    serrePadicFiniteUnitComplementTransition p n (x (n + 1)) = x n}
+  one_mem' := by
+    intro n
+    simp [serrePadicFiniteUnitComplementTransition]
+  mul_mem' := by
+    intro x y hx hy n
+    change serrePadicFiniteUnitComplementTransition p n
+        (x (n + 1) * y (n + 1)) = x n * y n
+    rw [map_mul, hx n, hy n]
+  inv_mem' := by
+    intro x hx n
+    change serrePadicFiniteUnitComplementTransition p n
+        ((x (n + 1))⁻¹) = (x n)⁻¹
+    rw [map_inv, hx n]
+
+/-- The type of compatible finite-complement towers. -/
+abbrev serrePadicFiniteUnitComplementTower : Type :=
+  serrePadicFiniteUnitComplementTowerSubgroup p
+
+/-- Projection from a compatible finite-complement tower to level `n`. -/
+def serrePadicFiniteUnitComplementTowerProj (n : ℕ) :
+    serrePadicFiniteUnitComplementTower p →* serrePadicFiniteUnitComplement p n where
+  toFun x := (x : ∀ n : ℕ, serrePadicFiniteUnitComplement p n) n
+  map_one' := rfl
+  map_mul' _ _ := rfl
+
+@[simp]
+theorem serrePadicFiniteUnitComplementTowerProj_apply
+    (n : ℕ) (x : serrePadicFiniteUnitComplementTower p) :
+    serrePadicFiniteUnitComplementTowerProj p n x =
+      (x : ∀ n : ℕ, serrePadicFiniteUnitComplement p n) n :=
+  rfl
+
+/-- Project roots of unity determine a compatible finite-complement tower. -/
+def serrePadicUnitRootsToFiniteComplementTower :
+    serrePadicUnitRootsOfUnity p →* serrePadicFiniteUnitComplementTower p where
+  toFun u :=
+    ⟨fun n => serrePadicUnitRootsReductionLevelToFiniteComplement p n u,
+      serrePadicUnitRootsReductionLevelToFiniteComplement_transition p · u⟩
+  map_one' := by
+    apply Subtype.ext
+    funext n
+    ext
+    simp [serrePadicUnitRootsReductionLevelToFiniteComplement]
+  map_mul' u v := by
+    apply Subtype.ext
+    funext n
+    ext
+    simp [serrePadicUnitRootsReductionLevelToFiniteComplement]
+
+@[simp]
+theorem serrePadicUnitRootsToFiniteComplementTower_proj
+    (n : ℕ) (u : serrePadicUnitRootsOfUnity p) :
+    serrePadicFiniteUnitComplementTowerProj p n
+        (serrePadicUnitRootsToFiniteComplementTower p u) =
+      serrePadicUnitRootsReductionLevelToFiniteComplement p n u :=
+  rfl
+
+/-- The residue-root value of a compatible finite-complement tower is independent of level. -/
+theorem serrePadicFiniteUnitComplementTower_residueRoots_eq_zero
+    (x : serrePadicFiniteUnitComplementTower p) (n : ℕ) :
+    serrePadicFiniteUnitComplementResidueRootsEquiv p n
+        (serrePadicFiniteUnitComplementTowerProj p n x) =
+      serrePadicFiniteUnitComplementResidueRootsEquiv p 0
+        (serrePadicFiniteUnitComplementTowerProj p 0 x) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      have htrans :=
+        serrePadicFiniteUnitComplementResidueRootsEquiv_transition p n
+          (serrePadicFiniteUnitComplementTowerProj p (n + 1) x)
+      have hx := x.property n
+      change serrePadicFiniteUnitComplementTransition p n
+          (serrePadicFiniteUnitComplementTowerProj p (n + 1) x) =
+        serrePadicFiniteUnitComplementTowerProj p n x at hx
+      rw [hx] at htrans
+      rw [← htrans, ih]
+
+/-- A compatible finite-complement tower has a well-defined first-residue-root value. -/
+noncomputable def serrePadicFiniteUnitComplementTowerToResidueRoots :
+    serrePadicFiniteUnitComplementTower p →* serreResidueUnitRootsOfUnity p where
+  toFun x := serrePadicFiniteUnitComplementResidueRootsEquiv p 0
+    (serrePadicFiniteUnitComplementTowerProj p 0 x)
+  map_one' := by
+    simp [serrePadicFiniteUnitComplementTowerProj]
+  map_mul' x y := by
+    simp [serrePadicFiniteUnitComplementTowerProj]
+
+/-- Every first-residue root determines a compatible finite-complement tower. -/
+theorem serrePadicFiniteUnitComplementTowerToResidueRoots_surjective :
+    Function.Surjective (serrePadicFiniteUnitComplementTowerToResidueRoots p) := by
+  intro r
+  refine ⟨⟨fun n =>
+      (serrePadicFiniteUnitComplementResidueRootsEquiv p n).symm r, ?_⟩, ?_⟩
+  · intro n
+    apply (serrePadicFiniteUnitComplementResidueRootsEquiv p n).injective
+    rw [serrePadicFiniteUnitComplementResidueRootsEquiv_transition]
+    simp
+  · simp [serrePadicFiniteUnitComplementTowerToResidueRoots,
+      serrePadicFiniteUnitComplementTowerProj]
+
+/-- The first-residue-root value separates compatible finite-complement towers. -/
+theorem serrePadicFiniteUnitComplementTowerToResidueRoots_injective :
+    Function.Injective (serrePadicFiniteUnitComplementTowerToResidueRoots p) := by
+  intro x y hxy
+  apply Subtype.ext
+  funext n
+  apply (serrePadicFiniteUnitComplementResidueRootsEquiv p n).injective
+  rw [serrePadicFiniteUnitComplementTower_residueRoots_eq_zero p x n,
+    serrePadicFiniteUnitComplementTower_residueRoots_eq_zero p y n]
+  exact hxy
+
+/-- The inverse-compatible finite-complement tower is canonically the first-residue roots. -/
+noncomputable def serrePadicFiniteUnitComplementTowerEquivResidueRoots :
+    serrePadicFiniteUnitComplementTower p ≃* serreResidueUnitRootsOfUnity p :=
+  MulEquiv.ofBijective (serrePadicFiniteUnitComplementTowerToResidueRoots p)
+    ⟨serrePadicFiniteUnitComplementTowerToResidueRoots_injective p,
+      serrePadicFiniteUnitComplementTowerToResidueRoots_surjective p⟩
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
