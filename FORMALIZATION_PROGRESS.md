@@ -99,26 +99,26 @@
 | §2.1 命題5: `Z_p` の共通零点と全 residue level の共通零点 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.1 命題6: homogeneous system の `Q_p` / primitive `Z_p` / residue zeros | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §2.2 Hensel lifting theorem + Corollary 1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ✅ | ✅ | ✅ | ✅ | 🚧 |
-| §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §2.2 Corollary 2: odd-`p` nondegenerate quadratic lifting | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| §2.2 Corollary 3: dyadic quadratic lifting | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 - #99 / PR #103 はmerge `326c2aec2e3f2168dfce64d5f95d678d8b6a1930` でend-to-end完成。finite inverse-limit nonemptiness、polynomial reduction/evaluation compatibility、Proposition 5 proof、独立Blueprint、normal Formalization/Blueprint aggregator integrationまで揃い、final head `1a86c84e…` はCI #260 green。#100向けに以前freezeしたfinite-level interfaceも維持される。
 - #100 / PR #145 は main `32c68109beac3f3b27504501c166022864c34c1c` へ統合済み。primitive finite-level compatibility、primitive inverse-limit recovery、homogeneous evaluation scaling、nonzero `Q_p` tuple normalization、Proposition 6 の three-condition equivalence、Blueprint/root integrationを完了し、final PR-head CI #462 green。
 - #102 / PR #146 は main `3695fa0bd60adb0f0f1cb0863d5b0a4269c60bd4` へ統合済み。Taylor one-step improvement、Cauchy iteration、exact root from finite residues、coordinate specialization、multivariate theorem、Corollary 1、quadratic value-lift wrappersを完了し、final PR-head CI #590 green。
-- #104 / PR #147 is the current single-lane ACTIVE item. The Lean proof is now source-shaped end-to-end: monomial differentiation and symmetry prove `formal derivative = 2 * Σ_i a_ij x_i`; a no-zero-divisors adjugate/determinant argument proves determinant nonzero + primitive first-residue vector gives a nonzero gradient coordinate; unit determinant over project `Z_p` projects to nonzero first-residue determinant; and `serreOddQuadratic_exists_solution_lift` closes Corollary 2 via the merged Hensel theorem. Blueprint/explanation are synchronized; only the final latest-head CI/self-review/merge gate remains.
-- #105 はdyadic quadratic liftingのpreflight complete。proofは#104 active完了後に開始する。#96は不要。
+- #104 / PR #147 は main `3bd49171d8bf95a355d4eae8f7b4eef609a8d285` へ統合済み。odd-prime quadratic lifting を source-shaped derivative / determinant / primitive-vector bridgeからHenselへ接続し、final PR-head CI #700 green。
+- #105 / PR #148 は main `c7c030763ee4251f10c2d96decd42fad63c66004` へ統合済み。dyadic quadratic lifting と `serreDyadicQuadratic_exists_solution_lift` を完成し、final PR-head CI #729 green。
 
 ## Phase 8 — 第2章 §3 `Q_p` の乗法群と平方類
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
 | §3.2 principal units / Proposition 8 / multiplicative-group theorem | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #108 はB-ownedでPR #125まで進んだが、現在CIは同じupstream p進整数moduleで失敗。filtration commitは保存し、replacement stack待ち。
-- #112 はcanonical branchがcurrent mainに作成済みでatomic lock成立。ただしIssue上のlegacy owner metadataは未記録のため、Aはownerを推測せず `CLAIMED / owner pending` として扱う。source `p`-power step、Proposition 8、multiplicative-group theoremが対象で、core proofは#108、最終 `Q_p^×` theoremは#96にも依存する。
-- #120 はPREFLIGHT。odd `p` では `x=p^n u` の平方条件をvaluation parity + residue Legendreで、`p=2`ではvaluation parity + `u≡1 (mod 8)` で特徴付ける方針。branchはproof-code-cleanで、proofは#112のprincipal-unit/multiplicative decompositionと#96のproject `Q_p` interface待ち。
+- #108 / PR #149 が現在唯一のACTIVE item。旧PR #125をlatest mainへ回収し、`U_n` filtration、successive quotient、`U/U_1 ≃ (Z/pZ)^×`、roots-of-unity reduction interfacesまで実装済み。head `721f7120…` はCI #786 greenで、次はkernel trivialityとfinite complement `V`。
+- #112 は WAITING。§3.1 / Proposition 7 がmainへ統合された後にfresh latest-main branchで開始する。§3.2 Proposition 8 とmultiplicative-group theoremが対象。
+- #120 は WAITING。#112完了後に、odd `p` のvaluation parity + residue Legendre criterion と dyadic `u≡1 (mod 8)` criterionを実装する。#96 / project `Q_p` はすでにmain上で完成。
 
 ## Phase 9 — 第3章 §1 Hilbert記号の局所的性質
 
@@ -127,8 +127,8 @@
 | §1.1 Hilbert記号の定義 / norm criterion / 基本公式 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §1.2 明示公式 / 双1次性 / 非退化性 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #121 はD-ownedでPREFLIGHT complete。generic field-level Hilbert symbol / norm criterion / Proposition 2 のAPI計画を固定し、branchはproof-code-clean。generic coreは#96なしでもimplementation-readyだが、project `Q_p` specializationは#96待ち。
-- #122 はB-ownedでPREFLIGHT complete。real/`Q_p` の明示Hilbert公式、`kˣ/kˣ²` 上の双1次非退化形式、norm subgroup index-two corollaryのsource/API planを固定し、branchはproof-code-clean。proofは#121に加え、#96/#120および実際に使う#100/#104/#105 interface待ち。
+- #121 は PREFLIGHT。generic field-level Hilbert symbol / norm criterion / Proposition 2 のsource/API計画はIssueに整理済み。project `Q_p` interface (#96/#143) はすでにmain上で利用可能。
+- #122 は WAITING。#121 と #120 のmain統合後に開始する。#96/#100/#104/#105 の必要interfaceはすでにmain上で完成。
 
 ## Phase 10 — 第3章 §2 Hilbert記号の大局的性質
 
@@ -138,7 +138,7 @@
 | §2.2 CRT + weak approximation lemmas | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §2.2 prescribed local Hilbert signs / 定理4 | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #124 はB-ownedでPREFLIGHT complete。有限個を除いて local Hilbert symbol が1であり `∏_v (a,b)_v = 1` となる積公式、rational square-class generator reduction、exact #64 reciprocity edgeを固定し、branchはproof-code-clean。proofは#122と#64の実際に使うinterface待ち。
+- #124 は WAITING。#122完了後に開始し、quadratic reciprocity (#64 / PR #114) はすでにmain上で利用可能。
 - #129 は原典 printed pp.35–36 / uploaded PDF pp.45–46 を独立確認してseedしたunclaimed PREFLIGHT。source Lemma 1（CRT）と Lemma 2（有限個の実・p進場所に対するQのweak approximation）を対象とし、Hilbert proof chainからほぼ独立。
 - #130 は原典 printed pp.35–38 / uploaded PDF pp.45–48 を独立確認してseedしたunclaimed PREFLIGHT。source Theorem 4（prescribed local Hilbert signsのglobal realization）を対象とし、proofは#124/#122/#120/#129および書籍がChapter 6へ証明を送るDirichlet theorem interface待ち。
 
@@ -146,9 +146,15 @@
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| §1.1 quadratic-form definition / polarization / matrix / discriminant | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.1 quadratic-form definition / polarization / matrix / discriminant | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.2 orthogonality / radical / nondegeneracy | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.3 isotropic vectors / hyperbolic planes | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §1.4 orthogonal bases / adjacency theorem | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #131 は原典 printed pp.39–40 / uploaded PDF pp.49–50 を独立確認してseedしたunclaimed PREFLIGHT。char ≠ 2 の有限次元vector space上のquadratic form、associated symmetric bilinear form、isometry、basis matrix、change-of-basis `A' = XᵀAX`、discriminant mod squaresを対象とし、現在のp進/Hilbert dependency chainから独立した安全なparallel candidate。
+- #131 は PREFLIGHT。原典 printed pp.39–40 / uploaded PDF pp.49–50 のsource boundaryをIssueに整理済み。単一レーンのためread-only preflightのみで、別implementation branchは開かない。
+- #134 は WAITING。§1.2 orthogonality / radical / nondegeneracyを対象とし、#131のsource-facing interface待ち。
+- #136 は WAITING。§1.3 isotropic vectors / hyperbolic plane / Proposition 3を対象とし、#131/#134待ち。
+- #137 は WAITING。§1.4 orthogonal bases / adjacency theoremを対象とし、#131/#134待ち。§1.5 Witt theoremは明示的にscope外。
 
 ## Single-lane operation rules
 
