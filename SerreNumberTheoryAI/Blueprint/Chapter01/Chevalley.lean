@@ -43,7 +43,7 @@ open Informal
 
 ## Chevalley–Warning 定理
 
-:::theorem "serre_chevalley_warning" (lean := "SerreNumberTheoryAI.serre_chevalleyWarning") (uses := "multivariate_grid_sum_zero, chevalley_indicator_idea")
+:::theorem "serre_chevalley_warning" (lean := "SerreNumberTheoryAI.serre_theorem3") (uses := "multivariate_grid_sum_zero, chevalley_indicator_idea")
 有限体 `K` の標数を `p` とする。有限集合で添字付けられた `σ` 変数多項式 `fᵢ` について、全次数の総和が `#σ` より小さいなら、共通零点の個数は `p` で割り切れる。
 :::
 
