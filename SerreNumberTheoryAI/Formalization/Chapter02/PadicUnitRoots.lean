@@ -69,6 +69,68 @@ theorem serrePadicUnitRootsReduction_pow
   simpa using congrArg (serrePadicUnitReduction p) u.property
 
 /--
+The first-residue analogue of the source roots-of-unity subgroup: units of the
+prime residue ring satisfying the same `(p-1)`-st root equation.
+-/
+def serreResidueUnitRootsOfUnity : Subgroup (padicResidueRing p 0)ˣ where
+  carrier := {a | a ^ (p - 1) = 1}
+  one_mem' := by simp
+  mul_mem' := by
+    intro a b ha hb
+    change a ^ (p - 1) = 1 at ha
+    change b ^ (p - 1) = 1 at hb
+    calc
+      (a * b) ^ (p - 1) = a ^ (p - 1) * b ^ (p - 1) := by
+        rw [mul_pow]
+      _ = 1 := by rw [ha, hb, one_mul]
+  inv_mem' := by
+    intro a ha
+    change a ^ (p - 1) = 1 at ha
+    calc
+      a⁻¹ ^ (p - 1) = (a ^ (p - 1))⁻¹ := by
+        rw [inv_pow]
+      _ = 1 := by rw [ha, inv_one]
+
+@[simp]
+theorem mem_serreResidueUnitRootsOfUnity
+    (a : (padicResidueRing p 0)ˣ) :
+    a ∈ serreResidueUnitRootsOfUnity p ↔ a ^ (p - 1) = 1 :=
+  Iff.rfl
+
+/-- The same reduction map, with codomain narrowed to residue roots of unity. -/
+def serrePadicUnitRootsReductionToResidueRoots :
+    serrePadicUnitRootsOfUnity p →* serreResidueUnitRootsOfUnity p where
+  toFun u :=
+    ⟨serrePadicUnitRootsReduction p u, serrePadicUnitRootsReduction_pow p u⟩
+  map_one' := by
+    ext
+    simp [serrePadicUnitRootsReduction]
+  map_mul' u v := by
+    ext
+    simp [serrePadicUnitRootsReduction]
+
+@[simp]
+theorem serrePadicUnitRootsReductionToResidueRoots_apply
+    (u : serrePadicUnitRootsOfUnity p) :
+    (serrePadicUnitRootsReductionToResidueRoots p u : (padicResidueRing p 0)ˣ) =
+      serrePadicUnitRootsReduction p u :=
+  rfl
+
+/-- Narrowing the codomain to residue roots does not change the kernel. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_ker :
+    (serrePadicUnitRootsReductionToResidueRoots p).ker =
+      (serrePadicUnitRootsReduction p).ker := by
+  ext u
+  constructor
+  · intro hu
+    exact congrArg
+      (fun a : serreResidueUnitRootsOfUnity p =>
+        (a : (padicResidueRing p 0)ˣ)) hu
+  · intro hu
+    ext
+    exact hu
+
+/--
 The kernel of the roots-of-unity reduction is its intersection with the first
 principal-unit subgroup.  Proving this kernel is trivial is the next source
 step toward showing that `V` maps isomorphically to the first residue units.
