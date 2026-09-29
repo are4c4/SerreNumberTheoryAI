@@ -13,8 +13,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest validated branch head in this run: `37f3ba78c6e7ef557bcd49fa23798b0b79f3e253`.
-- Latest CI: #770 passed policy / Lean build / Verso Blueprint build.
+- Latest validated branch head in this run: `344adc130082b0b5998234f813d3e0d8c2c17e84`.
+- Latest CI: #777 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -29,9 +29,10 @@ The Lean development in PR #149 now contains:
 - `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`;
 - `serrePadicPrincipalUnitCoeffResidueHom`, its kernel theorem, its surjectivity, and `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: the source successive quotient layer;
 - `serrePadicUnitRootsOfUnity`, `serrePadicTeichmuellerSubgroup`, and `serrePadicUnitRootsReduction`: the first roots-of-unity / finite-complement interface;
-- `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`.
+- `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`;
+- `serreResidueUnitRootsOfUnity`, `serrePadicUnitRootsReductionToResidueRoots`, `serrePadicUnitRootsReductionToResidueRoots_ker`, and `serrePadicUnitRootsReductionToResidueRoots_ker_principal`: the residue-root target and the corresponding kernel bridge.
 
-Blueprint pages are synchronized for the unit-filtration and roots-of-unity layers.
+Blueprint pages are synchronized for the unit-filtration, successive-quotient, and roots-of-unity target layers.
 
 ## CI / repair state
 
@@ -43,13 +44,17 @@ Blueprint pages are synchronized for the unit-filtration and roots-of-unity laye
 - CI #767 validated the roots-of-unity Lean interface.
 - CI #769 exposed Blueprint parsing failure on direct theorem previews for names containing underscores.
 - CI #770 validated the repair using labeled inline Lean aliases.
+- CI #774 validated the residue-roots codomain and narrowed-kernel bridge.
+- CI #776 exposed a second Blueprint parsing failure around direct theorem preview names containing underscores.
+- CI #777 validated the Blueprint repair that keeps theorem names in prose and avoids direct theorem previews for these declarations.
 
 ## Next proof targets for this ACTIVE item
 
 1. Prove that the kernel of `serrePadicUnitRootsReduction` is trivial.
-2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-unit group as an isomorphism when the kernel/surjectivity proof is available.
-3. Use that isomorphism as the source-shaped entry point for the finite complement `V`.
-4. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this proof boundary unless the required interfaces are already isolated.
+2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism when the kernel/surjectivity proof is available.
+3. Transfer that isomorphism back to the first residue-unit group once the finite-field root subgroup is identified with all residue units.
+4. Use that isomorphism as the source-shaped entry point for the finite complement `V`.
+5. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this proof boundary unless the required interfaces are already isolated.
 
 The immediate mathematical risk is the kernel-triviality proof: it amounts to showing that a `(p-1)`-st root in `U_1` is already `1`, and should not be forced with an unsupported theorem-strength jump.
 
