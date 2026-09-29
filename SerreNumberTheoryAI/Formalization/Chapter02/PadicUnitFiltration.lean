@@ -115,6 +115,85 @@ noncomputable def serrePadicPrincipalUnitCoeffResidue
     padicResidueRing p 0 :=
   serrePadicIntProj p 0 (serrePadicPrincipalUnitCoeff p n u)
 
+/-- Every source-shaped element \`1 + p^(n+1) x\` is a p-adic unit. -/
+theorem serrePadicOneAddPowMul_isUnit
+    (n : ℕ) (x : SerrePadicInt p) :
+    IsUnit (1 + (p : SerrePadicInt p) ^ (n + 1) * x) := by
+  apply serrePadicInt_isUnit_of_proj_zero_isUnit p
+  have hpdiv :
+      (p : SerrePadicInt p) ∣
+        (p : SerrePadicInt p) ^ (n + 1) * x := by
+    refine ⟨(p : SerrePadicInt p) ^ n * x, ?_⟩
+    rw [pow_succ]
+    ring
+  have hpzero :
+      serrePadicIntProj p 0
+          ((p : SerrePadicInt p) ^ (n + 1) * x) = 0 :=
+    (p_dvd_serrePadicInt_iff_proj_zero p _).1 hpdiv
+  rw [map_add, map_one, hpzero, add_zero]
+  exact isUnit_one
+
+/-- The principal unit represented by the coefficient \`x\` at level \`n+1\`. -/
+noncomputable def serrePadicPrincipalUnitOfCoeff
+    (n : ℕ) (x : SerrePadicInt p) :
+    serrePadicPrincipalUnits p (n + 1) := by
+  let hunit :=
+    serrePadicOneAddPowMul_isUnit p n x
+  let u : (SerrePadicInt p)ˣ := hunit.unit
+  refine ⟨u, ?_⟩
+  rw [mem_serrePadicPrincipalUnits_succ_iff_pow_dvd]
+  refine ⟨x, ?_⟩
+  have huval :
+      (u : SerrePadicInt p) =
+        1 + (p : SerrePadicInt p) ^ (n + 1) * x := by
+    simpa [u] using IsUnit.unit_spec hunit
+  rw [huval]
+  ring
+
+@[simp]
+theorem serrePadicPrincipalUnitOfCoeff_val
+    (n : ℕ) (x : SerrePadicInt p) :
+    (((serrePadicPrincipalUnitOfCoeff p n x :
+        serrePadicPrincipalUnits p (n + 1)) :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+      1 + (p : SerrePadicInt p) ^ (n + 1) * x := by
+  simp [serrePadicPrincipalUnitOfCoeff, IsUnit.unit_spec]
+
+@[simp]
+theorem serrePadicPrincipalUnitCoeff_ofCoeff
+    (n : ℕ) (x : SerrePadicInt p) :
+    serrePadicPrincipalUnitCoeff p n
+        (serrePadicPrincipalUnitOfCoeff p n x) = x := by
+  apply serrePadicInt_mul_pow_injective p (n + 1)
+  calc
+    (p : SerrePadicInt p) ^ (n + 1) *
+        serrePadicPrincipalUnitCoeff p n
+          (serrePadicPrincipalUnitOfCoeff p n x) =
+        ((((serrePadicPrincipalUnitOfCoeff p n x :
+            serrePadicPrincipalUnits p (n + 1)) :
+              (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) :=
+      (serrePadicPrincipalUnitCoeff_spec p n
+        (serrePadicPrincipalUnitOfCoeff p n x)).symm
+    _ = (1 + (p : SerrePadicInt p) ^ (n + 1) * x) - 1 := by
+      rw [serrePadicPrincipalUnitOfCoeff_val]
+    _ = (p : SerrePadicInt p) ^ (n + 1) * x := by ring
+
+@[simp]
+theorem serrePadicPrincipalUnitCoeffResidue_ofCoeff
+    (n : ℕ) (x : SerrePadicInt p) :
+    serrePadicPrincipalUnitCoeffResidue p n
+        (serrePadicPrincipalUnitOfCoeff p n x) =
+      serrePadicIntProj p 0 x := by
+  simp [serrePadicPrincipalUnitCoeffResidue]
+
+/-- Every first residue occurs as the coefficient residue of a principal unit. -/
+theorem serrePadicPrincipalUnitCoeffResidue_surjective (n : ℕ) :
+    Function.Surjective (serrePadicPrincipalUnitCoeffResidue p n) := by
+  intro a
+  obtain ⟨x, hx⟩ := serrePadicIntProj_surjective p 0 a
+  refine ⟨serrePadicPrincipalUnitOfCoeff p n x, ?_⟩
+  simpa using hx
+
 /--
 The coefficient has zero first residue exactly when the principal unit lies
 one step deeper in the filtration.
