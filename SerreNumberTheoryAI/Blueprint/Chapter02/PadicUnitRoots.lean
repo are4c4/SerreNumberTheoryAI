@@ -69,3 +69,16 @@ Lean 側では `serrePadicUnitRootsReduction_ker` として実装している。
 余域を狭めた還元写像の kernel も、第一 principal-unit subgroup との交わりとして表せる。
 Lean 側では `serrePadicUnitRootsReductionToResidueRoots_ker_principal` として実装している。
 :::
+
+:::theorem "padicunitrootseqonecriterion"
+  (uses := "padicunitrootsreductionkernel")
+roots-of-unity subgroup の元が residue units 側で 1 に還元されることと、
+元の p進単数が `U_1` に属することは同値である。
+Lean 側では `serrePadicUnitRootsReduction_eq_one_iff` として実装している。
+:::
+
+:::theorem "padicunitrootsnarroweqonecriterion"
+  (uses := "padicunitrootsnarrowkernelprincipal")
+余域を residue roots に狭めた還元写像についても、1 に写る条件は同じく `U_1` への所属である。
+Lean 側では `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff` として実装している。
+:::
