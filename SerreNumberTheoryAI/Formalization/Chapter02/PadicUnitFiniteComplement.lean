@@ -194,7 +194,7 @@ theorem serrePadicFiniteUnitComplementTransitionEquiv_apply
       serrePadicFiniteUnitComplementTransition p n u := by
   apply (serrePadicFiniteUnitComplementEquiv p n).injective
   rw [serrePadicFiniteUnitComplementEquiv_transition_apply]
-  rfl
+  simp [serrePadicFiniteUnitComplementTransitionEquiv]
 
 /--
 The finite complement is the unique subgroup of the residue-unit group on
