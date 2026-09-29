@@ -219,7 +219,7 @@ Lean では一つの単項式の偏微分、有限和への展開、対称性に
 :::
 
 :::theorem "henselquadraticdyadicvaluecorollary"
-  (lean := "SerreNumberTheoryAI.serreDyadicQuadratic_exists_solution_lift")
+  (lean := "SerreNumberTheoryAI.serreHenselValueLift_mod_eight_of_quadratic_two_det_hypothesis")
   (uses := "henseltheorem, henselvalueconclusionapi, henselquadraticgradientbridge, henselquadraticvaluecorollary")
 p が 2 の場合は Hensel の定理に n=3, k=1 を入れるため、値の合同は
 法 8、得られる持ち上げの合同は法 4 になる。対称な座標二次形式では、
