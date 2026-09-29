@@ -46,7 +46,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 ## Current serial state
 
 - ACTIVE: `C2S3.1-UnitFiltration` — Issue #108 / PR #149 / branch `work/c2-s3-1-unit-filtration-serial`.
-- ACTIVE CI watch: latest head `734b0976f6c6876a59ab26175d86a1be482a4f5f`; CI should be checked before further mathematical expansion.
+- ACTIVE CI watch: latest head `978e077dac54a0082f36c2dd984c86ea9a1d9301`; CI should be checked before further mathematical expansion.
 - ACTIVE repair note: CI #735 failed at the first unit-filtration membership bridge; repaired by `d140c36...`, then extended by `bdb0a88...` with the consecutive filtration inclusion.
 - JUST DONE: `C2S2.2-HenselQuadraticTwo` — Issue #105 / PR #148 / main `c7c03076…`, PR-head CI #729 green
 - JUST DONE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / main `3bd49171…`, PR-head CI #700 green
