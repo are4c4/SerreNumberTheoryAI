@@ -147,6 +147,17 @@ theorem serre_chevalleyWarning
     _ ≤ (f i ^ (q - 1)).totalDegree := by simp
     _ ≤ (q - 1) * (f i).totalDegree := totalDegree_pow _ _
 
+/--
+Serre, Chapter 1, §2.2, Theorem 3 (Chevalley–Warning), exposed under the
+source theorem number.  The descriptive theorem `serre_chevalleyWarning`
+is retained as the implementation-facing name used by downstream corollaries.
+-/
+theorem serre_theorem3
+    {s : Finset ι} {f : ι → MvPolynomial σ K}
+    (h : (∑ i ∈ s, (f i).totalDegree) < Fintype.card σ) :
+    p ∣ Fintype.card {x : σ → K // ∀ i ∈ s, eval x (f i) = 0} :=
+  serre_chevalleyWarning (K := K) (σ := σ) (ι := ι) p h
+
 end Chevalley
 
 end SerreNumberTheoryAI
