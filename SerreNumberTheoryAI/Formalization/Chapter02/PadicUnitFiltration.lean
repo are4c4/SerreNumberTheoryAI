@@ -43,10 +43,13 @@ theorem mem_serrePadicPrincipalUnits_succ_iff_pow_dvd
     change serrePadicUnitReductionLevel p n u = 1 at hu
     have hval := congrArg
       (fun z : (padicResidueRing p n)ˣ => (z : padicResidueRing p n)) hu
+    have hval' :
+        serrePadicIntProj p n (u : SerrePadicInt p) = 1 := by
+      simpa [serrePadicUnitReductionLevel] using hval
     have hzero :
         serrePadicIntProj p n ((u : SerrePadicInt p) - 1) = 0 := by
       rw [map_sub]
-      simpa [serrePadicUnitReductionLevel] using hval
+      exact sub_eq_zero.mpr hval'
     exact (pow_dvd_serrePadicInt_iff_proj_zero p n _).2 hzero
   · intro hdiv
     change serrePadicUnitReductionLevel p n u = 1
