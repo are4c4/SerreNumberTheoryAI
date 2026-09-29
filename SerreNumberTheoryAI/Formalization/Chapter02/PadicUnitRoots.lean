@@ -123,10 +123,12 @@ theorem serrePadicUnitRootsReductionToResidueRoots_ker :
   ext u
   constructor
   · intro hu
+    change (serrePadicUnitRootsReductionToResidueRoots p) u = 1 at hu
     exact congrArg
       (fun a : serreResidueUnitRootsOfUnity p =>
         (a : (padicResidueRing p 0)ˣ)) hu
   · intro hu
+    change serrePadicUnitRootsReduction p u = 1 at hu
     ext
     exact hu
 
