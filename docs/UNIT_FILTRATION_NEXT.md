@@ -30,20 +30,20 @@ The recovered and extended slice defines the source-indexed filtration in the pr
 
 ## CI notes
 
-- CI #735 failed in the Lean build at the first direction of `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; the projection equality bridge fixed it.
-- CI #757 validated the extended coefficient-residue calculation through `serrePadicPrincipalUnitCoeffResidue_mul`.
-- CI #762 failed at a dependent rewrite in `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`.
-- The latest fix replaces the dependent rewrite by `QuotientGroup.quotientMulEquivOfEq` followed by `QuotientGroup.quotientKerEquivOfSurjective`.
-- CI #763 validated policy, Lean build, and Verso Blueprint for head `60ab1a52d6f4ccaafe31d176d7cb115f04aa0844`.
+- The filtration and successive-quotient layers have repeatedly passed policy / Lean / Verso CI.
+- Roots-of-unity subgroup and reduction layers are now integrated.
+- Head `721f7120ce88e682419ceed98a33e90558a95684` passed CI #786.
+- The newest one-criterion lemmas make kernel-triviality the next focused mathematical boundary.
 
 ## Next proof boundary
 
-The successive quotient layer is now implemented and CI-valid.  The next source-shaped boundary is the finite complement subgroup `V` in Proposition 7:
+The filtration, successive quotient, and roots-reduction interfaces are implemented and CI-valid. The next source-shaped boundary is proving that a `(p-1)`-st root lying in `U_1` is `1`, then using that to construct the finite complement subgroup `V` in Proposition 7:
 
-1. formulate a project-local finite-level splitting / complement interface for `U/U_1 ≃ (Z/pZ)^×` and the principal-unit tower;
-2. avoid using a packaged p-adic unit decomposition theorem;
-3. identify which finite abelian/coprime-order lemmas are already available in mathlib;
-4. only then begin the construction of a compatible finite-level complement system leading to `U ≃ V × U_1`.
+1. prove kernel triviality for the roots-of-unity reduction;
+2. package the roots subgroup → first-residue roots map as an isomorphism;
+3. identify the residue-root subgroup with all first-residue units;
+4. use that isomorphism as the project-local finite complement `V`;
+5. then complete the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
 Keep §3.2 Proposition 8 separate.
 
