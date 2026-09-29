@@ -13,8 +13,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest validated pre-cleanup head: `721f7120ce88e682419ceed98a33e90558a95684`.
-- Latest validated CI: #786 passed policy / Lean build / Verso Blueprint build.
+- Latest validated implementation/docs head before this sync: `86c76f665bfcf2c790c5221ed94836c78da1b387`.
+- Latest validated CI: #798 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -31,7 +31,10 @@ The Lean development in PR #149 now contains:
 - `serrePadicUnitRootsOfUnity`, `serrePadicTeichmuellerSubgroup`, and `serrePadicUnitRootsReduction`: the first roots-of-unity / finite-complement interface;
 - `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`;
 - `serreResidueUnitRootsOfUnity`, `serrePadicUnitRootsReductionToResidueRoots`, `serrePadicUnitRootsReductionToResidueRoots_ker`, and `serrePadicUnitRootsReductionToResidueRoots_ker_principal`: the residue-root target and the corresponding kernel bridge;
-- `serrePadicUnitRootsReduction_eq_one_iff` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff`: one-fiber criteria reducing injectivity questions to the principal-unit condition.
+- `serrePadicUnitRootsReduction_eq_one_iff` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff`: one-fiber criteria reducing injectivity questions to the principal-unit condition;
+- `serrePadicUnitRootsReductionToResidueRoots_injective_iff`: the ordinary and narrowed reduction maps have equivalent injectivity content;
+- `serrePadicUnitRootsReduction_injective_of_principal_one_trivial` and `serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial`: conditional injectivity from the pending kernel-triviality target;
+- `serrePadicUnitRootsReduction_injective_iff_principal_one_trivial` and `serrePadicUnitRootsReductionToResidueRoots_injective_iff_principal_one_trivial`: injectivity is exactly equivalent to the pending kernel-triviality target.
 
 Blueprint pages are synchronized for the unit-filtration, successive-quotient, and roots-of-unity target layers.
 
@@ -52,11 +55,14 @@ Blueprint pages are synchronized for the unit-filtration, successive-quotient, a
 - CI #785 validated cleanup head `f729a8e71afa3ffdbe6edbbb1d8c84f45105829d`.
 - CI #786 validated the Lean one-fiber criteria at head `721f7120ce88e682419ceed98a33e90558a95684`.
 - CI #787 validated the Blueprint documentation of those one-fiber criteria at head `7c705bc2e4e779eec7de440ee16bd49d70679e2a`.
+- CI #794 validated repository-hygiene cleanup head `49e90f8ddcc326229363cdae31ebc7ae20799987`.
+- CI #796 validated the Lean conditional injectivity and injectivity-equivalence lemmas at head `e82d77a07335244261cdae3e5f7d0b6ebb625cb0`.
+- CI #798 validated the Blueprint documentation of the injectivity criteria at head `86c76f665bfcf2c790c5221ed94836c78da1b387`.
 
 ## Next proof targets for this ACTIVE item
 
 1. Prove that the kernel of `serrePadicUnitRootsReduction` is trivial.
-2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism when the kernel/surjectivity proof is available.
+2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism using the already-isolated conditional injectivity interface once the kernel-triviality proof is available.
 3. Transfer that isomorphism back to the first residue-unit group once the finite-field root subgroup is identified with all residue units.
 4. Use that isomorphism as the source-shaped entry point for the finite complement `V`.
 5. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this proof boundary unless the required interfaces are already isolated.
@@ -96,7 +102,7 @@ The immediate mathematical risk is the kernel-triviality proof: it amounts to sh
 ## Parked legacy implementation
 
 | Legacy PR | Work | Preserved branch | State |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | #123 | Chapter 2 §1.3 project `Q_p` | `work/c2-s1-3-qp-field` | superseded by merged #143 |
 | #125 | Chapter 2 §3.1 unit filtration | `work/c2-s3-1-unit-filtration` | recovery source for current ACTIVE item |
 
