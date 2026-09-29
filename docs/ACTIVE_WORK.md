@@ -13,9 +13,9 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest active-work sync head before this final metadata commit: `f7f9332dc5a1e9b427e556630467cbd977954bc9`.
-- Latest validated implementation/docs head: `86c76f665bfcf2c790c5221ed94836c78da1b387`.
-- Latest validated CI: #798 passed policy / Lean build / Verso Blueprint build.
+- Latest active-work sync head before this metadata commit: `fa270c06d46244685abade8767176f91ccb92e25`.
+- Latest validated implementation/docs head: `25459d3a701253f20e99b17f82a0be0d3e320a9d`.
+- Latest validated CI: #837 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -23,21 +23,18 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 
 The Lean development in PR #149 now contains:
 
-- `serrePadicUnitReductionLevel`: reduction of project p-adic units to a finite residue-unit group;
-- `serrePadicPrincipalUnits`: source-indexed principal-unit filtration, with `U_0 = U` and `U_(n+1)` as a kernel of reduction modulo `p^(n+1)`;
-- `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: membership in `U_(n+1)` as divisibility of `u - 1` by `p^(n+1)`;
-- `serrePadicPrincipalUnits_succ_succ_le_succ`: consecutive positive levels are descending, so `U_(n+2) ≤ U_(n+1)`;
-- `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`;
-- `serrePadicPrincipalUnitCoeffResidueHom`, its kernel theorem, its surjectivity, and `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: the source successive quotient layer;
-- `serrePadicUnitRootsOfUnity`, `serrePadicTeichmuellerSubgroup`, and `serrePadicUnitRootsReduction`: the first roots-of-unity / finite-complement interface;
-- `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`;
-- `serreResidueUnitRootsOfUnity`, `serrePadicUnitRootsReductionToResidueRoots`, `serrePadicUnitRootsReductionToResidueRoots_ker`, and `serrePadicUnitRootsReductionToResidueRoots_ker_principal`: the residue-root target and the corresponding kernel bridge;
-- `serrePadicUnitRootsReduction_eq_one_iff` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff`: one-fiber criteria reducing injectivity questions to the principal-unit condition;
-- `serrePadicUnitRootsReductionToResidueRoots_injective_iff`: the ordinary and narrowed reduction maps have equivalent injectivity content;
-- `serrePadicUnitRootsReduction_injective_of_principal_one_trivial` and `serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial`: conditional injectivity from the pending kernel-triviality target;
-- `serrePadicUnitRootsReduction_injective_iff_principal_one_trivial` and `serrePadicUnitRootsReductionToResidueRoots_injective_iff_principal_one_trivial`: injectivity is exactly equivalent to the pending kernel-triviality target.
+- source-indexed unit reduction and principal-unit filtration in `PadicUnitFiltration.lean`;
+- first quotient `U/U_1 ≃ (Z/pZ)^×` and finite quotient `U/U_(n+1) ≃ (Z/p^(n+1)Z)^×`;
+- coefficient extraction, coefficient-residue map, kernel/surjectivity, product additivity, and the successive quotient equivalence `U_(n+1)/U_(n+2)`;
+- roots-of-unity subgroup `serrePadicUnitRootsOfUnity`, alias `serrePadicTeichmuellerSubgroup`, first-residue reduction, residue-root target, kernel/one-fiber criteria, and conditional injectivity interfaces;
+- abstract finite commutative coprime-order complement in `FiniteAbelianCoprimeSplit.lean`;
+- finite residue-unit complements, cardinality/kernel-coprimality facts, uniqueness, adjacent transition maps, transition/equivalence comparisons, and adjacent transition bijectivity;
+- first-residue roots identified with all first-residue units and packaged as a multiplicative equivalence;
+- finite-complement residue-root equivalence and transition compatibility;
+- project roots reduced to each finite complement via `serrePadicUnitRootsReductionLevelToFiniteComplement`;
+- transition compatibility for those reductions via `serrePadicUnitRootsReductionLevelToFiniteComplement_transition`.
 
-Blueprint pages are synchronized for the unit-filtration, successive-quotient, and roots-of-unity target layers.
+Blueprint pages are synchronized through the finite-complement limit comparison layer.
 
 ## CI / repair state
 
@@ -45,30 +42,25 @@ Blueprint pages are synchronized for the unit-filtration, successive-quotient, a
 - CI #742 validated the first Lean filtration layer, then exposed Blueprint notation/rendering issues.
 - CI #757 validated the extended coefficient-residue Lean layer, with remaining direct Blueprint theorem-preview issues.
 - CI #763/#764 validated successive quotient packaging and progress-note synchronization.
-- CI #766 exposed subgroup-closure proof gaps in the first roots-of-unity file; fixed by converting set-membership hypotheses to the root equations.
-- CI #767 validated the roots-of-unity Lean interface.
-- CI #769 exposed Blueprint parsing failure on direct theorem previews for names containing underscores.
-- CI #770 validated the repair using labeled inline Lean aliases.
-- CI #774 validated the residue-roots codomain and narrowed-kernel bridge.
-- CI #776 exposed a second Blueprint parsing failure around direct theorem preview names containing underscores.
-- CI #777 validated the Blueprint repair that keeps theorem names in prose and avoids direct theorem previews for these declarations.
-- CI #782 validated the final docs-synced head for the previous run.
-- CI #785 validated cleanup head `f729a8e71afa3ffdbe6edbbb1d8c84f45105829d`.
-- CI #786 validated the Lean one-fiber criteria at head `721f7120ce88e682419ceed98a33e90558a95684`.
-- CI #787 validated the Blueprint documentation of those one-fiber criteria at head `7c705bc2e4e779eec7de440ee16bd49d70679e2a`.
-- CI #794 validated repository-hygiene cleanup head `49e90f8ddcc326229363cdae31ebc7ae20799987`.
-- CI #796 validated the Lean conditional injectivity and injectivity-equivalence lemmas at head `e82d77a07335244261cdae3e5f7d0b6ebb625cb0`.
-- CI #798 validated the Blueprint documentation of the injectivity criteria at head `86c76f665bfcf2c790c5221ed94836c78da1b387`.
+- CI #767 through #798 validated the roots-of-unity interface, one-fiber criteria, conditional injectivity, and Blueprint documentation.
+- CI #807 validated finite-level unit lifting and finite quotient equivalence.
+- CI #810 validated the finite residue-unit complement Lean layer.
+- CI #816 validated the first-residue roots identification.
+- CI #818/#819 validated Blueprint and equivalence packaging for first-residue roots.
+- CI #821/#823 validated finite complement transition maps and concrete transition/equivalence proofs.
+- CI #831 validated the finite-complement residue-roots Blueprint after the duplicate-tag fix.
+- CI #835 validated the finite-complement limit Lean layer after coercion repairs.
+- CI #837 validated the finite-complement limit Blueprint inclusion.
 
 ## Next proof targets for this ACTIVE item
 
 1. Prove that the kernel of `serrePadicUnitRootsReduction` is trivial.
 2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism using the already-isolated conditional injectivity interface once the kernel-triviality proof is available.
-3. Transfer that isomorphism back to the first residue-unit group once the finite-field root subgroup is identified with all residue units.
-4. Use that isomorphism as the source-shaped entry point for the finite complement `V`.
-5. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this proof boundary unless the required interfaces are already isolated.
+3. Compare that isomorphism with the finite-complement residue-root equivalences.
+4. Upgrade the levelwise compatible finite-complement reductions to the source-shaped finite complement `V` picture.
+5. Then move toward the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
-The immediate mathematical risk is the kernel-triviality proof: it amounts to showing that a `(p-1)`-st root in `U_1` is already `1`, and should not be forced with an unsupported theorem-strength jump.
+The immediate mathematical risk remains the kernel-triviality proof: it amounts to showing that a `(p-1)`-st root in `U_1` is already `1`, and should not be forced with an unsupported theorem-strength jump.
 
 ## Run-length preference for this ACTIVE item
 
