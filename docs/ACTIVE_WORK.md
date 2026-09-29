@@ -13,8 +13,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest branch head in this run: `8c4ac319f0d722bea4e418e75fcbee28b3b6dbca`.
-- Latest validated CI: #782 passed policy / Lean build / Verso Blueprint build.
+- Latest branch head in this run: `7c705bc2e4e779eec7de440ee16bd49d70679e2a`.
+- Latest validated CI: #787 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -30,7 +30,8 @@ The Lean development in PR #149 now contains:
 - `serrePadicPrincipalUnitCoeffResidueHom`, its kernel theorem, its surjectivity, and `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: the source successive quotient layer;
 - `serrePadicUnitRootsOfUnity`, `serrePadicTeichmuellerSubgroup`, and `serrePadicUnitRootsReduction`: the first roots-of-unity / finite-complement interface;
 - `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`;
-- `serreResidueUnitRootsOfUnity`, `serrePadicUnitRootsReductionToResidueRoots`, `serrePadicUnitRootsReductionToResidueRoots_ker`, and `serrePadicUnitRootsReductionToResidueRoots_ker_principal`: the residue-root target and the corresponding kernel bridge.
+- `serreResidueUnitRootsOfUnity`, `serrePadicUnitRootsReductionToResidueRoots`, `serrePadicUnitRootsReductionToResidueRoots_ker`, and `serrePadicUnitRootsReductionToResidueRoots_ker_principal`: the residue-root target and the corresponding kernel bridge;
+- `serrePadicUnitRootsReduction_eq_one_iff` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff`: one-fiber criteria reducing injectivity questions to the principal-unit condition.
 
 Blueprint pages are synchronized for the unit-filtration, successive-quotient, and roots-of-unity target layers.
 
@@ -47,7 +48,10 @@ Blueprint pages are synchronized for the unit-filtration, successive-quotient, a
 - CI #774 validated the residue-roots codomain and narrowed-kernel bridge.
 - CI #776 exposed a second Blueprint parsing failure around direct theorem preview names containing underscores.
 - CI #777 validated the Blueprint repair that keeps theorem names in prose and avoids direct theorem previews for these declarations.
-- CI #782 validated the final docs-synced head for this run.
+- CI #782 validated the final docs-synced head for the previous run.
+- CI #785 validated cleanup head `f729a8e71afa3ffdbe6edbbb1d8c84f45105829d`.
+- CI #786 validated the Lean one-fiber criteria at head `721f7120ce88e682419ceed98a33e90558a95684`.
+- CI #787 validated the Blueprint documentation of those one-fiber criteria at head `7c705bc2e4e779eec7de440ee16bd49d70679e2a`.
 
 ## Next proof targets for this ACTIVE item
 
