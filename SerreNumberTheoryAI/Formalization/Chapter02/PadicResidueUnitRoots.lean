@@ -34,6 +34,30 @@ noncomputable def serreResidueUnitRootsOfUnityEquivUnits :
   (MulEquiv.subgroupCongr (serreResidueUnitRootsOfUnity_eq_top p)).trans
     Subgroup.topEquiv
 
+/--
+If the p-adic roots reduction is bijective onto residue roots, then it is an
+isomorphism onto all first residue units.
+-/
+noncomputable def serrePadicUnitRootsReductionEquivResidueUnitsOfBijective
+    (hbij : Function.Bijective (serrePadicUnitRootsReductionToResidueRoots p)) :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  (MulEquiv.ofBijective (serrePadicUnitRootsReductionToResidueRoots p) hbij).trans
+    (serreResidueUnitRootsOfUnityEquivUnits p)
+
+/--
+A source-shaped conditional packaging of the finite complement map: kernel
+triviality plus surjectivity onto residue roots gives an isomorphism onto all
+first residue units.
+-/
+noncomputable def serrePadicUnitRootsReductionEquivResidueUnitsOfPrincipalOneTrivial
+    (htriv : ∀ u : serrePadicUnitRootsOfUnity p,
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 → u = 1)
+    (hsurj : Function.Surjective (serrePadicUnitRootsReductionToResidueRoots p)) :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  serrePadicUnitRootsReductionEquivResidueUnitsOfBijective p
+    ⟨serrePadicUnitRootsReductionToResidueRoots_injective_of_principal_one_trivial p htriv,
+      hsurj⟩
+
 end PadicResidueUnitRoots
 
 end SerreNumberTheoryAI
