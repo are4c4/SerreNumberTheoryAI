@@ -35,6 +35,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddDerivativeB
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticOddSourceConsequences
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwo
 import SerreNumberTheoryAI.Formalization.Chapter02.HenselQuadraticTwoResidue
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltration
 
 /-!
 # Formalization root
