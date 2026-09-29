@@ -13,8 +13,8 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest branch head in this run: `7c705bc2e4e779eec7de440ee16bd49d70679e2a`.
-- Latest validated CI: #787 passed policy / Lean build / Verso Blueprint build.
+- Latest validated pre-cleanup head: `721f7120ce88e682419ceed98a33e90558a95684`.
+- Latest validated CI: #786 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
