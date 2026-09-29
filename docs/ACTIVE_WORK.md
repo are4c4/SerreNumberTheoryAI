@@ -13,9 +13,9 @@ live GitHub stateがこの文書より新しい場合はlive stateを優先し�
 - Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
 - State: ACTIVE
 - Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest active-work sync head before this metadata commit: `8835c31ef94d6915b8cf0cde2f021d944d5efe74`.
-- Latest validated implementation/docs head: `8835c31ef94d6915b8cf0cde2f021d944d5efe74`.
-- Latest validated CI: #844 passed policy / Lean build / Verso Blueprint build.
+- Latest active-work sync head before this metadata commit: `9b7b351ca3949c999750bb61627f8e56b6090610`.
+- Latest validated implementation/docs head: `9b7b351ca3949c999750bb61627f8e56b6090610`.
+- Latest validated CI: #849 passed policy / Lean build / Verso Blueprint build.
 - Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
 - Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
 
@@ -36,9 +36,12 @@ The Lean development in PR #149 now contains:
 - finite-complement reduction separation and level-zero-to-all-levels propagation for project roots;
 - kernel-triviality for project `(p-1)`-st roots lying in `U_1` via `serrePadicUnitRoots_principal_one_trivial`;
 - injectivity and kernel-bottom packaging for both the ordinary first-residue reduction and the narrowed reduction to first-residue roots;
-- conditional equivalence packaging reducing the remaining `V ≃ (Z/pZ)^×` isomorphism to surjectivity of the narrowed reduction.
+- conditional equivalence packaging reducing the remaining `V ≃ (Z/pZ)^×` isomorphism to surjectivity of the narrowed reduction;
+- finite-complement tower subgroup/type/projections;
+- `serrePadicUnitRootsToFiniteComplementTower`, sending project roots to the compatible finite-complement tower;
+- `serrePadicFiniteUnitComplementTowerEquivResidueRoots`, identifying the compatible finite-complement tower with first-residue roots.
 
-Blueprint pages are synchronized through the finite-complement limit comparison, injectivity bridge, and kernel/equivalence packaging layers.
+Blueprint pages are synchronized through the finite-complement tower packaging layer.
 
 ## CI / repair state
 
@@ -59,17 +62,20 @@ Blueprint pages are synchronized through the finite-complement limit comparison,
 - CI #841 validated the Blueprint documentation for the injectivity bridge.
 - CI #842 validated the Lean kernel/equivalence packaging.
 - CI #843 validated the Blueprint documentation for the kernel/equivalence packaging.
-- CI #844 validated the progress-note sync at head `8835c31ef94d6915b8cf0cde2f021d944d5efe74`.
+- CI #844/#845 validated the progress-note synchronization through the kernel/equivalence layer.
+- CI #847 validated the finite-complement tower Lean packaging after repairing the transition lambda and tower injectivity rewrite.
+- CI #848 validated the Blueprint documentation for the finite-complement tower packaging.
+- CI #849 validated the progress-note synchronization at head `9b7b351ca3949c999750bb61627f8e56b6090610`.
 
 ## Next proof targets for this ACTIVE item
 
-1. Prove or isolate the inverse-limit/surjectivity argument showing that every first-residue root lifts to a project `(p-1)`-st root.
-2. Use `serrePadicUnitRootsReductionToResidueRootsEquivOfSurjective` to package the narrowed reduction as an isomorphism once that surjectivity proof is available.
-3. Compare that isomorphism with the finite-complement residue-root equivalences.
-4. Upgrade the levelwise compatible finite-complement reductions to the source-shaped finite complement `V` picture.
+1. Prove that `serrePadicUnitRootsToFiniteComplementTower` is surjective, or isolate the exact project-local inverse-limit compactness argument needed for that proof.
+2. Compose that surjectivity with `serrePadicFiniteUnitComplementTowerEquivResidueRoots` to obtain surjectivity of `serrePadicUnitRootsReductionToResidueRoots`.
+3. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism using the already-proved injectivity.
+4. Compare that isomorphism with the finite-complement residue-root equivalences.
 5. Then move toward the internal product `U ≃ V × U_1` without importing a packaged p-adic unit decomposition theorem.
 
-The immediate mathematical risk is now the surjectivity/inverse-limit bridge: it should be proved from the already-built finite compatible complements or a carefully isolated project-local compactness/inverse-limit argument, not by importing a packaged Teichmüller theorem.
+The immediate mathematical risk is now the project-lift/surjectivity bridge: it should construct a project root from a compatible finite-complement tower, but should not silently import a Teichmüller theorem or assume an unsupported inverse-limit theorem.
 
 ## Run-length preference for this ACTIVE item
 
