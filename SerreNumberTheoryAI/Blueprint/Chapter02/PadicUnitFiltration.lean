@@ -30,14 +30,12 @@ source-indexed な principal-unit filtration を定義する。
 :::
 
 :::theorem "padicprincipalunitsmembership"
-  (lean := "SerreNumberTheoryAI.mem_serrePadicPrincipalUnits_succ_iff_pow_dvd")
   (uses := "padicprincipalunits")
 `u ∈ Uₙ₊₁` であることは、`u - 1` が対応する `p` の冪で割り切れることと同値である。
 これは、kernel 表現と source の「1 に高次の `p` 倍を加えた形」を結ぶ基本変換である。
 :::
 
 :::theorem "padicprincipalunitsdescending"
-  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnits_succ_succ_le_succ")
   (uses := "padicprincipalunitsmembership")
 隣り合う正のレベルでは filtration が降下する。すなわち次のレベルは現在のレベルの部分群である。
 :::
@@ -70,19 +68,16 @@ principal unit の `u - 1` から、対応する `p` の冪を割った係数を
 :::
 
 :::theorem "padicprincipalunitcoeffsurjective"
-  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitCoeffResidue_surjective")
   (uses := "padicprincipalunitofcoeff")
 任意の一階剰余類は、ある principal unit の係数の一階剰余として現れる。
 :::
 
 :::theorem "padicprincipalunitcoeffkernel"
-  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitCoeffResidue_eq_zero_iff")
   (uses := "padicprincipalunitcoeff, padicprincipalunitsnextsubgroup")
 係数の一階剰余が 0 であることは、その principal unit が一つ深い level に属することと同値である。
 :::
 
 :::theorem "padicprincipalunitmulcongruence"
-  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnit_mul_congruent_add")
   (uses := "padicprincipalunitcoeff")
 source の合同式として、二つの principal unit を掛けると係数は一階剰余では加法的に振る舞う。
 これは successive quotient を加法群へ送る準同型の中核である。
@@ -95,14 +90,12 @@ source の合同式として、二つの principal unit を掛けると係数は
 :::
 
 :::theorem "padicunitreductionsurjective"
-  (lean := "SerreNumberTheoryAI.serrePadicUnitReduction_surjective")
   (uses := "padicunitreductionfirst")
 剰余射影の全射性と一階剰余での単元判定を用いて、任意の `mod p` 単数を
 p進整数環の単数へ持ち上げる。
 :::
 
 :::theorem "padicunitsfirstquotient"
-  (lean := "SerreNumberTheoryAI.serrePadicUnitsQuotientPrincipalOneEquiv")
   (uses := "padicprincipalunits, padicunitreductionsurjective")
 第一同型定理により、最初の商 `U/U₁` は最初の剰余単数群と同型になる。
 後続では、これを successive quotient と finite complement の議論の入口として使う。
