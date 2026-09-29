@@ -145,6 +145,14 @@ theorem serrePadicUnitRootsReduction_ker :
     (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1
   rfl
 
+/-- Kernel identification for the narrowed codomain version of reduction. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_ker_principal :
+    (serrePadicUnitRootsReductionToResidueRoots p).ker =
+      (serrePadicPrincipalUnits p 1).comap
+        (serrePadicUnitRootsOfUnity p).subtype := by
+  rw [serrePadicUnitRootsReductionToResidueRoots_ker,
+    serrePadicUnitRootsReduction_ker]
+
 @[simp]
 theorem mem_serrePadicUnitRootsReduction_ker
     (u : serrePadicUnitRootsOfUnity p) :
@@ -153,6 +161,14 @@ theorem mem_serrePadicUnitRootsReduction_ker
   change serrePadicUnitReduction p (u : (SerrePadicInt p)ˣ) = 1 ↔
     (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1
   rfl
+
+@[simp]
+theorem mem_serrePadicUnitRootsReductionToResidueRoots_ker
+    (u : serrePadicUnitRootsOfUnity p) :
+    u ∈ (serrePadicUnitRootsReductionToResidueRoots p).ker ↔
+      (u : (SerrePadicInt p)ˣ) ∈ serrePadicPrincipalUnits p 1 := by
+  rw [serrePadicUnitRootsReductionToResidueRoots_ker,
+    mem_serrePadicUnitRootsReduction_ker]
 
 end PadicUnitRoots
 
