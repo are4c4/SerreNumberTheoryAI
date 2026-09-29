@@ -46,7 +46,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 ## Current serial state
 
 - ACTIVE: `C2S3.1-UnitFiltration` — Issue #108 / PR #149 / branch `work/c2-s3-1-unit-filtration-serial`.
-- ACTIVE CI watch: latest head `978e077dac54a0082f36c2dd984c86ea9a1d9301`; CI should be checked before further mathematical expansion.
+- ACTIVE CI watch: head `721f7120ce88e682419ceed98a33e90558a95684` passed CI #786 (policy / Lean / Verso).
 - ACTIVE repair note: CI #735 failed at the first unit-filtration membership bridge; repaired by `d140c36...`, then extended by `bdb0a88...` with the consecutive filtration inclusion.
 - JUST DONE: `C2S2.2-HenselQuadraticTwo` — Issue #105 / PR #148 / main `c7c03076…`, PR-head CI #729 green
 - JUST DONE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / main `3bd49171…`, PR-head CI #700 green
@@ -79,7 +79,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | DONE | PR #146 merged as `3695fa0b…`, CI #590 green | Issue #102 |
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | DONE | PR #147 merged as `3bd49171…`, PR-head CI #700 green | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | DONE | PR #148 merged as `c7c03076…`, PR-head CI #729 green | Issue #105 |
-| 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | ACTIVE | PR #149 recovers #125 on latest main; first slice defines `U_n`, proves `U_(n+2) ≤ U_(n+1)`, and `U/U_1 ≃ (Z/pZ)^×` | Issue #108 / PR #125 |
+| 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | ACTIVE | PR #149 on latest main; filtration, successive quotients, residue reduction, and roots-of-unity reduction interfaces are implemented; next target is kernel triviality / finite complement `V` | Issue #108 / PR #149; recovery source PR #125 |
 | 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | WAITING | depends on §3.1 and project `Q_p` | Issue #112 |
 | 8 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 | WAITING | depends on §3.2 and project `Q_p` | Issue #120 |
 | 9 | `C3S1.1-HilbertBasics` | Chapter 3 §1.1 Hilbert symbol basics | PREFLIGHT | future source-order work; `Q_p` specialization needs current chain | Issue #121 |
@@ -87,7 +87,10 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 11 | `C3S2.1-HilbertProductFormula` | Chapter 3 §2.1 product formula | WAITING | depends on local formula | Issue #124 |
 | 12 | `C3S2.2-WeakApproximation` | Chapter 3 §2.2 CRT / weak approximation | PREFLIGHT | independent read-only preflight allowed; do not implement in parallel | Issue #129 |
 | 13 | `C3S2.2-PrescribedHilbertSymbols` | Chapter 3 §2.2 Theorem 4 | WAITING | depends on product formula, square classes, weak approximation, Dirichlet interface | Issue #130 |
-| 14 | `C4S1.1-QuadraticFormBasics` | Chapter 4 §1.1 quadratic-form basics | PREFLIGHT | future candidate only; no parallel proof branch | Issue #131 |
+| 14 | `C4S1.1-QuadraticFormBasics` | Chapter 4 §1.1 quadratic-form basics | PREFLIGHT | read-only source/API preflight only until promoted after earlier serial work | Issue #131 |
+| 15 | `C4S1.2-Orthogonality` | Chapter 4 §1.2 orthogonality / radicals | WAITING | depends on §1.1 source-facing quadratic-form interface | Issue #134 |
+| 16 | `C4S1.3-IsotropicHyperbolic` | Chapter 4 §1.3 isotropic vectors / hyperbolic planes | WAITING | depends on §1.1–§1.2 | Issue #136 |
+| 17 | `C4S1.4-OrthogonalBases` | Chapter 4 §1.4 orthogonal bases | WAITING | depends on §1.1–§1.2; keep §1.5 Witt theorem out of scope | Issue #137 |
 
 ## Legacy recovery rule
 
