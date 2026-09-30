@@ -322,6 +322,58 @@ noncomputable def serrePadicFiniteUnitComplementTowerEquivResidueRoots :
     ⟨serrePadicFiniteUnitComplementTowerToResidueRoots_injective p,
       serrePadicFiniteUnitComplementTowerToResidueRoots_surjective p⟩
 
+/--
+The map from project roots to the compatible finite-complement tower is
+injective.  Thus the remaining inverse-limit step is only surjectivity.
+-/
+theorem serrePadicUnitRootsToFiniteComplementTower_injective :
+    Function.Injective (serrePadicUnitRootsToFiniteComplementTower p) := by
+  intro u v huv
+  apply Subtype.ext
+  apply Units.ext
+  apply serrePadicInt_ext p
+  intro n
+  have hlevel :=
+    congrArg (serrePadicFiniteUnitComplementTowerProj p n) huv
+  have hunit := congrArg
+    (fun z : serrePadicFiniteUnitComplement p n =>
+      (z : (padicResidueRing p n)ˣ)) hlevel
+  have hval := congrArg
+    (fun z : (padicResidueRing p n)ˣ => (z : padicResidueRing p n)) hunit
+  simpa [serrePadicUnitRootsToFiniteComplementTower_proj,
+    serrePadicUnitRootsReductionLevelToFiniteComplement_apply,
+    serrePadicUnitReductionLevel] using hval
+
+/--
+A surjectivity proof for the project-roots-to-tower map upgrades it to an
+isomorphism with the compatible finite-complement tower.
+-/
+noncomputable def serrePadicUnitRootsEquivFiniteComplementTowerOfSurjective
+    (hsurj : Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p)) :
+    serrePadicUnitRootsOfUnity p ≃* serrePadicFiniteUnitComplementTower p :=
+  MulEquiv.ofBijective (serrePadicUnitRootsToFiniteComplementTower p)
+    ⟨serrePadicUnitRootsToFiniteComplementTower_injective p, hsurj⟩
+
+/--
+Surjectivity onto the compatible finite-complement tower gives a canonical
+isomorphism from project roots to first-residue roots.
+-/
+noncomputable def serrePadicUnitRootsEquivResidueRootsOfTowerSurjective
+    (hsurj : Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p)) :
+    serrePadicUnitRootsOfUnity p ≃* serreResidueUnitRootsOfUnity p :=
+  (serrePadicUnitRootsEquivFiniteComplementTowerOfSurjective p hsurj).trans
+    (serrePadicFiniteUnitComplementTowerEquivResidueRoots p)
+
+/--
+Surjectivity onto the compatible finite-complement tower gives the source-shaped
+finite complement equivalence `V ≃ (Z/pZ)^×`.
+-/
+noncomputable def serrePadicUnitRootsEquivResidueUnitsOfTowerSurjective
+    (hsurj : Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p)) :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  (serrePadicUnitRootsEquivResidueRootsOfTowerSurjective p hsurj).trans
+    (serreResidueUnitRootsOfUnityEquivUnits p)
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
