@@ -236,3 +236,65 @@ noncomputable def blueprint_finiteComplementTowerResidueRootsEquiv
   serrePadicFiniteUnitComplementTowerEquivResidueRoots p
 end SerreNumberTheoryAI
 ```
+
+:::theorem "unitrootstofinitecomplementtowerinjective"
+  (uses := "unitrootstofinitecomplementtower unitrootsreductioninjective")
+project 側の根から compatible finite-complement tower への写像は単射である。
+したがって、残る inverse-limit bridge はこの写像の全射性に集約される。
+:::
+
+```lean "unitrootstofinitecomplementtowerinjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsToFiniteComplementTowerInjective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Injective (serrePadicUnitRootsToFiniteComplementTower p) :=
+  serrePadicUnitRootsToFiniteComplementTower_injective p
+end SerreNumberTheoryAI
+```
+
+:::definition "unitrootstowerequivofsurjective"
+  (uses := "unitrootstofinitecomplementtowerinjective")
+project 側の根が compatible finite-complement tower 全体へ全射であることを別途示せば、
+根部分群はその tower と同型になる。
+:::
+
+```lean "unitrootstowerequivofsurjective"
+namespace SerreNumberTheoryAI
+noncomputable def blueprint_unitRootsTowerEquivOfSurjective
+    (p : ℕ) [Fact p.Prime]
+    (hsurj : Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p)) :
+    serrePadicUnitRootsOfUnity p ≃* serrePadicFiniteUnitComplementTower p :=
+  serrePadicUnitRootsEquivFiniteComplementTowerOfSurjective p hsurj
+end SerreNumberTheoryAI
+```
+
+:::definition "unitrootsresiduerootsequivoftowersurjective"
+  (uses := "unitrootstowerequivofsurjective finitecomplementtowerresiduerootsequiv")
+上の全射性を仮定すると、project 側の根部分群は第一剰余根部分群と同型になる。
+:::
+
+```lean "unitrootsresiduerootsequivoftowersurjective"
+namespace SerreNumberTheoryAI
+noncomputable def blueprint_unitRootsResidueRootsEquivOfTowerSurjective
+    (p : ℕ) [Fact p.Prime]
+    (hsurj : Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p)) :
+    serrePadicUnitRootsOfUnity p ≃* serreResidueUnitRootsOfUnity p :=
+  serrePadicUnitRootsEquivResidueRootsOfTowerSurjective p hsurj
+end SerreNumberTheoryAI
+```
+
+:::definition "unitrootsresidueunitsequivoftowersurjective"
+  (uses := "unitrootsresiduerootsequivoftowersurjective")
+さらに第一剰余根部分群と全第一剰余単元群の同型を合成して、
+`V ≃ (Z/pZ)^×` 型の条件付き同型を得る。
+:::
+
+```lean "unitrootsresidueunitsequivoftowersurjective"
+namespace SerreNumberTheoryAI
+noncomputable def blueprint_unitRootsResidueUnitsEquivOfTowerSurjective
+    (p : ℕ) [Fact p.Prime]
+    (hsurj : Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p)) :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  serrePadicUnitRootsEquivResidueUnitsOfTowerSurjective p hsurj
+end SerreNumberTheoryAI
+```
