@@ -329,14 +329,18 @@ injective.  Thus the remaining inverse-limit step is only surjectivity.
 theorem serrePadicUnitRootsToFiniteComplementTower_injective :
     Function.Injective (serrePadicUnitRootsToFiniteComplementTower p) := by
   intro u v huv
-  have hlevel :=
-    congrArg (serrePadicFiniteUnitComplementTowerProj p 0) huv
-  rw [serrePadicUnitRootsToFiniteComplementTower_proj] at hlevel
+  have hunit :
+      (serrePadicUnitRootsReductionLevelToFiniteComplement p 0 u :
+        (padicResidueRing p 0)ˣ) =
+      (serrePadicUnitRootsReductionLevelToFiniteComplement p 0 v :
+        (padicResidueRing p 0)ˣ) := by
+    simpa [serrePadicUnitRootsToFiniteComplementTower] using
+      congrArg
+        (fun x : serrePadicFiniteUnitComplementTower p =>
+          (((x : ∀ n : ℕ, serrePadicFiniteUnitComplement p n) 0) :
+            (padicResidueRing p 0)ˣ)) huv
   have hred : serrePadicUnitRootsReduction p u =
       serrePadicUnitRootsReduction p v := by
-    have hunit := congrArg
-      (fun z : serrePadicFiniteUnitComplement p 0 =>
-        (z : (padicResidueRing p 0)ˣ)) hlevel
     simpa [serrePadicUnitRootsReductionLevelToFiniteComplement_apply,
       serrePadicUnitRootsReduction, serrePadicUnitReduction] using hunit
   exact serrePadicUnitRootsReduction_injective p hred
