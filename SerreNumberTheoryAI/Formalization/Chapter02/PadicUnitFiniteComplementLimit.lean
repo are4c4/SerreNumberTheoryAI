@@ -329,33 +329,17 @@ injective.  Thus the remaining inverse-limit step is only surjectivity.
 theorem serrePadicUnitRootsToFiniteComplementTower_injective :
     Function.Injective (serrePadicUnitRootsToFiniteComplementTower p) := by
   intro u v huv
-  have hmul : serrePadicUnitRootsToFiniteComplementTower p (u * v⁻¹) = 1 := by
-    rw [map_mul, map_inv, huv, mul_inv_cancel]
-  have hred : ∀ n : ℕ,
-      serrePadicUnitRootsReductionLevelToFiniteComplement p n (u * v⁻¹) = 1 := by
-    intro n
-    have h := congrArg (serrePadicFiniteUnitComplementTowerProj p n) hmul
-    simpa [serrePadicUnitRootsToFiniteComplementTower_proj] using h
-  have htriv : u * v⁻¹ = 1 :=
-    serrePadicUnitRoots_eq_one_of_reductions_eq_one p (u * v⁻¹) hred
-  have hval := congrArg
-    (fun z : serrePadicUnitRootsOfUnity p => (z : (SerrePadicInt p)ˣ)) htriv
-  have huv_units :
-      (u : (SerrePadicInt p)ˣ) * (v : (SerrePadicInt p)ˣ)⁻¹ = 1 := by
-    simpa using hval
-  apply Subtype.ext
-  calc
-    (u : (SerrePadicInt p)ˣ) =
-        (u : (SerrePadicInt p)ˣ) * 1 := by rw [mul_one]
-    _ = (u : (SerrePadicInt p)ˣ) *
-          ((v : (SerrePadicInt p)ˣ)⁻¹ * (v : (SerrePadicInt p)ˣ)) := by
-        rw [inv_mul_cancel]
-    _ = ((u : (SerrePadicInt p)ˣ) * (v : (SerrePadicInt p)ˣ)⁻¹) *
-          (v : (SerrePadicInt p)ˣ) := by
-        rw [mul_assoc]
-    _ = 1 * (v : (SerrePadicInt p)ˣ) := by
-        rw [huv_units]
-    _ = (v : (SerrePadicInt p)ˣ) := by rw [one_mul]
+  have hlevel :=
+    congrArg (serrePadicFiniteUnitComplementTowerProj p 0) huv
+  have hred : serrePadicUnitRootsReduction p u =
+      serrePadicUnitRootsReduction p v := by
+    have hunit := congrArg
+      (fun z : serrePadicFiniteUnitComplement p 0 =>
+        (z : (padicResidueRing p 0)ˣ)) hlevel
+    simpa [serrePadicUnitRootsToFiniteComplementTower_proj,
+      serrePadicUnitRootsReductionLevelToFiniteComplement_apply,
+      serrePadicUnitRootsReduction, serrePadicUnitReduction] using hunit
+  exact serrePadicUnitRootsReduction_injective p hred
 
 /--
 A surjectivity proof for the project-roots-to-tower map upgrades it to an
