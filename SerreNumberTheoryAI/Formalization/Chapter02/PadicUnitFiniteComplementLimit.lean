@@ -331,13 +331,13 @@ theorem serrePadicUnitRootsToFiniteComplementTower_injective :
   intro u v huv
   have hlevel :=
     congrArg (serrePadicFiniteUnitComplementTowerProj p 0) huv
+  rw [serrePadicUnitRootsToFiniteComplementTower_proj] at hlevel
   have hred : serrePadicUnitRootsReduction p u =
       serrePadicUnitRootsReduction p v := by
     have hunit := congrArg
       (fun z : serrePadicFiniteUnitComplement p 0 =>
         (z : (padicResidueRing p 0)ˣ)) hlevel
-    simpa [serrePadicUnitRootsToFiniteComplementTower_proj,
-      serrePadicUnitRootsReductionLevelToFiniteComplement_apply,
+    simpa [serrePadicUnitRootsReductionLevelToFiniteComplement_apply,
       serrePadicUnitRootsReduction, serrePadicUnitReduction] using hunit
   exact serrePadicUnitRootsReduction_injective p hred
 
