@@ -329,20 +329,33 @@ injective.  Thus the remaining inverse-limit step is only surjectivity.
 theorem serrePadicUnitRootsToFiniteComplementTower_injective :
     Function.Injective (serrePadicUnitRootsToFiniteComplementTower p) := by
   intro u v huv
-  apply Subtype.ext
-  apply Units.ext
-  apply serrePadicInt_ext p
-  intro n
-  have hlevel :=
-    congrArg (serrePadicFiniteUnitComplementTowerProj p n) huv
-  have hunit := congrArg
-    (fun z : serrePadicFiniteUnitComplement p n =>
-      (z : (padicResidueRing p n)ˣ)) hlevel
+  have hmul : serrePadicUnitRootsToFiniteComplementTower p (u * v⁻¹) = 1 := by
+    rw [map_mul, map_inv, huv, mul_inv_cancel]
+  have hred : ∀ n : ℕ,
+      serrePadicUnitRootsReductionLevelToFiniteComplement p n (u * v⁻¹) = 1 := by
+    intro n
+    have h := congrArg (serrePadicFiniteUnitComplementTowerProj p n) hmul
+    simpa [serrePadicUnitRootsToFiniteComplementTower_proj] using h
+  have htriv : u * v⁻¹ = 1 :=
+    serrePadicUnitRoots_eq_one_of_reductions_eq_one p (u * v⁻¹) hred
   have hval := congrArg
-    (fun z : (padicResidueRing p n)ˣ => (z : padicResidueRing p n)) hunit
-  simpa [serrePadicUnitRootsToFiniteComplementTower_proj,
-    serrePadicUnitRootsReductionLevelToFiniteComplement_apply,
-    serrePadicUnitReductionLevel] using hval
+    (fun z : serrePadicUnitRootsOfUnity p => (z : (SerrePadicInt p)ˣ)) htriv
+  have huv_units :
+      (u : (SerrePadicInt p)ˣ) * (v : (SerrePadicInt p)ˣ)⁻¹ = 1 := by
+    simpa using hval
+  apply Subtype.ext
+  calc
+    (u : (SerrePadicInt p)ˣ) =
+        (u : (SerrePadicInt p)ˣ) * 1 := by rw [mul_one]
+    _ = (u : (SerrePadicInt p)ˣ) *
+          ((v : (SerrePadicInt p)ˣ)⁻¹ * (v : (SerrePadicInt p)ˣ)) := by
+        rw [inv_mul_cancel]
+    _ = ((u : (SerrePadicInt p)ˣ) * (v : (SerrePadicInt p)ˣ)⁻¹) *
+          (v : (SerrePadicInt p)ˣ) := by
+        rw [mul_assoc]
+    _ = 1 * (v : (SerrePadicInt p)ˣ) := by
+        rw [huv_units]
+    _ = (v : (SerrePadicInt p)ˣ) := by rw [one_mul]
 
 /--
 A surjectivity proof for the project-roots-to-tower map upgrades it to an
