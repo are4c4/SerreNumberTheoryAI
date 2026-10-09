@@ -154,3 +154,35 @@ end SerreNumberTheoryAI
 有限主単数商の逆極限の元を`U_(n+1)`に復元する候補写像を定義する。
 この候補が逆写像であることは別に証明する。
 :::
+
+
+:::theorem "principalunitfiniteinverselimitrepsof_le"
+  (uses := "principalunitfiniteinverselimitrepadjacentproj")
+逆極限の代表元は、その後のすべての段階で元の有限剰余と合同である。
+:::
+
+:::theorem "principalunitinversefromlimitresidue"
+  (uses := "principalunitfiniteinverselimittoprincipalunit principalunitfiniteinverselimitrepsof_le")
+復元した主単数は、各有限商でその段階の代表元と同じ剰余を持つ。
+:::
+
+:::theorem "principalunitfiniteinverselimitsurjective"
+  (uses := "principalunitinversefromlimitresidue principalunitfinitequotientresidueeq")
+主単数群から有限主単数商の逆極限への自然な群準同型は全射となる。
+:::
+
+```lean "principalunitfiniteinverselimitsurjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitToFiniteInverseLimitSurjective
+    (p n : ℕ) [Fact p.Prime] :
+    Function.Surjective (serrePadicPrincipalUnitToFiniteInverseLimit p n) :=
+  serrePadicPrincipalUnitToFiniteInverseLimit_surjective p n
+end SerreNumberTheoryAI
+```
+
+:::definition "principalunitequivfiniteinverselimit"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitEquivFiniteInverseLimit")
+  (uses := "principalunittofiniteinverselimitinjective principalunitfiniteinverselimitsurjective")
+`U_(n+1)`がすべての有限主単数商の逆極限と群同型になる。
+この同型自体は、`Z_p`の加法群との命題8の同型とは区別する。
+:::
