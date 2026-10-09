@@ -55,6 +55,52 @@ theorem serrePadicPrincipalUnitFiniteQuotientCyclicEquiv_transition_intCast
       map_zpow,
       serrePadicPrincipalUnitFiniteQuotientTransition_mk]
 
+/--
+The source's standard reduction between additive cyclic residue groups,
+viewed as a multiplicative-group homomorphism. It reuses the project
+p-adic residue transition from Chapter 2 §1.1.
+-/
+def serrePadicPrincipalUnitZModTransition (k : ℕ) :
+    Multiplicative (ZMod (p ^ (k + 2))) →*
+      Multiplicative (ZMod (p ^ (k + 1))) :=
+  (padicReduction p k).toAddMonoidHom.toMultiplicative
+
+/-- The standard cyclic reduction preserves integer residue classes. -/
+theorem serrePadicPrincipalUnitZModTransition_intCast
+    (k : ℕ) (i : ℤ) :
+    serrePadicPrincipalUnitZModTransition p k
+      (Multiplicative.ofAdd (i : ZMod (p ^ (k + 2)))) =
+        Multiplicative.ofAdd (i : ZMod (p ^ (k + 1))) := by
+  change Multiplicative.ofAdd
+      (padicReduction p k (i : padicResidueRing p (k + 1))) =
+    Multiplicative.ofAdd (i : padicResidueRing p k)
+  simp [padicReduction]
+
+/--
+The cyclic identifications commute with the *actual reduction map*
+on all finite residue classes, not just on a chosen generator.
+-/
+theorem serrePadicPrincipalUnitFiniteQuotientCyclicEquiv_transition
+    (n k : ℕ) (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2))
+    (x : Multiplicative (ZMod (p ^ (k + 2)))) :
+    serrePadicPrincipalUnitFiniteQuotientTransition p n (k + 1)
+      (serrePadicPrincipalUnitFiniteQuotientCyclicEquiv p n (k + 1)
+        hsource u hnot x) =
+    serrePadicPrincipalUnitFiniteQuotientCyclicEquiv p n k
+      hsource u hnot
+      (serrePadicPrincipalUnitZModTransition p k x) := by
+  obtain ⟨i, hi⟩ :=
+    ZMod.intCast_surjective (Multiplicative.toAdd x)
+  have hx : x = Multiplicative.ofAdd (i : ZMod (p ^ (k + 2))) := by
+    simpa using congrArg Multiplicative.ofAdd hi.symm
+  rw [hx, serrePadicPrincipalUnitZModTransition_intCast]
+  exact
+    serrePadicPrincipalUnitFiniteQuotientCyclicEquiv_transition_intCast
+      p n k hsource u hnot i
+
 end PadicPrincipalUnitFiniteQuotientCompatibility
 
 end SerreNumberTheoryAI
