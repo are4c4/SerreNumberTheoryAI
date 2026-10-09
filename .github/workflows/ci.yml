@@ -12,7 +12,9 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Let the current run finish and populate the build caches before the next commit runs.
+  # GitHub keeps at most one pending run in each concurrency group.
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -106,7 +108,7 @@ jobs:
         run: lake exe vbp build
 
       - name: Save compiled Verso dependencies
-        if: ${{ success() && steps.verso-build-cache.outputs.cache-hit != 'true' }}
+        if: ${{ always() && steps.verso-build-cache.outcome == 'success' && steps.verso-build-cache.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v5
         with:
           path: |
