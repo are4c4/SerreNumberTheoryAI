@@ -156,13 +156,13 @@ end SerreNumberTheoryAI
 :::
 
 
-:::theorem "principalunitfiniteinverselimitrepsof_le"
+:::theorem "principalunitfiniteinverselimitrepsofle"
   (uses := "principalunitfiniteinverselimitrepadjacentproj")
 逆極限の代表元は、その後のすべての段階で元の有限剰余と合同である。
 :::
 
 :::theorem "principalunitinversefromlimitresidue"
-  (uses := "principalunitfiniteinverselimittoprincipalunit principalunitfiniteinverselimitrepsof_le")
+  (uses := "principalunitfiniteinverselimittoprincipalunit principalunitfiniteinverselimitrepsofle")
 復元した主単数は、各有限商でその段階の代表元と同じ剰余を持つ。
 :::
 
