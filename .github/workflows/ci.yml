@@ -62,15 +62,30 @@ jobs:
             lake-manifest.json
           key: ${{ runner.os }}-lake-deps-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
 
+      # Cache compiled Verso tools separately from the immutable source cache.
+      # This avoids repeatedly compiling the Blueprint toolchain and its C objects.
+      - name: Restore compiled Verso dependencies
+        id: verso-build-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake/packages/verso/.lake/build
+            .lake/packages/VersoBlueprint/.lake/build
+            .lake/packages/subverso/.lake/build
+            .lake/packages/verso-slides/.lake/build
+            .lake/packages/MD4Lean/.lake/build
+            .lake/packages/illuminate/.lake/build
+          key: ${{ runner.os }}-verso-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
+
       - name: Restore root Lean build cache
-        uses: actions/cache@v5
+        id: root-build-cache
+        uses: actions/cache/restore@v5
         with:
           path: .lake/build
           key: ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-${{ hashFiles('*.lean', 'SerreNumberTheoryAI/**/*.lean') }}
           restore-keys: |
             ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-
             ${{ runner.os }}-lean-build-v1-
-          save-always: true
 
       - name: Check repository policy
         run: bash scripts/check_formalization_policy.sh
@@ -78,5 +93,27 @@ jobs:
       - name: Build Lean project
         run: lake build
 
+      # Save the local Lean artifacts even when a proof fails. A subsequent
+      # source edit gets a new exact key but can restore these incremental objects.
+      - name: Save root Lean build cache after proof checking
+        if: ${{ always() && steps.root-build-cache.outcome == 'success' && steps.root-build-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-${{ hashFiles('*.lean', 'SerreNumberTheoryAI/**/*.lean') }}
+
       - name: Build Verso Blueprint
         run: lake exe vbp build
+
+      - name: Save compiled Verso dependencies
+        if: ${{ success() && steps.verso-build-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake/packages/verso/.lake/build
+            .lake/packages/VersoBlueprint/.lake/build
+            .lake/packages/subverso/.lake/build
+            .lake/packages/verso-slides/.lake/build
+            .lake/packages/MD4Lean/.lake/build
+            .lake/packages/illuminate/.lake/build
+          key: ${{ runner.os }}-verso-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
