@@ -44,6 +44,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitRoots
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicResidueUnitRoots
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicFiniteComplementResidueRoots
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiniteComplementLimit
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFieldRoots
 
 /-!
 # Formalization root
