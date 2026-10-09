@@ -36,3 +36,11 @@ GitHubのlive stateがこの文書より新しければlive stateを優先しま
 
 1回の`続けて`で、現在のACTIVEに限り可能な限り作業を進める。
 CI失敗があれば最優先でログを読み修正する。書籍本文の転載や完成済みp進単数構造定理のブラックボックス利用は行わない。
+
+
+## 2026-10-10 §3.2 finite quotient checkpoint
+
+- Latest **verified** CI: #919 SUCCESS at commit `66247c32` (policy / Lean / Blueprint). All of the finite-quotient cardinality, cyclicity, and explicit equivalence modules are Lean-checked and Blueprint-checked at this checkpoint.
+- New finite-level transition `serrePadicPrincipalUnitFiniteQuotientTransition` and its surjectivity are added in `PadicPrincipalUnitFiniteQuotientTransition.lean` and linked in the Blueprint/root entry points. Latest CI #926 is **pending**; do not mark transitions as verified until green.
+- The next mathematical boundary is the compatible transition diagram for chosen cyclic equivalences `ZMod(p^k)`, then the inverse-limit passage to project `Z_p`. The dyadic sign decomposition and the project field multiplicative-group theorem remain unproved.
+- Keep PR #152 / Issue #112 sole ACTIVE; do not start §3.3.
