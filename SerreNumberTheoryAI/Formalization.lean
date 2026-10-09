@@ -49,6 +49,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitPowerStep
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotient
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCard
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientTransition
 
 /-!
 # Formalization root
