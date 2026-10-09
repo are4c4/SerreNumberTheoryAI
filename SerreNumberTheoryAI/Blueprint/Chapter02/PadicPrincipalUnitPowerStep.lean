@@ -248,3 +248,26 @@ theorem blueprint_principalUnitCancelPowDivisibility
   serrePadicPowerStep_cancel_pow_dvd p n a hdiv
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitexactpowerstep"
+  (uses := "principalunitbinomialcongruence principalunitcancelpowdivisibility principalunitpowmemnext principalunitexactlayercriterion")
+原典の補題。添字をprojectの`U_(n+1)`に合わせた形で、
+`u∈U_(n+1)＼U_(n+2)`なら`u^p∈U_(n+2)＼U_(n+3)`となる。
+奇素数には`n≥0`、`p=2`には`n≥1`を仮定する。
+:::
+
+```lean "principalunitexactpowerstep"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitExactPowerStep
+    (p n : ℕ) [Fact p.Prime] (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    ((u : (SerrePadicInt p)ˣ) ^ p ∈
+        serrePadicPrincipalUnits p (n + 2)) ∧
+      ((u : (SerrePadicInt p)ˣ) ^ p ∉
+        serrePadicPrincipalUnits p (n + 3)) :=
+  serrePadicPrincipalUnit_pow_prime_exact_next p n hsource u hnot
+end SerreNumberTheoryAI
+```
