@@ -55,6 +55,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteInver
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitResidueQuotient
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitInverseLimitReconstruction
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitZModTower
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitDyadicSign
 
 /-!
 # Formalization root
