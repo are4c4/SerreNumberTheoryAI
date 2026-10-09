@@ -168,6 +168,30 @@ theorem serrePadicPowerStep_last_term_dvd
           rw [hz]
           ring
 
+/--
+Iterating the weak p-power step: each further p-th power enters one
+more principal-unit layer.  This gives the finite-quotient exponent bound
+needed before proving that the chosen element has *exactly* that order.
+-/
+theorem serrePadicPrincipalUnit_pow_prime_iterate_mem
+    (n k : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
+    ((u : (SerrePadicInt p)ˣ) ^ (p ^ k)) ∈
+      serrePadicPrincipalUnits p (n + k + 1) := by
+  induction k with
+  | zero =>
+      simpa using u.property
+  | succ k ih =>
+      have hmem :
+          ((u : (SerrePadicInt p)ˣ) ^ p ^ k) ∈
+            serrePadicPrincipalUnits p ((n + k) + 1) := by
+        simpa only [Nat.add_assoc] using ih
+      have hstep :
+          (((u : (SerrePadicInt p)ˣ) ^ p ^ k) ^ p) ∈
+            serrePadicPrincipalUnits p ((n + k) + 2) :=
+        serrePadicPrincipalUnit_pow_prime_mem_next p (n + k)
+          ⟨_, hmem⟩
+      simpa only [pow_mul, pow_succ, Nat.add_assoc] using hstep
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
