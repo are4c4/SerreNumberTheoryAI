@@ -38,7 +38,7 @@ theorem serrePadicPrincipalUnits_deep_le (n k : ℕ) :
       serrePadicPrincipalUnits p (n + 1) := by
   induction k with
   | zero =>
-      simpa only [Nat.add_zero]
+      simpa only [Nat.add_zero] using (le_refl (serrePadicPrincipalUnits p (n + 1)))
   | succ k ih =>
       have hstep :
           serrePadicPrincipalUnits p (n + (k + 1) + 1) ≤
@@ -74,7 +74,6 @@ theorem serrePadicPrincipalUnits_deep_relIndex (n k : ℕ) :
           (serrePadicPrincipalUnits p (n + k + 2)).relIndex
             (serrePadicPrincipalUnits p (n + 1)) := by
               congr 1
-              omega
         _ = (serrePadicPrincipalUnits p (n + k + 2)).relIndex
                 (serrePadicPrincipalUnits p (n + k + 1)) *
               (serrePadicPrincipalUnits p (n + k + 1)).relIndex
