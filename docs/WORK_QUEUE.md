@@ -110,3 +110,11 @@ When an old branch/PR reaches the front of the serial queue:
 各run終了時に、ACTIVE、PR/CI、blocker、next candidateを `docs/ACTIVE_WORK.md` とこのqueueへ同期します。複数worker用handoffやlane owner記録は作りません。
 
 GitHubへの特定のwriteがChatGPT/OpenAI側の安全性チェック等で拒否された場合は、別itemへwork stealingせず、同じACTIVE itemで安全なread-only解析・review・patch設計を続ける。文書やコードが実際には永続化されていない場合、同期済み・commit済みとは記録しない。run結果に pending branch/path/変更内容/再開地点を明示し、次回はlive GitHub stateを再読して通常の構造化writeを再試行する。
+
+
+## 2026-10-10 serial checkpoint
+
+- ACTIVEは依然`C2S3.1-UnitFiltration`（Issue #108 / PR #149）一件のみ。
+- 有限補群の根への復元は`c23280cd` / CI #863で検証済み。
+- 命題7の直積同型のLean定義は`d8b864d`、Blueprintは`22373e7`で追加し、まだ新headのCI検証待ち。
+- #112 (§3.2) は命題7のsource-facing proof・Blueprint・CI・main merge後までWAITINGのまま。
