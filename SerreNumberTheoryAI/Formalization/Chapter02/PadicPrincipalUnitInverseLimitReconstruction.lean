@@ -64,6 +64,43 @@ theorem serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent
         (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x) :=
       (serrePadicPrincipalUnitFiniteInverseLimitRep_spec p n k x).symm
 
+/--
+Adjacent chosen representatives have the same finite residue at the
+shallower level, by the quotient-residue comparison.
+-/
+theorem serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_residue
+    (n k : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicPrincipalUnitResidueHom p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitRep p n (k + 1) x) =
+    serrePadicPrincipalUnitResidueHom p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x) :=
+  (serrePadicPrincipalUnitFiniteQuotient_mk_eq_iff_residue_eq p n k
+    (serrePadicPrincipalUnitFiniteInverseLimitRep p n (k + 1) x)
+    (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x)).1
+    (serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent p n k x)
+
+/--
+Adjacent representatives have equal project p-adic residues at the
+higher modulus p^(n+k+2).
+-/
+theorem serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_proj
+    (n k : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicIntProj p (n + k + 1)
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n (k + 1) x :
+          serrePadicPrincipalUnits p (n + 1)) :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+    serrePadicIntProj p (n + k + 1)
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+          serrePadicPrincipalUnits p (n + 1)) :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) := by
+  have h :=
+    serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_residue p n k x
+  have hval := congrArg
+    (fun z : (padicResidueRing p (n + k + 1))ˣ =>
+      (z : padicResidueRing p (n + k + 1))) h
+  simpa [serrePadicPrincipalUnitResidueHom,
+    serrePadicUnitReductionLevel] using hval
+
 end PadicPrincipalUnitInverseLimitReconstruction
 
 end SerreNumberTheoryAI
