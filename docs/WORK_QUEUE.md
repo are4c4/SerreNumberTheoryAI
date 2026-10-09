@@ -130,3 +130,12 @@ GitHubへの特定のwriteがChatGPT/OpenAI側の安全性チェック等で拒�
 - PR #149 / Issue #108 はmainへ統合され、§3.1の命題7・補群一意性・Q_pの根に関する系まで完了。
 - 現在唯一のACTIVEはIssue #112 / PR #152 / `work/c2-s3-2-principal-units-serial`。
 - 出典 §3.2 に合わせ、冪の補題と命題8の奇素数／2進の分岐を先に形式化。§3.3はWAITINGを維持。
+
+
+## 2026-10-10 §3.2 serial inverse-limit checkpoint
+
+- ACTIVE remains `C2S3.2-PrincipalUnits` (Issue #112 / draft PR #152), sole mathematical implementation.
+- CI #935 success verifies quotient transitions and all-class cyclic compatibility/inverse-limit definition.
+- CI #942 failure in finite-inverse-limit injectivity proof repaired at `6a14c068`; latest proof additions need fresh PR-head CI.
+- New work within PR #152: finite-quotient residues comparison, compatible representative choices and reconstructed project p-adic integer. Surjectivity, Proposition 8, dyadic sign factor, Theorem 2 remain pending.
+- Resume by latest CI review (do not start next ACTIVE or parallel work).
