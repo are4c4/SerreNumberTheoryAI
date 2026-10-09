@@ -32,6 +32,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFieldRoots
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitPowerStep
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotient
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCard
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -100,6 +101,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotient}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCard}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic}
 
 # 定理の依存関係
 
