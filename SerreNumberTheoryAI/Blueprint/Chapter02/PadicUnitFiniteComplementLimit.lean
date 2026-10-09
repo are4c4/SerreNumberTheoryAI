@@ -298,3 +298,79 @@ noncomputable def blueprint_unitRootsResidueUnitsEquivOfTowerSurjective
   serrePadicUnitRootsEquivResidueUnitsOfTowerSurjective p hsurj
 end SerreNumberTheoryAI
 ```
+
+
+# 有限補群の復元と命題7
+
+有限剰余レベルごとの補群は、射影と整合する元の列から
+project `Z_p` の単数として復元できる。
+各有限レベルで `(p-1)` 乗が `1` なので、射影の分離性により
+復元した単数も `(p-1)` 乗根になる。
+
+:::definition "finitecomplementtowerreconstruction"
+  (lean := "SerreNumberTheoryAI.serrePadicFiniteUnitComplementTowerToUnitRoots")
+有限補群塔から `(p-1)` 乗根を構成する。
+:::
+
+:::theorem "unitrootstofinitecomplementtowersurjective"
+  (uses := "finitecomplementtowerreconstruction unitrootstofinitecomplementtower")
+project 側の根から有限補群塔への還元写像は全射である。
+:::
+
+```lean "unitrootstofinitecomplementtowersurjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsToFiniteComplementTowerSurjective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p) :=
+  serrePadicUnitRootsToFiniteComplementTower_surjective p
+end SerreNumberTheoryAI
+```
+
+:::theorem "unitrootsactualreductionsurjective"
+  (uses := "unitrootstofinitecomplementtowersurjective unitrootsreductioninjective")
+補群 `V` は第一剰余単数群と同じ有限位数を持つ。
+根の第一剰余還元は単射なので、有限集合の同位数性から全射でもある。
+:::
+
+```lean "unitrootsactualreductionsurjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsActualReductionSurjective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Surjective (serrePadicUnitRootsReduction p) :=
+  serrePadicUnitRootsReduction_surjective p
+end SerreNumberTheoryAI
+```
+
+:::definition "unitrootsactualreductionequiv"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitRootsReductionEquiv")
+  (uses := "unitrootsactualreductionsurjective")
+根の部分群 `V` から第一剰余単数群への実際の還元写像が群同型になる。
+:::
+
+:::definition "unitproducthom"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitProductHom")
+  (uses := "unitrootsactualreductionequiv")
+根の部分群と `U_1` を掛け合わせる準同型を定義する。
+:::
+
+:::theorem "unitproductsurjective"
+  (uses := "unitrootsactualreductionsurjective unitproducthom")
+任意の単数 `u` について、同じ第一剰余を持つ根 `v` を選べば、
+`v⁻¹u` は `U_1` に属する。したがって任意の単数は両者の積で表せる。
+:::
+
+```lean "unitproductsurjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitProductSurjective
+    (p : ℕ) [Fact p.Prime] :
+    Function.Surjective (serrePadicUnitProductHom p) :=
+  serrePadicUnitProductHom_surjective p
+end SerreNumberTheoryAI
+```
+
+:::definition "unitproductpropositionseven"
+  (lean := "SerreNumberTheoryAI.serrePadicUnitsMulEquivRootsProdPrincipal")
+  (uses := "unitproductsurjective unitrootsreductioninjective")
+命題7。project p進整数の単数群は、有限の `(p-1)` 乗根部分群
+`V` と第一主単数群 `U_1` の直積に群同型である。
+:::
