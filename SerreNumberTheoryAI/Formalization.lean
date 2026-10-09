@@ -50,6 +50,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuoti
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCard
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientTransition
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCompatibility
 
 /-!
 # Formalization root
