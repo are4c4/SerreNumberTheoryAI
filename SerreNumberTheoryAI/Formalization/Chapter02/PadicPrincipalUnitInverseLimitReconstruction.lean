@@ -136,6 +136,68 @@ theorem serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_proj
         serrePadicPrincipalUnits p (n + 1)) :
         (SerrePadicInt p)ˣ) : SerrePadicInt p) := rfl
 
+/-- The reconstructed project-local p-adic integer is a unit. -/
+theorem serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_isUnit
+    (n : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    IsUnit (serrePadicPrincipalUnitFiniteInverseLimitToPadicInt p n x) := by
+  apply serrePadicInt_isUnit_of_proj_zero_isUnit p
+  rw [serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_proj]
+  exact ⟨serrePadicUnitReductionLevel p 0
+    ((serrePadicPrincipalUnitFiniteInverseLimitRep p n 0 x :
+      serrePadicPrincipalUnits p (n + 1)) : (SerrePadicInt p)ˣ), rfl⟩
+
+/-- The unit represented by the reconstructed p-adic integer. -/
+noncomputable def serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit
+    (n : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    (SerrePadicInt p)ˣ :=
+  (serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_isUnit p n x).unit
+
+@[simp]
+theorem serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_proj
+    (n k : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicIntProj p k
+      ((serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+    serrePadicIntProj p k
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+          serrePadicPrincipalUnits p (n + 1)) :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) := by
+  unfold serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit
+  rw [IsUnit.unit_spec (serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_isUnit p n x)]
+  exact serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_proj p n k x
+
+/--
+The reconstructed unit belongs to the original principal-unit layer
+U_(n+1), because its nth residue coordinate is that of a principal unit.
+-/
+theorem serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_mem
+    (n : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x ∈
+      serrePadicPrincipalUnits p (n + 1) := by
+  change serrePadicUnitReductionLevel p n
+    (serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x) = 1
+  apply Units.ext
+  change serrePadicIntProj p n
+      ((serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x :
+          (SerrePadicInt p)ˣ) : SerrePadicInt p) = 1
+  rw [serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_proj]
+  have hmem :=
+    (serrePadicPrincipalUnitFiniteInverseLimitRep p n n x).property
+  change serrePadicUnitReductionLevel p n
+    ((serrePadicPrincipalUnitFiniteInverseLimitRep p n n x :
+      serrePadicPrincipalUnits p (n + 1)) : (SerrePadicInt p)ˣ) = 1 at hmem
+  have hval := congrArg
+    (fun z : (padicResidueRing p n)ˣ =>
+      (z : padicResidueRing p n)) hmem
+  simpa [serrePadicUnitReductionLevel] using hval
+
+/-- A canonical candidate inverse from the finite-unit tower to U_(n+1). -/
+noncomputable def serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit
+    (n : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicPrincipalUnits p (n + 1) :=
+  ⟨serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x,
+    serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_mem p n x⟩
+
 end PadicPrincipalUnitInverseLimitReconstruction
 
 end SerreNumberTheoryAI
