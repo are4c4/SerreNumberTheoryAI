@@ -45,8 +45,8 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 
 ## Current serial state
 
-- ACTIVE: `C2S3.1-UnitFiltration` — Issue #108 / PR #149 / branch `work/c2-s3-1-unit-filtration-serial`.
-- ACTIVE CI watch: head `721f7120ce88e682419ceed98a33e90558a95684` passed CI #786 (policy / Lean / Verso).
+- ACTIVE: none（PR #149をmainへmergeした時点の予定状態）。
+- Last validated implementation: PR #149, CI #873 green (unit filtration / Proposition 7 / `Q_p` roots corollary).
 - ACTIVE repair note: CI #735 failed at the first unit-filtration membership bridge; repaired by `d140c36...`, then extended by `bdb0a88...` with the consecutive filtration inclusion.
 - JUST DONE: `C2S2.2-HenselQuadraticTwo` — Issue #105 / PR #148 / main `c7c03076…`, PR-head CI #729 green
 - JUST DONE: `C2S2.2-HenselQuadraticOdd` — Issue #104 / PR #147 / main `3bd49171…`, PR-head CI #700 green
@@ -79,8 +79,8 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 3 | `C2S2.2-HenselLifting` | §2.2 Hensel theorem + Corollary 1 | DONE | PR #146 merged as `3695fa0b…`, CI #590 green | Issue #102 |
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | DONE | PR #147 merged as `3bd49171…`, PR-head CI #700 green | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | DONE | PR #148 merged as `c7c03076…`, PR-head CI #729 green | Issue #105 |
-| 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 | ACTIVE | PR #149 on latest main; filtration, successive quotients, residue reduction, and roots-of-unity reduction interfaces are implemented; next target is kernel triviality / finite complement `V` | Issue #108 / PR #149; recovery source PR #125 |
-| 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | WAITING | depends on §3.1 and project `Q_p` | Issue #112 |
+| 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 / `Q_p` root corollary | DONE | PR #149 all source-facing Lean/Blueprint proofs built; CI #873 green, pending final merge | Issue #108 / PR #149; recovery source PR #125 |
+| 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | READY | choose as sole next ACTIVE only after PR #149 has merged into latest main | Issue #112 |
 | 8 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 | WAITING | depends on §3.2 and project `Q_p` | Issue #120 |
 | 9 | `C3S1.1-HilbertBasics` | Chapter 3 §1.1 Hilbert symbol basics | PREFLIGHT | future source-order work; `Q_p` specialization needs current chain | Issue #121 |
 | 10 | `C3S1.2-HilbertLocalFormula` | Chapter 3 §1.2 local formula | WAITING | depends on Hilbert basics and p-adic square classes | Issue #122 |
@@ -110,3 +110,17 @@ When an old branch/PR reaches the front of the serial queue:
 各run終了時に、ACTIVE、PR/CI、blocker、next candidateを `docs/ACTIVE_WORK.md` とこのqueueへ同期します。複数worker用handoffやlane owner記録は作りません。
 
 GitHubへの特定のwriteがChatGPT/OpenAI側の安全性チェック等で拒否された場合は、別itemへwork stealingせず、同じACTIVE itemで安全なread-only解析・review・patch設計を続ける。文書やコードが実際には永続化されていない場合、同期済み・commit済みとは記録しない。run結果に pending branch/path/変更内容/再開地点を明示し、次回はlive GitHub stateを再読して通常の構造化writeを再試行する。
+
+
+## 2026-10-10 serial checkpoint
+
+- ACTIVEは依然`C2S3.1-UnitFiltration`（Issue #108 / PR #149）一件のみ。
+- 有限補群の根への復元は`c23280cd` / CI #863で検証済み。
+- 命題7の直積同型のLean定義は`d8b864d`、Blueprintは`22373e7`で追加し、まだ新headのCI検証待ち。
+- #112 (§3.2) は命題7のsource-facing proof・Blueprint・CI・main merge後までWAITINGのまま。
+
+## Ready-to-merge handoff 2026-10-10
+
+- 今回のserial implementationはIssue #108 / PR #149だけ。source §3.1の命題7・有限補群一意性・`Q_p`根の系がCI #873 green。
+- 上記DONE/READY/noneは**PR #149をmainへmergeした時点で成立**する次状態を示す。merge前にlive GitHub PRがopenならまだ当該itemをACTIVE扱いする。
+- merge後、最新mainから§3.2 Issue #112を唯一の次itemとして昇格。先行実装PRを並列に走らせない。

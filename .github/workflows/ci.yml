@@ -12,7 +12,9 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Let the current run finish and populate the build caches before the next commit runs.
+  # GitHub keeps at most one pending run in each concurrency group.
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -31,16 +33,55 @@ jobs:
           lean --version
           lake --version
 
-      - name: Restore Lake package cache
-        uses: actions/cache@v5
+      # Restore both package sources/build artifacts and the resolved dependency graph.
+      # The cache key changes when the Lean version or dependency declarations change.
+      - name: Restore Lake dependency cache
+        id: lake-deps-cache
+        uses: actions/cache/restore@v5
         with:
-          path: .lake/packages
-          key: ${{ runner.os }}-lake-packages-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
+          path: |
+            .lake/packages
+            lake-manifest.json
+          key: ${{ runner.os }}-lake-deps-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
-            ${{ runner.os }}-lake-packages-v1-
+            ${{ runner.os }}-lake-deps-v2-
+
+      - name: Resolve dependencies on cache miss
+        if: steps.lake-deps-cache.outputs.cache-hit != 'true'
+        run: lake update
+
+      - name: Restore mathlib cache when available
+        run: lake exe cache get || true
+
+      # Save dependencies *before* proof checking: even a failing Lean proof can
+      # then reuse downloaded dependencies on its next CI attempt.
+      - name: Save Lake dependency cache before proof checking
+        if: steps.lake-deps-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake/packages
+            lake-manifest.json
+          key: ${{ runner.os }}-lake-deps-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
+
+      # Cache compiled Verso tools separately from the immutable source cache.
+      # This avoids repeatedly compiling the Blueprint toolchain and its C objects.
+      - name: Restore compiled Verso dependencies
+        id: verso-build-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .lake/packages/verso/.lake/build
+            .lake/packages/VersoBlueprint/.lake/build
+            .lake/packages/subverso/.lake/build
+            .lake/packages/verso-slides/.lake/build
+            .lake/packages/MD4Lean/.lake/build
+            .lake/packages/illuminate/.lake/build
+          key: ${{ runner.os }}-verso-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
 
       - name: Restore root Lean build cache
-        uses: actions/cache@v5
+        id: root-build-cache
+        uses: actions/cache/restore@v5
         with:
           path: .lake/build
           key: ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-${{ hashFiles('*.lean', 'SerreNumberTheoryAI/**/*.lean') }}
@@ -48,17 +89,33 @@ jobs:
             ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-
             ${{ runner.os }}-lean-build-v1-
 
-      - name: Resolve dependencies
-        run: lake update
-
-      - name: Restore mathlib cache when available
-        run: lake exe cache get || true
-
       - name: Check repository policy
         run: bash scripts/check_formalization_policy.sh
 
       - name: Build Lean project
         run: lake build
 
+      # Save the local Lean artifacts even when a proof fails. A subsequent
+      # source edit gets a new exact key but can restore these incremental objects.
+      - name: Save root Lean build cache after proof checking
+        if: ${{ always() && steps.root-build-cache.outcome == 'success' && steps.root-build-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-${{ hashFiles('*.lean', 'SerreNumberTheoryAI/**/*.lean') }}
+
       - name: Build Verso Blueprint
         run: lake exe vbp build
+
+      - name: Save compiled Verso dependencies
+        if: ${{ always() && steps.verso-build-cache.outcome == 'success' && steps.verso-build-cache.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake/packages/verso/.lake/build
+            .lake/packages/VersoBlueprint/.lake/build
+            .lake/packages/subverso/.lake/build
+            .lake/packages/verso-slides/.lake/build
+            .lake/packages/MD4Lean/.lake/build
+            .lake/packages/illuminate/.lake/build
+          key: ${{ runner.os }}-verso-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}

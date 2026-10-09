@@ -1,105 +1,34 @@
 # ACTIVE_WORK.md
 
-このファイルは単一レーン運用における現在唯一のactive mathematical workを記録します。
+このファイルは単一レーン運用の唯一のactive workと、直近の統合完了workを管理します。
+GitHubのlive PR / main stateがこのファイルより新しい場合は、live stateを優先します。
 
-live GitHub stateがこの文書より新しい場合はlive stateを優先し、その後この文書を同期します。
+## Current ACTIVE
 
-## Current active work
+- なし（**PR #149 のmain統合後**の状態）。
+- PR #149がopenの間は `C2S3.1-UnitFiltration` / Issue #108 がまだ唯一のACTIVE work。
+- 複数の実装PRを同時にACTIVEにしない。
 
-- Work ID: C2S3.1-UnitFiltration
+## Just completed / ready to merge
+
+- Work: `C2S3.1-UnitFiltration`
 - Issue: #108
-- Branch: `work/c2-s3-1-unit-filtration-serial`
 - PR: #149
-- Source: Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34
-- State: ACTIVE
-- Base main: after PR #148 merge; Chapter 2 §2.2 Corollary 3 / dyadic quadratic Hensel lifting is DONE.
-- Latest validated pre-cleanup head: `721f7120ce88e682419ceed98a33e90558a95684`.
-- Latest validated CI: #786 passed policy / Lean build / Verso Blueprint build.
-- Dependencies now on main: project `Z_p` inverse-limit construction, residue projections and surjectivity, divisibility/principal-ideal bridge for powers of `p`, unit criterion, project `Q_p`, Hensel and quadratic corollary chain.
-- Rule: このworkをmergeまたは明示的にpark/closeするまで、別の数学的実装PRをactiveにしない。
+- Branch: `work/c2-s3-1-unit-filtration-serial`
+- Source: Serre Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34.
+- Completed results: project `U_n` filtration; `U/U₁ ≃ (Z/pZ)ˣ`; successive quotients; finite complements and inverse-compatible tower; `V ≃ (Z/pZ)ˣ`; Proposition 7 `serrePadicUnitsMulEquivRootsProdPrincipal`; uniqueness `serrePadicUnitRootsOfUnity_unique`; project `Q_p` corollary `serrePadicField_contains_p_sub_one_roots`.
+- Verified PR-head CIs: #868 (Proposition 7), #870 (uniqueness), #873 (fraction-field corollary), all policy / Lean / Blueprint green.
+- Final docs-only sync and merge gate: pending successful latest PR-head CI and main merge.
+- The former #125 branch is legacy recovery material, not a parallel ACTIVE lane.
 
-## Current unit-filtration proof state
+## Next serial candidate
 
-The Lean development in PR #149 now contains:
+- Issue #112: `C2S3.2-PrincipalUnits`, Serre Chapter 2 §3.2 Proposition 8 / multiplicative group structure.
+- State: READY **only after #149 merges into main**.
+- Create a single new implementation branch from latest main; source check -> explanation -> Lean -> Blueprint -> CI -> self-review -> merge.
+- Downstream #120 (p-adic squares) stays WAITING until #112 completes.
+- Do not start §3.2 as part of PR #149.
 
-- `serrePadicUnitReductionLevel`: reduction of project p-adic units to a finite residue-unit group;
-- `serrePadicPrincipalUnits`: source-indexed principal-unit filtration, with `U_0 = U` and `U_(n+1)` as a kernel of reduction modulo `p^(n+1)`;
-- `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`: membership in `U_(n+1)` as divisibility of `u - 1` by `p^(n+1)`;
-- `serrePadicPrincipalUnits_succ_succ_le_succ`: consecutive positive levels are descending, so `U_(n+2) ≤ U_(n+1)`;
-- `serrePadicUnitReduction`, `serrePadicUnitReduction_surjective`, and `serrePadicUnitsQuotientPrincipalOneEquiv`: first quotient `U/U_1 ≃ (Z/pZ)^×`;
-- `serrePadicPrincipalUnitCoeffResidueHom`, its kernel theorem, its surjectivity, and `serrePadicPrincipalUnitsSuccessiveQuotientEquiv`: the source successive quotient layer;
-- `serrePadicUnitRootsOfUnity`, `serrePadicTeichmuellerSubgroup`, and `serrePadicUnitRootsReduction`: the first roots-of-unity / finite-complement interface;
-- `serrePadicUnitRootsReduction_pow` and `serrePadicUnitRootsReduction_ker`: reduction preserves the root condition and has kernel equal to the intersection with `U_1`;
-- `serreResidueUnitRootsOfUnity`, `serrePadicUnitRootsReductionToResidueRoots`, `serrePadicUnitRootsReductionToResidueRoots_ker`, and `serrePadicUnitRootsReductionToResidueRoots_ker_principal`: the residue-root target and the corresponding kernel bridge;
-- `serrePadicUnitRootsReduction_eq_one_iff` and `serrePadicUnitRootsReductionToResidueRoots_eq_one_iff`: one-fiber criteria reducing injectivity questions to the principal-unit condition.
+## Run-length and safety rule
 
-Blueprint pages are synchronized for the unit-filtration, successive-quotient, and roots-of-unity target layers.
-
-## CI / repair state
-
-- CI #735 failed in Lean build at `mem_serrePadicPrincipalUnits_succ_iff_pow_dvd`; fixed by inserting the explicit projection equality bridge.
-- CI #742 validated the first Lean filtration layer, then exposed Blueprint notation/rendering issues.
-- CI #757 validated the extended coefficient-residue Lean layer, with remaining direct Blueprint theorem-preview issues.
-- CI #763/#764 validated successive quotient packaging and progress-note synchronization.
-- CI #766 exposed subgroup-closure proof gaps in the first roots-of-unity file; fixed by converting set-membership hypotheses to the root equations.
-- CI #767 validated the roots-of-unity Lean interface.
-- CI #769 exposed Blueprint parsing failure on direct theorem previews for names containing underscores.
-- CI #770 validated the repair using labeled inline Lean aliases.
-- CI #774 validated the residue-roots codomain and narrowed-kernel bridge.
-- CI #776 exposed a second Blueprint parsing failure around direct theorem preview names containing underscores.
-- CI #777 validated the Blueprint repair that keeps theorem names in prose and avoids direct theorem previews for these declarations.
-- CI #782 validated the final docs-synced head for the previous run.
-- CI #785 validated cleanup head `f729a8e71afa3ffdbe6edbbb1d8c84f45105829d`.
-- CI #786 validated the Lean one-fiber criteria at head `721f7120ce88e682419ceed98a33e90558a95684`.
-- CI #787 validated the Blueprint documentation of those one-fiber criteria at head `7c705bc2e4e779eec7de440ee16bd49d70679e2a`.
-
-## Next proof targets for this ACTIVE item
-
-1. Prove that the kernel of `serrePadicUnitRootsReduction` is trivial.
-2. Package the reduction from `serrePadicUnitRootsOfUnity` to the first residue-root subgroup as an isomorphism when the kernel/surjectivity proof is available.
-3. Transfer that isomorphism back to the first residue-unit group once the finite-field root subgroup is identified with all residue units.
-4. Use that isomorphism as the source-shaped entry point for the finite complement `V`.
-5. Keep the later §3.2 Proposition 8 and the final `Q_p` roots-of-unity corollary out of this proof boundary unless the required interfaces are already isolated.
-
-The immediate mathematical risk is the kernel-triviality proof: it amounts to showing that a `(p-1)`-st root in `U_1` is already `1`, and should not be forced with an unsupported theorem-strength jump.
-
-## Run-length preference for this ACTIVE item
-
-この unit filtration item では、ユーザーの「続けて」「形式化を続けて」1回につき、原則として最大25分間の連続作業予算を使う。短い状態確認だけで止めず、同じPR内で安全に進められる小タスクを連続して処理する。
-
-標準の継続順:
-
-1. live branch / PR / CI を確認する。
-2. CI失敗があれば、最初にログを読み、原因を直す。
-3. CI pendingまたはgreenなら、同じACTIVE item内で次の小補題、Blueprint同期、docs同期、PR本文更新、self-reviewを進める。
-4. CI pendingだけでは止まらない。待ち時間にはread-only review、次補題のstatement設計、既存API調査、docs/Blueprint同期を進める。
-5. 新しいLean/Blueprint/docs commitを積んだら、latest headのCI起動状況を確認する。
-6. run終了時には、最新head、CI状態、次の具体的補題を記録する。
-
-ただし、次の場合は25分を待たず止める:
-
-- roots-of-unity subgroup / finite complement `V` のstatementを勝手に強めそうな場合。
-- kernel triviality で必要な torsion-free / separatedness / Hensel 型補題が未確認の場合。
-- CI failureのログ確認が必要な場合。
-- GitHub write拒否、merge conflict、branch不整合、権限エラーが出た場合。
-- source boundaryやcopyright policyに不安がある場合。
-- context/time上限が近く、未検証の主張を残しそうな場合。
-- ユーザーが短時間作業や停止を明示した場合。
-
-## Just completed
-
-- C2S2.2-HenselQuadraticTwo / Issue #105
-- PR #148 merged as `c7c030763ee4251f10c2d96decd42fad63c66004`
-- Final PR-head CI #729: policy / Lean / Verso all green
-- Final source-facing theorem: `SerreNumberTheoryAI.serreDyadicQuadratic_exists_solution_lift`
-
-## Parked legacy implementation
-
-| Legacy PR | Work | Preserved branch | State |
-| --- | --- | --- | --- |
-| #123 | Chapter 2 §1.3 project `Q_p` | `work/c2-s1-3-qp-field` | superseded by merged #143 |
-| #125 | Chapter 2 §3.1 unit filtration | `work/c2-s3-1-unit-filtration` | recovery source for current ACTIVE item |
-
-## Transition note
-
-旧 `docs/LANE_STATUS.md` と `docs/lanes/*` は廃止済みです。現行ownershipやparallel laneは存在せず、現在地はこのファイルだけで管理します。
+When the user says `続けて` / `形式化を続けて`, advance the currently ACTIVE work for up to approximately 25 minutes, with CI repair first. Do not steal work across lanes or start an overlapping implementation PR. Commit explanatory messages in clear Japanese. Synchronize Lean, Blueprint, progress documents, and issue/PR metadata before merge. A failing or pending CI is never recorded as green.
