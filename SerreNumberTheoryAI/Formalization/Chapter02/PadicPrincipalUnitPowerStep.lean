@@ -112,6 +112,59 @@ theorem serrePadicPowerStep_middle_choose_dvd
     p ∣ Nat.choose p i :=
   (Fact.out : p.Prime).dvd_choose_self (by omega) hip
 
+/--
+An intermediate term of (1 + p^n a)^p is divisible by p^(n+2).
+This combines p-divisibility of the interior binomial coefficients
+with the source exponent bound.
+-/
+theorem serrePadicPowerStep_middle_term_dvd
+    (n i : ℕ) (hn : 1 ≤ n) (hi : 2 ≤ i) (hip : i < p)
+    (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      (Nat.choose p i : SerrePadicInt p) *
+        ((p : SerrePadicInt p) ^ n * a) ^ i := by
+  obtain ⟨k, hk⟩ :=
+    serrePadicPowerStep_middle_choose_dvd p i (by omega) hip
+  obtain ⟨z, hz⟩ :=
+    (pow_dvd_pow (p : SerrePadicInt p)
+      (serrePadicPowerStep_middle_exponent_bound n i hn hi))
+  have hterm :
+      (Nat.choose p i : SerrePadicInt p) *
+          ((p : SerrePadicInt p) ^ n * a) ^ i =
+        (p : SerrePadicInt p) ^ (n * i + 1) * ((k : SerrePadicInt p) * a ^ i) := by
+    simp [hk, mul_pow, pow_mul, pow_succ, mul_comm, mul_left_comm, mul_assoc]
+  refine ⟨z * ((k : SerrePadicInt p) * a ^ i), ?_⟩
+  calc
+    (Nat.choose p i : SerrePadicInt p) *
+        ((p : SerrePadicInt p) ^ n * a) ^ i =
+          (p : SerrePadicInt p) ^ (n * i + 1) *
+            ((k : SerrePadicInt p) * a ^ i) := hterm
+    _ = (p : SerrePadicInt p) ^ (n + 2) *
+        (z * ((k : SerrePadicInt p) * a ^ i)) := by
+          rw [hz]
+          ring
+
+/--
+The final term of the binomial expansion has valuation at least n+2
+under exactly the source's odd-prime/dyadic lower-bound disjunction.
+-/
+theorem serrePadicPowerStep_last_term_dvd
+    (n : ℕ) (hn : 1 ≤ n) (hsource : p ≠ 2 ∨ 2 ≤ n)
+    (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      ((p : SerrePadicInt p) ^ n * a) ^ p := by
+  obtain ⟨z, hz⟩ :=
+    (pow_dvd_pow (p : SerrePadicInt p)
+      (serrePadicPowerStep_last_exponent_bound p n hn hsource))
+  refine ⟨z * a ^ p, ?_⟩
+  calc
+    ((p : SerrePadicInt p) ^ n * a) ^ p =
+        (p : SerrePadicInt p) ^ (n * p) * a ^ p := by
+          rw [mul_pow, pow_mul]
+    _ = (p : SerrePadicInt p) ^ (n + 2) * (z * a ^ p) := by
+          rw [hz]
+          ring
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
