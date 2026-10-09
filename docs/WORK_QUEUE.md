@@ -139,3 +139,11 @@ GitHubへの特定のwriteがChatGPT/OpenAI側の安全性チェック等で拒�
 - CI #942 failure in finite-inverse-limit injectivity proof repaired at `6a14c068`; latest proof additions need fresh PR-head CI.
 - New work within PR #152: finite-quotient residues comparison, compatible representative choices and reconstructed project p-adic integer. Surjectivity, Proposition 8, dyadic sign factor, Theorem 2 remain pending.
 - Resume by latest CI review (do not start next ACTIVE or parallel work).
+
+
+## 2026-10-10 §3.2 Proposition 8 late-stage serial checkpoint
+
+- ACTIVE continues as Issue #112 / draft PR #152 only.
+- CI #935 succeeded (finite cyclic quotients and compatibility). CI #964 checked the new Lean source successfully, including both infinite additive-group equivalence definitions, but failed in Blueprint parsing; patched Blueprint ID `38a5f7f0`.
+- Dyadic `-1` sign subgroup, order 2 and generator of U₁/U₂ have been added; await latest PR-head CI before calling these proved.
+- Remaining in the same active item: direct product `U₁ ≃ {±1} × U₂`, project `Q_p^×` structure theorem, source/CI/self-review and merge. §3.3 remains waiting.
