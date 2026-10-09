@@ -108,3 +108,49 @@ theorem blueprint_principalUnitFiniteInverseLimitToPadicIntProj
   serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_proj p n k x
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitfiniteinverselimittopadicintisunit"
+  (uses := "principalunitfiniteinverselimittopadicint")
+逆極限の整合列から復元した`p`進整数は単数である。
+これは第0剰余が単数であることを利用する。
+:::
+
+```lean "principalunitfiniteinverselimittopadicintisunit"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitInverseLimitToPadicIntIsUnit
+    (p n : ℕ) [Fact p.Prime]
+    (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    IsUnit (serrePadicPrincipalUnitFiniteInverseLimitToPadicInt p n x) :=
+  serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_isUnit p n x
+end SerreNumberTheoryAI
+```
+
+:::definition "principalunitfiniteinverselimittopadicunit"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit")
+  (uses := "principalunitfiniteinverselimittopadicintisunit")
+復元した`p`進整数の単数構造を構成する。
+:::
+
+:::theorem "principalunitfiniteinverselimittopadicunitmem"
+  (uses := "principalunitfiniteinverselimittopadicunit")
+復元した単数は元のフィルトレーション層`U_(n+1)`に含まれる。
+:::
+
+```lean "principalunitfiniteinverselimittopadicunitmem"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitInverseLimitToPadicUnitMem
+    (p n : ℕ) [Fact p.Prime]
+    (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x ∈
+      serrePadicPrincipalUnits p (n + 1) :=
+  serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_mem p n x
+end SerreNumberTheoryAI
+```
+
+:::definition "principalunitfiniteinverselimittoprincipalunit"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit")
+  (uses := "principalunitfiniteinverselimittopadicunitmem")
+有限主単数商の逆極限の元を`U_(n+1)`に復元する候補写像を定義する。
+この候補が逆写像であることは別に証明する。
+:::
