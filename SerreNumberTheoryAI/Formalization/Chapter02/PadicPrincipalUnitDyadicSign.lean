@@ -63,6 +63,55 @@ theorem serrePadicDyadicNegOnePrincipal_quotient_ne_one :
     (QuotientGroup.eq_one_iff _).1 heq
   exact serrePadicDyadicNegOnePrincipal_not_mem_levelTwo hmem
 
+/-- The dyadic sign has exact order two in U₁. -/
+theorem serrePadicDyadicNegOnePrincipal_order_two :
+    orderOf (serrePadicDyadicNegOnePrincipal :
+      serrePadicPrincipalUnits 2 1) = 2 := by
+  have hne : (serrePadicDyadicNegOnePrincipal :
+      serrePadicPrincipalUnits 2 1) ≠ 1 := by
+    intro heq
+    apply serrePadicDyadicNegOnePrincipal_not_mem_levelTwo
+    rw [heq]
+    exact Subgroup.one_mem _
+  exact orderOf_eq_prime serrePadicDyadicNegOnePrincipal_sq hne
+
+/--
+The class of the sign generates the entire two-element quotient U₁/U₂.
+This is the finite sign factor used in Serre's dyadic decomposition.
+-/
+theorem serrePadicDyadicNegOnePrincipal_quotient_generates :
+    Subgroup.zpowers
+      ((QuotientGroup.mk'
+        (serrePadicPrincipalUnitDeepSubgroup 2 0 1))
+        serrePadicDyadicNegOnePrincipal) = ⊤ := by
+  let q : serrePadicPrincipalUnitFiniteQuotient 2 0 1 :=
+    (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup 2 0 1))
+      serrePadicDyadicNegOnePrincipal
+  have hpow : q ^ 2 = 1 := by
+    change ((QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup 2 0 1))
+      serrePadicDyadicNegOnePrincipal) ^ 2 = 1
+    rw [← map_pow, serrePadicDyadicNegOnePrincipal_sq, map_one]
+  have hnot : q ≠ 1 :=
+    serrePadicDyadicNegOnePrincipal_quotient_ne_one
+  have horder : orderOf q = 2 :=
+    orderOf_eq_prime hpow hnot
+  have hcard :
+      Nat.card (Subgroup.zpowers q) =
+        Nat.card (serrePadicPrincipalUnitFiniteQuotient 2 0 1) := by
+    calc
+      Nat.card (Subgroup.zpowers q) = orderOf q := Nat.card_zpowers q
+      _ = 2 := horder
+      _ = Nat.card (serrePadicPrincipalUnitFiniteQuotient 2 0 1) :=
+        (serrePadicPrincipalUnitFiniteQuotient_card 2 0 1).symm
+  have hpositive : 0 < Nat.card (Subgroup.zpowers q) := by
+    rw [hcard, serrePadicPrincipalUnitFiniteQuotient_card]
+    decide
+  letI : Finite (Subgroup.zpowers q) :=
+    Nat.finite_of_card_ne_zero (Nat.ne_of_gt hpositive)
+  exact Subgroup.eq_top_of_card_eq _ hcard
+
 end PadicPrincipalUnitDyadicSign
 
 end SerreNumberTheoryAI
