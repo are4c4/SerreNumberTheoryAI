@@ -46,6 +46,41 @@ theorem mem_serrePadicPrincipalUnitFiniteInverseLimit
       ∀ k, serrePadicPrincipalUnitFiniteQuotientTransition p n (k + 1)
         (x (k + 1)) = x k := Iff.rfl
 
+/--
+The canonical map from a principal unit to its compatible family of
+classes in all finite quotients. This is the natural map to the
+project-local inverse limit, prior to proving it is bijective.
+-/
+def serrePadicPrincipalUnitToFiniteInverseLimit (n : ℕ) :
+    serrePadicPrincipalUnits p (n + 1) →*
+      serrePadicPrincipalUnitFiniteInverseLimit p n where
+  toFun u :=
+    ⟨fun k => (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u,
+      by
+        intro k
+        exact serrePadicPrincipalUnitFiniteQuotientTransition_mk p n
+          (k + 1) u⟩
+  map_one' := by
+    apply Subtype.ext
+    funext k
+    exact map_one (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup p n (k + 1)))
+  map_mul' u v := by
+    apply Subtype.ext
+    funext k
+    exact map_mul (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u v
+
+@[simp]
+theorem serrePadicPrincipalUnitToFiniteInverseLimit_apply
+    (n k : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
+    ((serrePadicPrincipalUnitToFiniteInverseLimit p n u :
+      serrePadicPrincipalUnitFiniteInverseLimit p n) :
+      ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k =
+    (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u := rfl
+
 end PadicPrincipalUnitFiniteInverseLimit
 
 end SerreNumberTheoryAI
