@@ -429,6 +429,66 @@ theorem serrePadicFiniteUnitComplementTowerToPadicUnit_proj
   rfl
 
 
+/--
+A compatible tower of the finite complements satisfies the source
+`(p - 1)`-st root equation in the project p-adic unit group.
+-/
+theorem serrePadicFiniteUnitComplementTowerToPadicUnit_pow
+    (x : serrePadicFiniteUnitComplementTower p) :
+    (serrePadicFiniteUnitComplementTowerToPadicUnit p x) ^ (p - 1) = 1 := by
+  apply Units.ext
+  apply serrePadicInt_ext p
+  intro n
+  have hfinite := (serrePadicFiniteUnitComplementTowerProj p n x).property
+  change
+    (serrePadicFiniteUnitComplementTowerProj p n x :
+      (padicResidueRing p n)ˣ) ^ Nat.card (padicResidueRing p 0)ˣ = 1
+    at hfinite
+  rw [serrePadicFirstResidueUnits_card p] at hfinite
+  have hval := congrArg
+    (fun v : (padicResidueRing p n)ˣ => (v : padicResidueRing p n)) hfinite
+  simpa [serrePadicFiniteUnitComplementTowerToPadicUnit_proj] using hval
+
+/-- Reconstruct a project root of unity from a compatible finite-complement tower. -/
+noncomputable def serrePadicFiniteUnitComplementTowerToUnitRoots
+    (x : serrePadicFiniteUnitComplementTower p) :
+    serrePadicUnitRootsOfUnity p :=
+  ⟨serrePadicFiniteUnitComplementTowerToPadicUnit p x,
+    serrePadicFiniteUnitComplementTowerToPadicUnit_pow p x⟩
+
+/-- Reduction back to the finite complements recovers the original compatible tower. -/
+theorem serrePadicFiniteUnitComplementTowerToUnitRoots_rightInverse :
+    Function.RightInverse (serrePadicFiniteUnitComplementTowerToUnitRoots p)
+      (serrePadicUnitRootsToFiniteComplementTower p) := by
+  intro x
+  apply Subtype.ext
+  funext n
+  apply Subtype.ext
+  apply Units.ext
+  simpa [serrePadicUnitRootsToFiniteComplementTower,
+    serrePadicUnitRootsReductionLevelToFiniteComplement,
+    serrePadicUnitReductionLevel,
+    serrePadicFiniteUnitComplementTowerToUnitRoots] using
+    (serrePadicFiniteUnitComplementTowerToPadicUnit_proj p x n)
+
+/-- The inverse-limit bridge is surjective, with an explicit section. -/
+theorem serrePadicUnitRootsToFiniteComplementTower_surjective :
+    Function.Surjective (serrePadicUnitRootsToFiniteComplementTower p) :=
+  (serrePadicFiniteUnitComplementTowerToUnitRoots_rightInverse p).surjective
+
+/-- The unconditional isomorphism between project roots and finite-complement towers. -/
+noncomputable def serrePadicUnitRootsEquivFiniteComplementTower :
+    serrePadicUnitRootsOfUnity p ≃* serrePadicFiniteUnitComplementTower p :=
+  serrePadicUnitRootsEquivFiniteComplementTowerOfSurjective p
+    (serrePadicUnitRootsToFiniteComplementTower_surjective p)
+
+/-- The finite complement of p-adic units is isomorphic to the first residue-unit group. -/
+noncomputable def serrePadicUnitRootsEquivResidueUnits :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  serrePadicUnitRootsEquivResidueUnitsOfTowerSurjective p
+    (serrePadicUnitRootsToFiniteComplementTower_surjective p)
+
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
