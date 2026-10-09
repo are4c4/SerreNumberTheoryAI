@@ -54,3 +54,12 @@ CI失敗があれば最優先でログを読み修正する。書籍本文の転
 - New unverified Lean/Blueprint on active branch: natural map `U_(n+1) →* finite inverse limit`; filtration separation and injectivity; quotient equality iff unit residue equality; compatible representatives; project-local `SerrePadicInt p` reconstructed from residue coordinates.
 - **Next:** Inspect latest HEAD CI/log; repair any errors; then prove reconstructed p-adic integer is a principal unit, projection right inverse, and surjectivity of the natural map. Then identify the finite cyclic system with the project `Z_p`, tackle Proposition 8 and dyadic sign decomposition.
 - Target theorem still **NOT DONE**; leave PR #152 draft and don't merge until full source-facing statements and CI succeed.
+
+
+## 2026-10-10 §3.2 Proposition 8 inverse-limit and dyadic sign checkpoint
+
+- Sole ACTIVE is still Issue #112 / draft PR #152, branch `work/c2-s3-2-principal-units-serial`. Do not start §3.3.
+- **Last completely green checkpoint:** CI #935 (`4016f550`): sharp p-power filtration, finite cyclic quotients, transitions, finite-level compatibility, and finite quotient inverse limit.
+- **New Lean-checked result** in CI #964 (`eac6a1b4`): natural inverse-limit reconstruction, surjectivity of `U_(n+1) → lim U_(n+1)/U_(n+k+2)`, the explicit `Z_p` additive residue tower equivalence, and Proposition 8 candidates `serrePadicPrincipalUnitsOddAddEquiv` and `serrePadicPrincipalUnitsDyadicLevelTwoAddEquiv`. **CI #964 as a whole failed** in Verso Blueprint, not Lean, due to a malformed Blueprint uses-node ID containing an underscore. This was corrected in `38a5f7f0`.
+- More recent source-shaped Lean/Blueprint added: the dyadic sign `-1` belongs to U₁ but not U₂, its order is 2, and its class generates U₁/U₂. These **remain PR-head CI-unverified**. The full U₁ ≃ {±1} × U₂ and project `Q_p^×` structure theorem still remain incomplete.
+- Next: inspect latest CI, repair all failures, finish the internal direct-product decomposition in p=2, and compose with the already-existing project `Q_p` valuation/unit decomposition to obtain Serre Chapter 2 Theorem 2. Keep the same draft PR until source-facing proof, Blueprint and full CI green.
