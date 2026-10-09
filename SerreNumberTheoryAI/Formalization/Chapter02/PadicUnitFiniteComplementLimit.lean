@@ -445,13 +445,22 @@ theorem serrePadicFiniteUnitComplementTowerToPadicUnit_pow
       (padicResidueRing p n)ˣ) ^ Nat.card (padicResidueRing p 0)ˣ = 1
     at hfinite
   rw [serrePadicFirstResidueUnits_card p] at hfinite
+  have hunit :
+      serrePadicUnitReductionLevel p n
+          (serrePadicFiniteUnitComplementTowerToPadicUnit p x) =
+        (serrePadicFiniteUnitComplementTowerProj p n x :
+          (padicResidueRing p n)ˣ) := by
+    apply Units.ext
+    simpa [serrePadicUnitReductionLevel] using
+      (serrePadicFiniteUnitComplementTowerToPadicUnit_proj p x n)
+  have hpow :
+      serrePadicUnitReductionLevel p n
+          ((serrePadicFiniteUnitComplementTowerToPadicUnit p x) ^ (p - 1)) = 1 := by
+    rw [map_pow, hunit]
+    exact hfinite
   have hval := congrArg
-    (fun v : (padicResidueRing p n)ˣ => (v : padicResidueRing p n)) hfinite
-  change serrePadicIntProj p n
-    (((serrePadicFiniteUnitComplementTowerToPadicUnit p x) ^ (p - 1) :
-      (SerrePadicInt p)ˣ) : SerrePadicInt p) = 1
-  simpa only [Units.val_pow, map_pow,
-    serrePadicFiniteUnitComplementTowerToPadicUnit_proj] using hval
+    (fun v : (padicResidueRing p n)ˣ => (v : padicResidueRing p n)) hpow
+  simpa [serrePadicUnitReductionLevel] using hval
 
 /-- Reconstruct a project root of unity from a compatible finite-complement tower. -/
 noncomputable def serrePadicFiniteUnitComplementTowerToUnitRoots
