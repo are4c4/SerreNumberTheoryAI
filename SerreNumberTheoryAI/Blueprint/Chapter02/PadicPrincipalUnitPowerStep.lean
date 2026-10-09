@@ -208,3 +208,25 @@ theorem blueprint_principalUnitHighTermsSumDivisibility
   serrePadicPowerStep_high_terms_sum_dvd p n hn hsource a
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitbinomialcongruence"
+  (uses := "principalunithightermssumdivisibility")
+原典の補題で用いる中心的な合同式。
+`p≠2,n≥1`、または`p=2,n≥2`のもとで
+`(1+p^n a)^p ≡ 1+p^(n+1)a (mod p^(n+2))` が成り立つ。
+ここではフィルトレーションへの所属条件をまだ使わずに、
+二項展開の計算そのものを独立に記録する。
+:::
+
+```lean "principalunitbinomialcongruence"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitBinomialCongruence
+    (p n : ℕ) [Fact p.Prime] (hn : 1 ≤ n)
+    (hsource : p ≠ 2 ∨ 2 ≤ n) (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      ((1 + (p : SerrePadicInt p) ^ n * a) ^ p -
+        (1 + (p : SerrePadicInt p) ^ (n + 1) * a)) :=
+  serrePadicPowerStep_binomial_congr_dvd p n hn hsource a
+end SerreNumberTheoryAI
+```
