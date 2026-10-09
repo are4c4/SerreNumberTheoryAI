@@ -230,3 +230,21 @@ theorem blueprint_principalUnitBinomialCongruence
   serrePadicPowerStep_binomial_congr_dvd p n hn hsource a
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitcancelpowdivisibility"
+  (uses := "principalunitbinomialcongruence")
+`p^(n+2)` が `p^(n+1)a` を割るならば、`p` が `a` を割る。
+project `Z_p` 内で `p` の冪が非零因子であるという既存の証明を利用する。
+:::
+
+```lean "principalunitcancelpowdivisibility"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitCancelPowDivisibility
+    (p n : ℕ) [Fact p.Prime] (a : SerrePadicInt p)
+    (hdiv : (p : SerrePadicInt p) ^ (n + 2) ∣
+      (p : SerrePadicInt p) ^ (n + 1) * a) :
+    (p : SerrePadicInt p) ∣ a :=
+  serrePadicPowerStep_cancel_pow_dvd p n a hdiv
+end SerreNumberTheoryAI
+```
