@@ -37,3 +37,30 @@ theorem blueprint_principalUnitFiniteInverseLimitMem
   mem_serrePadicPrincipalUnitFiniteInverseLimit p n x
 end SerreNumberTheoryAI
 ```
+
+
+:::definition "principalunittofiniteinverselimit"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitToFiniteInverseLimit")
+  (uses := "principalunitfiniteinverselimit principalunitfinitequotienttransitionmk")
+主単数を全ての有限商における剰余類の整合列に送る自然な群準同型を定義する。
+同型であることはこの段階ではまだ主張しない。
+:::
+
+:::theorem "principalunittofiniteinverselimitapply"
+  (uses := "principalunittofiniteinverselimit")
+上記準同型の第`k`成分は`U_(n+1)/U_(n+k+2)`への自然な商写像である。
+:::
+
+```lean "principalunittofiniteinverselimitapply"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitToFiniteInverseLimitApply
+    (p n k : ℕ) [Fact p.Prime]
+    (u : serrePadicPrincipalUnits p (n + 1)) :
+    ((serrePadicPrincipalUnitToFiniteInverseLimit p n u :
+      serrePadicPrincipalUnitFiniteInverseLimit p n) :
+      ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k =
+    (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u :=
+  serrePadicPrincipalUnitToFiniteInverseLimit_apply p n k u
+end SerreNumberTheoryAI
+```
