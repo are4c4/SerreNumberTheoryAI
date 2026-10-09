@@ -86,3 +86,22 @@ theorem blueprint_dyadicNegOnePrincipalQuotientGenerates :
   serrePadicDyadicNegOnePrincipal_quotient_generates
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "dyadicprincipalunitleveltwoorsign"
+  (uses := "dyadicnegativeoneprincipalnotleveltwo")
+`U₁/U₂`の位数が2であることにより、`U₁`の任意の元は
+`U₂`に属するか、`-1`を掛ければ`U₂`に入る。
+符号部分群との直積分解に向けた全射性の準備となる。
+:::
+
+```lean "dyadicprincipalunitleveltwoorsign"
+namespace SerreNumberTheoryAI
+theorem blueprint_dyadicPrincipalUnitLevelTwoOrSign
+    (u : serrePadicPrincipalUnits 2 1) :
+    u ∈ serrePadicPrincipalUnitDeepSubgroup 2 0 1 ∨
+      serrePadicDyadicNegOnePrincipal * u ∈
+        serrePadicPrincipalUnitDeepSubgroup 2 0 1 :=
+  serrePadicDyadicPrincipalUnit_mem_levelTwo_or_sign_mul_mem u
+end SerreNumberTheoryAI
+```
