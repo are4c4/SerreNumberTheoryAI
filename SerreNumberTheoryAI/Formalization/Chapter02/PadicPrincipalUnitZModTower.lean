@@ -76,6 +76,81 @@ def serrePadicIntMultiplicativeEquivZModTower :
     rw [map_add]
     rfl
 
+/--
+The cyclic isomorphisms at each finite level glue to a group
+isomorphism of their inverse limits, since every square with the
+standard reduction transitions has already been proved commutative.
+-/
+noncomputable def serrePadicPrincipalUnitZModTowerEquivFiniteInverseLimit
+    (n : ℕ) (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    serrePadicPrincipalUnitZModTower p ≃*
+      serrePadicPrincipalUnitFiniteInverseLimit p n := by
+  let e (k : ℕ) :
+      Multiplicative (padicResidueRing p k) ≃*
+        serrePadicPrincipalUnitFiniteQuotient p n (k + 1) :=
+    serrePadicPrincipalUnitFiniteQuotientCyclicEquiv p n k hsource u hnot
+  refine
+    { toFun := fun z =>
+        ⟨fun k => e k ((z : ∀ k, Multiplicative (padicResidueRing p k)) k),
+          by
+            intro k
+            calc
+              serrePadicPrincipalUnitFiniteQuotientTransition p n (k + 1)
+                  (e (k + 1)
+                    ((z : ∀ k, Multiplicative (padicResidueRing p k)) (k + 1))) =
+                e k (serrePadicPrincipalUnitZModTransition p k
+                  ((z : ∀ k, Multiplicative (padicResidueRing p k)) (k + 1))) :=
+                    serrePadicPrincipalUnitFiniteQuotientCyclicEquiv_transition
+                      p n k hsource u hnot _
+              _ = e k ((z : ∀ k, Multiplicative (padicResidueRing p k)) k) :=
+                congrArg (e k) (z.property k)⟩
+      invFun := fun y =>
+        ⟨fun k => (e k).symm
+            ((y : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k),
+          by
+            intro k
+            apply (e k).injective
+            calc
+              e k (serrePadicPrincipalUnitZModTransition p k
+                  ((e (k + 1)).symm
+                    ((y : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1))
+                      (k + 1)))) =
+                serrePadicPrincipalUnitFiniteQuotientTransition p n (k + 1)
+                  (e (k + 1) ((e (k + 1)).symm
+                    ((y : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1))
+                      (k + 1)))) :=
+                    (serrePadicPrincipalUnitFiniteQuotientCyclicEquiv_transition
+                      p n k hsource u hnot _).symm
+              _ = serrePadicPrincipalUnitFiniteQuotientTransition p n (k + 1)
+                    ((y : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1))
+                      (k + 1)) := by
+                  rw [MulEquiv.apply_symm_apply]
+              _ = ((y : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k) :=
+                y.property k
+              _ = e k ((e k).symm
+                    ((y : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1))
+                      k)) := ((e k).apply_symm_apply _).symm⟩
+      left_inv := by
+        intro z
+        apply Subtype.ext
+        funext k
+        exact (e k).symm_apply_apply _
+      right_inv := by
+        intro y
+        apply Subtype.ext
+        funext k
+        exact (e k).apply_symm_apply _
+      map_mul' := by
+        intro z w
+        apply Subtype.ext
+        funext k
+        exact (e k).map_mul
+          ((z : ∀ k, Multiplicative (padicResidueRing p k)) k)
+          ((w : ∀ k, Multiplicative (padicResidueRing p k)) k) }
+
 end PadicPrincipalUnitZModTower
 
 end SerreNumberTheoryAI
