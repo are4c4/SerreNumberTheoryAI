@@ -608,6 +608,56 @@ noncomputable def serrePadicUnitsMulEquivRootsProdPrincipal :
       serrePadicUnitProductHom_surjective p⟩
 
 
+/--
+Uniqueness in Proposition 7: a subgroup of project p-adic units that reduces
+bijectively to the first residue-unit group is exactly the group of
+`(p-1)`-st roots of unity.  This uses only the finite-group order argument and
+the independently established injectivity of the root reduction.
+-/
+theorem serrePadicUnitRootsOfUnity_unique
+    (C : Subgroup (SerrePadicInt p)ˣ)
+    (hbij : Function.Bijective
+      ((serrePadicUnitReduction p).comp C.subtype)) :
+    C = serrePadicUnitRootsOfUnity p := by
+  let e : C ≃* (padicResidueRing p 0)ˣ :=
+    MulEquiv.ofBijective ((serrePadicUnitReduction p).comp C.subtype) hbij
+  letI : Finite C :=
+    Finite.of_equiv ((padicResidueRing p 0)ˣ) e.symm.toEquiv
+  have hcard : Nat.card C = p - 1 := by
+    calc
+      Nat.card C = Nat.card (padicResidueRing p 0)ˣ :=
+        Nat.card_congr e.toEquiv
+      _ = p - 1 := serrePadicFirstResidueUnits_card p
+  have hle : C ≤ serrePadicUnitRootsOfUnity p := by
+    intro u hu
+    change u ^ (p - 1) = 1
+    have hpow : (⟨u, hu⟩ : C) ^ (p - 1) = 1 := by
+      rw [← hcard]
+      exact pow_card_eq_one'
+    simpa only [Subgroup.coe_pow, Subgroup.coe_one] using
+      congrArg (fun c : C => (c : (SerrePadicInt p)ˣ)) hpow
+  apply le_antisymm hle
+  intro u hu
+  obtain ⟨c, hc⟩ := hbij.2 (serrePadicUnitReduction p u)
+  have hcV : (c : (SerrePadicInt p)ˣ) ∈
+      serrePadicUnitRootsOfUnity p := hle c.property
+  have hred :
+      serrePadicUnitRootsReduction p
+          (⟨(c : (SerrePadicInt p)ˣ), hcV⟩ :
+            serrePadicUnitRootsOfUnity p) =
+        serrePadicUnitRootsReduction p
+          (⟨u, hu⟩ : serrePadicUnitRootsOfUnity p) := by
+    change serrePadicUnitReduction p (c : (SerrePadicInt p)ˣ) =
+      serrePadicUnitReduction p u
+    exact hc
+  have heq := serrePadicUnitRootsReduction_injective p hred
+  have hval := congrArg
+    (fun v : serrePadicUnitRootsOfUnity p =>
+      (v : (SerrePadicInt p)ˣ)) heq
+  change (c : (SerrePadicInt p)ˣ) = u at hval
+  rw [← hval]
+  exact c.property
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
