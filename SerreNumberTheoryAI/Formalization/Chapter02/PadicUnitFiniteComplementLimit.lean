@@ -447,7 +447,11 @@ theorem serrePadicFiniteUnitComplementTowerToPadicUnit_pow
   rw [serrePadicFirstResidueUnits_card p] at hfinite
   have hval := congrArg
     (fun v : (padicResidueRing p n)ˣ => (v : padicResidueRing p n)) hfinite
-  simpa [serrePadicFiniteUnitComplementTowerToPadicUnit_proj] using hval
+  change serrePadicIntProj p n
+    (((serrePadicFiniteUnitComplementTowerToPadicUnit p x) ^ (p - 1) :
+      (SerrePadicInt p)ˣ) : SerrePadicInt p) = 1
+  simpa only [Units.val_pow, map_pow,
+    serrePadicFiniteUnitComplementTowerToPadicUnit_proj] using hval
 
 /-- Reconstruct a project root of unity from a compatible finite-complement tower. -/
 noncomputable def serrePadicFiniteUnitComplementTowerToUnitRoots
