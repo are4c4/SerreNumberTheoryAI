@@ -80,7 +80,7 @@ downstreamがupstreamを必要とする場合は、upstreamをmainへmergeして
 | 4 | `C2S2.2-HenselQuadraticOdd` | §2.2 Corollary 2 | DONE | PR #147 merged as `3bd49171…`, PR-head CI #700 green | Issue #104 |
 | 5 | `C2S2.2-HenselQuadraticTwo` | §2.2 Corollary 3 | DONE | PR #148 merged as `c7c03076…`, PR-head CI #729 green | Issue #105 |
 | 6 | `C2S3.1-UnitFiltration` | §3.1 unit filtration / Proposition 7 / `Q_p` root corollary | DONE | PR #149 all source-facing Lean/Blueprint proofs built; CI #873 green, pending final merge | Issue #108 / PR #149; recovery source PR #125 |
-| 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | READY | choose as sole next ACTIVE only after PR #149 has merged into latest main | Issue #112 |
+| 7 | `C2S3.2-PrincipalUnits` | §3.2 Proposition 8 / multiplicative group | ACTIVE | PR #152 from merged #149 main; initial power-step lemmas and Blueprint under CI | Issue #112 |
 | 8 | `C2S3.3-PadicSquares` | §3.3 p-adic squares / Theorems 3–4 | WAITING | depends on §3.2 and project `Q_p` | Issue #120 |
 | 9 | `C3S1.1-HilbertBasics` | Chapter 3 §1.1 Hilbert symbol basics | PREFLIGHT | future source-order work; `Q_p` specialization needs current chain | Issue #121 |
 | 10 | `C3S1.2-HilbertLocalFormula` | Chapter 3 §1.2 local formula | WAITING | depends on Hilbert basics and p-adic square classes | Issue #122 |
@@ -124,3 +124,26 @@ GitHubへの特定のwriteがChatGPT/OpenAI側の安全性チェック等で拒�
 - 今回のserial implementationはIssue #108 / PR #149だけ。source §3.1の命題7・有限補群一意性・`Q_p`根の系がCI #873 green。
 - 上記DONE/READY/noneは**PR #149をmainへmergeした時点で成立**する次状態を示す。merge前にlive GitHub PRがopenならまだ当該itemをACTIVE扱いする。
 - merge後、最新mainから§3.2 Issue #112を唯一の次itemとして昇格。先行実装PRを並列に走らせない。
+
+## 2026-10-10 §3.2 シリアル移行
+
+- PR #149 / Issue #108 はmainへ統合され、§3.1の命題7・補群一意性・Q_pの根に関する系まで完了。
+- 現在唯一のACTIVEはIssue #112 / PR #152 / `work/c2-s3-2-principal-units-serial`。
+- 出典 §3.2 に合わせ、冪の補題と命題8の奇素数／2進の分岐を先に形式化。§3.3はWAITINGを維持。
+
+
+## 2026-10-10 §3.2 serial inverse-limit checkpoint
+
+- ACTIVE remains `C2S3.2-PrincipalUnits` (Issue #112 / draft PR #152), sole mathematical implementation.
+- CI #935 success verifies quotient transitions and all-class cyclic compatibility/inverse-limit definition.
+- CI #942 failure in finite-inverse-limit injectivity proof repaired at `6a14c068`; latest proof additions need fresh PR-head CI.
+- New work within PR #152: finite-quotient residues comparison, compatible representative choices and reconstructed project p-adic integer. Surjectivity, Proposition 8, dyadic sign factor, Theorem 2 remain pending.
+- Resume by latest CI review (do not start next ACTIVE or parallel work).
+
+
+## 2026-10-10 §3.2 Proposition 8 late-stage serial checkpoint
+
+- ACTIVE continues as Issue #112 / draft PR #152 only.
+- CI #935 succeeded (finite cyclic quotients and compatibility). CI #964 checked the new Lean source successfully, including both infinite additive-group equivalence definitions, but failed in Blueprint parsing; patched Blueprint ID `38a5f7f0`.
+- Dyadic `-1` sign subgroup, order 2 and generator of U₁/U₂ have been added; await latest PR-head CI before calling these proved.
+- Remaining in the same active item: direct product `U₁ ≃ {±1} × U₂`, project `Q_p^×` structure theorem, source/CI/self-review and merge. §3.3 remains waiting.

@@ -1,34 +1,65 @@
 # ACTIVE_WORK.md
 
-このファイルは単一レーン運用の唯一のactive workと、直近の統合完了workを管理します。
-GitHubのlive PR / main stateがこのファイルより新しい場合は、live stateを優先します。
+この文書は単一レーン運用の現在唯一の数学実装を記録します。
+GitHubのlive stateがこの文書より新しければlive stateを優先します。
 
 ## Current ACTIVE
 
-- なし（**PR #149 のmain統合後**の状態）。
-- PR #149がopenの間は `C2S3.1-UnitFiltration` / Issue #108 がまだ唯一のACTIVE work。
-- 複数の実装PRを同時にACTIVEにしない。
+- Work ID: `C2S3.2-PrincipalUnits`
+- Issue: #112
+- Branch: `work/c2-s3-2-principal-units-serial`
+- PR: #152（draft）
+- State: ACTIVE
+- Source: Chapter 2 §3.2、印刷 pp.24–25 / uploaded PDF pp.34–35
+- Base: PR #149 がmainにマージされた後の最新main
+- 必須の証明範囲: power-step lemma / Proposition 8 (odd p and p=2) / Theorem 2 for project Q_p^×.
+- §3.3 のsquare classesは明示的にscope外。
+- ルール: このPRを完了・parkするまで、別の数学実装PRをactiveにしない。
 
-## Just completed / ready to merge
+## Current proof state
 
-- Work: `C2S3.1-UnitFiltration`
-- Issue: #108
-- PR: #149
-- Branch: `work/c2-s3-1-unit-filtration-serial`
-- Source: Serre Chapter 2 §3.1, printed pp.22–24 / uploaded PDF pp.32–34.
-- Completed results: project `U_n` filtration; `U/U₁ ≃ (Z/pZ)ˣ`; successive quotients; finite complements and inverse-compatible tower; `V ≃ (Z/pZ)ˣ`; Proposition 7 `serrePadicUnitsMulEquivRootsProdPrincipal`; uniqueness `serrePadicUnitRootsOfUnity_unique`; project `Q_p` corollary `serrePadicField_contains_p_sub_one_roots`.
-- Verified PR-head CIs: #868 (Proposition 7), #870 (uniqueness), #873 (fraction-field corollary), all policy / Lean / Blueprint green.
-- Final docs-only sync and merge gate: pending successful latest PR-head CI and main merge.
-- The former #125 branch is legacy recovery material, not a parallel ACTIVE lane.
+- §3.1（Issue #108, PR #149）はmain統合済み（merge commit `9f95bb90a3c3386d289f34afca92451423651d21`、CI #877 green）。
+- §3.2の先行実装は、既存の`serrePadicPrincipalUnits` / coefficient residue / successive quotient homomorphismを再利用する。
+- `PadicPrincipalUnitPowerStep.lean`: 厳密層の係数による判定、`1+p^(n+1)`による各層の非空性、二項展開の中間・最終項の指数評価。
+- 新規補題は最初のCI検証中。ここから命題8が自動的に従うとは主張しない。
 
-## Next serial candidate
+## Next proof target
 
-- Issue #112: `C2S3.2-PrincipalUnits`, Serre Chapter 2 §3.2 Proposition 8 / multiplicative group structure.
-- State: READY **only after #149 merges into main**.
-- Create a single new implementation branch from latest main; source check -> explanation -> Lean -> Blueprint -> CI -> self-review -> merge.
-- Downstream #120 (p-adic squares) stays WAITING until #112 completes.
-- Do not start §3.2 as part of PR #149.
+1. 現在のCIでLean/Blueprintを確認し、エラーを修正。
+2. 二項係数のp可除性と評価済み指数から、`p`乗のフィルトレーション1段上昇を証明。
+3. 係数の非零性を用いて、原典の仮定下でちょうど次の層に属することを証明。
+4. 生成元・有限商・整合性・逆極限に進み、命題8を構成。
+5. project `Q_p` の付値分解と命題7を接続して定理2を得る。
+6. Blueprint、進捗、最終CIを同期してmainへ統合。
 
-## Run-length and safety rule
+## Serial operation
 
-When the user says `続けて` / `形式化を続けて`, advance the currently ACTIVE work for up to approximately 25 minutes, with CI repair first. Do not steal work across lanes or start an overlapping implementation PR. Commit explanatory messages in clear Japanese. Synchronize Lean, Blueprint, progress documents, and issue/PR metadata before merge. A failing or pending CI is never recorded as green.
+1回の`続けて`で、現在のACTIVEに限り可能な限り作業を進める。
+CI失敗があれば最優先でログを読み修正する。書籍本文の転載や完成済みp進単数構造定理のブラックボックス利用は行わない。
+
+
+## 2026-10-10 §3.2 finite quotient checkpoint
+
+- Latest **verified** CI: #919 SUCCESS at commit `66247c32` (policy / Lean / Blueprint). All of the finite-quotient cardinality, cyclicity, and explicit equivalence modules are Lean-checked and Blueprint-checked at this checkpoint.
+- New finite-level transition `serrePadicPrincipalUnitFiniteQuotientTransition` and its surjectivity are added in `PadicPrincipalUnitFiniteQuotientTransition.lean` and linked in the Blueprint/root entry points. Latest CI #926 is **pending**; do not mark transitions as verified until green.
+- The next mathematical boundary is the compatible transition diagram for chosen cyclic equivalences `ZMod(p^k)`, then the inverse-limit passage to project `Z_p`. The dyadic sign decomposition and the project field multiplicative-group theorem remain unproved.
+- Keep PR #152 / Issue #112 sole ACTIVE; do not start §3.3.
+
+
+## 2026-10-10 04:24 JST §3.2 inverse-limit reconstruction checkpoint
+
+- Sole ACTIVE Issue #112 / draft PR #152, no §3.3 implementation. The 25-minute serial-run budget is reached; resume same PR next run.
+- **Last fully verified:** CI #935 SUCCESS at `4016f550`: the chosen cyclic finite quotient equivalences commute with finite residue reduction on all classes, and the compatible finite-quotient inverse-limit subgroup is built in Lean/Blueprint.
+- **CI #942** failed in `PadicPrincipalUnitFiniteInverseLimit.lean:145` due to membership type inference for `QuotientGroup.eq_one_iff`; fixed with explicit subgroup membership in `6a14c068`. The fix has not yet been CI-verified.
+- New unverified Lean/Blueprint on active branch: natural map `U_(n+1) →* finite inverse limit`; filtration separation and injectivity; quotient equality iff unit residue equality; compatible representatives; project-local `SerrePadicInt p` reconstructed from residue coordinates.
+- **Next:** Inspect latest HEAD CI/log; repair any errors; then prove reconstructed p-adic integer is a principal unit, projection right inverse, and surjectivity of the natural map. Then identify the finite cyclic system with the project `Z_p`, tackle Proposition 8 and dyadic sign decomposition.
+- Target theorem still **NOT DONE**; leave PR #152 draft and don't merge until full source-facing statements and CI succeed.
+
+
+## 2026-10-10 §3.2 Proposition 8 inverse-limit and dyadic sign checkpoint
+
+- Sole ACTIVE is still Issue #112 / draft PR #152, branch `work/c2-s3-2-principal-units-serial`. Do not start §3.3.
+- **Last completely green checkpoint:** CI #935 (`4016f550`): sharp p-power filtration, finite cyclic quotients, transitions, finite-level compatibility, and finite quotient inverse limit.
+- **New Lean-checked result** in CI #964 (`eac6a1b4`): natural inverse-limit reconstruction, surjectivity of `U_(n+1) → lim U_(n+1)/U_(n+k+2)`, the explicit `Z_p` additive residue tower equivalence, and Proposition 8 candidates `serrePadicPrincipalUnitsOddAddEquiv` and `serrePadicPrincipalUnitsDyadicLevelTwoAddEquiv`. **CI #964 as a whole failed** in Verso Blueprint, not Lean, due to a malformed Blueprint uses-node ID containing an underscore. This was corrected in `38a5f7f0`.
+- More recent source-shaped Lean/Blueprint added: the dyadic sign `-1` belongs to U₁ but not U₂, its order is 2, and its class generates U₁/U₂. These **remain PR-head CI-unverified**. The full U₁ ≃ {±1} × U₂ and project `Q_p^×` structure theorem still remain incomplete.
+- Next: inspect latest CI, repair all failures, finish the internal direct-product decomposition in p=2, and compose with the already-existing project `Q_p` valuation/unit decomposition to obtain Serre Chapter 2 Theorem 2. Keep the same draft PR until source-facing proof, Blueprint and full CI green.

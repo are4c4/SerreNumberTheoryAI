@@ -29,6 +29,17 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicResidueUnitRoots
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicFiniteComplementResidueRoots
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplementLimit
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFieldRoots
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitPowerStep
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotient
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCard
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientTransition
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCompatibility
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteInverseLimit
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitResidueQuotient
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitInverseLimitReconstruction
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitZModTower
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitDyadicSign
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -91,6 +102,28 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFiniteComplementLimit}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicUnitFieldRoots}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitPowerStep}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotient}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCard}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientTransition}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCompatibility}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteInverseLimit}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitResidueQuotient}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitInverseLimitReconstruction}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitZModTower}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitDyadicSign}
 
 # 定理の依存関係
 

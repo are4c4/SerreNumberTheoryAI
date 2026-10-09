@@ -113,7 +113,7 @@
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §3.2 principal units / Proposition 8 / multiplicative-group theorem | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §3.2 principal units / Proposition 8 / multiplicative-group theorem | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
 | §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #108 / PR #149 はCI #873まで全検証がgreen。`U_n` filtration、successive quotient、有限補群塔と逆極限、命題7 `serrePadicUnitsMulEquivRootsProdPrincipal` と補群の一意性、分数体 `Q_p` の `(p-1)` 乗根の系までLean/Blueprintを完了した。PR #149 のmain統合をもってDONEとする。
@@ -176,3 +176,27 @@
 - CI #870: `V` の一意性、Lean・Blueprint・policy green。
 - CI #873: project `Q_p` における `p-1` 個の相異なる根の系、root import / Blueprint / policy green。
 - これらは原典 printed pp.22–24 / uploaded PDF pp.32–34 の§3.1を完了する。§3.2は次の別work item。
+
+## 2026-10-10 §3.2 シリアル移行
+
+- PR #149 / Issue #108 はmainへ統合され、§3.1の命題7・補群一意性・Q_pの根に関する系まで完了。
+- 現在唯一のACTIVEはIssue #112 / PR #152 / `work/c2-s3-2-principal-units-serial`。
+- 出典 §3.2 に合わせ、冪の補題と命題8の奇素数／2進の分岐を先に形式化。§3.3はWAITINGを維持。
+
+
+## 2026-10-10 §3.2 主単数群：逆極限の再構成（継続中）
+
+- Issue #112 / draft PR #152 が単一レーンの唯一のACTIVE。
+- **CI #935 green:** 原典の許容範囲における厳密`p`冪上昇、生成元候補、有限巡回商の位数と同型、自然射影と同型の可換性、有限商の逆極限部分群の定義がLean/Blueprintで検証済み。
+- その後に、主単数群から逆極限への自然な準同型・フィルトレーションの分離性と単射性、有限商と剰余射影の対応、逆極限の代表元選択、代表元の剰余座標からproject-local`SerrePadicInt`を再構成するコード・Blueprintを追加。
+- **CI #942 failed:** 逆極限への単射性における`QuotientGroup.eq_one_iff`の型推論を`6a14c068`で修正。追加範囲は現在のPR-head CI成功まで未検証。
+- 未完了: 再構成した`p`進整数の主単数性・全射性、命題8の`Z_p`との同型、2進の場合の符号分解、`Q_p^×`の定理2。現行PRをdraftのまま保持。
+
+
+## 2026-10-10 §3.2 命題8の逆極限同型と2進符号分解
+
+- 唯一の実装中PRは #152（Issue #112）。§3.3 は未着手。
+- CI #935が全項目成功。有限巡回商とその射影の可換性、逆極限の定義は検証済み。
+- CI #964は追加Leanコードのビルドに成功し、主単数群の逆極限からの復元・全射性、project-local`SerrePadicInt p`の加法群と主単数群の同型（奇素数の`U₁`および2進の`U₂`）のLean定義まで通過した。一方、Blueprint依存識別子にエラーがありCI全体は失敗。後続コミットで修正。
+- 2進の場合の符号元`-1`が`U₁`に入り`U₂`には入らないこと、その位数が2であり`U₁/U₂`を生成することをLean/Blueprintに追加。これらは最新CIで再検証中。
+- **命題8はまだ全体としてDONEにしない。** 2進の内部直積分解、定理2の`Q_p^×`群分解、完全なCI成功、自己レビューとmain統合が残る。
