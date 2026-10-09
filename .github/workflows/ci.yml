@@ -31,13 +31,36 @@ jobs:
           lean --version
           lake --version
 
-      - name: Restore Lake package cache
-        uses: actions/cache@v5
+      # Restore both package sources/build artifacts and the resolved dependency graph.
+      # The cache key changes when the Lean version or dependency declarations change.
+      - name: Restore Lake dependency cache
+        id: lake-deps-cache
+        uses: actions/cache/restore@v5
         with:
-          path: .lake/packages
-          key: ${{ runner.os }}-lake-packages-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
+          path: |
+            .lake/packages
+            lake-manifest.json
+          key: ${{ runner.os }}-lake-deps-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
           restore-keys: |
-            ${{ runner.os }}-lake-packages-v1-
+            ${{ runner.os }}-lake-deps-v2-
+
+      - name: Resolve dependencies on cache miss
+        if: steps.lake-deps-cache.outputs.cache-hit != 'true'
+        run: lake update
+
+      - name: Restore mathlib cache when available
+        run: lake exe cache get || true
+
+      # Save dependencies *before* proof checking: even a failing Lean proof can
+      # then reuse downloaded dependencies on its next CI attempt.
+      - name: Save Lake dependency cache before proof checking
+        if: steps.lake-deps-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake/packages
+            lake-manifest.json
+          key: ${{ runner.os }}-lake-deps-v2-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}
 
       - name: Restore root Lean build cache
         uses: actions/cache@v5
@@ -47,12 +70,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-lean-build-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean') }}-
             ${{ runner.os }}-lean-build-v1-
-
-      - name: Resolve dependencies
-        run: lake update
-
-      - name: Restore mathlib cache when available
-        run: lake exe cache get || true
+          save-always: true
 
       - name: Check repository policy
         run: bash scripts/check_formalization_policy.sh
