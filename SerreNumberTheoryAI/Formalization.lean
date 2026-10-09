@@ -51,6 +51,7 @@ import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuoti
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCyclic
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientTransition
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteQuotientCompatibility
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitFiniteInverseLimit
 
 /-!
 # Formalization root
