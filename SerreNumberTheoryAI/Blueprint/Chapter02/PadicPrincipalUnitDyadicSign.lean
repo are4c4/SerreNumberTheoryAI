@@ -7,6 +7,8 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Informal
 
+private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+
 #doc (Manual) "第2章3.2 2進主単数群の符号" =>
 
 *出典:* セール『数論講義』第2章§3.2、印刷25頁。
