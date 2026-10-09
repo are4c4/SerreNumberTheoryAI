@@ -401,6 +401,42 @@ theorem serrePadicPrincipalUnit_pow_prime_iterate_exact
       · simpa only [pow_succ, pow_mul, Nat.add_assoc] using hnext
       · simpa only [pow_succ, pow_mul, Nat.add_assoc] using hnotnext
 
+/--
+In odd residue characteristic the distinguished unit 1+p has exact
+filtration depth k+1 after its p^k-th power.
+This is the source's chosen generator candidate for U₁.
+-/
+theorem serrePadicPrincipalUnitLevelOneGenerator_exact_layers
+    (hpodd : p ≠ 2) (k : ℕ) :
+    (((serrePadicPrincipalUnitOfCoeff p 0 1 :
+      serrePadicPrincipalUnits p 1) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∈
+        serrePadicPrincipalUnits p (k + 1)) ∧
+      (((serrePadicPrincipalUnitOfCoeff p 0 1 :
+        serrePadicPrincipalUnits p 1) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∉
+        serrePadicPrincipalUnits p (k + 2)) := by
+  simpa using
+    (serrePadicPrincipalUnit_pow_prime_iterate_exact p 0 k
+      (Or.inl hpodd) (serrePadicPrincipalUnitOfCoeff p 0 1)
+      (serrePadicPrincipalUnitOfCoeff_one_exactLayer p 0))
+
+/--
+At level two the unit 1+p² has exact filtration depth k+2 after its
+p^k-th power, including the dyadic prime p=2.  This is the source's
+generator candidate for U₂.
+-/
+theorem serrePadicPrincipalUnitLevelTwoGenerator_exact_layers
+    (k : ℕ) :
+    (((serrePadicPrincipalUnitOfCoeff p 1 1 :
+      serrePadicPrincipalUnits p 2) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∈
+        serrePadicPrincipalUnits p (k + 2)) ∧
+      (((serrePadicPrincipalUnitOfCoeff p 1 1 :
+        serrePadicPrincipalUnits p 2) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∉
+        serrePadicPrincipalUnits p (k + 3)) := by
+  simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
+    (serrePadicPrincipalUnit_pow_prime_iterate_exact p 1 k
+      (Or.inr (by omega)) (serrePadicPrincipalUnitOfCoeff p 1 1)
+      (serrePadicPrincipalUnitOfCoeff_one_exactLayer p 1))
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
