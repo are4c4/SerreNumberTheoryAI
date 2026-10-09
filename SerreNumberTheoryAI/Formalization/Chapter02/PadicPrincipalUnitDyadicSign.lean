@@ -112,6 +112,29 @@ theorem serrePadicDyadicNegOnePrincipal_quotient_generates :
     Nat.finite_of_card_ne_zero (Nat.ne_of_gt hpositive)
   exact Subgroup.eq_top_of_card_eq _ hcard
 
+/--
+Every element of U₁ lies in U₂ or becomes an element of U₂ when
+multiplied by -1. This uses the index-two statement already proved
+for the finite principal-unit quotient.
+-/
+theorem serrePadicDyadicPrincipalUnit_mem_levelTwo_or_sign_mul_mem
+    (u : serrePadicPrincipalUnits 2 1) :
+    u ∈ serrePadicPrincipalUnitDeepSubgroup 2 0 1 ∨
+      serrePadicDyadicNegOnePrincipal * u ∈
+        serrePadicPrincipalUnitDeepSubgroup 2 0 1 := by
+  let K := serrePadicPrincipalUnitDeepSubgroup 2 0 1
+  have hindex : K.index = 2 := by
+    change Nat.card (serrePadicPrincipalUnitFiniteQuotient 2 0 1) = 2
+    exact serrePadicPrincipalUnitFiniteQuotient_card 2 0 1
+  have hsign : serrePadicDyadicNegOnePrincipal ∉ K :=
+    serrePadicDyadicNegOnePrincipal_not_mem_levelTwo
+  by_cases hu : u ∈ K
+  · exact Or.inl hu
+  · right
+    exact (Subgroup.mul_mem_iff_of_index_two hindex
+      (a := serrePadicDyadicNegOnePrincipal) (b := u)).2
+        (by simp [hsign, hu])
+
 end PadicPrincipalUnitDyadicSign
 
 end SerreNumberTheoryAI
