@@ -502,6 +502,112 @@ noncomputable def serrePadicUnitRootsEquivResidueUnits :
     (serrePadicUnitRootsToFiniteComplementTower_surjective p)
 
 
+/--
+The *actual* reduction map from project roots to first residue units is
+surjective.  The source roots form a finite group with the same cardinality
+as the residue-unit group, by the explicit finite-complement inverse limit;
+the already proved injectivity therefore implies surjectivity.
+-/
+theorem serrePadicUnitRootsReduction_surjective :
+    Function.Surjective (serrePadicUnitRootsReduction p) := by
+  let e : serrePadicUnitRootsOfUnity p ≃ (padicResidueRing p 0)ˣ :=
+    (serrePadicUnitRootsEquivResidueUnits p).toEquiv
+  letI : Finite (serrePadicUnitRootsOfUnity p) :=
+    Finite.of_equiv ((padicResidueRing p 0)ˣ) e.symm
+  exact (serrePadicUnitRootsReduction_injective p).surjective_of_finite e
+
+/-- Actual reduction to the subgroup of first-residue roots is surjective. -/
+theorem serrePadicUnitRootsReductionToResidueRoots_surjective :
+    Function.Surjective (serrePadicUnitRootsReductionToResidueRoots p) := by
+  intro r
+  obtain ⟨u, hu⟩ :=
+    serrePadicUnitRootsReduction_surjective p (r : (padicResidueRing p 0)ˣ)
+  refine ⟨u, ?_⟩
+  apply Subtype.ext
+  exact hu
+
+/-- The actual first-residue reduction restricted to the source finite complement. -/
+noncomputable def serrePadicUnitRootsReductionEquiv :
+    serrePadicUnitRootsOfUnity p ≃* (padicResidueRing p 0)ˣ :=
+  MulEquiv.ofBijective (serrePadicUnitRootsReduction p)
+    ⟨serrePadicUnitRootsReduction_injective p,
+      serrePadicUnitRootsReduction_surjective p⟩
+
+/--
+The multiplication homomorphism from the finite roots subgroup and the first
+principal-unit subgroup onto the full group of project p-adic units.
+-/
+def serrePadicUnitProductHom :
+    (serrePadicUnitRootsOfUnity p × serrePadicPrincipalUnits p 1) →*
+      (SerrePadicInt p)ˣ where
+  toFun x := (x.1 : (SerrePadicInt p)ˣ) * (x.2 : (SerrePadicInt p)ˣ)
+  map_one' := by
+    change (1 : (SerrePadicInt p)ˣ) * 1 = 1
+    simp
+  map_mul' x y := by
+    change (((x.1 * y.1 : serrePadicUnitRootsOfUnity p) :
+        (SerrePadicInt p)ˣ) *
+      ((x.2 * y.2 : serrePadicPrincipalUnits p 1) :
+        (SerrePadicInt p)ˣ)) =
+      ((x.1 : (SerrePadicInt p)ˣ) * (x.2 : (SerrePadicInt p)ˣ)) *
+      ((y.1 : (SerrePadicInt p)ˣ) * (y.2 : (SerrePadicInt p)ˣ))
+    simp only [Subgroup.coe_mul]
+    ac_rfl
+
+/-- The multiplication map has trivial fibers, by the injectivity of root reduction. -/
+theorem serrePadicUnitProductHom_injective :
+    Function.Injective (serrePadicUnitProductHom p) := by
+  intro x y hxy
+  have hredx :
+      serrePadicUnitReduction p (x.2 : (SerrePadicInt p)ˣ) = 1 :=
+    x.2.property
+  have hredy :
+      serrePadicUnitReduction p (y.2 : (SerrePadicInt p)ˣ) = 1 :=
+    y.2.property
+  have hprod :
+      (x.1 : (SerrePadicInt p)ˣ) * (x.2 : (SerrePadicInt p)ˣ) =
+        (y.1 : (SerrePadicInt p)ˣ) * (y.2 : (SerrePadicInt p)ˣ) := hxy
+  have hred := congrArg (serrePadicUnitReduction p) hprod
+  rw [map_mul, map_mul, hredx, hredy, mul_one, mul_one] at hred
+  have hroot : x.1 = y.1 :=
+    serrePadicUnitRootsReduction_injective p hred
+  have hprincipal : x.2 = y.2 := by
+    apply Subtype.ext
+    rw [hroot] at hprod
+    exact mul_left_cancel hprod
+  exact Prod.ext hroot hprincipal
+
+/-- Each project p-adic unit decomposes into a root of unity and a principal unit. -/
+theorem serrePadicUnitProductHom_surjective :
+    Function.Surjective (serrePadicUnitProductHom p) := by
+  intro u
+  obtain ⟨v, hv⟩ :=
+    serrePadicUnitRootsReduction_surjective p (serrePadicUnitReduction p u)
+  have hvred :
+      serrePadicUnitReduction p (v : (SerrePadicInt p)ˣ) =
+        serrePadicUnitReduction p u := hv
+  let w : (SerrePadicInt p)ˣ := (v : (SerrePadicInt p)ˣ)⁻¹ * u
+  have hw : w ∈ serrePadicPrincipalUnits p 1 := by
+    change serrePadicUnitReduction p w = 1
+    dsimp [w]
+    rw [map_mul, map_inv, hvred, inv_mul_cancel]
+  refine ⟨(v, ⟨w, hw⟩), ?_⟩
+  change (v : (SerrePadicInt p)ˣ) * w = u
+  dsimp [w]
+  simp
+
+/--
+Serre Chapter 2, §3.1, Proposition 7: the group of p-adic units splits as
+the direct product of the finite `(p-1)`-st roots and the principal units.
+-/
+noncomputable def serrePadicUnitsMulEquivRootsProdPrincipal :
+    (serrePadicUnitRootsOfUnity p × serrePadicPrincipalUnits p 1) ≃*
+      (SerrePadicInt p)ˣ :=
+  MulEquiv.ofBijective (serrePadicUnitProductHom p)
+    ⟨serrePadicUnitProductHom_injective p,
+      serrePadicUnitProductHom_surjective p⟩
+
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
