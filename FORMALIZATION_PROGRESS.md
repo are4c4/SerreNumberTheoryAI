@@ -161,3 +161,11 @@
 - active mathematical implementationは原則1 item / 1 PRだけ。
 - 現在のactive itemは `docs/ACTIVE_WORK.md` とlive GitHub stateを優先する。
 - 既存PRのレビュー待ちやmerge待ちを理由に新しい数学sliceを開始しない。
+
+
+### 2026-10-10 §3.1 作業中の追加実装
+
+- CI #863（`c23280cd`）で有限補群塔の逆極限と`(p-1)`乗根への復元・全射性がLean/Versoとも成功。
+- 後続コミット`d8b864d`で命題7の直積同型`serrePadicUnitsMulEquivRootsProdPrincipal`までLean定義を追加。`22373e7`でBlueprint対応を追加した。
+- この後続部分のCIは確認中のため、上のPhase 8 §3.1の完了欄はまだ更新しない。
+- 次はCI修復（必要なら）→補群の一意性・原典の系→source/self-review→main統合の順。§3.2はこのPRの範囲外。
