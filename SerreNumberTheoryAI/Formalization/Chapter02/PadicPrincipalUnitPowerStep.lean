@@ -369,6 +369,38 @@ theorem serrePadicPrincipalUnit_pow_prime_exact_next
   exact serrePadicPowerStep_cancel_pow_dvd p (n + 1) a
     (by simpa [Nat.add_assoc] using hcoefficient)
 
+/--
+Iterated sharp power-step lemma: a project principal unit in an exact
+filtration layer remains in the corresponding exact layer after every
+successive p-power.  The original source parity restriction persists.
+-/
+theorem serrePadicPrincipalUnit_pow_prime_iterate_exact
+    (n k : ℕ) (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    (((u : (SerrePadicInt p)ˣ) ^ (p ^ k)) ∈
+        serrePadicPrincipalUnits p (n + k + 1)) ∧
+      (((u : (SerrePadicInt p)ˣ) ^ (p ^ k)) ∉
+        serrePadicPrincipalUnits p (n + k + 2)) := by
+  induction k with
+  | zero =>
+      simpa using (And.intro u.property hnot)
+  | succ k ih =>
+      obtain ⟨hmem, hdeep⟩ := ih
+      have hsource' : p ≠ 2 ∨ 1 ≤ n + k := by
+        rcases hsource with hp | hn
+        · exact Or.inl hp
+        · exact Or.inr (by omega)
+      obtain ⟨hnext, hnotnext⟩ :=
+        serrePadicPrincipalUnit_pow_prime_exact_next p (n + k)
+          hsource'
+          (⟨(u : (SerrePadicInt p)ˣ) ^ p ^ k, hmem⟩ :
+            serrePadicPrincipalUnits p (n + k + 1)) hdeep
+      constructor
+      · simpa only [pow_succ, pow_mul, Nat.add_assoc] using hnext
+      · simpa only [pow_succ, pow_mul, Nat.add_assoc] using hnotnext
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
