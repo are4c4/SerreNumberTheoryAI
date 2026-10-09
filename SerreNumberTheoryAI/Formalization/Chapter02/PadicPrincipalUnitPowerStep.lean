@@ -293,6 +293,82 @@ theorem serrePadicPowerStep_cancel_pow_dvd
       rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
       ring
 
+/--
+The sharp source power-step lemma in project indices: if a unit belongs to
+U_(n+1) but not U_(n+2), its p-th power belongs to U_(n+2) but not
+U_(n+3). The dyadic case requires n+1 >= 2, unlike odd prime p.
+-/
+theorem serrePadicPrincipalUnit_pow_prime_exact_next
+    (n : ℕ) (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    ((u : (SerrePadicInt p)ˣ) ^ p ∈
+        serrePadicPrincipalUnits p (n + 2)) ∧
+      ((u : (SerrePadicInt p)ˣ) ^ p ∉
+        serrePadicPrincipalUnits p (n + 3)) := by
+  refine ⟨serrePadicPrincipalUnit_pow_prime_mem_next p n u, ?_⟩
+  intro hdeep
+  let a : SerrePadicInt p := serrePadicPrincipalUnitCoeff p n u
+  have hnotdiv : ¬ (p : SerrePadicInt p) ∣ a := by
+    intro hdiv
+    have hzero : serrePadicPrincipalUnitCoeffResidue p n u = 0 := by
+      change serrePadicIntProj p 0 a = 0
+      exact (p_dvd_serrePadicInt_iff_proj_zero p a).1 hdiv
+    exact hnot
+      ((serrePadicPrincipalUnitCoeffResidue_eq_zero_iff p n u).1 hzero)
+  have huval :
+      (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p)) =
+        1 + (p : SerrePadicInt p) ^ (n + 1) * a := by
+    have hs := serrePadicPrincipalUnitCoeff_spec p n u
+    calc
+      (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p)) =
+          (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) + 1 := by ring
+      _ = (p : SerrePadicInt p) ^ (n + 1) * a + 1 := by
+        simpa only [a] using
+          congrArg (fun z : SerrePadicInt p => z + 1) hs
+      _ = 1 + (p : SerrePadicInt p) ^ (n + 1) * a := by ring
+  have hsource' : p ≠ 2 ∨ 2 ≤ n + 1 := by
+    rcases hsource with hodd | hn
+    · exact Or.inl hodd
+    · exact Or.inr (by omega)
+  have hbinom :=
+    serrePadicPowerStep_binomial_congr_dvd p (n + 1)
+      (by omega) hsource' a
+  have hbinom' :
+      (p : SerrePadicInt p) ^ (n + 3) ∣
+        (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) ^ p -
+          (1 + (p : SerrePadicInt p) ^ (n + 2) * a)) := by
+    simpa [huval, Nat.add_assoc] using hbinom
+  have hdeepdiv :
+      (p : SerrePadicInt p) ^ (n + 3) ∣
+        (((((u : (SerrePadicInt p)ˣ) ^ p) :
+            (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) :=
+    (mem_serrePadicPrincipalUnits_succ_iff_pow_dvd p (n + 2)
+      ((u : (SerrePadicInt p)ˣ) ^ p)).1 (by
+        simpa [Nat.add_assoc] using hdeep)
+  have hdeepval :
+      (p : SerrePadicInt p) ^ (n + 3) ∣
+        (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) ^ p - 1) := by
+    change (p : SerrePadicInt p) ^ (n + 3) ∣
+      ((Units.coeHom (SerrePadicInt p))
+        ((u : (SerrePadicInt p)ˣ) ^ p) - 1) at hdeepdiv
+    rw [map_pow] at hdeepdiv
+    simpa only [Units.coeHom_apply] using hdeepdiv
+  have hcoefficient :
+      (p : SerrePadicInt p) ^ (n + 3) ∣
+        (p : SerrePadicInt p) ^ (n + 2) * a := by
+    have hsub := dvd_sub hdeepval hbinom'
+    have heq :
+        ((((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) ^ p - 1) -
+          (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) ^ p -
+            (1 + (p : SerrePadicInt p) ^ (n + 2) * a))) =
+          (p : SerrePadicInt p) ^ (n + 2) * a := by ring
+    simpa only [heq] using hsub
+  apply hnotdiv
+  exact serrePadicPowerStep_cancel_pow_dvd p (n + 1) a
+    (by simpa [Nat.add_assoc] using hcoefficient)
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
