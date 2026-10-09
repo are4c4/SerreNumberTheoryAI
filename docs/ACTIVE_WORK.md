@@ -44,3 +44,13 @@ CI失敗があれば最優先でログを読み修正する。書籍本文の転
 - New finite-level transition `serrePadicPrincipalUnitFiniteQuotientTransition` and its surjectivity are added in `PadicPrincipalUnitFiniteQuotientTransition.lean` and linked in the Blueprint/root entry points. Latest CI #926 is **pending**; do not mark transitions as verified until green.
 - The next mathematical boundary is the compatible transition diagram for chosen cyclic equivalences `ZMod(p^k)`, then the inverse-limit passage to project `Z_p`. The dyadic sign decomposition and the project field multiplicative-group theorem remain unproved.
 - Keep PR #152 / Issue #112 sole ACTIVE; do not start §3.3.
+
+
+## 2026-10-10 04:24 JST §3.2 inverse-limit reconstruction checkpoint
+
+- Sole ACTIVE Issue #112 / draft PR #152, no §3.3 implementation. The 25-minute serial-run budget is reached; resume same PR next run.
+- **Last fully verified:** CI #935 SUCCESS at `4016f550`: the chosen cyclic finite quotient equivalences commute with finite residue reduction on all classes, and the compatible finite-quotient inverse-limit subgroup is built in Lean/Blueprint.
+- **CI #942** failed in `PadicPrincipalUnitFiniteInverseLimit.lean:145` due to membership type inference for `QuotientGroup.eq_one_iff`; fixed with explicit subgroup membership in `6a14c068`. The fix has not yet been CI-verified.
+- New unverified Lean/Blueprint on active branch: natural map `U_(n+1) →* finite inverse limit`; filtration separation and injectivity; quotient equality iff unit residue equality; compatible representatives; project-local `SerrePadicInt p` reconstructed from residue coordinates.
+- **Next:** Inspect latest HEAD CI/log; repair any errors; then prove reconstructed p-adic integer is a principal unit, projection right inverse, and surjectivity of the natural map. Then identify the finite cyclic system with the project `Z_p`, tackle Proposition 8 and dyadic sign decomposition.
+- Target theorem still **NOT DONE**; leave PR #152 draft and don't merge until full source-facing statements and CI succeed.
