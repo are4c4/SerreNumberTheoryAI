@@ -271,3 +271,27 @@ theorem blueprint_principalUnitExactPowerStep
   serrePadicPrincipalUnit_pow_prime_exact_next p n hsource u hnot
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitexactpoweriterate"
+  (uses := "principalunitexactpowerstep")
+厳密な層上昇を反復する。原典の奇素数・2進の場合分けを保ったまま、
+`u∈U_(n+1)＼U_(n+2)` なら任意の `k` について
+`u^(p^k)∈U_(n+k+1)＼U_(n+k+2)` を得る。
+これは有限商における生成元の位数を調べるための基礎となる。
+:::
+
+```lean "principalunitexactpoweriterate"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitExactPowerIterate
+    (p n k : ℕ) [Fact p.Prime] (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    (((u : (SerrePadicInt p)ˣ) ^ (p ^ k)) ∈
+        serrePadicPrincipalUnits p (n + k + 1)) ∧
+      (((u : (SerrePadicInt p)ˣ) ^ (p ^ k)) ∉
+        serrePadicPrincipalUnits p (n + k + 2)) :=
+  serrePadicPrincipalUnit_pow_prime_iterate_exact p n k hsource u hnot
+end SerreNumberTheoryAI
+```
