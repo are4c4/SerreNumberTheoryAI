@@ -375,6 +375,59 @@ noncomputable def serrePadicUnitRootsEquivResidueUnitsOfTowerSurjective
   (serrePadicUnitRootsEquivResidueRootsOfTowerSurjective p hsurj).trans
     (serreResidueUnitRootsOfUnityEquivUnits p)
 
+/--
+A compatible tower of finite *units* determines a compatible tower of
+residue-ring elements, hence a project p-adic integer.
+-/
+def serrePadicFiniteUnitComplementTowerToPadicInt
+    (x : serrePadicFiniteUnitComplementTower p) : SerrePadicInt p :=
+  ⟨fun n => ((serrePadicFiniteUnitComplementTowerProj p n x :
+      (padicResidueRing p n)ˣ) : padicResidueRing p n), by
+    intro n
+    have hx : serrePadicFiniteUnitComplementTransition p n
+        (serrePadicFiniteUnitComplementTowerProj p (n + 1) x) =
+      serrePadicFiniteUnitComplementTowerProj p n x := x.property n
+    have hunits := congrArg
+      (fun v : serrePadicFiniteUnitComplement p n =>
+        (v : (padicResidueRing p n)ˣ)) hx
+    have hvals := congrArg
+      (fun v : (padicResidueRing p n)ˣ => (v : padicResidueRing p n)) hunits
+    simpa [serrePadicFiniteUnitComplementTransition,
+      serrePadicResidueUnitTransition, padicReduction,
+      serrePadicFiniteUnitComplementTowerProj] using hvals⟩
+
+@[simp]
+theorem serrePadicFiniteUnitComplementTowerToPadicInt_proj
+    (x : serrePadicFiniteUnitComplementTower p) (n : ℕ) :
+    serrePadicIntProj p n (serrePadicFiniteUnitComplementTowerToPadicInt p x) =
+      ((serrePadicFiniteUnitComplementTowerProj p n x :
+        (padicResidueRing p n)ˣ) : padicResidueRing p n) :=
+  rfl
+
+/-- The inverse-limit element obtained from a compatible unit tower is a unit. -/
+theorem serrePadicFiniteUnitComplementTowerToPadicInt_isUnit
+    (x : serrePadicFiniteUnitComplementTower p) :
+    IsUnit (serrePadicFiniteUnitComplementTowerToPadicInt p x) := by
+  apply serrePadicInt_isUnit_of_proj_zero_isUnit p
+  exact ⟨(serrePadicFiniteUnitComplementTowerProj p 0 x :
+    (padicResidueRing p 0)ˣ), rfl⟩
+
+/-- The project unit associated to a compatible tower of finite complements. -/
+noncomputable def serrePadicFiniteUnitComplementTowerToPadicUnit
+    (x : serrePadicFiniteUnitComplementTower p) : (SerrePadicInt p)ˣ :=
+  (serrePadicFiniteUnitComplementTowerToPadicInt_isUnit p x).unit
+
+@[simp]
+theorem serrePadicFiniteUnitComplementTowerToPadicUnit_proj
+    (x : serrePadicFiniteUnitComplementTower p) (n : ℕ) :
+    serrePadicIntProj p n
+        (serrePadicFiniteUnitComplementTowerToPadicUnit p x : SerrePadicInt p) =
+      ((serrePadicFiniteUnitComplementTowerProj p n x :
+        (padicResidueRing p n)ˣ) : padicResidueRing p n) := by
+  rw [IsUnit.unit_spec (serrePadicFiniteUnitComplementTowerToPadicInt_isUnit p x)]
+  rfl
+
+
 end PadicUnitFiniteComplementLimit
 
 end SerreNumberTheoryAI
