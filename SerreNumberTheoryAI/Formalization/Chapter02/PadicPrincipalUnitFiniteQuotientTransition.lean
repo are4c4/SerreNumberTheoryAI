@@ -52,6 +52,18 @@ theorem serrePadicPrincipalUnitFiniteQuotientTransition_mk
         (serrePadicPrincipalUnitDeepSubgroup p n k)) u) := by
   rfl
 
+/-- Every class at a shallow finite level lifts to a class at the next level. -/
+theorem serrePadicPrincipalUnitFiniteQuotientTransition_surjective
+    (n k : ℕ) :
+    Function.Surjective (serrePadicPrincipalUnitFiniteQuotientTransition p n k) := by
+  intro x
+  obtain ⟨u, rfl⟩ :=
+    (QuotientGroup.mk'_surjective
+      (serrePadicPrincipalUnitDeepSubgroup p n k)) x
+  refine ⟨(QuotientGroup.mk'
+    (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u, ?_⟩
+  exact serrePadicPrincipalUnitFiniteQuotientTransition_mk p n k u
+
 end PadicPrincipalUnitFiniteQuotientTransition
 
 end SerreNumberTheoryAI
