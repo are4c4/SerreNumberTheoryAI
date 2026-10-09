@@ -103,3 +103,28 @@ theorem blueprint_principalUnitFiniteQuotientLevelTwoGenerator
   serrePadicPrincipalUnitFiniteQuotient_levelTwo_generator_order p k
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitfinitequotientcyclicsubgroupcard"
+  (uses := "principalunitfinitequotientexactorder")
+厳密な最初の層の元が有限商内で生成する巡回部分群の位数は
+`p^(k+1)` に等しい。有限商全体が巡回群であることは
+**まだ主張していない**（商全体の位数との比較が次の課題）。
+:::
+
+```lean "principalunitfinitequotientcyclicsubgroupcard"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteQuotientCyclicSubgroupCard
+    (p n k : ℕ) [Fact p.Prime] (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    Nat.card
+      (Subgroup.zpowers
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u)) =
+      p ^ (k + 1) :=
+  serrePadicPrincipalUnitFiniteQuotient_cyclicSubgroup_card
+    p n k hsource u hnot
+end SerreNumberTheoryAI
+```
