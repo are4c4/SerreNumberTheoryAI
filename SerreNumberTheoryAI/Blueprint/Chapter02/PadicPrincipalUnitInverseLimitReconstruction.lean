@@ -56,3 +56,55 @@ theorem blueprint_principalUnitFiniteInverseLimitRepAdjacent
   serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent p n k x
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitfiniteinverselimitrepadjacentresidue"
+  (uses := "principalunitfiniteinverselimitrepadjacent principalunitfinitequotientresidueeq")
+隣接する主単数の代表元は、適切な法の剰余環でも一致する。
+:::
+
+```lean "principalunitfiniteinverselimitrepadjacentresidue"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteInverseLimitRepAdjacentResidue
+    (p n k : ℕ) [Fact p.Prime]
+    (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicPrincipalUnitResidueHom p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitRep p n (k + 1) x) =
+    serrePadicPrincipalUnitResidueHom p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x) :=
+  serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_residue p n k x
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunitfiniteinverselimitrepadjacentproj"
+  (uses := "principalunitfiniteinverselimitrepadjacentresidue")
+隣接代表元の法`p^(n+k+2)`での像が一致する。
+:::
+
+:::definition "principalunitfiniteinverselimittopadicint"
+  (lean := "SerreNumberTheoryAI.serrePadicPrincipalUnitFiniteInverseLimitToPadicInt")
+  (uses := "principalunitfiniteinverselimitrepadjacentproj")
+整合する有限主単数商の代表元の剰余座標を並べ、
+project-localな`SerrePadicInt p`の元を構成する。
+この段階では単数性・主単数性の証明とは区別する。
+:::
+
+:::theorem "principalunitfiniteinverselimittopadicintproj"
+  (uses := "principalunitfiniteinverselimittopadicint")
+構成した`p`進整数の第`k`剰余成分は選んだ代表元の同じ成分である。
+:::
+
+```lean "principalunitfiniteinverselimittopadicintproj"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteInverseLimitToPadicIntProj
+    (p n k : ℕ) [Fact p.Prime]
+    (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicIntProj p k
+      (serrePadicPrincipalUnitFiniteInverseLimitToPadicInt p n x) =
+    serrePadicIntProj p k
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+        serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p) :=
+  serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_proj p n k x
+end SerreNumberTheoryAI
+```
