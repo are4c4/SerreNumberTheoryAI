@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltrationQuotient
 import Mathlib.Data.Nat.Choose.Dvd
+import Mathlib.Data.Nat.Choose.Sum
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -224,6 +225,53 @@ theorem serrePadicPowerStep_high_terms_sum_dvd
   intro i hi
   exact serrePadicPowerStep_high_term_dvd p n i hn hsource
     (Finset.mem_Icc.mp hi).1 (Finset.mem_Icc.mp hi).2 a
+
+/--
+Source binomial congruence: in the permitted odd-prime/dyadic range,
+(1 + p^n a)^p is congruent to 1 + p^(n+1) a modulo p^(n+2).
+This is the key calculation behind the *sharp* p-power filtration step.
+-/
+theorem serrePadicPowerStep_binomial_congr_dvd
+    (n : ℕ) (hn : 1 ≤ n) (hsource : p ≠ 2 ∨ 2 ≤ n)
+    (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      ((1 + (p : SerrePadicInt p) ^ n * a) ^ p -
+        (1 + (p : SerrePadicInt p) ^ (n + 1) * a)) := by
+  let t : SerrePadicInt p := (p : SerrePadicInt p) ^ n * a
+  let f : ℕ → SerrePadicInt p := fun i =>
+    (Nat.choose p i : SerrePadicInt p) * t ^ i
+  have hp2 : 2 ≤ p + 1 := by
+    have hprime : 2 ≤ p := (Fact.out : p.Prime).two_le
+    omega
+  have hbinom :
+      (1 + t) ^ p = ∑ i ∈ Finset.range (p + 1), f i := by
+    simpa [f, add_comm, mul_comm] using
+      (add_pow t (1 : SerrePadicInt p) p)
+  have hsplit :
+      (∑ i ∈ Finset.range (p + 1), f i) =
+        f 0 + f 1 + ∑ i ∈ Finset.Icc 2 p, f i := by
+    calc
+      _ = (∑ i ∈ Finset.range 2, f i) +
+          ∑ i ∈ Finset.Ico 2 (p + 1), f i :=
+        (Finset.sum_range_add_sum_Ico f hp2).symm
+      _ = f 0 + f 1 + ∑ i ∈ Finset.Icc 2 p, f i := by
+        simp [Finset.sum_range_succ, Finset.Ico_add_one_right_eq_Icc, add_assoc]
+  have hzero : f 0 = 1 := by simp [f]
+  have hone :
+      f 1 = (p : SerrePadicInt p) ^ (n + 1) * a := by
+    simp [f, t, pow_succ, mul_assoc, mul_comm, mul_left_comm]
+  have hrem :
+      (1 + t) ^ p -
+        (1 + (p : SerrePadicInt p) ^ (n + 1) * a) =
+      ∑ i ∈ Finset.Icc 2 p, f i := by
+    rw [hbinom, hsplit, hzero, hone]
+    ring
+  change (p : SerrePadicInt p) ^ (n + 2) ∣
+    ((1 + t) ^ p -
+      (1 + (p : SerrePadicInt p) ^ (n + 1) * a))
+  rw [hrem]
+  simpa [f, t, mul_comm] using
+    (serrePadicPowerStep_high_terms_sum_dvd p n hn hsource a)
 
 end PadicPrincipalUnitPowerStep
 
