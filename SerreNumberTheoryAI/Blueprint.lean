@@ -37,6 +37,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientT
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteQuotientCompatibility
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteInverseLimit
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitResidueQuotient
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitInverseLimitReconstruction
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -115,6 +116,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteInverseLimit}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitResidueQuotient}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitInverseLimitReconstruction}
 
 # 定理の依存関係
 
