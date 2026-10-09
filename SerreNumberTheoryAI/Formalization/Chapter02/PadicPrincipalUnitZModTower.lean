@@ -151,6 +151,42 @@ noncomputable def serrePadicPrincipalUnitZModTowerEquivFiniteInverseLimit
           ((z : ∀ k, Multiplicative (padicResidueRing p k)) k)
           ((w : ∀ k, Multiplicative (padicResidueRing p k)) k) }
 
+/--
+The general source-compatible principal-unit identification: a chosen
+element in the first exact layer gives an additive-group isomorphism
+between project-local Z_p and the source principal-unit group.
+-/
+noncomputable def serrePadicIntMultiplicativeEquivPrincipalUnits
+    (n : ℕ) (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    Multiplicative (SerrePadicInt p) ≃*
+      serrePadicPrincipalUnits p (n + 1) :=
+  (serrePadicIntMultiplicativeEquivZModTower p).trans
+    ((serrePadicPrincipalUnitZModTowerEquivFiniteInverseLimit
+        p n hsource u hnot).trans
+      (serrePadicPrincipalUnitEquivFiniteInverseLimit p n).symm)
+
+/-- Proposition 8, odd residue characteristic: the additive Z_p is U₁. -/
+noncomputable def serrePadicPrincipalUnitsOddAddEquiv
+    (hpodd : p ≠ 2) :
+    SerrePadicInt p ≃+
+      Additive (serrePadicPrincipalUnits p 1) :=
+  (serrePadicIntMultiplicativeEquivPrincipalUnits p 0
+    (Or.inl hpodd) (serrePadicPrincipalUnitOfCoeff p 0 1)
+    (serrePadicPrincipalUnitOfCoeff_one_exactLayer p 0)).toAdditiveRight
+
+/-- Proposition 8, dyadic principal units U₂: the additive Z₂ is U₂. -/
+noncomputable def serrePadicPrincipalUnitsDyadicLevelTwoAddEquiv :
+    SerrePadicInt 2 ≃+
+      Additive (serrePadicPrincipalUnits 2 2) := by
+  letI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  exact
+    (serrePadicIntMultiplicativeEquivPrincipalUnits 2 1
+      (Or.inr (by omega)) (serrePadicPrincipalUnitOfCoeff 2 1 1)
+      (serrePadicPrincipalUnitOfCoeff_one_exactLayer 2 1)).toAdditiveRight
+
 end PadicPrincipalUnitZModTower
 
 end SerreNumberTheoryAI
