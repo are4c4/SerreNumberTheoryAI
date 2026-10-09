@@ -1,4 +1,5 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltrationQuotient
+import Mathlib.Data.Nat.Choose.Dvd
 
 /-!
 # The first steps toward the structure of principal p-adic units
@@ -99,6 +100,16 @@ theorem serrePadicPrincipalUnit_pow_prime_mem_next
     exact hpower
   rw [serrePadicPrincipalUnitCoeffResidueHom_ker p n] at hker
   exact hker
+
+/--
+Every strictly intermediate binomial coefficient in (1+t)^p is divisible
+by p.  Together with the exponent bounds above, this is the arithmetic
+input for the source's sharp p-power step.
+-/
+theorem serrePadicPowerStep_middle_choose_dvd
+    (i : ℕ) (hi0 : 0 < i) (hip : i < p) :
+    p ∣ Nat.choose p i :=
+  (Fact.out : p.Prime).dvd_choose_self (by omega) hip
 
 end PadicPrincipalUnitPowerStep
 
