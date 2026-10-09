@@ -198,6 +198,90 @@ noncomputable def serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit
   ⟨serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit p n x,
     serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_mem p n x⟩
 
+/--
+Chosen principal-unit representatives agree modulo p^(n+k+2)
+at all later stages, not only at adjacent stages.
+-/
+theorem serrePadicPrincipalUnitFiniteInverseLimitRep_proj_of_le
+    (n k j : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n)
+    (hkj : k ≤ j) :
+    serrePadicIntProj p (n + k + 1)
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n j x :
+        serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+    serrePadicIntProj p (n + k + 1)
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+        serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p) := by
+  induction j, hkj using Nat.le_induction with
+  | base => rfl
+  | succ j hj ih =>
+      have hstep :=
+        serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_proj p n j x
+      have hlower :=
+        serrePadicIntProj_eq_of_le p
+          (m := n + k + 1) (n := n + j + 1) (by omega) hstep
+      exact hlower.trans ih
+
+/--
+The reconstructed principal unit has the same finite residue as
+the representative from the corresponding quotient level.
+-/
+theorem serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit_residue
+    (n k : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicPrincipalUnitResidueHom p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x) =
+    serrePadicPrincipalUnitResidueHom p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x) := by
+  apply Units.ext
+  change serrePadicIntProj p (n + k + 1)
+    ((serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x :
+      serrePadicPrincipalUnits p (n + 1)) : SerrePadicInt p) =
+    serrePadicIntProj p (n + k + 1)
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+        serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p)
+  exact
+    (serrePadicPrincipalUnitFiniteInverseLimitToPadicUnit_proj p n
+      (n + k + 1) x).trans
+    (serrePadicPrincipalUnitFiniteInverseLimitRep_proj_of_le p n k
+      (n + k + 1) x (by omega))
+
+/--
+Every coherent family in the finite quotient tower is realized by a
+project-local principal unit. This proves surjectivity, not merely density.
+-/
+theorem serrePadicPrincipalUnitToFiniteInverseLimit_surjective
+    (n : ℕ) :
+    Function.Surjective (serrePadicPrincipalUnitToFiniteInverseLimit p n) := by
+  intro x
+  refine ⟨serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x, ?_⟩
+  apply Subtype.ext
+  funext k
+  change
+    (QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup p n (k + 1)))
+      (serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x) =
+    ((x : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k)
+  rw [← serrePadicPrincipalUnitFiniteInverseLimitRep_spec p n k x]
+  exact
+    (serrePadicPrincipalUnitFiniteQuotient_mk_eq_iff_residue_eq p n k
+      (serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x)
+      (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x)).2
+      (serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit_residue p n k x)
+
+/--
+The source principal-unit layer is the inverse limit of its
+finite principal-unit quotients, as an abstract group.
+-/
+noncomputable def serrePadicPrincipalUnitEquivFiniteInverseLimit
+    (n : ℕ) :
+    serrePadicPrincipalUnits p (n + 1) ≃*
+      serrePadicPrincipalUnitFiniteInverseLimit p n :=
+  MulEquiv.ofBijective (serrePadicPrincipalUnitToFiniteInverseLimit p n)
+    ⟨serrePadicPrincipalUnitToFiniteInverseLimit_injective p n,
+      serrePadicPrincipalUnitToFiniteInverseLimit_surjective p n⟩
+
 end PadicPrincipalUnitInverseLimitReconstruction
 
 end SerreNumberTheoryAI
