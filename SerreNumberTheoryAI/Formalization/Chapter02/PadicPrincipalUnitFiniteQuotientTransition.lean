@@ -35,7 +35,7 @@ theorem serrePadicPrincipalUnitDeepSubgroup_succ_le
 def serrePadicPrincipalUnitFiniteQuotientTransition (n k : ℕ) :
     serrePadicPrincipalUnitFiniteQuotient p n (k + 1) →*
       serrePadicPrincipalUnitFiniteQuotient p n k :=
-  QuotientGroup.map
+  QuotientGroup.map (N := serrePadicPrincipalUnitDeepSubgroup p n (k + 1))
     (serrePadicPrincipalUnitDeepSubgroup p n k)
     (MonoidHom.id _)
     (by
