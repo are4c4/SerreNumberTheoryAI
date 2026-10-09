@@ -1,0 +1,68 @@
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitZModTower
+
+/-!
+# The sign component in the dyadic principal-unit group
+
+Serre Chapter 2 §3.2 identifies U₁ = {±1} × U₂ for p=2.
+We start by constructing the nontrivial sign element and verifying
+that its class is not in U₂. No source-level sign decomposition is
+assumed as a prepackaged theorem.
+-/
+
+namespace SerreNumberTheoryAI
+
+section PadicPrincipalUnitDyadicSign
+
+private instance : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+
+/-- The dyadic sign -1 belongs to U₁, since -1 ≡ 1 (mod 2). -/
+def serrePadicDyadicNegOnePrincipal : serrePadicPrincipalUnits 2 1 := by
+  refine ⟨(-1 : (SerrePadicInt 2)ˣ), ?_⟩
+  change serrePadicUnitReductionLevel 2 0 (-1 : (SerrePadicInt 2)ˣ) = 1
+  apply Units.ext
+  change serrePadicIntProj 2 0
+    ((-1 : (SerrePadicInt 2)ˣ) : SerrePadicInt 2) = 1
+  have h : (-1 : padicResidueRing 2 0) = 1 := by decide
+  simpa using h
+
+/-- The sign element has order dividing two. -/
+theorem serrePadicDyadicNegOnePrincipal_sq :
+    (serrePadicDyadicNegOnePrincipal :
+      serrePadicPrincipalUnits 2 1) ^ 2 = 1 := by
+  apply Subtype.ext
+  change (-1 : (SerrePadicInt 2)ˣ) ^ 2 = 1
+  simp
+
+/-- The sign is not in U₂, since -1 ≠ 1 (mod 4). -/
+theorem serrePadicDyadicNegOnePrincipal_not_mem_levelTwo :
+    ((serrePadicDyadicNegOnePrincipal :
+      serrePadicPrincipalUnits 2 1) : (SerrePadicInt 2)ˣ) ∉
+      serrePadicPrincipalUnits 2 2 := by
+  intro hdeep
+  change serrePadicUnitReductionLevel 2 1
+    ((serrePadicDyadicNegOnePrincipal :
+      serrePadicPrincipalUnits 2 1) : (SerrePadicInt 2)ˣ) = 1 at hdeep
+  have hval := congrArg
+    (fun z : (padicResidueRing 2 1)ˣ =>
+      (z : padicResidueRing 2 1)) hdeep
+  have hbad : (-1 : padicResidueRing 2 1) = 1 := by
+    simpa [serrePadicUnitReductionLevel,
+      serrePadicDyadicNegOnePrincipal] using hval
+  have hneq : (-1 : padicResidueRing 2 1) ≠ 1 := by decide
+  exact hneq hbad
+
+/-- The class of -1 is nontrivial in the two-element quotient U₁/U₂. -/
+theorem serrePadicDyadicNegOnePrincipal_quotient_ne_one :
+    ((QuotientGroup.mk'
+      (serrePadicPrincipalUnitDeepSubgroup 2 0 1))
+      serrePadicDyadicNegOnePrincipal) ≠ 1 := by
+  intro heq
+  have hmem :
+      serrePadicDyadicNegOnePrincipal ∈
+        serrePadicPrincipalUnitDeepSubgroup 2 0 1 :=
+    (QuotientGroup.eq_one_iff _).1 heq
+  exact serrePadicDyadicNegOnePrincipal_not_mem_levelTwo hmem
+
+end PadicPrincipalUnitDyadicSign
+
+end SerreNumberTheoryAI
