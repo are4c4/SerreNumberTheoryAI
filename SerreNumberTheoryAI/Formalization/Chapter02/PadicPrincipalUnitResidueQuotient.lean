@@ -46,7 +46,7 @@ theorem serrePadicPrincipalUnitFiniteQuotient_mk_eq_iff_residue_eq
   rw [← serrePadicPrincipalUnitResidueHom_ker p n k]
   change serrePadicPrincipalUnitResidueHom p n k (u / v) = 1 ↔ _
   rw [map_div]
-  exact div_eq_one_iff_eq
+  rw [div_eq_mul_inv, mul_inv_eq_one]
 
 end PadicPrincipalUnitResidueQuotient
 
