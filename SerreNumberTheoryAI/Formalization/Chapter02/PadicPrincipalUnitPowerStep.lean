@@ -90,10 +90,13 @@ theorem serrePadicPrincipalUnit_pow_prime_mem_next
   have hcard :
       Nat.card (Multiplicative (padicResidueRing p 0)) = p := by
     simp [padicResidueRing, Nat.card_eq_fintype_card, ZMod.card]
+  have hpowerCard :
+      ((serrePadicPrincipalUnitCoeffResidueHom p n) u) ^
+        Nat.card (Multiplicative (padicResidueRing p 0)) = 1 :=
+    pow_card_eq_one'
   have hpower :
       ((serrePadicPrincipalUnitCoeffResidueHom p n) u) ^ p = 1 := by
-    rw [← hcard]
-    exact pow_card_eq_one'
+    simpa only [hcard] using hpowerCard
   have hker :
       u ^ p ∈ (serrePadicPrincipalUnitCoeffResidueHom p n).ker := by
     change (serrePadicPrincipalUnitCoeffResidueHom p n) (u ^ p) = 1
