@@ -192,6 +192,39 @@ theorem serrePadicPrincipalUnit_pow_prime_iterate_mem
           ⟨_, hmem⟩
       simpa only [pow_mul, pow_succ, Nat.add_assoc] using hstep
 
+/--
+All binomial terms of degree between 2 and p vanish modulo p^(n+2)
+in the source range.  The endpoint i=p is treated by the last-term bound.
+-/
+theorem serrePadicPowerStep_high_term_dvd
+    (n i : ℕ) (hn : 1 ≤ n) (hsource : p ≠ 2 ∨ 2 ≤ n)
+    (hi : 2 ≤ i) (hip : i ≤ p) (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      (Nat.choose p i : SerrePadicInt p) *
+        ((p : SerrePadicInt p) ^ n * a) ^ i := by
+  rcases lt_or_eq_of_le hip with hlt | heq
+  · exact serrePadicPowerStep_middle_term_dvd p n i hn hi hlt a
+  · subst i
+    simpa only [Nat.choose_self, Nat.cast_one, one_mul] using
+      (serrePadicPowerStep_last_term_dvd p n hn hsource a)
+
+/--
+The sum of all higher-degree terms of the binomial expansion is divisible
+by p^(n+2).  This is the aggregated remainder estimate for the sharp
+filtration step.
+-/
+theorem serrePadicPowerStep_high_terms_sum_dvd
+    (n : ℕ) (hn : 1 ≤ n) (hsource : p ≠ 2 ∨ 2 ≤ n)
+    (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      ∑ i ∈ Finset.Icc 2 p,
+        (Nat.choose p i : SerrePadicInt p) *
+          ((p : SerrePadicInt p) ^ n * a) ^ i := by
+  apply Finset.dvd_sum
+  intro i hi
+  exact serrePadicPowerStep_high_term_dvd p n i hn hsource
+    (Finset.mem_Icc.mp hi).1 (Finset.mem_Icc.mp hi).2 a
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
