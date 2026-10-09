@@ -394,7 +394,7 @@ def serrePadicFiniteUnitComplementTowerToPadicInt
       (fun v : (padicResidueRing p n)ˣ => (v : padicResidueRing p n)) hunits
     simpa [serrePadicFiniteUnitComplementTransition,
       serrePadicResidueUnitTransition, padicReduction,
-      serrePadicFiniteUnitComplementTowerProj] using hvals⟩
+      serrePadicFiniteUnitComplementTowerProj, ZMod.unitsMap] using hvals⟩
 
 @[simp]
 theorem serrePadicFiniteUnitComplementTowerToPadicInt_proj
@@ -424,6 +424,7 @@ theorem serrePadicFiniteUnitComplementTowerToPadicUnit_proj
         (serrePadicFiniteUnitComplementTowerToPadicUnit p x : SerrePadicInt p) =
       ((serrePadicFiniteUnitComplementTowerProj p n x :
         (padicResidueRing p n)ˣ) : padicResidueRing p n) := by
+  unfold serrePadicFiniteUnitComplementTowerToPadicUnit
   rw [IsUnit.unit_spec (serrePadicFiniteUnitComplementTowerToPadicInt_isUnit p x)]
   rfl
 
