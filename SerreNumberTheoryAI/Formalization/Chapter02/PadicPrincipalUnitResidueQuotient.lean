@@ -40,6 +40,8 @@ theorem serrePadicPrincipalUnitFiniteQuotient_mk_eq_iff_residue_eq
       (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) v ↔
       serrePadicPrincipalUnitResidueHom p n k u =
         serrePadicPrincipalUnitResidueHom p n k v := by
+  change ((u : serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) =
+    (v : serrePadicPrincipalUnitFiniteQuotient p n (k + 1))) ↔ _
   rw [QuotientGroup.eq_iff_div_mem]
   rw [← serrePadicPrincipalUnitResidueHom_ker p n k]
   change serrePadicPrincipalUnitResidueHom p n k (u / v) = 1 ↔ _
