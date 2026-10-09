@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicUnitFiltrationQuotient
 import Mathlib.Data.Nat.Choose.Dvd
+import Mathlib.Tactic.Linarith
 
 /-!
 # The first steps toward the structure of principal p-adic units
