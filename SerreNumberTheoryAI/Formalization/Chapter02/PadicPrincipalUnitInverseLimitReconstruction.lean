@@ -30,7 +30,7 @@ theorem serrePadicPrincipalUnitFiniteInverseLimitRep_spec
       (serrePadicPrincipalUnitDeepSubgroup p n (k + 1)))
       (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x) =
     ((x : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k) := by
-  exact Quotient.out_eq'
+  exact Quotient.out_eq' _
 
 /--
 Adjacent representatives are congruent in the *shallower* finite quotient.
@@ -235,8 +235,9 @@ theorem serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit_residue
       (serrePadicPrincipalUnitFiniteInverseLimitRep p n k x) := by
   apply Units.ext
   change serrePadicIntProj p (n + k + 1)
-    ((serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x :
-      serrePadicPrincipalUnits p (n + 1)) : SerrePadicInt p) =
+    (((serrePadicPrincipalUnitFiniteInverseLimitToPrincipalUnit p n x :
+      serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p) =
     serrePadicIntProj p (n + k + 1)
       (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
         serrePadicPrincipalUnits p (n + 1)) :
