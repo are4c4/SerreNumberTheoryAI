@@ -273,6 +273,26 @@ theorem serrePadicPowerStep_binomial_congr_dvd
   simpa [f, t, mul_comm] using
     (serrePadicPowerStep_high_terms_sum_dvd p n hn hsource a)
 
+/--
+Cancelling a nonzero p^(n+1) from a power divisibility statement:
+if p^(n+2) divides p^(n+1) a, then p divides a.
+-/
+theorem serrePadicPowerStep_cancel_pow_dvd
+    (n : ℕ) (a : SerrePadicInt p)
+    (hdiv : (p : SerrePadicInt p) ^ (n + 2) ∣
+      (p : SerrePadicInt p) ^ (n + 1) * a) :
+    (p : SerrePadicInt p) ∣ a := by
+  obtain ⟨b, hb⟩ := hdiv
+  refine ⟨b, ?_⟩
+  apply serrePadicInt_mul_pow_injective p (n + 1)
+  calc
+    (p : SerrePadicInt p) ^ (n + 1) * a =
+        (p : SerrePadicInt p) ^ (n + 2) * b := hb
+    _ = (p : SerrePadicInt p) ^ (n + 1) *
+        ((p : SerrePadicInt p) * b) := by
+      rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+      ring
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
