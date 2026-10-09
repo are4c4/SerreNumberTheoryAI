@@ -59,10 +59,9 @@ end SerreNumberTheoryAI
 ```lean "principalunitmiddlebound"
 namespace SerreNumberTheoryAI
 theorem blueprint_principalUnitMiddleBound
-    (p n i : ℕ) [Fact p.Prime]
-    (hn : 1 ≤ n) (hi : 2 ≤ i) :
+    (n i : ℕ) (hn : 1 ≤ n) (hi : 2 ≤ i) :
     n + 2 ≤ n * i + 1 :=
-  serrePadicPowerStep_middle_exponent_bound p n i hn hi
+  serrePadicPowerStep_middle_exponent_bound n i hn hi
 end SerreNumberTheoryAI
 ```
 
