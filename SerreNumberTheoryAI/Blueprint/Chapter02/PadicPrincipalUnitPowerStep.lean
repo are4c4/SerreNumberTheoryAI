@@ -98,3 +98,19 @@ theorem blueprint_principalUnitPowMemNext
   serrePadicPrincipalUnit_pow_prime_mem_next p n u
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitmiddlechoosedvd"
+  (uses := "principalunitmiddlebound")
+素数 `p` の二項展開において `0<i<p` ならば `p` が `p.choose i` を割り切る。
+各中間項のp進位数を1だけ引き上げる算術的な根拠となる。
+:::
+
+```lean "principalunitmiddlechoosedvd"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitMiddleChooseDvd
+    (p i : ℕ) [Fact p.Prime] (hi0 : 0 < i) (hip : i < p) :
+    p ∣ Nat.choose p i :=
+  serrePadicPowerStep_middle_choose_dvd p i hi0 hip
+end SerreNumberTheoryAI
+```
