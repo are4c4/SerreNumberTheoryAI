@@ -64,3 +64,38 @@ theorem blueprint_principalUnitToFiniteInverseLimitApply
   serrePadicPrincipalUnitToFiniteInverseLimit_apply p n k u
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitdeepseparated"
+  (uses := "principalunittofiniteinverselimit")
+全ての深い層に入る主単数は`1`に限る。
+project-localな`SerrePadicInt p`の剰余射影の外延性を使って証明する。
+:::
+
+```lean "principalunitdeepseparated"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitDeepSeparated
+    (p n : ℕ) [Fact p.Prime]
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hdeep : ∀ k : ℕ,
+      (u : (SerrePadicInt p)ˣ) ∈
+        serrePadicPrincipalUnits p (n + k + 2)) :
+    u = 1 :=
+  serrePadicPrincipalUnit_deep_separated p n u hdeep
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunittofiniteinverselimitinjective"
+  (uses := "principalunitdeepseparated principalunittofiniteinverselimit")
+主単数群から有限商の逆極限への自然な写像は単射となる。
+全射性は別に証明する必要がある。
+:::
+
+```lean "principalunittofiniteinverselimitinjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitToFiniteInverseLimitInjective
+    (p n : ℕ) [Fact p.Prime] :
+    Function.Injective (serrePadicPrincipalUnitToFiniteInverseLimit p n) :=
+  serrePadicPrincipalUnitToFiniteInverseLimit_injective p n
+end SerreNumberTheoryAI
+```
