@@ -39,6 +39,7 @@ import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitFiniteInverseLi
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitResidueQuotient
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitInverseLimitReconstruction
 import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitZModTower
+import SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitDyadicSign
 
 open Verso.Genre
 open Verso.Genre.Manual
@@ -121,6 +122,8 @@ open Informal
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitInverseLimitReconstruction}
 
 {include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitZModTower}
+
+{include 0 SerreNumberTheoryAI.Blueprint.Chapter02.PadicPrincipalUnitDyadicSign}
 
 # 定理の依存関係
 
