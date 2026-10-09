@@ -1,4 +1,5 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitResidueQuotient
+import SerreNumberTheoryAI.Formalization.Chapter02.PadicIntegerMetricTopology
 
 /-!
 # Reconstructing project principal units from coherent finite quotients
@@ -100,6 +101,40 @@ theorem serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_proj
       (z : padicResidueRing p (n + k + 1))) h
   simpa [serrePadicPrincipalUnitResidueHom,
     serrePadicUnitReductionLevel] using hval
+
+/--
+A compatible inverse system of finite principal-unit classes determines
+an element of the project-local p-adic integer ring by its residue
+coordinates. The next step is to show this element is a principal unit.
+-/
+noncomputable def serrePadicPrincipalUnitFiniteInverseLimitToPadicInt
+    (n : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    SerrePadicInt p :=
+  ⟨fun k => serrePadicIntProj p k
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+        serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p),
+    by
+      intro k
+      have hhigh :=
+        serrePadicPrincipalUnitFiniteInverseLimitRep_adjacent_proj p n k x
+      have hlow :=
+        serrePadicIntProj_eq_of_le p (m := k) (n := n + k + 1)
+          (by omega) hhigh
+      exact (serrePadicIntProj_compat p k
+          (((serrePadicPrincipalUnitFiniteInverseLimitRep p n (k + 1) x :
+            serrePadicPrincipalUnits p (n + 1)) :
+            (SerrePadicInt p)ˣ) : SerrePadicInt p)).trans hlow⟩
+
+@[simp]
+theorem serrePadicPrincipalUnitFiniteInverseLimitToPadicInt_proj
+    (n k : ℕ) (x : serrePadicPrincipalUnitFiniteInverseLimit p n) :
+    serrePadicIntProj p k
+      (serrePadicPrincipalUnitFiniteInverseLimitToPadicInt p n x) =
+    serrePadicIntProj p k
+      (((serrePadicPrincipalUnitFiniteInverseLimitRep p n k x :
+        serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) : SerrePadicInt p) := rfl
 
 end PadicPrincipalUnitInverseLimitReconstruction
 
