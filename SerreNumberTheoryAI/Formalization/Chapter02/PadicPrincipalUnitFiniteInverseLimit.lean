@@ -142,7 +142,11 @@ theorem serrePadicPrincipalUnitToFiniteInverseLimit_injective
         ((QuotientGroup.mk'
           (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) (u * v⁻¹)) = 1 := by
       rw [map_mul, map_inv, heq, mul_inv_cancel]
-    exact (QuotientGroup.eq_one_iff _).1 hone
+    have hmem :
+        (u * v⁻¹ : serrePadicPrincipalUnits p (n + 1)) ∈
+          serrePadicPrincipalUnitDeepSubgroup p n (k + 1) :=
+      (QuotientGroup.eq_one_iff _).1 hone
+    exact hmem
   have hunit := serrePadicPrincipalUnit_deep_separated p n (u * v⁻¹) hdeep
   exact mul_inv_eq_one.mp hunit
 
