@@ -295,3 +295,45 @@ theorem blueprint_principalUnitExactPowerIterate
   serrePadicPrincipalUnit_pow_prime_iterate_exact p n k hsource u hnot
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitlevelonegenerator"
+  (uses := "principalunitexactpoweriterate principalunitexactlayerwitness")
+奇素数 `p` に対し、`1+p` の `p^k` 乗は
+`U_(k+1)` に入り `U_(k+2)` に入らない。
+命題8の奇素数の場合の有限商生成元の候補を構成する。
+:::
+
+```lean "principalunitlevelonegenerator"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitLevelOneGenerator
+    (p k : ℕ) [Fact p.Prime] (hpodd : p ≠ 2) :
+    (((serrePadicPrincipalUnitOfCoeff p 0 1 :
+      serrePadicPrincipalUnits p 1) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∈
+        serrePadicPrincipalUnits p (k + 1)) ∧
+      (((serrePadicPrincipalUnitOfCoeff p 0 1 :
+        serrePadicPrincipalUnits p 1) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∉
+        serrePadicPrincipalUnits p (k + 2)) :=
+  serrePadicPrincipalUnitLevelOneGenerator_exact_layers p hpodd k
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunitleveltwogenerator"
+  (uses := "principalunitexactpoweriterate principalunitexactlayerwitness")
+`1+p²` の `p^k` 乗は`U_(k+2)`に入り`U_(k+3)`に入らない。
+これは特に2進の場合の`U_2`に関する生成元候補である。
+:::
+
+```lean "principalunitleveltwogenerator"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitLevelTwoGenerator
+    (p k : ℕ) [Fact p.Prime] :
+    (((serrePadicPrincipalUnitOfCoeff p 1 1 :
+      serrePadicPrincipalUnits p 2) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∈
+        serrePadicPrincipalUnits p (k + 2)) ∧
+      (((serrePadicPrincipalUnitOfCoeff p 1 1 :
+        serrePadicPrincipalUnits p 2) : (SerrePadicInt p)ˣ) ^ (p ^ k) ∉
+        serrePadicPrincipalUnits p (k + 3)) :=
+  serrePadicPrincipalUnitLevelTwoGenerator_exact_layers p k
+end SerreNumberTheoryAI
+```
