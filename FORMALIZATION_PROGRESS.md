@@ -112,12 +112,12 @@
 
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
-| §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
+| §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | §3.2 principal units / Proposition 8 / multiplicative-group theorem | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-- #108 / PR #149 が現在唯一のACTIVE item。旧PR #125をlatest mainへ回収し、`U_n` filtration、successive quotient、`U/U_1 ≃ (Z/pZ)^×`、roots-of-unity reduction interfacesまで実装済み。head `721f7120…` はCI #786 greenで、次はkernel trivialityとfinite complement `V`。
-- #112 は WAITING。§3.1 / Proposition 7 がmainへ統合された後にfresh latest-main branchで開始する。§3.2 Proposition 8 とmultiplicative-group theoremが対象。
+- #108 / PR #149 はCI #873まで全検証がgreen。`U_n` filtration、successive quotient、有限補群塔と逆極限、命題7 `serrePadicUnitsMulEquivRootsProdPrincipal` と補群の一意性、分数体 `Q_p` の `(p-1)` 乗根の系までLean/Blueprintを完了した。PR #149 のmain統合をもってDONEとする。
+- #112 は §3.1 / PR #149 のmain統合直後にREADY。fresh latest-main branchで§3.2 Proposition 8 とmultiplicative-group theoremを開始する。
 - #120 は WAITING。#112完了後に、odd `p` のvaluation parity + residue Legendre criterion と dyadic `u≡1 (mod 8)` criterionを実装する。#96 / project `Q_p` はすでにmain上で完成。
 
 ## Phase 9 — 第3章 §1 Hilbert記号の局所的性質
@@ -169,3 +169,10 @@
 - 後続コミット`d8b864d`で命題7の直積同型`serrePadicUnitsMulEquivRootsProdPrincipal`までLean定義を追加。`22373e7`でBlueprint対応を追加した。
 - この後続部分のCIは確認中のため、上のPhase 8 §3.1の完了欄はまだ更新しない。
 - 次はCI修復（必要なら）→補群の一意性・原典の系→source/self-review→main統合の順。§3.2はこのPRの範囲外。
+
+### §3.1 final ready-to-merge checkpoint
+
+- CI #868: 命題7 `V × U₁ ≃ U`、Lean・Blueprint・policy green。
+- CI #870: `V` の一意性、Lean・Blueprint・policy green。
+- CI #873: project `Q_p` における `p-1` 個の相異なる根の系、root import / Blueprint / policy green。
+- これらは原典 printed pp.22–24 / uploaded PDF pp.32–34 の§3.1を完了する。§3.2は次の別work item。
