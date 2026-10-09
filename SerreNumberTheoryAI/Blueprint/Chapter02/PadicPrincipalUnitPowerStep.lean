@@ -168,3 +168,43 @@ theorem blueprint_principalUnitPowIterate
   serrePadicPrincipalUnit_pow_prime_iterate_mem p n k u
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunithightermdivisibility"
+  (uses := "principalunitmiddletermdivisibility principalunitlasttermdivisibility")
+原典で必要な条件下で、二項展開の次数 `2≤i≤p` の項は
+いずれも `p^(n+2)` で割り切れる。
+:::
+
+```lean "principalunithightermdivisibility"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitHighTermDivisibility
+    (p n i : ℕ) [Fact p.Prime] (hn : 1 ≤ n)
+    (hsource : p ≠ 2 ∨ 2 ≤ n) (hi : 2 ≤ i) (hip : i ≤ p)
+    (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      (Nat.choose p i : SerrePadicInt p) *
+        ((p : SerrePadicInt p) ^ n * a) ^ i :=
+  serrePadicPowerStep_high_term_dvd p n i hn hsource hi hip a
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunithightermssumdivisibility"
+  (uses := "principalunithightermdivisibility")
+次数 `2` から `p` までの二項展開の高次項を全て足した余りも
+`p^(n+2)` で割り切れる。次の合同式のための余剰評価である。
+:::
+
+```lean "principalunithightermssumdivisibility"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitHighTermsSumDivisibility
+    (p n : ℕ) [Fact p.Prime]
+    (hn : 1 ≤ n) (hsource : p ≠ 2 ∨ 2 ≤ n)
+    (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      ∑ i ∈ Finset.Icc 2 p,
+        (Nat.choose p i : SerrePadicInt p) *
+          ((p : SerrePadicInt p) ^ n * a) ^ i :=
+  serrePadicPowerStep_high_terms_sum_dvd p n hn hsource a
+end SerreNumberTheoryAI
+```
