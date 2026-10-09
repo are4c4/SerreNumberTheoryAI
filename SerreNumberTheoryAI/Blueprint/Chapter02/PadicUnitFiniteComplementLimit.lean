@@ -374,3 +374,22 @@ end SerreNumberTheoryAI
 命題7。project p進整数の単数群は、有限の `(p-1)` 乗根部分群
 `V` と第一主単数群 `U_1` の直積に群同型である。
 :::
+
+
+:::theorem "unitrootsuniquefinitecomplement"
+  (uses := "unitrootsactualreductionequiv unitproductpropositionseven")
+命題7の一意性。第一剰余単数群への還元が全単射となる部分群は、
+`(p-1)` 乗根からなる `V` に限られる。
+:::
+
+```lean "unitrootsuniquefinitecomplement"
+namespace SerreNumberTheoryAI
+theorem blueprint_unitRootsUniqueFiniteComplement
+    (p : ℕ) [Fact p.Prime]
+    (C : Subgroup (SerrePadicInt p)ˣ)
+    (hbij : Function.Bijective
+      ((serrePadicUnitReduction p).comp C.subtype)) :
+    C = serrePadicUnitRootsOfUnity p :=
+  serrePadicUnitRootsOfUnity_unique p C hbij
+end SerreNumberTheoryAI
+```
