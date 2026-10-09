@@ -43,3 +43,63 @@ theorem blueprint_principalUnitFiniteQuotientPowerBound
   serrePadicPrincipalUnitFiniteQuotient_pow_prime_eq_one p n k u
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitfinitequotientexactorder"
+  (uses := "principalunitfinitequotientpowerbound principalunitexactpoweriterate")
+原典の範囲で、次層に属さない主単数の有限商での位数は
+ちょうど `p^(k+1)` となる。冪の上界と、ひとつ前の冪が
+さらに深い層に属さないことを組み合わせる。
+:::
+
+```lean "principalunitfinitequotientexactorder"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteQuotientExactOrder
+    (p n k : ℕ) [Fact p.Prime] (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    orderOf
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u) =
+      p ^ (k + 1) :=
+  serrePadicPrincipalUnitFiniteQuotient_exact_order p n k hsource u hnot
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunitfinitequotientoddgenerator"
+  (uses := "principalunitfinitequotientexactorder principalunitlevelonegenerator")
+奇素数の `U₁/U_(k+2)` で、`1+p` の像の位数は `p^(k+1)`。
+:::
+
+```lean "principalunitfinitequotientoddgenerator"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteQuotientOddGenerator
+    (p k : ℕ) [Fact p.Prime] (hpodd : p ≠ 2) :
+    orderOf
+      ((QuotientGroup.mk'
+        (serrePadicPrincipalUnitDeepSubgroup p 0 (k + 1)))
+        (serrePadicPrincipalUnitOfCoeff p 0 1)) =
+      p ^ (k + 1) :=
+  serrePadicPrincipalUnitFiniteQuotient_odd_generator_order p hpodd k
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunitfinitequotientleveltwogenerator"
+  (uses := "principalunitfinitequotientexactorder principalunitleveltwogenerator")
+特に2進で用いる `U₂/U_(k+3)` の候補生成元 `1+p²` の位数も
+`p^(k+1)` となる。
+:::
+
+```lean "principalunitfinitequotientleveltwogenerator"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteQuotientLevelTwoGenerator
+    (p k : ℕ) [Fact p.Prime] :
+    orderOf
+      ((QuotientGroup.mk'
+        (serrePadicPrincipalUnitDeepSubgroup p 1 (k + 1)))
+        (serrePadicPrincipalUnitOfCoeff p 1 1)) =
+      p ^ (k + 1) :=
+  serrePadicPrincipalUnitFiniteQuotient_levelTwo_generator_order p k
+end SerreNumberTheoryAI
+```
