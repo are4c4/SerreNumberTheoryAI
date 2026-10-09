@@ -1,5 +1,6 @@
 import SerreNumberTheoryAI.Formalization.Chapter02.PadicPrincipalUnitPowerStep
 import Mathlib.GroupTheory.QuotientGroup.Basic
+import Mathlib.Data.ZMod.QuotientGroup
 
 /-!
 # Finite quotients of the principal-unit filtration
@@ -109,6 +110,49 @@ theorem serrePadicPrincipalUnitFiniteQuotient_levelTwo_generator_order
     (Or.inr (by omega))
     (serrePadicPrincipalUnitOfCoeff p 1 1)
     (serrePadicPrincipalUnitOfCoeff_one_exactLayer p 1)
+
+/--
+The powers of a source unit in the exact first layer form a cyclic
+subgroup of the finite quotient, with precisely p^(k+1) elements.
+The remaining step to the *whole quotient* being cyclic is an
+independent cardinality argument, not included in this lemma.
+-/
+theorem serrePadicPrincipalUnitFiniteQuotient_cyclicSubgroup_card
+    (n k : ℕ) (hsource : p ≠ 2 ∨ 1 ≤ n)
+    (u : serrePadicPrincipalUnits p (n + 1))
+    (hnot : (u : (SerrePadicInt p)ˣ) ∉
+      serrePadicPrincipalUnits p (n + 2)) :
+    Nat.card
+      (Subgroup.zpowers
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u)) =
+      p ^ (k + 1) := by
+  rw [Nat.card_zpowers]
+  exact serrePadicPrincipalUnitFiniteQuotient_exact_order p n k hsource u hnot
+
+/-- The candidate 1+p generates a cyclic subgroup of cardinal p^(k+1), for odd p. -/
+theorem serrePadicPrincipalUnitFiniteQuotient_odd_cyclicSubgroup_card
+    (hpodd : p ≠ 2) (k : ℕ) :
+    Nat.card
+      (Subgroup.zpowers
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p 0 (k + 1)))
+          (serrePadicPrincipalUnitOfCoeff p 0 1))) =
+      p ^ (k + 1) := by
+  rw [Nat.card_zpowers]
+  exact serrePadicPrincipalUnitFiniteQuotient_odd_generator_order p hpodd k
+
+/-- The candidate 1+p² generates a cyclic subgroup of cardinal p^(k+1). -/
+theorem serrePadicPrincipalUnitFiniteQuotient_levelTwo_cyclicSubgroup_card
+    (k : ℕ) :
+    Nat.card
+      (Subgroup.zpowers
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p 1 (k + 1)))
+          (serrePadicPrincipalUnitOfCoeff p 1 1))) =
+      p ^ (k + 1) := by
+  rw [Nat.card_zpowers]
+  exact serrePadicPrincipalUnitFiniteQuotient_levelTwo_generator_order p k
 
 end PadicPrincipalUnitFiniteQuotient
 
