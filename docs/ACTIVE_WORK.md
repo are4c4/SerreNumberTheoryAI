@@ -117,3 +117,12 @@ The immediate mathematical risk is now the project-lift/surjectivity bridge: it 
 ## Transition note
 
 旧 `docs/LANE_STATUS.md` と `docs/lanes/*` は廃止済みです。現行ownershipやparallel laneは存在せず、現在地はこのファイルだけで管理します。
+
+
+## 2026-10-10 — 命題7の実装と検証ゲート
+
+- 最新のCI成功チェックポイント: `c23280cd` / CI #863（policy / Lean / Verso）。
+- 有限補群塔からp進の根を復元する写像・全射性・`V ≃ (Z/pZ)ˣ` はこのチェックポイントまでLeanビルド済み。
+- `d8b864d` で第一剰余への**実際の**根還元の全射性、根と第一主単数の積写像の単射・全射、命題7 `serrePadicUnitsMulEquivRootsProdPrincipal` を新規実装。
+- `22373e7` で対応するBlueprint記述を追加。これら新しい宣言は**CI未確定**のため完成扱いにしない。
+- 現在のACTIVEは引き続き Issue #108 / PR #149だけ。Lean / BlueprintのCIが成功したら、補群の一意性と原典の`Q_p`根の系を確認して最終レビューする。
