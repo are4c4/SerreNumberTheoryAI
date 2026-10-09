@@ -52,3 +52,35 @@ end SerreNumberTheoryAI
   (uses := "dyadicnegativeoneprincipalnotleveltwo")
 符号元は2元商`U₁/U₂`で非自明な剰余類を表す。
 :::
+
+
+:::theorem "dyadicnegativeoneprincipalordertwo"
+  (uses := "dyadicnegativeoneprincipalsquare dyadicnegativeoneprincipalnotleveltwo")
+`U₁`内の符号元の位数は2である。
+:::
+
+```lean "dyadicnegativeoneprincipalordertwo"
+namespace SerreNumberTheoryAI
+theorem blueprint_dyadicNegOnePrincipalOrderTwo :
+    orderOf (serrePadicDyadicNegOnePrincipal :
+      serrePadicPrincipalUnits 2 1) = 2 :=
+  serrePadicDyadicNegOnePrincipal_order_two
+end SerreNumberTheoryAI
+```
+
+:::theorem "dyadicnegativeoneprincipalquotientgenerates"
+  (uses := "dyadicnegativeoneprincipalordertwo dyadicnegativeoneprincipalquotientnontrivial")
+`-1`の剰余類は2元商`U₁/U₂`の生成元である。
+次はこの有限符号部分と`U₂`の内部直積分解を証明する。
+:::
+
+```lean "dyadicnegativeoneprincipalquotientgenerates"
+namespace SerreNumberTheoryAI
+theorem blueprint_dyadicNegOnePrincipalQuotientGenerates :
+    Subgroup.zpowers
+      ((QuotientGroup.mk'
+        (serrePadicPrincipalUnitDeepSubgroup 2 0 1))
+        serrePadicDyadicNegOnePrincipal) = ⊤ :=
+  serrePadicDyadicNegOnePrincipal_quotient_generates
+end SerreNumberTheoryAI
+```
