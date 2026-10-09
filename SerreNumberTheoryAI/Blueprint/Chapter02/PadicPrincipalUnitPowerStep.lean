@@ -150,3 +150,21 @@ theorem blueprint_principalUnitLastTermDivisibility
   serrePadicPowerStep_last_term_dvd p n hn hsource a
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitpowiterate"
+  (uses := "principalunitpowmemnext")
+主単数を繰り返し `p` 乗すると、その都度フィルトレーションの次の層へ入る。
+将来の有限商の位数の評価に用いる。
+:::
+
+```lean "principalunitpowiterate"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitPowIterate
+    (p n k : ℕ) [Fact p.Prime]
+    (u : serrePadicPrincipalUnits p (n + 1)) :
+    ((u : (SerrePadicInt p)ˣ) ^ (p ^ k)) ∈
+      serrePadicPrincipalUnits p (n + k + 1) :=
+  serrePadicPrincipalUnit_pow_prime_iterate_mem p n k u
+end SerreNumberTheoryAI
+```
