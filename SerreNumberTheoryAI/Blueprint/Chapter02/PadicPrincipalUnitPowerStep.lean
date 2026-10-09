@@ -80,3 +80,22 @@ theorem blueprint_principalUnitLastBound
   serrePadicPowerStep_last_exponent_bound p n hn hsource
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitpowmemnext"
+  (uses := "principalunitexactlayercriterion")
+`U_(n+1)` の任意の元の `p` 乗は `U_(n+2)` に入る。
+これは層の係数剰余が `F_p` の加法群に値をとることによる、
+原典の冪に関する補題の弱い方向である。
+:::
+
+```lean "principalunitpowmemnext"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitPowMemNext
+    (p n : ℕ) [Fact p.Prime]
+    (u : serrePadicPrincipalUnits p (n + 1)) :
+    ((u : (SerrePadicInt p)ˣ) ^ p) ∈
+      serrePadicPrincipalUnits p (n + 2) :=
+  serrePadicPrincipalUnit_pow_prime_mem_next p n u
+end SerreNumberTheoryAI
+```
