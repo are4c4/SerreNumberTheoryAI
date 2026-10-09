@@ -81,6 +81,71 @@ theorem serrePadicPrincipalUnitToFiniteInverseLimit_apply
     (QuotientGroup.mk'
       (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u := rfl
 
+/--
+Separation of the project-local principal-unit filtration: the only
+principal unit in arbitrarily deep layers is the identity.  We prove
+this from all residue projections of the project-local p-adic integer,
+rather than from a black-box completion theorem.
+-/
+theorem serrePadicPrincipalUnit_deep_separated
+    (n : ℕ) (u : serrePadicPrincipalUnits p (n + 1))
+    (hdeep : ∀ k : ℕ,
+      (u : (SerrePadicInt p)ˣ) ∈
+        serrePadicPrincipalUnits p (n + k + 2)) :
+    u = 1 := by
+  apply Subtype.ext
+  apply Units.ext
+  apply serrePadicInt_ext p
+  intro k
+  have hdiv :
+      (p : SerrePadicInt p) ^ (n + k + 2) ∣
+        (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) :=
+    (mem_serrePadicPrincipalUnits_succ_iff_pow_dvd p (n + k + 1)
+      (u : (SerrePadicInt p)ˣ)).1 (by
+        simpa only [Nat.add_assoc] using hdeep k)
+  have hsmall :
+      (p : SerrePadicInt p) ^ (k + 1) ∣
+        (((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) - 1) :=
+    (pow_dvd_pow (p : SerrePadicInt p) (by omega)).trans hdiv
+  have hzero :=
+    (pow_dvd_serrePadicInt_iff_proj_zero p k _).1 hsmall
+  change serrePadicIntProj p k
+      ((u : (SerrePadicInt p)ˣ) : SerrePadicInt p) =
+    serrePadicIntProj p k (1 : SerrePadicInt p)
+  rw [map_one]
+  apply sub_eq_zero.mp
+  simpa only [map_sub, map_one] using hzero
+
+/--
+The natural map from source principal units to the inverse limit of
+their finite quotients is injective.
+-/
+theorem serrePadicPrincipalUnitToFiniteInverseLimit_injective
+    (n : ℕ) :
+    Function.Injective (serrePadicPrincipalUnitToFiniteInverseLimit p n) := by
+  intro u v huv
+  have hdeep : ∀ k : ℕ,
+      ((u * v⁻¹ : serrePadicPrincipalUnits p (n + 1)) :
+        (SerrePadicInt p)ˣ) ∈
+      serrePadicPrincipalUnits p (n + k + 2) := by
+    intro k
+    have hcoords := congrArg
+      (fun x : serrePadicPrincipalUnitFiniteInverseLimit p n =>
+        (x : ∀ k, serrePadicPrincipalUnitFiniteQuotient p n (k + 1)) k) huv
+    have heq :
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) u) =
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) v) := by
+      simpa only [serrePadicPrincipalUnitToFiniteInverseLimit_apply] using hcoords
+    have hone :
+        ((QuotientGroup.mk'
+          (serrePadicPrincipalUnitDeepSubgroup p n (k + 1))) (u * v⁻¹)) = 1 := by
+      rw [map_mul, map_inv, heq, mul_inv_cancel]
+    exact (QuotientGroup.eq_one_iff _).1 hone
+  have hunit := serrePadicPrincipalUnit_deep_separated p n (u * v⁻¹) hdeep
+  exact mul_inv_eq_one.mp hunit
+
 end PadicPrincipalUnitFiniteInverseLimit
 
 end SerreNumberTheoryAI
