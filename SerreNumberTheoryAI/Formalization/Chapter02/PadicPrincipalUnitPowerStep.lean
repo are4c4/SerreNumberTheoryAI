@@ -74,6 +74,32 @@ theorem serrePadicPowerStep_last_exponent_bound
     nlinarith [Nat.mul_le_mul_left n hp3]
   · nlinarith [Nat.mul_le_mul_left n hp2]
 
+/--
+A p-th power of any source principal unit passes to the next filtration
+level.  This is the weak half of the source's sharp power-step lemma:
+it follows from the already established coefficient-residue homomorphism
+to the additive group of F_p.  The sharp exclusion from the following level
+will require the source's binomial argument and index restrictions.
+-/
+theorem serrePadicPrincipalUnit_pow_prime_mem_next
+    (n : ℕ) (u : serrePadicPrincipalUnits p (n + 1)) :
+    ((u : (SerrePadicInt p)ˣ) ^ p) ∈
+      serrePadicPrincipalUnits p (n + 2) := by
+  have hcard :
+      Nat.card (Multiplicative (padicResidueRing p 0)) = p := by
+    simp [padicResidueRing, Nat.card_eq_fintype_card, ZMod.card]
+  have hpower :
+      ((serrePadicPrincipalUnitCoeffResidueHom p n) u) ^ p = 1 := by
+    rw [← hcard]
+    exact pow_card_eq_one'
+  have hker :
+      u ^ p ∈ (serrePadicPrincipalUnitCoeffResidueHom p n).ker := by
+    change (serrePadicPrincipalUnitCoeffResidueHom p n) (u ^ p) = 1
+    rw [map_pow]
+    exact hpower
+  rw [serrePadicPrincipalUnitCoeffResidueHom_ker p n] at hker
+  exact hker
+
 end PadicPrincipalUnitPowerStep
 
 end SerreNumberTheoryAI
