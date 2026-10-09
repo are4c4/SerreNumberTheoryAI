@@ -114,3 +114,39 @@ theorem blueprint_principalUnitMiddleChooseDvd
   serrePadicPowerStep_middle_choose_dvd p i hi0 hip
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitmiddletermdivisibility"
+  (uses := "principalunitmiddlechoosedvd principalunitmiddlebound")
+`(1+p^n a)^p` の二項展開の中間項は、
+`n≥1`、`2≤i<p` ならば `p^(n+2)` で割り切れる。
+:::
+
+```lean "principalunitmiddletermdivisibility"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitMiddleTermDivisibility
+    (p n i : ℕ) [Fact p.Prime] (hn : 1 ≤ n) (hi : 2 ≤ i)
+    (hip : i < p) (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      (Nat.choose p i : SerrePadicInt p) *
+        ((p : SerrePadicInt p) ^ n * a) ^ i :=
+  serrePadicPowerStep_middle_term_dvd p n i hn hi hip a
+end SerreNumberTheoryAI
+```
+
+:::theorem "principalunitlasttermdivisibility"
+  (uses := "principalunitlastbound")
+同じ二項展開の最終項が `p^(n+2)` で割れるための
+ソースに記載された指数条件を確認する。
+:::
+
+```lean "principalunitlasttermdivisibility"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitLastTermDivisibility
+    (p n : ℕ) [Fact p.Prime] (hn : 1 ≤ n)
+    (hsource : p ≠ 2 ∨ 2 ≤ n) (a : SerrePadicInt p) :
+    (p : SerrePadicInt p) ^ (n + 2) ∣
+      ((p : SerrePadicInt p) ^ n * a) ^ p :=
+  serrePadicPowerStep_last_term_dvd p n hn hsource a
+end SerreNumberTheoryAI
+```
