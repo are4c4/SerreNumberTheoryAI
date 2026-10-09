@@ -113,7 +113,7 @@
 | Component | Interpretation | Explanation | Blueprint | Lean statement | Lean proof | CI |
 | --- | --- | --- | --- | --- | --- | --- |
 | §3.1 unit filtration / Proposition 7 / roots of unity corollary | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| §3.2 principal units / Proposition 8 / multiplicative-group theorem | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| §3.2 principal units / Proposition 8 / multiplicative-group theorem | ✅ | 🚧 | 🚧 | 🚧 | 🚧 | 🚧 |
 | §3.3 p-adic squares / Theorems 3–4 / square classes | 🚧 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
 - #108 / PR #149 はCI #873まで全検証がgreen。`U_n` filtration、successive quotient、有限補群塔と逆極限、命題7 `serrePadicUnitsMulEquivRootsProdPrincipal` と補群の一意性、分数体 `Q_p` の `(p-1)` 乗根の系までLean/Blueprintを完了した。PR #149 のmain統合をもってDONEとする。
@@ -176,3 +176,9 @@
 - CI #870: `V` の一意性、Lean・Blueprint・policy green。
 - CI #873: project `Q_p` における `p-1` 個の相異なる根の系、root import / Blueprint / policy green。
 - これらは原典 printed pp.22–24 / uploaded PDF pp.32–34 の§3.1を完了する。§3.2は次の別work item。
+
+## 2026-10-10 §3.2 シリアル移行
+
+- PR #149 / Issue #108 はmainへ統合され、§3.1の命題7・補群一意性・Q_pの根に関する系まで完了。
+- 現在唯一のACTIVEはIssue #112 / PR #152 / `work/c2-s3-2-principal-units-serial`。
+- 出典 §3.2 に合わせ、冪の補題と命題8の奇素数／2進の分岐を先に形式化。§3.3はWAITINGを維持。
