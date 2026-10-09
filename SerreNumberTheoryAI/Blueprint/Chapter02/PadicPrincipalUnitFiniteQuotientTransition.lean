@@ -52,3 +52,20 @@ theorem blueprint_principalUnitFiniteQuotientTransitionMk
   serrePadicPrincipalUnitFiniteQuotientTransition_mk p n k u
 end SerreNumberTheoryAI
 ```
+
+
+:::theorem "principalunitfinitequotienttransitionsurjective"
+  (uses := "principalunitfinitequotienttransitionmk")
+任意の浅い商の剰余類は、一段深い商の剰余類に持ち上がる。
+したがって有限商の射影は全射である。
+:::
+
+```lean "principalunitfinitequotienttransitionsurjective"
+namespace SerreNumberTheoryAI
+theorem blueprint_principalUnitFiniteQuotientTransitionSurjective
+    (p n k : ℕ) [Fact p.Prime] :
+    Function.Surjective
+      (serrePadicPrincipalUnitFiniteQuotientTransition p n k) :=
+  serrePadicPrincipalUnitFiniteQuotientTransition_surjective p n k
+end SerreNumberTheoryAI
+```
